@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "profile": {
+    "id": "commerce-promotional",
+    "name": "Commerce Promotional (example second project)",
+    "description": "EXAMPLE PROFILE for the cross-project neutrality test. No client file exists yet: the source entry reuses the first-party SECOMM file by reference so this profile validates today, but a real onboarding replaces sources[].figmaFileKey/scopes with the client's own style guide. Nothing about this profile may require toolkit-core changes — that is the neutrality claim under test.",
+    "businessContext": {
+      "summary": "Multi-brand promotional storefront where discovery and deal clarity drive conversion; the homepage is a dense, scannable offer surface, not a story.",
+      "audience": "Deal-driven shoppers browsing across brands and categories",
+      "commerceStrategy": "commerce-first: compact hero, campaign and category discovery, high product density, explicit offer communication where business data is real"
+    },
+    "sources": [
+      {
+        "sourceId": "secomm-launchpad-fashion",
+        "kind": "figma-file",
+        "figmaFileKey": "eVxx3KKeZnS81cOAU09ytg",
+        "figmaUrl": "https://www.figma.com/design/eVxx3KKeZnS81cOAU09ytg/-SECOMM--LAUNCHPAD_FASHION",
+        "role": "style-guide",
+        "scopes": ["1:3", "3:2", "1:4"],
+        "readOnly": true,
+        "note": "Placeholder for a future client file. Deliberately EXCLUDES the Home page draft (121:14313): its brand-first hero contradicts this aesthetic, proving scope selection is a profile decision, not core behavior."
+      }
+    ],
+    "aesthetic": {
+      "direction": "Commerce promotional: sans-serif-led hierarchy, compact hero, card-based product grids at high density, strong offer typographic contrast, category tiles over editorial spreads. Same component vocabulary as the luxury profile — density and emphasis change, not the system.",
+      "referenceDesigns": [
+        {
+          "label": "Promo Homepage exploration (PL drafts, archived)",
+          "figmaFileKey": "vNPtfBRpYM3PsExirVqhmt",
+          "nodeId": "152:47",
+          "note": "Historic draft direction only — reference, not an approved source; PL file is issue #2's archive concern."
+        }
+      ],
+      "constraints": [
+        "No serif display roles; sans throughout with weight/size contrast.",
+        "Offers, badges, and countdowns appear ONLY where the client's business data actually supports them (fixture policy below) — never as decorative fiction.",
+        "Higher component reuse ratio than luxury profile: grids repeat card instances."
+      ]
+    },
+    "targets": {
+      "destination": {
+        "policy": "new-file-after-approval",
+        "fileKey": null,
+        "approvalRef": null
+      },
+      "pages": [
+        {
+          "name": "01 — Foundation",
+          "purpose": "Tokens reference composed from normalized contracts under the promotional direction."
+        },
+        {
+          "name": "02 — Homepage (responsive)",
+          "purpose": "One responsive page at 1440/768/390: slim header, compact campaign hero, category grid, promo product grid, multi-brand strip — instances and variants only.",
+          "sections": ["header", "campaign-hero-compact", "category-grid", "promo-product-grid", "brand-discovery", "newsletter"]
+        }
+      ],
+      "breakpoints": [1440, 768, 390]
+    },
+    "content": {
+      "provenancePolicy": "first-party-fixture",
+      "fixturePolicy": "Product cards render with placeholder art and clearly-fake 'SAMPLE' pricing tokens only if the client profile enables them; no real-looking prices, % discounts, stock counts, review scores, or urgency timers — this storefront's value proposition is offers, so fictional offers are the worst possible fixture. Client onboarding must supply real offer data policy before any commerce content composes.",
+      "licensing": {
+        "fonts": [
+          { "family": "Open Sans", "license": "OFL (confirmed for the family itself; exact source file unconfirmed)", "source": "Google Fonts" }
+        ],
+        "imagery": [
+          { "description": "Client product photography", "license": "unconfirmed until client onboarding", "source": "TBD at onboarding" }
+        ]
+      }
+    },
+    "platform": {
+      "adapter": "figma-only",
+      "futureAdapters": ["page-builder", "magento-hyva"]
+    },
+    "gates": {
+      "sourceFidelity": 1.0,
+      "reuseRatio": 0.9,
+      "contrast": "AA",
+      "breakpoints": [1440, 768, 390]
+    },
+    "safety": {
+      "allowSourceWrites": false,
+      "allowDeletes": false,
+      "approvedTargets": []
+    }
+  }
+}

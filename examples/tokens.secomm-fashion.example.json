@@ -1,0 +1,167 @@
+{
+  "schemaVersion": 1,
+  "profileId": "luxury-editorial",
+  "generatedAt": "2026-10-27T17:30:00Z",
+  "provenance": {
+    "sourceManifests": [
+      {
+        "sourceId": "secomm-launchpad-fashion",
+        "figmaFileKey": "eVxx3KKeZnS81cOAU09ytg",
+        "accessedAt": "2026-10-27T17:20:00Z",
+        "auditDocUrl": "docs/source-audit/secomm-launchpad-fashion.md"
+      }
+    ],
+    "notes": "ILLUSTRATIVE EXAMPLE: structure and source references are real (docs/source-audit/secomm-launchpad-fashion.md); color values and metrics are placeholders marked provenance.class='illustrative' because the source contains no Figma variables/styles to observe. The pilot (issue #2) must replace them with values extracted via get_design_context before composition. Source declares zero Figma variables and zero styles."
+  },
+  "modes": [
+    { "id": "light", "default": true, "description": "Only mode evidenced in source artwork; dark mode exists solely as demo swatch variants." }
+  ],
+  "primitive": {
+    "color": {
+      "ink-900": { "value": "#111111", "description": "Near-black observed in type artwork", "provenance": { "class": "illustrative", "confidence": "low" } },
+      "paper-50": { "value": "#ffffff", "description": "Page ground observed across Library artwork", "provenance": { "class": "illustrative", "confidence": "low" } },
+      "accent-600": { "value": "#8a6d3b", "description": "Warm accent observed in Editorial artwork", "provenance": { "class": "illustrative", "confidence": "low" } }
+    },
+    "fontFamily": {
+      "display-serif": { "value": "SERIF_FAMILY_UNCONFIRMED", "fallbacks": ["Georgia", "serif"], "licenseStatus": "unconfirmed", "description": "Serif used by Display/Heading roles; exact family to be extracted in pilot", "provenance": { "class": "derived", "method": "get_screenshot visual read of 181:10089", "confidence": "low", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "181:10089" } } },
+      "ui-sans": { "value": "Open Sans", "fallbacks": ["system-ui", "sans-serif"], "licenseStatus": "unconfirmed", "description": "Sans used by Price/Body/Label roles; spec labels suggest Open Sans", "provenance": { "class": "derived", "method": "get_screenshot visual read of 181:10089", "confidence": "medium", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "181:10089" } } }
+    },
+    "fontSize": {
+      "96": { "value": "96px", "provenance": { "class": "illustrative", "confidence": "low" } },
+      "56": { "value": "56px", "provenance": { "class": "illustrative", "confidence": "low" } },
+      "40": { "value": "40px", "provenance": { "class": "illustrative", "confidence": "low" } },
+      "32": { "value": "32px", "provenance": { "class": "illustrative", "confidence": "low" } },
+      "24": { "value": "24px", "provenance": { "class": "illustrative", "confidence": "low" } },
+      "18": { "value": "18px", "provenance": { "class": "illustrative", "confidence": "low" } },
+      "16": { "value": "16px", "provenance": { "class": "illustrative", "confidence": "low" } },
+      "14": { "value": "14px", "provenance": { "class": "illustrative", "confidence": "low" } },
+      "12": { "value": "12px", "provenance": { "class": "illustrative", "confidence": "low" } }
+    },
+    "fontWeight": {
+      "regular": { "value": "400" },
+      "medium": { "value": "500" },
+      "semibold": { "value": "600" },
+      "bold": { "value": "700" }
+    },
+    "lineHeight": {
+      "tight": { "value": "1.1", "provenance": { "class": "illustrative", "confidence": "low" } },
+      "normal": { "value": "1.4", "provenance": { "class": "illustrative", "confidence": "low" } },
+      "relaxed": { "value": "1.6", "provenance": { "class": "illustrative", "confidence": "low" } }
+    },
+    "letterSpacing": {
+      "wide": { "value": "0.08em", "description": "Eyebrow-style tracking seen in artwork", "provenance": { "class": "illustrative", "confidence": "low" } },
+      "normal": { "value": "0em" }
+    },
+    "spacing": {
+      "4": { "value": "4px" },
+      "8": { "value": "8px" },
+      "16": { "value": "16px" },
+      "24": { "value": "24px" },
+      "40": { "value": "40px" },
+      "64": { "value": "64px" },
+      "96": { "value": "96px" },
+      "160": { "value": "160px", "description": "Editorial section rhythm placeholder", "provenance": { "class": "illustrative", "confidence": "low" } }
+    },
+    "radius": {
+      "none": { "value": "0px", "description": "Squared editorial corner treatment observed in artwork" },
+      "full": { "value": "9999px", "description": "Round buttons observed on hero content block" }
+    },
+    "breakpoint": {
+      "desktop": { "value": "1440px" },
+      "mobile": { "value": "390px" }
+    }
+  },
+  "semantic": {
+    "color": {
+      "text/primary": {
+        "alias": "{primitive.color.ink-900}",
+        "usage": "Primary ink for display, heading and body text",
+        "contrastPairs": ["surface/canvas", "surface/raised"],
+        "provenance": { "class": "illustrative", "confidence": "low" }
+      },
+      "text/on-media": {
+        "alias": "{primitive.color.paper-50}",
+        "usage": "Text overlaid on hero media and imagery",
+        "contrastPairs": ["surface/media"],
+        "provenance": { "class": "illustrative", "confidence": "low" }
+      },
+      "action/primary": {
+        "alias": "{primitive.color.accent-600}",
+        "usage": "Primary CTA fill (hero button)",
+        "contrastPairs": ["text/on-action"],
+        "provenance": { "class": "illustrative", "confidence": "low" }
+      },
+      "text/on-action": {
+        "alias": "{primitive.color.paper-50}",
+        "usage": "Label color on action/primary fills",
+        "contrastPairs": ["action/primary"],
+        "provenance": { "class": "illustrative", "confidence": "low" }
+      }
+    },
+    "surface": {
+      "surface/canvas": {
+        "alias": "{primitive.color.paper-50}",
+        "usage": "Page background",
+        "contrastPairs": ["text/primary"],
+        "provenance": { "class": "illustrative", "confidence": "low" }
+      },
+      "surface/media": {
+        "alias": "{primitive.color.ink-900}",
+        "usage": "Hero media with filter overlay; on-media text must clear it",
+        "contrastPairs": ["text/on-media"],
+        "provenance": { "class": "derived", "confidence": "medium", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "171:4588" } }
+      }
+    }
+  },
+  "typography": {
+    "roles": {
+      "display/xl": {
+        "fontFamily": "{primitive.fontFamily.display-serif}",
+        "weight": "{primitive.fontWeight.bold}",
+        "size": { "base": "{primitive.fontSize.96}", "byBreakpoint": { "390": "{primitive.fontSize.56}" } },
+        "lineHeight": "{primitive.lineHeight.tight}",
+        "usage": "Hero statement — cf. 'SCENES FROM FALL' on the Home page draft",
+        "provenance": { "class": "derived", "confidence": "medium", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "171:5598" } }
+      },
+      "heading/h1": {
+        "fontFamily": "{primitive.fontFamily.display-serif}",
+        "weight": "{primitive.fontWeight.semibold}",
+        "size": { "base": "{primitive.fontSize.56}" },
+        "lineHeight": "{primitive.lineHeight.tight}",
+        "usage": "Section headings",
+        "provenance": { "class": "illustrative", "confidence": "low" }
+      },
+      "body/lg": {
+        "fontFamily": "{primitive.fontFamily.ui-sans}",
+        "weight": "{primitive.fontWeight.regular}",
+        "size": { "base": "{primitive.fontSize.18}" },
+        "lineHeight": "{primitive.lineHeight.relaxed}",
+        "usage": "Hero supporting copy",
+        "provenance": { "class": "derived", "confidence": "medium", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "171:5599" } }
+      },
+      "eyebrow/regular": {
+        "fontFamily": "{primitive.fontFamily.ui-sans}",
+        "weight": "{primitive.fontWeight.medium}",
+        "size": { "base": "{primitive.fontSize.14}" },
+        "lineHeight": "{primitive.lineHeight.normal}",
+        "letterSpacing": "{primitive.letterSpacing.wide}",
+        "textTransform": "uppercase",
+        "usage": "Section kickers / labels",
+        "provenance": { "class": "illustrative", "confidence": "low" }
+      },
+      "price/md": {
+        "fontFamily": "{primitive.fontFamily.ui-sans}",
+        "weight": "{primitive.fontWeight.medium}",
+        "size": { "base": "{primitive.fontSize.16}" },
+        "lineHeight": "{primitive.lineHeight.normal}",
+        "usage": "Product price",
+        "provenance": { "class": "illustrative", "confidence": "low" }
+      }
+    }
+  },
+  "diagnostics": [
+    { "code": "NO_FIGMA_VARIABLES", "severity": "info", "message": "All values derived/illustrative; source has no variables to observe." },
+    { "code": "FONT_LICENSE_UNCONFIRMED", "severity": "warning", "message": "Both font families require license confirmation (gate G5) before composition." },
+    { "code": "ILLUSTRATIVE_VALUES_PRESENT", "severity": "warning", "message": "Entries with provenance.class='illustrative' block S4 until replaced by extracted values." }
+  ]
+}

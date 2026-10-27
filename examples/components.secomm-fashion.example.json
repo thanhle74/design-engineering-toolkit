@@ -1,0 +1,180 @@
+{
+  "schemaVersion": 1,
+  "profileId": "luxury-editorial",
+  "generatedAt": "2026-10-27T17:30:00Z",
+  "provenance": {
+    "sourceManifests": [
+      {
+        "sourceId": "secomm-launchpad-fashion",
+        "figmaFileKey": "eVxx3KKeZnS81cOAU09ytg",
+        "accessedAt": "2026-10-27T17:20:00Z",
+        "auditDocUrl": "docs/source-audit/secomm-launchpad-fashion.md"
+      }
+    ],
+    "notes": "ILLUSTRATIVE EXAMPLE: component entries reference real audited node IDs. Variant samples are curated (never the full dump); tokenBindings are descriptive placeholders pending token extraction in the pilot."
+  },
+  "components": [
+    {
+      "id": "button",
+      "name": "button",
+      "classification": "REUSE",
+      "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "85:7475", "page": "Master Components", "name": "button" },
+      "description": "Full button matrix observed on the Home page hero ('SCENES FROM FALL' CTA is an instance of this set).",
+      "props": [
+        { "name": "Hierarchy", "type": "enum", "values": ["Primary", "Secondary"], "default": "Primary" },
+        { "name": "State", "type": "enum", "values": ["Default", "Disabled"], "default": "Default" },
+        { "name": "Style", "type": "enum", "values": ["Label", "Leading", "Trailing", "Icon (Square)", "Icon (Round)"], "default": "Label" },
+        { "name": "Size", "type": "enum", "values": ["XS", "S", "M", "L", "XL"], "default": "M" }
+      ],
+      "states": [
+        { "name": "interaction", "values": ["Default", "Hover", "Focus", "Disabled"] }
+      ],
+      "slots": ["label", "leadingIcon", "trailingIcon"],
+      "breakpoints": [1440, 390],
+      "variants": {
+        "count": 375,
+        "sample": [
+          { "props": { "Hierarchy": "Primary", "State": "Default", "Style": "Label", "Size": "XS" }, "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "85:7471" } },
+          { "props": { "Hierarchy": "Primary", "State": "Disabled", "Style": "Label", "Size": "XS" }, "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "85:7474" } }
+        ]
+      },
+      "aliases": ["button/base"],
+      "tokenBindings": {
+        "background": "action/primary",
+        "label": "text/on-action"
+      },
+      "provenance": { "class": "observed", "method": "get_metadata variant-name parse", "confidence": "high", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "85:7475" } },
+      "diagnostics": [
+        { "code": "VARIANT_NAMING_INCONSISTENT", "severity": "info", "message": "Sibling group button/base writes 'Style = Label, Size = XS' with spaces; this set writes 'Hierarchy=Primary' without. Toolkit ids are normalized; source names preserved here." }
+      ]
+    },
+    {
+      "id": "input-field",
+      "name": "Input field",
+      "classification": "REUSE",
+      "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "115:1827", "page": "Master Components", "name": "Input field" },
+      "props": [
+        { "name": "Type", "type": "enum", "values": ["Text", "Textarea"] },
+        { "name": "State", "type": "enum", "values": ["Default", "Hover", "Focus", "Disabled"] },
+        { "name": "Feedback", "type": "enum", "values": ["None", "Error", "Success"] },
+        { "name": "Label", "type": "enum", "values": ["None", "Label"] },
+        { "name": "Leading icon", "type": "enum", "values": ["None", "Icon"] },
+        { "name": "Trailing icon", "type": "enum", "values": ["None", "Icon"] },
+        { "name": "Hint text", "type": "enum", "values": ["None", "Hint"] }
+      ],
+      "slots": ["label", "value", "hintText", "feedback", "leadingIcon", "trailingIcon"],
+      "variants": { "count": 600, "sample": [] },
+      "aliases": ["Base/_Input field {base}", "Base/_Textarea input field {base}"],
+      "provenance": { "class": "observed", "method": "get_metadata variant-name parse", "confidence": "high", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "115:1827" } }
+    },
+    {
+      "id": "checkbox",
+      "name": "Checkbox",
+      "classification": "REUSE",
+      "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "97:2044", "page": "Master Components", "name": "Checkbox" },
+      "props": [
+        { "name": "Size", "type": "enum", "values": ["S", "M", "L"] },
+        { "name": "State", "type": "enum", "values": ["Default", "Hover", "Focus", "Disabled"] },
+        { "name": "Checked", "type": "boolean", "values": ["True", "False"] },
+        { "name": "Text", "type": "enum", "values": ["None", "Label", "Label + Hint text"] }
+      ],
+      "slots": ["label", "hintText"],
+      "variants": { "count": 72, "sample": [] },
+      "aliases": ["Base/_CheckRadio"],
+      "tokenBindings": { "selected": "action/primary" },
+      "provenance": { "class": "observed", "method": "get_metadata variant-name parse", "confidence": "high", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "97:2044" } }
+    },
+    {
+      "id": "radiobutton",
+      "name": "Radiobutton",
+      "classification": "REUSE",
+      "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "97:1611", "page": "Master Components", "name": "Radiobutton" },
+      "props": [
+        { "name": "Size", "type": "enum", "values": ["S", "M", "L"] },
+        { "name": "State", "type": "enum", "values": ["Default", "Hover", "Focus", "Disabled"] },
+        { "name": "Checked", "type": "boolean", "values": ["True", "False"] },
+        { "name": "Text", "type": "enum", "values": ["None", "Label", "Label + Hint text"] }
+      ],
+      "slots": ["label", "hintText"],
+      "variants": { "count": 72, "sample": [] },
+      "aliases": ["Base/_CheckRadio"],
+      "provenance": { "class": "observed", "method": "get_metadata variant-name parse", "confidence": "high", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "97:1611" } }
+    },
+    {
+      "id": "header-branding",
+      "name": "Header/Branding",
+      "classification": "REUSE",
+      "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "169:3282", "page": "Master Components", "name": "Header/Branding" },
+      "description": "Site header actually placed on the Home page draft (instance 171:4147).",
+      "props": [
+        { "name": "Theme", "type": "enum", "values": ["Light", "Dark"], "normalized": true },
+        { "name": "BG", "type": "enum", "values": ["Transparent", "Solid"] }
+      ],
+      "slots": ["logo", "mainNavigation", "searchNavigation", "cart", "language"],
+      "breakpoints": [1440, 390],
+      "variants": { "count": 4, "sample": [] },
+      "tokenBindings": { "background": "surface/canvas", "foreground": "text/primary" },
+      "provenance": { "class": "observed", "method": "get_metadata variant-name parse", "confidence": "high", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "169:3282" } },
+      "diagnostics": [
+        { "code": "VARIANT_NAMING_INCONSISTENT", "severity": "warning", "message": "Uses 'Theme' capitalized while Brand Header/Main Navigation use lowercase 'theme'; normalized toolkit prop recorded as observed, casing differences tracked." }
+      ]
+    },
+    {
+      "id": "announcement-bar",
+      "name": "Announcement Bar",
+      "classification": "REUSE",
+      "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "171:4129", "page": "Master Components", "name": "Announcement Bar" },
+      "props": [{ "name": "Theme", "type": "enum", "values": ["Light", "Dark"], "normalized": true }],
+      "slots": ["message"],
+      "variants": { "count": 2, "sample": [] },
+      "provenance": { "class": "observed", "method": "get_metadata variant-name parse", "confidence": "high", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "171:4129" } }
+    },
+    {
+      "id": "hero-editorial",
+      "name": "Hero (composition pattern)",
+      "classification": "NORMALIZE",
+      "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "171:4145", "page": "Home page", "name": "Hero" },
+      "description": "Not a Figma component in source — a layout pattern observed on the Home page draft (image + filter overlay + centered content block with eyebrow/copy/button). Extracted as a composition pattern for the pilot to instantiate from audited primitives.",
+      "props": [
+        { "name": "media", "type": "instance-swap", "values": ["image"] },
+        { "name": "filter", "type": "enum", "values": ["Overlay-dark"] }
+      ],
+      "slots": ["media", "eyebrow", "copy", "cta"],
+      "breakpoints": [1440, 390],
+      "variants": { "count": 0, "sample": [] },
+      "provenance": { "class": "derived", "method": "get_metadata + get_screenshot of 171:4144", "confidence": "medium", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "171:4145" } },
+      "diagnostics": [
+        { "code": "PATTERN_NOT_COMPONENT_IN_SOURCE", "severity": "info", "message": "Hero exists only as a drafted frame, not a component set; toolkit treats it as a composition pattern." }
+      ]
+    }
+  ],
+  "icons": [
+    {
+      "id": "icon-fill",
+      "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "73:545", "page": "Icons", "name": "Fill Icon Sets" },
+      "glyphCount": 93,
+      "styles": ["fill"],
+      "sizes": [12, 16, 24, 32, 40],
+      "naming": "kebab-case glyph + '-fill' suffix (heroicons-style)",
+      "licenseStatus": "unconfirmed",
+      "glyphSample": ["academic-cap-fill", "adjustments-fill", "annotation-fill", "archive-fill", "arrow-fill", "backspace-fill", "ban-fill"],
+      "provenance": { "class": "observed", "method": "get_metadata inventory", "confidence": "high", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "73:545" } }
+    },
+    {
+      "id": "icon-outline",
+      "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "73:3619", "page": "Icons", "name": "Fill Icon Sets" },
+      "glyphCount": 96,
+      "styles": ["outline"],
+      "sizes": [12, 16, 24, 32, 40],
+      "naming": "kebab-case glyph + '-outline' suffix (heroicons-style)",
+      "licenseStatus": "unconfirmed",
+      "glyphSample": ["zoom-out-outline", "zoom-in-outline", "x-circle-outline", "view-grid-outline", "view-boards-outline", "volume-off-outline"],
+      "provenance": { "class": "observed", "method": "get_metadata inventory", "confidence": "high", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "73:3619" } }
+    }
+  ],
+  "diagnostics": [
+    { "code": "VARIANT_NAMING_INCONSISTENT", "severity": "warning", "message": "Theme/theme casing and '=' spacing vary across source groups; toolkit ids normalized, observed names retained in 'name'." },
+    { "code": "ICON_LICENSE_UNCONFIRMED", "severity": "warning", "message": "Icon sets resemble Heroicons (MIT); license must be confirmed before composition (gate G5)." },
+    { "code": "DUPLICATE_COMPONENT_GROUPS", "severity": "info", "message": "Base groups excluded from composition and recorded as component aliases." }
+  ]
+}
