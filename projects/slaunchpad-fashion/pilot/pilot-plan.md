@@ -1,12 +1,16 @@
 # Pilot Plan — clean Figma workspace → responsive editable design
 
-[issue #2][i2] steps 2–5. **Blocked on Owner go** (see "Approval gate").
-Contracts dependency: [issue #1][i1] has **no reviewed contracts yet** (no PRs, no issue comments as of 2026-10-27).
-This plan follows the repo README rule: research/prep ran independently; the Figma write waits for the
-Owner. The Owner may waive the #1 dependency explicitly.
+[issue #2][i2] steps 2–5. Status: **BUILT 2026-10-27 after an in-session Owner go** — see
+"Verification status" and "Approval gate" below.
+
+**This was a manual design proof, not a pipeline run.** The build was executed interactively
+(agent-driven Figma sessions), not by an automated S0–S5 toolkit pipeline. It is **not** evidence that
+the [PR #3][i3] architecture (`docs/ARCHITECTURE.md`, **DRAFT/unmerged**; P1 orchestrator + ajv validation
+not yet implemented) drives automated execution — that remains [issue #1][i1] scope after contract review.
 
 [i1]: https://github.com/thanhle74/design-engineering-toolkit/issues/1
 [i2]: https://github.com/thanhle74/design-engineering-toolkit/issues/2
+[i3]: https://github.com/thanhle74/design-engineering-toolkit/pull/3
 
 ## Target file architecture (proposed)
 
@@ -47,11 +51,29 @@ From reference `37:2` ↔ `38:30`: 1440→390 container; gutters 72px→24px; he
 | QA evidence | `pilot/evidence/qa-homepage-desktop-final.png` (pass), `qa-homepage-mobile-final.png` (pass after fix), `qa-components.png`. Mobile fix: 9 copy blocks were auto-width and clipped at 390 → clamped to 342px + `HEIGHT` auto-resize (`22:23`, `22:28`, `22:76`, `22:81`, `22:82`, `22:87`, `22:90`, `22:95`, `22:118`); post-fix sweep found zero overflowing texts |
 | Deviations & limitations | (1) All page copy beyond PL's verbatim strings is **authored sample content**: announcement text, product names/prices ("Wool tailored coat € 890"…), tile subtitles, editorial meta, legal lines — flagged for Owner review. (2) Button set trimmed to Hierarchy × State (Style=Label, Size=S/M used) — full 4-axis matrix not rebuilt. (3) Open Sans **Medium unavailable** in the file's fonts → `label/*` styles use Regular (weight diff vs source). (4) Derived tokens added where source bindings were unobservable headlessly: `hairline/100`, `muted/100`, `spacing/md`, `spacing/xl`, `spacing/8xl`. (5) PL reference brand ("MAISON / FORM", cream/olive) replaced by style-guide identity (SLAUNCH ink/white, Merriweather+Open Sans); PL contributes structure + verbatim strings only. (6) Imagery: hero photo reused as-is from source `171:4146` (**license UNKNOWN** — flagged in source audit); all other imagery = `mist` placeholder rects + disclaimer caption, no new external assets. (7) Footer is simple stacked columns, not the PL accordion rows (accordion = prototype interaction, out of V1 static scope). |
 
+| Verification status (G1–G5) | **NOT measured to gate definitions** — see "Verification status" below |
+
+## Verification status (2026-10-28, post Coordinator review)
+
+Status classes: **BUILT** (exists, IDs recorded) · **VERIFIED** (measured by the gate's own method) ·
+**NOT_VERIFIED** (not measured — never inferred from screenshots) · **BLOCKED/CONDITIONAL**.
+Gates referenced from [PR #3 `docs/quality-gates.md`][i3] (**DRAFT** — thresholds pending contract review).
+
+| Gate | Status | Basis |
+|---|---|---|
+| G1 Source fidelity | **NOT_VERIFIED** | Gate method (contract↔manifest fidelity report, set intersection) never run; the audit tables + node-ID ledger exist but no per-entry cross-check artifact was produced. |
+| G2 Editability | **NOT_VERIFIED (as measured)** | Qualitative evidence only: all composed text is native TEXT layers; sections are instances (Header `10:2`, tiles, cards, buttons); both header variants exist. No % census or layers-panel artifact per the gate method. |
+| G3 Reuse | **NOT_VERIFIED** | Instance-ratio census never computed (luxury-editorial example threshold 0.85 unmeasured). |
+| G4 Accessibility & responsiveness | **PARTIAL → NOT_VERIFIED overall** | Clause (b) overflow: mobile clipping defect found, fixed (9 texts clamped to 342px), post-fix sweep = 0 overflowing texts, screenshots at both declared breakpoints — matches the gate's screenshot+inspection method. Clauses (a) WCAG contrast table and (c) 44px touch-target spot-check: **NOT_VERIFIED**. |
+| G5 Provenance & licensing | **BLOCKED/CONDITIONAL** | Hero photo `171:4146` licenseStatus **UNKNOWN** (reused as-is from source — a first-party fill is not proof of licensed reuse); authored product names/prices/subtitles are fixture content. 100%-confirmed threshold unmet → output is **demo-only; carries no production claims**. |
+
+**Summary: the pilot is BUILT with composition and breakpoint overflow visually verified; G1–G3 and G4(a)(c) are NOT_VERIFIED; G5 is BLOCKED until licensing is confirmed.** A measured gate run is a separate, future activity (pipeline scope, issue #1 / PR #3).
+
 ## Approval gate (per issue #2, required before any Figma write)
 
-- [ ] Owner approves creating the new file (name, team/workspace).
-- [ ] Owner confirms #1 contracts dependency is waived **or** waits for reviewed contracts.
-- [ ] Sources remain read-only regardless of decision.
+- [x] Owner approves creating the new file (name, team/workspace). — given **in-session 2026-10-27** via structured prompt ("Go — build pilot now"; file on SECOMM team). **Approval evidence not captured as a GitHub record** — the profile example's `approvalRef` remains `null`; this note is the only record.
+- [x] Owner confirms #1 contracts dependency is waived **or** waits for reviewed contracts. — waived in-session to run the manual pilot; the automated pipeline still requires reviewed contracts (issue #1 / PR #3).
+- [x] Sources remain read-only regardless of decision. — held: zero writes; PL archive verified six pages twice (pre- and post-build).
 
 ## Non-goals honored
 

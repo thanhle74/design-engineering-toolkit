@@ -1,10 +1,14 @@
 # Project Profile — Slaunchpad / Luxury Fashion (V1 Pilot)
 
 > Per-project profile per [issue #1][i1] requirement 1. All project-specific choices live here, not in toolkit core.
-> Status: **prepared, awaiting Owner go for Figma write** ([issue #2][i2]).
+> Status: **pilot file built 2026-10-27** after an in-session Owner go (approval not captured as a GitHub record) —
+> awaiting Owner acceptance on [issue #2][i2]. Manual design proof; [PR #3][i3] architecture remains DRAFT/unmerged,
+> so this was **not** an automated pipeline run. Gate-level verification: NOT measured (see pilot-plan.md
+> "Verification status").
 
 [i1]: https://github.com/thanhle74/design-engineering-toolkit/issues/1
 [i2]: https://github.com/thanhle74/design-engineering-toolkit/issues/2
+[i3]: https://github.com/thanhle74/design-engineering-toolkit/pull/3
 
 ## Identity
 
@@ -34,6 +38,6 @@
 |---|---|
 | Source files | Read-only for the entire pilot. No rename, no delete, no page edits. |
 | PL archive | Preserved as-is (six pages verified intact on 2026-10-27 — see source audit). Backup strategy: the new pilot file is **independent**; PL is never cleared. |
-| Pilot target | **One new dedicated Figma Design file**, created only after explicit Owner go. Nothing is written into PL or the style guide. |
+| Pilot target | **One new dedicated Figma Design file, created only after explicit Owner go.** Created 2026-10-27: `kFTfnFix9N6MUd1ojiRgkR` ("SLAUNCH — V1 Pilot (Toolkit)", SECOMM team) after the in-session go. Nothing is written into PL or the style guide. |
 | Workspace | Owner to confirm team (recommend SECOMM team — Full seat; the pilot session's Figma login is Full member there). |
 | Delete authority | Only the Owner deletes anything, ever. |
