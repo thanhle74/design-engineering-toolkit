@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/source-manifest.schema.json",
+  "$comment": "Design Engineering Toolkit V1 — source manifest contract. Major version 1. Records what exists in each audited source, how it was classified, and what could not be supported. The audit of record for stage S2.",
+  "title": "Design Engineering Toolkit — Source Manifest",
+  "type": "object",
+  "required": ["schemaVersion", "profileId", "generatedAt", "sources"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "profileId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/source" }
+    }
+  },
+  "$defs": {
+    "sourceRef": {
+      "type": "object",
+      "required": ["fileKey", "nodeId"],
+      "additionalProperties": false,
+      "properties": {
+        "fileKey": { "type": "string" },
+        "nodeId": { "type": "string", "pattern": "^[0-9]+:[0-9]+$" },
+        "page": { "type": "string" },
+        "name": { "type": "string" }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["class"],
+      "additionalProperties": false,
+      "properties": {
+        "class": { "enum": ["observed", "derived", "illustrative"], "$comment": "observed = read from a genuine Figma variable/style/component; derived = extracted from documentation artwork or layout measurement; illustrative = placeholder pending extraction (must never reach S4 composition)." },
+        "method": { "type": "string", "$comment": "Tool/query that produced the value, e.g. 'get_metadata', 'get_screenshot (visual read)', 'search_design_system'." },
+        "auditedAt": { "type": "string", "format": "date-time" },
+        "confidence": { "enum": ["high", "medium", "low"] }
+      }
+    },
+    "diagnostic": {
+      "type": "object",
+      "required": ["code", "severity", "message"],
+      "additionalProperties": false,
+      "properties": {
+        "code": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" },
+        "severity": { "enum": ["info", "warning", "error"] },
+        "message": { "type": "string" },
+        "sourceRef": { "$ref": "#/$defs/sourceRef" }
+      }
+    },
+    "nodeGroup": {
+      "type": "object",
+      "required": ["name", "classification"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "sourceRef": { "$ref": "#/$defs/sourceRef" },
+        "classification": { "enum": ["REUSE", "NORMALIZE", "REFERENCE_ONLY", "UNKNOWN", "IGNORE"] },
+        "stats": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "symbols": { "type": "integer", "minimum": 0 },
+            "instances": { "type": "integer", "minimum": 0 },
+            "frames": { "type": "integer", "minimum": 0 },
+            "texts": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "notes": { "type": "string" },
+        "diagnostics": { "type": "array", "items": { "$ref": "#/$defs/diagnostic" } }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": ["sourceId", "kind", "figmaFileKey", "accessedAt", "pages", "audit"],
+      "additionalProperties": false,
+      "properties": {
+        "sourceId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+        "kind": { "const": "figma-file" },
+        "figmaFileKey": { "type": "string" },
+        "figmaUrl": { "type": "string" },
+        "displayName": { "type": "string" },
+        "accessedAt": { "type": "string", "format": "date-time" },
+        "versionRef": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": { "enum": ["file-version", "accessed-at"] },
+            "versionId": { "type": "string" },
+            "note": { "type": "string" }
+          }
+        },
+        "variables": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "present": { "type": "boolean" },
+            "collections": { "type": "array", "items": { "type": "string" } },
+            "count": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "styles": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "present": { "type": "boolean" },
+            "count": { "type": "integer", "minimum": 0 },
+            "kinds": { "type": "array", "items": { "enum": ["fill", "text", "effect", "grid"] } }
+          }
+        },
+        "pages": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["pageId", "name", "classification", "nodeGroups"],
+            "additionalProperties": false,
+            "properties": {
+              "pageId": { "type": "string", "pattern": "^[0-9]+:[0-9]+$" },
+              "name": { "type": "string" },
+              "classification": { "enum": ["REUSE", "NORMALIZE", "REFERENCE_ONLY", "UNKNOWN", "IGNORE"] },
+              "nodeGroups": { "type": "array", "items": { "$ref": "#/$defs/nodeGroup" } }
+            }
+          }
+        },
+        "audit": {
+          "type": "object",
+          "required": ["method", "tools"],
+          "additionalProperties": false,
+          "properties": {
+            "method": { "type": "string", "$comment": "Reference to the audit method doc + any run-specific notes." },
+            "tools": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+            "auditor": { "type": "string" },
+            "auditDocUrl": { "type": "string" }
+          }
+        },
+        "contentProvenance": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "policy": { "type": "string" },
+            "assets": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["description", "licenseStatus"],
+                "additionalProperties": false,
+                "properties": {
+                  "description": { "type": "string" },
+                  "sourceRef": { "$ref": "#/$defs/sourceRef" },
+                  "licenseStatus": { "enum": ["confirmed", "unconfirmed", "incompatible", "not-applicable"] },
+                  "license": { "type": "string" },
+                  "note": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "diagnostics": { "type": "array", "items": { "$ref": "#/$defs/diagnostic" } }
+      }
+    }
+  }
+}

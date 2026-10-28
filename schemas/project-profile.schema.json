@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/project-profile.schema.json",
+  "$comment": "Design Engineering Toolkit V1 — project profile contract. Major version 1. Project-specific inputs and permissions; nothing here may be hardcoded in toolkit core.",
+  "title": "Design Engineering Toolkit — Project Profile",
+  "type": "object",
+  "required": ["schemaVersion", "profile"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "profile": {
+      "type": "object",
+      "required": ["id", "name", "businessContext", "sources", "aesthetic", "targets", "content", "platform", "safety"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+        "name": { "type": "string", "minLength": 1 },
+        "description": { "type": "string" },
+        "businessContext": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "summary": { "type": "string" },
+            "audience": { "type": "string" },
+            "commerceStrategy": { "type": "string", "$comment": "e.g. brand-first vs commerce-first; informs section priorities, never toolkit logic" }
+          }
+        },
+        "sources": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["sourceId", "kind", "figmaFileKey", "role", "scopes"],
+            "additionalProperties": false,
+            "properties": {
+              "sourceId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+              "kind": { "const": "figma-file" },
+              "figmaFileKey": { "type": "string", "minLength": 22, "maxLength": 22 },
+              "figmaUrl": { "type": "string" },
+              "role": { "enum": ["style-guide", "reference-designs", "icon-library", "archive"] },
+              "scopes": {
+                "type": "array",
+                "minItems": 1,
+                "$comment": "Page or node IDs the audit may read. Everything outside scopes is invisible to the pipeline.",
+                "items": { "type": "string", "pattern": "^[0-9]+:[0-9]+$" }
+              },
+              "note": { "type": "string" },
+              "readOnly": { "const": true, "default": true }
+            }
+          }
+        },
+        "aesthetic": {
+          "type": "object",
+          "required": ["direction"],
+          "additionalProperties": false,
+          "properties": {
+            "direction": { "type": "string", "$comment": "Prose art direction owned by the project, e.g. 'luxury editorial' or 'commerce promotional'." },
+            "referenceDesigns": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "label": { "type": "string" },
+                  "figmaFileKey": { "type": "string" },
+                  "nodeId": { "type": "string" },
+                  "externalUrl": { "type": "string" },
+                  "note": { "type": "string" }
+                }
+              }
+            },
+            "constraints": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "targets": {
+          "type": "object",
+          "required": ["destination", "breakpoints"],
+          "additionalProperties": false,
+          "properties": {
+            "destination": {
+              "type": "object",
+              "required": ["policy"],
+              "additionalProperties": false,
+              "properties": {
+                "policy": { "enum": ["new-file-after-approval", "existing-file-approved"], "$comment": "'new-file-after-approval' requires a recorded human GO in approvalRef before S4 may create anything." },
+                "fileKey": { "type": ["string", "null"] },
+                "approvalRef": { "type": ["string", "null"], "$comment": "Issue/PR/comment URL recording the human GO." },
+                "note": { "type": "string" }
+              }
+            },
+            "pages": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": ["name", "purpose"],
+                "additionalProperties": false,
+                "properties": {
+                  "name": { "type": "string" },
+                  "purpose": { "type": "string" },
+                  "sections": { "type": "array", "items": { "type": "string" } }
+                }
+              }
+            },
+            "breakpoints": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "type": "integer", "minimum": 320 },
+              "default": [1440, 390]
+            }
+          }
+        },
+        "content": {
+          "type": "object",
+          "required": ["provenancePolicy"],
+          "additionalProperties": false,
+          "properties": {
+            "provenancePolicy": { "enum": ["first-party-fixture", "licensed-stock", "client-supplied"] },
+            "fixturePolicy": { "type": "string", "$comment": "What copy/media may be invented. Must forbid fake prices/claims/reviews for commerce contexts." },
+            "licensing": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "fonts": { "type": "array", "items": { "type": "object", "required": ["family", "license"], "properties": { "family": { "type": "string" }, "license": { "type": "string" }, "source": { "type": "string" } } } },
+                "imagery": { "type": "array", "items": { "type": "object", "required": ["description", "license"], "properties": { "description": { "type": "string" }, "license": { "type": "string" }, "source": { "type": "string" } } } }
+              }
+            }
+          }
+        },
+        "platform": {
+          "type": "object",
+          "required": ["adapter"],
+          "additionalProperties": false,
+          "properties": {
+            "adapter": { "enum": ["figma-only"], "$comment": "V1. Future majors may add e.g. 'magento-hyva', 'page-builder' as downstream consumers of the contracts." },
+            "futureAdapters": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "gates": {
+          "type": "object",
+          "$comment": "May only tighten defaults from docs/quality-gates.md; a looser value fails S0.",
+          "additionalProperties": false,
+          "properties": {
+            "sourceFidelity": { "type": "number", "minimum": 1.0, "maximum": 1.0, "$comment": "Fixed at 1.0 in V1: 100% of contract entries traceable." },
+            "reuseRatio": { "type": "number", "minimum": 0.8, "maximum": 1.0 },
+            "contrast": { "enum": ["AA", "AAA"], "default": "AA" },
+            "breakpoints": { "type": "array", "items": { "type": "integer", "minimum": 320 } }
+          }
+        },
+        "safety": {
+          "type": "object",
+          "required": ["allowSourceWrites", "allowDeletes"],
+          "additionalProperties": false,
+          "properties": {
+            "allowSourceWrites": { "const": false, "default": false },
+            "allowDeletes": { "const": false, "default": false },
+            "approvedTargets": {
+              "type": "array",
+              "$comment": "The ONLY fileKeys S4 may write to. Empty until a human GO is recorded.",
+              "items": { "type": "string", "minLength": 22, "maxLength": 22 },
+              "default": []
+            }
+          }
+        }
+      }
+    }
+  }
+}

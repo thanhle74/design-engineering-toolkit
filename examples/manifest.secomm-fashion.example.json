@@ -1,0 +1,193 @@
+{
+  "schemaVersion": 1,
+  "profileId": "luxury-editorial",
+  "generatedAt": "2026-10-27T17:30:00Z",
+  "sources": [
+    {
+      "sourceId": "secomm-launchpad-fashion",
+      "kind": "figma-file",
+      "figmaFileKey": "eVxx3KKeZnS81cOAU09ytg",
+      "figmaUrl": "https://www.figma.com/design/eVxx3KKeZnS81cOAU09ytg/-SECOMM--LAUNCHPAD_FASHION",
+      "displayName": "-SECOMM--LAUNCHPAD_FASHION",
+      "accessedAt": "2026-10-27T17:20:00Z",
+      "versionRef": {
+        "type": "accessed-at",
+        "note": "Figma file versions are not addressable via current MCP tooling; accessedAt + node IDs are the V1 pin (ARCHITECTURE.md open question 4)."
+      },
+      "variables": {
+        "present": false,
+        "collections": [],
+        "count": 0
+      },
+      "styles": {
+        "present": false,
+        "count": 0,
+        "kinds": []
+      },
+      "pages": [
+        {
+          "pageId": "0:1",
+          "name": "Cover",
+          "classification": "IGNORE",
+          "nodeGroups": []
+        },
+        {
+          "pageId": "1:5",
+          "name": "Getting started",
+          "classification": "IGNORE",
+          "nodeGroups": []
+        },
+        {
+          "pageId": "1:2",
+          "name": "---",
+          "classification": "IGNORE",
+          "nodeGroups": []
+        },
+        {
+          "pageId": "1:3",
+          "name": "Library",
+          "classification": "NORMALIZE",
+          "nodeGroups": [
+            {
+              "name": "Color tittle",
+              "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "14:846", "page": "Library", "name": "Color tittle" },
+              "classification": "NORMALIZE",
+              "stats": { "symbols": 2, "instances": 0, "frames": 1, "texts": 0 },
+              "notes": "Demonstration swatch component with Style=light/dark variants — artwork, not a color variable or style.",
+              "diagnostics": [
+                { "code": "SOURCE_DATA_ARTWORK_ONLY", "severity": "warning", "message": "Color swatches drawn as component tiles; light/dark exist only as demo variants.", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "14:846" } }
+              ]
+            },
+            {
+              "name": "Color shade",
+              "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "14:845", "page": "Library", "name": "Color shade" },
+              "classification": "NORMALIZE",
+              "stats": { "symbols": 0, "instances": 11, "frames": 1, "texts": 0 },
+              "notes": "11-instance shade ramp drawn for human readers."
+            },
+            {
+              "name": "Typography artwork (Frame 25)",
+              "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "181:10085", "page": "Library", "name": "Frame 25" },
+              "classification": "NORMALIZE",
+              "stats": { "symbols": 0, "instances": 0, "frames": 505, "texts": 488 },
+              "notes": "Type system documentation: Display/Heading/Price/Body/Label/Eyebrow/Caption roles; serif + sans pairing; 4 weights; size/tracking/leading scales. Exact family and metric values to be extracted via get_design_context in the pilot."
+            }
+          ]
+        },
+        {
+          "pageId": "3:2",
+          "name": "Icons",
+          "classification": "REUSE",
+          "nodeGroups": [
+            {
+              "name": "Fill Icon Sets / fill-icon",
+              "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "73:545", "page": "Icons", "name": "Fill Icon Sets" },
+              "classification": "REUSE",
+              "stats": { "symbols": 1155, "instances": 2 },
+              "notes": "~96 glyphs, sizes 12/16/24/32/40, alphabetical groups. Naming matches Heroicons; license unconfirmed. (Icons-page frames: 1014 page-wide.)"
+            },
+            {
+              "name": "Fill Icon Sets / outline-icon",
+              "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "73:3619", "page": "Icons", "name": "Fill Icon Sets" },
+              "classification": "REUSE",
+              "stats": { "symbols": 1145 },
+              "notes": "Same structure as fill set."
+            }
+          ]
+        },
+        {
+          "pageId": "1:4",
+          "name": "Master Components",
+          "classification": "REUSE",
+          "nodeGroups": [
+            { "name": "button", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "85:7475", "page": "Master Components", "name": "button" }, "classification": "REUSE", "stats": { "symbols": 375 }, "notes": "Hierarchy x State x Style x Size — the canonical button matrix." },
+            { "name": "button/base", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "76:6885", "page": "Master Components", "name": "button/base" }, "classification": "NORMALIZE", "stats": { "symbols": 25 }, "notes": "Foundation subset; consolidated as an alias of 'button', excluded from composition." },
+            { "name": "Input field", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "115:1827", "page": "Master Components", "name": "Input field" }, "classification": "REUSE", "stats": { "symbols": 600 } },
+            { "name": "Checkbox", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "97:2044", "page": "Master Components", "name": "Checkbox" }, "classification": "REUSE", "stats": { "symbols": 72 } },
+            { "name": "Radiobutton", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "97:1611", "page": "Master Components", "name": "Radiobutton" }, "classification": "REUSE", "stats": { "symbols": 72 } },
+            { "name": "Base/_CheckRadio", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "97:2477", "page": "Master Components", "name": "Base/_CheckRadio" }, "classification": "NORMALIZE", "stats": { "symbols": 72 }, "notes": "Shared base of Checkbox/Radiobutton; excluded from composition." },
+            { "name": "Base/_Input field {base}", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "107:2916", "page": "Master Components", "name": "Base/_Input field {base}" }, "classification": "NORMALIZE", "stats": { "symbols": 16 }, "notes": "Base excluded from composition." },
+            { "name": "Base/_Textarea input field {base}", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "107:3354", "page": "Master Components", "name": "Base/_Textarea input field {base}" }, "classification": "NORMALIZE", "stats": { "symbols": 4 }, "notes": "Base excluded from composition." },
+            { "name": "Navigation Action", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "127:2783", "page": "Master Components", "name": "Navigation Action" }, "classification": "REUSE", "stats": { "symbols": 28 } },
+            { "name": "Navigation Item", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "122:2285", "page": "Master Components", "name": "Navigation Item" }, "classification": "REUSE", "stats": { "symbols": 4 } },
+            { "name": "Dropdown Menu", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "122:2298", "page": "Master Components", "name": "Dropdown Menu" }, "classification": "REUSE", "stats": { "symbols": 8 }, "diagnostics": [ { "code": "VARIANT_NAMING_INCONSISTENT", "severity": "warning", "message": "Property 'Active' capitalized here; lowercase 'active' in Navigation Item; 'theme'/'Theme' inconsistent file-wide.", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "122:2298" } } ] },
+            { "name": "Language", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "122:2327", "page": "Master Components", "name": "Language" }, "classification": "REUSE", "stats": { "symbols": 4 } },
+            { "name": "Status bar - iPhone", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "124:2428", "page": "Master Components", "name": "Status bar - iPhone" }, "classification": "REUSE", "stats": { "symbols": 2 }, "notes": "Device mockup chrome; composed pages use only if profile requests device frames." },
+            { "name": "Home Indicator", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "124:2449", "page": "Master Components", "name": "Home Indicator" }, "classification": "REUSE", "stats": { "symbols": 4 }, "notes": "Device chrome." },
+            { "name": "Safari", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "124:2458", "page": "Master Components", "name": "Safari" }, "classification": "REUSE", "stats": { "symbols": 8 }, "notes": "Device chrome." },
+            { "name": "Logo", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "127:2582", "page": "Master Components", "name": "Logo" }, "classification": "REUSE", "stats": { "symbols": 2 } },
+            { "name": "Brand Header", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "127:3547", "page": "Master Components", "name": "Brand Header" }, "classification": "REUSE", "stats": { "symbols": 2 } },
+            { "name": "Main Navigation", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "127:3709", "page": "Master Components", "name": "Main Navigation" }, "classification": "REUSE", "stats": { "symbols": 2 } },
+            { "name": "Search Navigation", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "127:3740", "page": "Master Components", "name": "Search Navigation" }, "classification": "REUSE", "stats": { "symbols": 2 } },
+            { "name": "Header", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "127:3840", "page": "Master Components", "name": "Header" }, "classification": "REUSE", "stats": { "symbols": 2 } },
+            { "name": "Header/Branding", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "169:3282", "page": "Master Components", "name": "Header/Branding" }, "classification": "REUSE", "stats": { "symbols": 4 }, "notes": "The header variant actually placed on the Home page draft." },
+            { "name": "Announcement Bar", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "171:4129", "page": "Master Components", "name": "Announcement Bar" }, "classification": "REUSE", "stats": { "symbols": 2 } },
+            { "name": "Legacy/Input with Label", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "120:13999", "page": "Master Components", "name": "Legacy/Input with Label" }, "classification": "IGNORE", "stats": { "symbols": 2 }, "diagnostics": [ { "code": "LEGACY_GROUP_PRESENT", "severity": "info", "message": "Superseded input pattern; excluded from composition.", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "120:13999" } } ] }
+          ]
+        },
+        {
+          "pageId": "3:3",
+          "name": "Page 7",
+          "classification": "IGNORE",
+          "nodeGroups": []
+        },
+        {
+          "pageId": "3:4",
+          "name": "---",
+          "classification": "IGNORE",
+          "nodeGroups": []
+        },
+        {
+          "pageId": "3:5",
+          "name": "Sketch",
+          "classification": "REFERENCE_ONLY",
+          "nodeGroups": [
+            {
+              "name": "Exploration drafts (Branding x3, Promotion x2, Desktop - 1)",
+              "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "32:519", "page": "Sketch", "name": "Desktop - 1" },
+              "classification": "REFERENCE_ONLY",
+              "stats": { "symbols": 0, "instances": 60, "frames": 1253, "texts": 576 },
+              "notes": "Flat exploratory illustration; aesthetic context only."
+            }
+          ]
+        },
+        {
+          "pageId": "121:14313",
+          "name": "Home page",
+          "classification": "REFERENCE_ONLY",
+          "nodeGroups": [
+            {
+              "name": "Homepage draft",
+              "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "171:4144", "page": "Home page", "name": "Homepage" },
+              "classification": "REFERENCE_ONLY",
+              "notes": "1440x6398 frame; content occupies top ~2048px only (hero + announcement bar + header); remainder verified empty by screenshot; no mobile frame.",
+              "diagnostics": [
+                { "code": "SOURCE_PAGE_PARTIAL", "severity": "warning", "message": "Hero-only draft: empty region from y~2048 to 6398; no 390px breakpoint frame. Not a complete page reference.", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "171:4144" } }
+              ]
+            }
+          ]
+        }
+      ],
+      "audit": {
+        "method": "docs/source-audit/method.md — read-only MCP audit; counts derived from get_metadata XML tallies; machine-readable data probed via search_design_system before classification.",
+        "tools": ["get_metadata", "search_design_system", "get_screenshot"],
+        "auditor": "Claude Code (orchestrated), read-only session",
+        "auditDocUrl": "docs/source-audit/secomm-launchpad-fashion.md"
+      },
+      "contentProvenance": {
+        "policy": "Imagery and typefaces treated as unconfirmed until verified per docs/quality-gates.md gate G5.",
+        "assets": [
+          { "description": "Fashion photography (hero imagery, Library samples)", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "171:4146" }, "licenseStatus": "unconfirmed" },
+          { "description": "Icon glyph sets (fill/outline)", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "73:545" }, "licenseStatus": "unconfirmed", "note": "Naming consistent with Heroicons (MIT); provenance unverified." },
+          { "description": "Typefaces (serif display + sans body)", "sourceRef": { "fileKey": "eVxx3KKeZnS81cOAU09ytg", "nodeId": "181:10089" }, "licenseStatus": "unconfirmed", "note": "Exact families not yet extracted." }
+        ]
+      },
+      "diagnostics": [
+        { "code": "NO_FIGMA_VARIABLES", "severity": "info", "message": "search_design_system returned no variable collections; all tokens must be derived." },
+        { "code": "NO_FIGMA_STYLES", "severity": "info", "message": "search_design_system returned no published styles; text/fill specs live in Library artwork." },
+        { "code": "VARIANT_NAMING_INCONSISTENT", "severity": "warning", "message": "Variant property naming differs across groups: 'theme' vs 'Theme', 'Style = Label, Size = XS' vs 'Style=Label,Size=XS'." },
+        { "code": "DUPLICATE_COMPONENT_GROUPS", "severity": "warning", "message": "button vs button/base; Base/_CheckRadio vs Checkbox vs Radiobutton; Header vs Header/Branding — resolved via component aliases in component-defs." }
+      ]
+    }
+  ]
+}

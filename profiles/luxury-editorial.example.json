@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "profile": {
+    "id": "luxury-editorial",
+    "name": "Luxury Editorial (SECOMM Launchpad Fashion)",
+    "description": "EXAMPLE PROFILE — exercises the toolkit against the real first-party style guide. Not an implemented project: pilot execution is issue #2 and requires the contracts from issue #1 to be approved first.",
+    "businessContext": {
+      "summary": "Single-brand fashion storefront where brand storytelling carries the purchase decision; the homepage must feel like an editorial magazine issue that happens to sell.",
+      "audience": "Brand-loyal shoppers responding to campaign imagery and collection narratives",
+      "commerceStrategy": "brand-first: immersive hero, collection stories, curated low-density product moments"
+    },
+    "sources": [
+      {
+        "sourceId": "secomm-launchpad-fashion",
+        "kind": "figma-file",
+        "figmaFileKey": "eVxx3KKeZnS81cOAU09ytg",
+        "figmaUrl": "https://www.figma.com/design/eVxx3KKeZnS81cOAU09ytg/-SECOMM--LAUNCHPAD_FASHION",
+        "role": "style-guide",
+        "scopes": ["1:3", "3:2", "1:4", "121:14313"],
+        "readOnly": true
+      }
+    ],
+    "aesthetic": {
+      "direction": "Luxury editorial: serif display typography, generous negative space, full-bleed campaign imagery, muted ground with a single warm accent, squared corners; commerce stays quiet until the product moment.",
+      "referenceDesigns": [
+        {
+          "label": "Home page hero draft (source file)",
+          "figmaFileKey": "eVxx3KKeZnS81cOAU09ytg",
+          "nodeId": "171:4144",
+          "note": "Hero-only draft — provides the hero direction and component vocabulary, not a complete page."
+        }
+      ],
+      "constraints": [
+        "Serif carries display and heading roles only; UI sans carries price/body/label.",
+        "One accent color; no promotional badges, countdowns, or urgency devices.",
+        "Photography is the section background, never a tile grid."
+      ]
+    },
+    "targets": {
+      "destination": {
+        "policy": "new-file-after-approval",
+        "fileKey": null,
+        "approvalRef": null,
+        "note": "Fresh dedicated file; creation blocked until the human GO is recorded here (issue #2 gate)."
+      },
+      "pages": [
+        {
+          "name": "01 — Foundation",
+          "purpose": "Color, type, spacing reference composed from normalized tokens — the destination-side mirror of the source Library."
+        },
+        {
+          "name": "02 — Homepage (responsive)",
+          "purpose": "One responsive page at 1440/390: announcement bar, header, editorial hero, collection story, curated product moment, newsletter/footer — built from audited component instances with native editable text.",
+          "sections": ["announcement-bar", "header-branding", "hero-editorial", "collection-story", "product-moment", "newsletter"]
+        }
+      ],
+      "breakpoints": [1440, 390]
+    },
+    "content": {
+      "provenancePolicy": "first-party-fixture",
+      "fixturePolicy": "Editorial copy may be invented as clearly-marked fixtures ('SCENES FROM FALL' style). Imagery only from confirmed first-party or licensed sources; no prices, discounts, review counts, or countdowns anywhere — fixtures are brand stories, not offers. License status of source photography and typefaces must reach 'confirmed' (gate G5) before composition.",
+      "licensing": {
+        "fonts": [
+          { "family": "SERIF_DISPLAY (exact family TBD in pilot)", "license": "unconfirmed", "source": "SECOMM Library artwork" },
+          { "family": "Open Sans (suspected UI sans, to confirm)", "license": "unconfirmed (Open Sans itself is OFL)", "source": "SECOMM Library artwork" }
+        ],
+        "imagery": [
+          { "description": "Fashion photography from SECOMM hero/Library", "license": "unconfirmed", "source": "figma eVxx3KKeZnS81cOAU09ytg" }
+        ]
+      }
+    },
+    "platform": {
+      "adapter": "figma-only",
+      "futureAdapters": ["magento-hyva", "page-builder"]
+    },
+    "gates": {
+      "sourceFidelity": 1.0,
+      "reuseRatio": 0.85,
+      "contrast": "AA",
+      "breakpoints": [1440, 390]
+    },
+    "safety": {
+      "allowSourceWrites": false,
+      "allowDeletes": false,
+      "approvedTargets": []
+    }
+  }
+}

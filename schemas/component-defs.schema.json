@@ -1,0 +1,185 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/component-defs.schema.json",
+  "$comment": "Design Engineering Toolkit V1 — component definitions contract. Major version 1. Platform-neutral component sets: variant props, states, slots, breakpoints, plus icon sets. Source of truth for what S4 may instantiate and reuse.",
+  "title": "Design Engineering Toolkit — Component Definitions",
+  "type": "object",
+  "required": ["schemaVersion", "profileId", "generatedAt", "provenance", "components"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "profileId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "provenance": { "$ref": "#/$defs/payloadProvenance" },
+    "components": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/component" }
+    },
+    "icons": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/iconSet" }
+    },
+    "diagnostics": { "type": "array", "items": { "$ref": "#/$defs/diagnostic" } }
+  },
+  "$defs": {
+    "payloadProvenance": {
+      "type": "object",
+      "required": ["sourceManifests"],
+      "additionalProperties": false,
+      "properties": {
+        "sourceManifests": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["sourceId", "figmaFileKey"],
+            "additionalProperties": false,
+            "properties": {
+              "sourceId": { "type": "string" },
+              "figmaFileKey": { "type": "string" },
+              "accessedAt": { "type": "string", "format": "date-time" },
+              "auditDocUrl": { "type": "string" }
+            }
+          }
+        },
+        "notes": { "type": "string" }
+      }
+    },
+    "sourceRef": {
+      "type": "object",
+      "required": ["fileKey", "nodeId"],
+      "additionalProperties": false,
+      "properties": {
+        "fileKey": { "type": "string" },
+        "nodeId": { "type": "string", "pattern": "^[0-9]+:[0-9]+$" },
+        "page": { "type": "string" },
+        "name": { "type": "string" }
+      }
+    },
+    "entryProvenance": {
+      "type": "object",
+      "required": ["class"],
+      "additionalProperties": false,
+      "properties": {
+        "class": { "enum": ["observed", "derived", "illustrative"] },
+        "method": { "type": "string" },
+        "confidence": { "enum": ["high", "medium", "low"] },
+        "sourceRef": { "$ref": "#/$defs/sourceRef" }
+      }
+    },
+    "prop": {
+      "type": "object",
+      "required": ["name", "type", "values"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "$comment": "Variant property name exactly as observed in source, e.g. 'Hierarchy'." },
+        "type": { "enum": ["enum", "boolean", "text", "instance-swap"] },
+        "values": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "default": { "type": "string" },
+        "normalized": { "type": "boolean", "default": false, "$comment": "true when the toolkit renamed/regularized this property vs source (see diagnostics)." }
+      }
+    },
+    "state": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "values": { "type": "array", "items": { "type": "string" } }
+      },
+      "$comment": "Interaction states drawn from variant props (e.g. State=Default/Hover/Focus/Disabled) or inferred."
+    },
+    "variant": {
+      "type": "object",
+      "required": ["sourceRef"],
+      "additionalProperties": false,
+      "properties": {
+        "props": {
+          "type": "object",
+          "$comment": "Full prop->value map for this variant; must resolve against the component's 'props'.",
+          "additionalProperties": { "type": "string" }
+        },
+        "sourceRef": { "$ref": "#/$defs/sourceRef" }
+      }
+    },
+    "component": {
+      "type": "object",
+      "required": ["id", "name", "classification", "sourceRef", "props"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9/-]*$", "$comment": "Toolkit-normalized id, e.g. 'input-field'. Stable across runs; never the raw Figma name." },
+        "name": { "type": "string", "$comment": "Human name as observed in source." },
+        "classification": { "enum": ["REUSE", "NORMALIZE"] },
+        "sourceRef": { "$ref": "#/$defs/sourceRef" },
+        "description": { "type": "string" },
+        "props": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/prop" } },
+        "states": { "type": "array", "items": { "$ref": "#/$defs/state" } },
+        "slots": {
+          "type": "array",
+          "$comment": "Named content slots, e.g. label, leadingIcon, trailingIcon, media.",
+          "items": { "type": "string" }
+        },
+        "breakpoints": {
+          "type": "array",
+          "$comment": "Breakpoints where the component has distinct layout behavior.",
+          "items": { "type": "integer", "minimum": 320 }
+        },
+        "variants": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "count": { "type": "integer", "minimum": 0 },
+            "sample": {
+              "type": "array",
+              "maxItems": 20,
+              "$comment": "Curated samples with node IDs; never a bulk dump of all variants.",
+              "items": { "$ref": "#/$defs/variant" }
+            }
+          }
+        },
+        "aliases": {
+          "type": "array",
+          "$comment": "Source names/groups this component consolidates, e.g. ['button/base'].",
+          "items": { "type": "string" }
+        },
+        "tokenBindings": {
+          "type": "object",
+          "$comment": "Which semantic tokens the component consumes, e.g. {'bg': 'action/primary', 'label': 'text/on-action'}. Descriptive, not prescriptive for platforms.",
+          "additionalProperties": { "type": "string" }
+        },
+        "provenance": { "$ref": "#/$defs/entryProvenance" },
+        "diagnostics": { "type": "array", "items": { "$ref": "#/$defs/diagnostic" } }
+      }
+    },
+    "iconSet": {
+      "type": "object",
+      "required": ["id", "sourceRef", "glyphCount"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+        "sourceRef": { "$ref": "#/$defs/sourceRef" },
+        "glyphCount": { "type": "integer", "minimum": 1 },
+        "styles": { "type": "array", "items": { "type": "string" }, "$comment": "e.g. ['fill', 'outline']." },
+        "sizes": { "type": "array", "items": { "type": "integer", "minimum": 1 } },
+        "naming": { "type": "string", "$comment": "Glyph naming convention, e.g. 'kebab-case glyph + -fill/-outline suffix'." },
+        "license": { "type": "string" },
+        "licenseStatus": { "enum": ["confirmed", "unconfirmed", "incompatible", "not-applicable"] },
+        "glyphSample": { "type": "array", "maxItems": 30, "items": { "type": "string" } },
+        "provenance": { "$ref": "#/$defs/entryProvenance" },
+        "diagnostics": { "type": "array", "items": { "$ref": "#/$defs/diagnostic" } }
+      }
+    },
+    "diagnostic": {
+      "type": "object",
+      "required": ["code", "severity", "message"],
+      "additionalProperties": false,
+      "properties": {
+        "code": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" },
+        "severity": { "enum": ["info", "warning", "error"] },
+        "message": { "type": "string" },
+        "sourceRef": { "$ref": "#/$defs/sourceRef" }
+      }
+    }
+  }
+}
