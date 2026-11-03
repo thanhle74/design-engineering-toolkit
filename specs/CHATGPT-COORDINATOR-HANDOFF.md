@@ -1,5 +1,15 @@
 # ACTIVE CHATGPT COORDINATOR HANDOFF — Design Engineering Toolkit
 
+## LATEST #9 CHECKPOINT — 2026-11-03 — CLI IMPLEMENTED; CORRECTION_REQUIRED BEFORE MERGE
+
+> **Live GitHub supersedes this snapshot.** [Issue #9](https://github.com/thanhle74/design-engineering-toolkit/issues/9) remains OPEN; [Draft PR #13](https://github.com/thanhle74/design-engineering-toolkit/pull/13) at `0c3afecafa3a8f0f6c999e4ccbce82c647b6f597` contains a real TypeScript `det` CLI (`validate/inspect/plan`), out-of-process Magento Page Builder read-only capability adapter, `schemas/cli`, synthetic fixtures and Claude Code `det-cli` skill. Integrator receipt claims 44/44, and Coordinator independently verified exact-tip GitHub Actions `contracts=SUCCESS`. **No Figma extraction, CMS imports, Admin round-trip or storefront QA.**
+>
+> **Coordinator verdict: `CORRECTION_REQUIRED`**, consolidated in [Issue #9 comment 6596713837](https://github.com/thanhle74/design-engineering-toolkit/issues/9#issuecomment-6596713837). Four bounded source findings: (F1/P0) `emit.ts` persists false `wroteFiles` and fails to propagate output write errors into JSON/exit; (F2/P0) adapter path guard checks relative strings but does not stop symlink file/dir escapes or explicit metadata exclusion; (F3/P1) `plan` does not cross-check binding map/registry project identities; (F4/P1) child streams lack output byte caps, raw stderr and descriptor entry traversal risk, and PR #13 needs a normal merge/reconciliation with newer `main` handoff.
+>
+> **NEXT:** Existing #9 Claude Code Integrator implements **one correction pass** directly on the owning PR branch, adds deterministic regressions, runs `npm test` and posts a final BASE→TIP receipt + exact remote checks in the SAME Issue. Coordinator reviews that exact tip and only then ACCEPT/merge/close #9 for first CLI gate. **No new issue, no full #5/#7 audit, no autonomous Figma/DB write.** Main remains stable until #9 passes.
+
+---
+
 ## NEWEST FIGMA NAMING CHECKPOINT — 2026-11-03 — DESKTOP FRAME 245:2 RENAMED
 
 > **Actual connected Figma read/write evidence.** File key `vNPtfBRpYM3PsExirVqhmt`, Figma page `Home page — Luxury`, source frame ID `245:2`. User explicitly asked to normalize the tree once #5 completed. The Figma plugin read verified 331 descendants (97 FRAME, 102 TEXT, 40 INSTANCE, 28 RECTANGLE, 52 VECTOR, 12 ELLIPSE); then applied **61 label-only changes** after validating all expected old names. **Source IDs, ancestry, child order, top-level section count and all frame geometry matched before/after**. No component instances, text contents, fills, media, or styles were intentionally mutated. No CMS/DB changes.
