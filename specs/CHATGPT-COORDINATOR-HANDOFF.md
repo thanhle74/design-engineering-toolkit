@@ -1,6 +1,14 @@
 # ACTIVE CHATGPT COORDINATOR HANDOFF — Design Engineering Toolkit
 
-## NEXT TRACKED EXECUTION — G2 Issue #14 (2026-11-03)
+## CURRENT COORDINATOR CHECKPOINT — 2026-11-03 — G2 #14 SYNTHETIC IMPLEMENTATION POSTED FOR REVIEW
+
+- **Issue [#14](https://github.com/thanhle74/design-engineering-toolkit/issues/14) G2 synthetic implementation is POSTED, NOT yet accepted.** One integrator commit `6816c6f` on branch `thanhle74/g2-figma-read-only-structural-extraction-nodeir`, Draft PR [#16](https://github.com/thanhle74/design-engineering-toolkit/pull/16) → `main`. Receipt: `docs/converter/RECEIPT-ISSUE14-G2.md` + ADR-014-001…009. Gate **64/64** (51 unchanged #9 checks + 13 G2 checks). Status class: `SYNTHETIC_G2_PASS` **only** — `LIVE_FIGMA_READ_ONLY_VERIFIED` is **NOT claimed**; no live design-tool access happened, `245:2`/`245:16` untouched, no CMS/DB writes.
+- **Delivered:** `NodeIR`/`PageStructure`/`SourceReview` materialized (converter family 1.1.0, additive, closed diagnostic registry untouched); `det extract` with caller-selected root only; typed `DesignSourcePort` stays an interface (snapshot is transport, ADR-014-002); combined-evidence classification with every-node accountability; `det plan` additively accepts real `PageStructure` (G1 harness retained → 51 #9 tests unchanged).
+- **NEXT for the Coordinator:** independently review Draft PR #16 against the issue contract (schema deltas in CONTRACTS §6, classification precedence, fail-closed negatives, pin hashes), verify live CI on the exact tip, then ACCEPT/CORRECTION_REQUIRED on issue #14. Merge only with explicit Owner GO. A live read-only provider (e.g. the reserved `245:2` read) remains a separate exact Owner GO — the seam is prepared (ADR-014-002/008), no live adapter ships here.
+
+---
+
+## PREVIOUS TRACKED EXECUTION — G2 Issue #14 (2026-11-03)
 
 **Task:** [#14 G2 Figma read-only structural extraction → NodeIR / PageStructure](https://github.com/thanhle74/design-engineering-toolkit/issues/14). This issue has a full scoped contract and test plan and is **READY_FOR_SYNTHETIC_IMPLEMENTATION**. First develop schemas/ports/semantic extraction and deterministic synthetic tests on #9 CLI. **Live Figma read of `245:2` requires explicit separate Owner GO**; no Figma rename, CMS/DB write, G3 importer or claim of live runtime proof. Reuse source fixture and latest Figma naming receipt (61 names), do not restart #5/#7/#9.
 
