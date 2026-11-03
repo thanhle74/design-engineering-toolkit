@@ -5,7 +5,7 @@
 
 **This was a manual design proof, not a pipeline run.** The build was executed interactively
 (agent-driven Figma sessions), not by an automated S0–S5 toolkit pipeline. It is **not** evidence that
-the [PR #3][i3] architecture (`docs/ARCHITECTURE.md`, **DRAFT/unmerged**; P1 orchestrator + ajv validation
+the [PR #3][i3] architecture (`docs/ARCHITECTURE.md`, **merged 2026-10-28 — this plan was written while it was DRAFT/unmerged**; P1 orchestrator + ajv validation
 not yet implemented) drives automated execution — that remains [issue #1][i1] scope after contract review.
 
 [i1]: https://github.com/thanhle74/design-engineering-toolkit/issues/1
@@ -57,7 +57,7 @@ From reference `37:2` ↔ `38:30`: 1440→390 container; gutters 72px→24px; he
 
 Status classes: **BUILT** (exists, IDs recorded) · **VERIFIED** (measured by the gate's own method) ·
 **NOT_VERIFIED** (not measured — never inferred from screenshots) · **BLOCKED/CONDITIONAL**.
-Gates referenced from [PR #3 `docs/quality-gates.md`][i3] (**DRAFT** — thresholds pending contract review).
+Gates referenced from [PR #3 `docs/quality-gates.md`][i3] (merged 2026-10-28; thresholds were pending contract review when this plan was written).
 
 | Gate | Status | Basis |
 |---|---|---|

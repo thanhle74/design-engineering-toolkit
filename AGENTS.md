@@ -32,10 +32,13 @@ This is the **one agent policy entrypoint** for this reusable, platform-neutral 
 
 ## Navigation
 - [Issue #5 architecture spec](specs/ISSUE-5-converter-architecture.md)
+- [Converter contracts (materialized schemas)](schemas/converter/README.md) · [Contract reference / deferred drafts](docs/converter/CONTRACTS.md)
+- [Capability matrix (Magento PB + UiWidget + Hyvä)](docs/converter/CAPABILITY-MATRIX.md)
 - [Converter decisions](docs/converter/DECISIONS.md)
+- [Integrator receipt G1](docs/converter/RECEIPT-ISSUE5-G1.md)
 - [OSS adoption](docs/research/oss-adoption-for-pagebuilder.md)
 - [Agent skills adoption](docs/research/agent-skills-adoption.md)
-- Focused skills under `.claude/skills/` (use only when relevant).
+- Focused skills under `.claude/skills/` (use only when relevant). Contract test gate: `npm test` (neutrality + negative cases run in CI).
 
 ## Naming & portability invariants (Issue #5)
 

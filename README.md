@@ -9,11 +9,13 @@ A **multi-project, platform-neutral** foundation for design-system contracts, se
 **Current gate (G1):** source-backed capability inventory, neutral contracts/schema decisions, reusable skills/agents and evidence-based repo hygiene. **No Figma access, no CMS import, no CSS pixel-perfect, no production writes.** Later G2–G4 require separate decisions.
 
 Start here:
-- [Current architecture/spec](specs/ISSUE-5-converter-architecture.md)
-- [Accepted/proposed decisions](docs/converter/DECISIONS.md)
-- [OSS source selection](docs/research/oss-adoption-for-pagebuilder.md)
-- [Agent skills selection](docs/research/agent-skills-adoption.md)
-- [Repo hygiene baseline](docs/converter/REPO-HYGIENE-BASELINE.md)
+- [Current architecture/spec](specs/ISSUE-5-converter-architecture.md) — INTEGRATED_FOR_G1_REVIEW (2026-11-03); integrator receipt: [docs/converter/RECEIPT-ISSUE5-G1.md](docs/converter/RECEIPT-ISSUE5-G1.md)
+- [Converter contracts](schemas/converter/) (materialized schemas) + [contract reference incl. deferred NodeIR/PageStructure](docs/converter/CONTRACTS.md)
+- [Capability matrix — Magento PB + UiWidget + Hyvä](docs/converter/CAPABILITY-MATRIX.md) (proof ceiling REGISTERED; machine-readable sample in `examples/converter/`)
+- [Accepted/proposed decisions](docs/converter/DECISIONS.md) (ADR-005-001..016)
+- [OSS source selection](docs/research/oss-adoption-for-pagebuilder.md) · [Agent skills selection](docs/research/agent-skills-adoption.md) — verified live against sources
+- [Repo hygiene baseline](docs/converter/REPO-HYGIENE-BASELINE.md) (incl. [5] TIP audit addendum)
+- **Test gate:** `npm test` — 30 checks: schema validation (V1 + converter families), the T-01..T-14 negative plan, determinism, neutrality guard. Also runs in CI (`.github/workflows/validate.yml`).
 - [Agent rules](AGENTS.md), [Claude Code entry](CLAUDE.md), `.claude/skills/` and `.claude/agents/`
 
 **Task naming:** `[<issue number>] <task title>`; `[5]` is this task's GitHub issue number, **not a version**.

@@ -1,6 +1,6 @@
 # [5] Converter architecture & contract specification
 
-**Status:** PROPOSED / architecture-first. **Target:** [Issue #5](https://github.com/thanhle74/design-engineering-toolkit/issues/5). **No Figma access authorized in this stage.** Approved designs remain frozen.
+**Status:** INTEGRATED_FOR_G1_REVIEW — architecture pass executed 2026-11-03 (workers W-A..W-D receipts + one integrator; see [docs/converter/RECEIPT-ISSUE5-G1.md](../docs/converter/RECEIPT-ISSUE5-G1.md)). **Target:** [Issue #5](https://github.com/thanhle74/design-engineering-toolkit/issues/5). **No Figma access authorized in this stage.** Approved designs remain frozen.
 
 ## 1. Outcomes
 
@@ -46,11 +46,11 @@ These are **conceptual boundaries**, not an instruction to create empty folders.
 - `NodeIR` (future): stable semantic `nodeId`, `kind`, `children`, `layout{direction, positioning, constraints, relativeSizes, overflow}`, `contentSlots`, `sourceRef`. Do not confuse visual pixels with component semantics.
 - `ComponentBindingMap`: versioned mapping `{sourceComponentId, variantConditions, targetCapabilityId, propsTransform, fallbackPolicy}`. Unmatched variants produce `UNSUPPORTED`, not guessed CSS.
 - `PageStructure` (future): `sections[]` with stable IDs, content and media references, responsive composition, capability resolution, source refs. **PageStructure is an intermediate artifact, not raw `cms_page.content`**.
-- `ResolutionReport`: per-section status, candidate/selected capabilities, unsupported reasons, mapping confidence, evidence/pin, missing contracts; summary coverage `native/widget/custom/unsupported/chrome`.
+- `ResolutionReport`: per-section status, candidate/selected capabilities, unsupported reasons, mapping confidence, evidence/pin, missing contracts; summary coverage `native/widget/custom-required/unsupported/chrome` (one vocabulary with the registry `category` enum).
 
 **Proof-level ladder:** `DISCOVERED` → `REGISTERED` → `STRUCTURALLY_MAPPED` → `ADMIN_ROUNDTRIP_VERIFIED` → `VISUALLY_VERIFIED`. Promotion needs evidence for that specific step.
 
-All output types must have explicit schema major/version, stable identifiers, deterministic ordering and provenance. Reuse V1 `schemas/*` where compatible, extend additively where possible; breaking major needs an explicit migration ADR.
+All output types must have explicit schema major/version, stable identifiers, deterministic ordering and provenance. G1 materialized these as a **separate family `schemas/converter/`** (own integer major; V1 `schemas/*` stays frozen at major 1 — see [schemas/converter/README.md](../schemas/converter/README.md) and ADR-005-011): `capability-registry`, `component-binding-map`, `resolution-report`, `converter-profile` (+ shared `common.defs.json`), validated against real and synthetic payloads by the repo test gate (`npm test`, 30 checks incl. the T-01..T-14 negative plan). `NodeIR`/`PageStructure` field drafts and the `DesignSourcePort` interface are documented in [docs/converter/CONTRACTS.md](../docs/converter/CONTRACTS.md) and materialize at their gates (ADR-005-013). Breaking changes need a new major + migration ADR ([docs/converter/DECISIONS.md](../docs/converter/DECISIONS.md)).
 
 ## 4. Magento/Hyvä adapter contract
 
