@@ -61,6 +61,7 @@ const ids = new Map<string, string>([
   ["kb-relations", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-relations.schema.json"],
   ["kb-ingest-manifest", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-ingest-manifest.schema.json"],
   ["kb-store", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-store.schema.json"],
+  ["kb-engine-output", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-engine-output.schema.json"],
 ]);
 
 export type SchemaName = keyof typeof ids extends string ? string : never;

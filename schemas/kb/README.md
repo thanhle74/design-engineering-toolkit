@@ -15,6 +15,7 @@ families.
 | [`kb-relations.schema.json`](kb-relations.schema.json) | shared | Cross-KB typed edges: core graph + KB-2 provenance relations + KB-3 chain relations |
 | [`kb-ingest-manifest.schema.json`](kb-ingest-manifest.schema.json) | engine | Plan-shaped ingest manifest: the only way `det kb ingest` reads anything |
 | [`kb-store.schema.json`](kb-store.schema.json) | engine | Store descriptor (`kb/store.json`): identity, partitions, counts — hashed, re-derived by the validator |
+| [`kb-engine-output.schema.json`](kb-engine-output.schema.json) | engine | Output envelopes for `det kb ingest`/`query`/`sync` artifacts (records view, query result with provenance-on-every-hit, sync report) |
 
 ## Store layout (one physical format, three logical domains)
 

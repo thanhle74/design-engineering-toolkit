@@ -7,6 +7,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { canonicalStringify } from "../dist/src/core/canonical.js";
+import { validateContract } from "../dist/src/core/schema-registry.js";
 import { main } from "../dist/src/core/cli/main.js";
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
@@ -484,6 +485,32 @@ export default async function registerKbSuite(checkAsync) {
     const unreadable = await runCli(["kb", "ingest", "--manifest", "/definitely/not/a/manifest.json", "--json"]);
     assert.equal(unreadable.code, 2, "unreadable manifest is usage error");
     return "fail-closed usage surface";
+  });
+
+  await checkAsync("KB-27", "engine output artifacts validate against kb-engine-output; schemaRef is honest", async () => {
+    const ingest = await runCli(["kb", "ingest", "--manifest", path.join(EX_KB, "manifest.json"), REG_FLAG, REG_VALUE, "--json"]);
+    const ing = JSON.parse(ingest.out);
+    const recordsPayload = ing.output.records;
+    const check1 = validateContract("kb-engine-output", recordsPayload);
+    assert.ok(check1.valid, "records view must validate: " + (check1.errors[0] ?? ""));
+    const q = await runCli(["kb", "query", "--store", KB_STORE, "--kb", "platform", "--where", "category=content", "--text", "banner", "--json"]);
+    const qOut = JSON.parse(q.out).output;
+    const check2 = validateContract("kb-engine-output", qOut);
+    assert.ok(check2.valid, "query result must validate: " + (check2.errors[0] ?? ""));
+    const ex = stageExamples();
+    fs.appendFileSync(path.join(ex, "ui-inventory.json"), "\n");
+    const store = stageStore();
+    const sync = await runCli(["kb", "sync", "--store", store, "--manifest", path.join(ex, "manifest.json"), REG_FLAG, REG_VALUE, "--json"]);
+    const syncReport = JSON.parse(sync.out).output.sync;
+    const check3 = validateContract("kb-engine-output", syncReport);
+    assert.ok(check3.valid, "sync report must validate: " + (check3.errors[0] ?? ""));
+    const run = parseJsonRun(q);
+    for (const art of run.artifacts) {
+      if (art.role.startsWith("kb-")) {
+        assert.ok(/schemas\/kb\//.test(art.schemaRef), `KB artifact ${art.role} must reference the KB family, got ${art.schemaRef}`);
+      }
+    }
+    return "3/3 envelopes schema-valid; KB artifact refs honest";
   });
 
   await checkAsync("KB-26", "portability scan: no owner paths, no real file keys, no secret markers in schemas/kb, examples/kb or kb/", async () => {

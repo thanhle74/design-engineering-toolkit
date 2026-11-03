@@ -11,7 +11,7 @@ authorization.
 | Base | `main` @ `f44dcdc8487551e1f0a0cc6fe1a8fa2ef7064e56` (= `origin/main` at start, clean) |
 | Implementation tip | `ec9a7025fa67b1f8e674f990adae0b023767c4e8` |
 | Receipt commit | this commit (docs/skill additions only after the implementation tip) |
-| Gate | `npm test` = tsc strict build + **77/77 checks** (51 unchanged from #9: G1 suite, CLI T-15…T-22; + 26 KB checks KB-01…KB-26) |
+| Gate | `npm test` = tsc strict build + **78/78 checks** (51 unchanged from #9: G1 suite, CLI T-15…T-22; + 27 KB checks KB-01…KB-27) |
 | PR | Draft PR linked from issue #15 by the integrator; normal merge only, no auto-merge |
 | Concurrency | #14 (`NodeIR`/`PageStructure`) untouched — zero edits outside KB-owned paths plus the shared-cli additive extension points |
 
@@ -39,7 +39,7 @@ authorization.
    ingest|sync|query|validate` with `--json`, no-write defaults. Structured exact filters
    (whitelisted keys; unknown key = blocking diagnostic), relation traversal
    (`--edge-type`/`--related-to`), exact proof filter (`--require-proof`), deterministic result
-   order. SQLite FTS5 deliberately deferred (TECH-ADR OPEN_DECISION #1/#4: adopt only on
+   order. Engine artifact payloads validate against the `kb-engine-output` envelope (schemaRef honesty; KB-27). SQLite FTS5 deliberately deferred (TECH-ADR OPEN_DECISION #1/#4: adopt only on
    measured structured-miss evidence) — no vector DB, SaaS, daemon, MCP, GUI, LLM ingestion.
 5. **Usability proof** — the three issue queries run end-to-end (see below); every hit carries
    provenance, license boundary and uncertainty; nothing claims runtime/admin verification.

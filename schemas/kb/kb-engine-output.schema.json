@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-engine-output.schema.json",
+  "$comment": "Knowledge Engine — engine output envelopes (issue #15). The artifact roles kb-records / kb-query-result / kb-sync-report in the tool-run envelope carry payloads that validate against ONE of the branches here (kb-store-descriptor payloads validate against kb-store.schema.json directly). Provenance-on-every-hit is structural: a query hit carries the whole record including its evidence block — a query layer that cannot fill provenance cannot return the record.",
+  "title": "Knowledge Engine — engine output envelope",
+  "type": "object",
+  "oneOf": [
+    {
+      "$comment": "records view (det kb ingest): the regenerated store content as a JSON view of the JSONL partitions",
+      "required": ["platform", "ui", "project", "relations", "counts"],
+      "additionalProperties": false,
+      "properties": {
+        "platform": { "type": "array", "items": { "type": "object" } },
+        "ui": { "type": "array", "items": { "type": "object" } },
+        "project": { "type": "object", "additionalProperties": { "type": "array", "items": { "type": "object" } } },
+        "relations": { "type": "array", "items": { "type": "object" } },
+        "counts": { "type": "object", "required": ["platform", "ui", "project", "relations"], "additionalProperties": false, "properties": { "platform": { "type": "integer", "minimum": 0 }, "ui": { "type": "integer", "minimum": 0 }, "project": { "type": "integer", "minimum": 0 }, "relations": { "type": "integer", "minimum": 0 } } }
+      }
+    },
+    {
+      "$comment": "sync report (det kb sync): what digest comparison decided — never a silent upgrade",
+      "required": ["checked", "stale", "unchanged", "noDigests", "staleIds"],
+      "additionalProperties": false,
+      "properties": {
+        "checked": { "type": "integer", "minimum": 0 },
+        "stale": { "type": "integer", "minimum": 0 },
+        "unchanged": { "type": "integer", "minimum": 0 },
+        "noDigests": { "type": "integer", "minimum": 0 },
+        "staleIds": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    {
+      "$comment": "query result (det kb query): deterministic filtered reads with provenance on every hit",
+      "required": ["query", "hits", "diagnostics", "scanned"],
+      "additionalProperties": false,
+      "properties": {
+        "query": { "type": "object", "required": ["storeDir", "kb"], "additionalProperties": false, "properties": { "storeDir": { "type": "string" }, "kb": { "type": "string", "enum": ["platform", "ui", "project", "relations", "all"] }, "project": { "type": "string" }, "where": { "type": "array", "items": { "type": "array", "items": { "type": "string" }, "minItems": 2, "maxItems": 2 } }, "text": { "type": "string" }, "requireProof": { "type": "string", "enum": ["DETECTED", "ASSUMED", "TESTED", "UNKNOWN"] }, "edgeType": { "type": "string" }, "relatedTo": { "type": "string" }, "includeLifecycle": { "type": "array", "items": { "type": "string" } } } },
+        "hits": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["kb", "file", "line", "record"],
+            "additionalProperties": false,
+            "properties": {
+              "kb": { "type": "string", "enum": ["platform", "ui", "project", "relations"] },
+              "partition": { "type": "string" },
+              "file": { "type": "string", "pattern": "^(?!/)(?!.*(^|/)\\.\\.(/|$))" },
+              "line": { "type": "integer", "minimum": 1 },
+              "record": { "type": "object", "required": ["schemaVersion", "recordType", "id"], "properties": { "schemaVersion": { "const": 1 }, "recordType": { "type": "string" }, "id": { "type": "string" } }, "$comment": "The full stored record — evidence/licence/lifecycle ride along; consumers cannot strip provenance." }
+            }
+          }
+        },
+        "diagnostics": { "type": "array", "items": { "type": "object", "required": ["code", "severity", "message"], "additionalProperties": false, "properties": { "code": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" }, "severity": { "enum": ["info", "warning", "error"] }, "message": { "type": "string" }, "subject": { "type": "object", "required": ["type", "id"], "additionalProperties": false, "properties": { "type": { "type": "string" }, "id": { "type": "string" } } } } } },
+        "scanned": { "type": "integer", "minimum": 0 }
+      }
+    }
+  ]
+}

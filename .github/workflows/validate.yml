@@ -1,7 +1,7 @@
 # Contract test gate (ADR-005-015). Validates both schema families + all examples/fixtures,
 # runs the contract suite (T-01..T-22: G1 negative plan, CLI write-truth, path-gateway, CLI/adapter behavior, determinism,
-# neutrality, deny-list), the KB engine suite (KB-01..KB-26: ingest/bridge/sync/query/validate) and the portability scans.
-# npm test = tsc build + 77 checks.
+# neutrality, deny-list), the KB engine suite (KB-01..KB-27: ingest/bridge/sync/query/validate) and the portability scans.
+# npm test = tsc build + 78 checks.
 # The task/issue prefix is never hardcoded here (spec §8): this workflow is issue-agnostic.
 name: validate-contracts
 on:

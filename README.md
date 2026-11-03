@@ -30,7 +30,7 @@ Start here:
 - [Accepted/proposed decisions](docs/converter/DECISIONS.md) (ADR-005-001..016)
 - [OSS source selection](docs/research/oss-adoption-for-pagebuilder.md) · [Agent skills selection](docs/research/agent-skills-adoption.md) — verified live against sources
 - [Repo hygiene baseline](docs/converter/REPO-HYGIENE-BASELINE.md) (incl. [5] TIP audit addendum)
-- **Test gate:** `npm test` — 77 checks (build + schema validation for the V1/converter/CLI/KB families, the T-01..T-22 negative/CLI plan, the KB-01..KB-26 knowledge-engine plan, determinism, neutrality + deny-list scans). Also runs in CI (`.github/workflows/validate.yml`).
+- **Test gate:** `npm test` — 78 checks (build + schema validation for the V1/converter/CLI/KB families, the T-01..T-22 negative/CLI plan, the KB-01..KB-27 knowledge-engine plan, determinism, neutrality + deny-list scans). Also runs in CI (`.github/workflows/validate.yml`).
 - [Agent rules](AGENTS.md), [Claude Code entry](CLAUDE.md), `.claude/skills/` and `.claude/agents/`
 
 **Task naming:** `[<issue number>] <task title>`; `[5]` is this task's GitHub issue number, **not a version**.
