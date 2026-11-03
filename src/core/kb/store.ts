@@ -51,9 +51,16 @@ export interface ReadStoreResult {
   diagnostics: KbDiagnostic[];
 }
 
-// Read a whole store directory. Per-line parse failures are collected as diagnostics (never
-// silently skipped) so a corrupted store is always visible to validate/ingest/sync/query.
-export function readStore(storeDir: string): ReadStoreResult {
+export interface ReadStoreOptions {
+  /** When set, ONLY these KB-3 project partitions are read — other tenants' partitions (and
+   * their corruption diagnostics) stay invisible to scoped consumers like `det kb query`. */
+  projectPartitions?: string[];
+}
+
+// Read a store directory. Per-line parse failures are collected as diagnostics (never silently
+// skipped) so a corrupted partition is always visible — scoped to the partitions the caller asked
+// for. Parse-error details are withheld: raw line content must never echo into diagnostics.
+export function readStore(storeDir: string, options: ReadStoreOptions = {}): ReadStoreResult {
   const diagnostics: KbDiagnostic[] = [];
   const records: StoredRecord[] = [];
   const readPartition = (relFile: string, kb: StoredRecord["kb"], partition?: string) => {
@@ -64,14 +71,14 @@ export function readStore(storeDir: string): ReadStoreResult {
     if (lines.length && lines[lines.length - 1] === "") lines.pop();
     lines.forEach((line, idx) => {
       if (line.trim() === "") {
-        diagnostics.push({ code: "STORE_LINE_INVALID", severity: "error", message: `${relFile}:${idx + 1} is blank; records.jsonl must carry one JSON record per line.`, subject: { type: "store", id: relFile } });
+        diagnostics.push({ code: "STORE_LINE_INVALID", severity: "error", message: `${relFile}:${idx + 1} is blank; records.jsonl must carry one JSON record per line (content withheld).`, subject: { type: "store", id: relFile } });
         return;
       }
       let parsed: unknown;
       try {
         parsed = JSON.parse(line);
-      } catch (e) {
-        diagnostics.push({ code: "STORE_LINE_INVALID", severity: "error", message: `${relFile}:${idx + 1} is not valid JSON: ${(e as Error).message}`, subject: { type: "store", id: relFile } });
+      } catch {
+        diagnostics.push({ code: "STORE_LINE_INVALID", severity: "error", message: `${relFile}:${idx + 1} is not valid JSON (parse position and content withheld — raw lines are never echoed into diagnostics).`, subject: { type: "store", id: relFile } });
         return;
       }
       records.push({ kb, partition, file: relFile, line: idx + 1, record: parsed as KbRecord });
@@ -80,11 +87,13 @@ export function readStore(storeDir: string): ReadStoreResult {
   readPartition(STORE_FILES.platform, "platform");
   readPartition(STORE_FILES.ui, "ui");
   readPartition(STORE_FILES.relations, "relations");
-  // KB-3 partitions: every directory under project/ that carries records.jsonl.
+  // KB-3 partitions: every directory under project/ that carries records.jsonl, filtered by the
+  // caller's scope when it declares one.
+  const only = options.projectPartitions ? new Set(options.projectPartitions) : null;
   const projectDir = path.join(storeDir, "project");
   if (fs.existsSync(projectDir)) {
     for (const ent of fs.readdirSync(projectDir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
-      if (ent.isDirectory()) readPartition(`project/${ent.name}/records.jsonl`, "project", ent.name);
+      if (ent.isDirectory() && (!only || only.has(ent.name))) readPartition(`project/${ent.name}/records.jsonl`, "project", ent.name);
     }
   }
   const data: KbStoreData = { platform: [], ui: [], project: new Map(), relations: [] };

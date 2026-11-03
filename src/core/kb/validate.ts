@@ -2,6 +2,7 @@
 // integrity, descriptor honesty, KB-3 project/tenant consistency, relation graph integrity and
 // the licensed/secret content guards. Re-derives descriptor counts and flags drift (the
 // descriptor must never lie about the partitions next to it).
+import { canonicalStringify } from "../canonical.js";
 import type { KbDiagnostic, KbRecord, KbStoreData, KbUiComponentRecord, StoreDescriptor } from "./types.js";
 import { isProjectRecord } from "./types.js";
 import { licensedRecordViolations } from "./ingest.js";
@@ -34,7 +35,7 @@ export function runValidate(storeDir: string): ValidateResult {
       diagnostics.push({ code: "STORE_COUNTS_DRIFT", severity: "error", message: `store.json projects ${JSON.stringify(descriptor.projects)} do not match partitions ${JSON.stringify(actualProjects)}; regenerate the descriptor (det kb ingest) — it must never lie.`, subject: { type: "store", id: "store.json" } });
     }
     const actualCounts = { platform: data.platform.length, ui: data.ui.length, project: [...data.project.values()].reduce((n, l) => n + l.length, 0), relations: data.relations.length };
-    if (JSON.stringify(actualCounts) !== JSON.stringify(descriptor.counts)) {
+    if (canonicalStringify(actualCounts) !== canonicalStringify(descriptor.counts)) {
       diagnostics.push({ code: "STORE_COUNTS_DRIFT", severity: "error", message: `store.json counts ${JSON.stringify(descriptor.counts)} do not match partitions ${JSON.stringify(actualCounts)}; regenerate the descriptor (det kb ingest).`, subject: { type: "store", id: "store.json" } });
     }
   }

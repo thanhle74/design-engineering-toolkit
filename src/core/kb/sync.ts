@@ -52,11 +52,11 @@ export function runSync(options: SyncOptions): SyncResult {
       };
     }
     manifest = parsed as KbIngestManifest;
-  } catch (e) {
+  } catch {
     return {
       data: store.data,
       report: { checked: 0, stale: 0, unchanged: 0, noDigests: 0, staleIds: [] },
-      diagnostics: [...diagnostics, { code: "INPUT_UNREADABLE", severity: "error", message: `Cannot read ingest manifest '${options.manifestPath}': ${(e as Error).message}`, subject: { type: "manifest", id: options.manifestPath } }],
+      diagnostics: [...diagnostics, { code: "INPUT_UNREADABLE", severity: "error", message: `Cannot read ingest manifest '${options.manifestPath}' (unreadable or not valid JSON; raw content is never echoed into diagnostics).`, subject: { type: "manifest", id: options.manifestPath } }],
       manifest: { schemaVersion: 1, manifestId: "invalid", platform: { id: "unknown" }, inputs: { capabilityRegistry: { path: "" }, uiInventory: { path: "" }, projectRecords: [{ path: "" }], relations: { path: "" } } },
     };
   }

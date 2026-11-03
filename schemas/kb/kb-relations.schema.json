@@ -47,7 +47,9 @@
       "additionalProperties": false,
       "properties": {
         "state": { "enum": ["ACTIVE", "STALE", "INVALIDATED", "ARCHIVED"] },
-        "reviewStatus": { "enum": ["unreviewed", "reviewed", "approved"] }
+        "reviewStatus": { "enum": ["unreviewed", "reviewed", "approved"] },
+        "reviewedBy": { "type": "string" },
+        "reviewRef": { "type": "string" }
       }
     },
     "observed": {

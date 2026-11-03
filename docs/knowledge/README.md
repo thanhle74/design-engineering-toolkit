@@ -70,7 +70,15 @@ human summary; act on diagnostic codes (`DENIED_PATH_SKIPPED`, `INGEST_PARTIAL_D
   dependents `STALE` when a source changes or disappears and never silently upgrades; queries
   exclude `STALE`/`INVALIDATED`/`ARCHIVED` unless explicitly included.
 - **Default-deny project scope.** KB-3 queries without `--project` fail; records from another
-  project never surface; partitions are per-project and validate flags misplaced records.
+  project never surface; project-scoped relation edges are KB-3 content too (unscoped relation
+  queries see shared edges only); partitions are per-project, a scoped query opens only its own
+  partition (another tenant's corruption can neither leak in nor break the run), and validate
+  flags misplaced records.
+- **Review metadata survives re-ingest — but never inherits.** `det kb ingest` carries
+  `reviewStatus`/`reviewedBy`/`reviewRef` forward on unchanged digests across all four lanes;
+  changed sources reset the record to `unreviewed` with an explicit
+  `REVIEW_RESET_ON_CHANGED_SOURCE` diagnostic (an approval is never inherited by content nobody
+  reviewed).
 - **Structural deny-list before any read.** Baseline: `auth.json`, `app/etc/env.php`, `.env*`,
   `*credentials*`, `*.pem`, `*.key`, `var/**`, `generated/**`, `pub/media/**`, `*.sql.gz`,
   `*.dump*`, `**/node_modules/**`; manifests may add globs, never remove. Partial denials refuse

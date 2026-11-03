@@ -45,7 +45,9 @@ directories and never enter this repo.
    KB-3 records, and `observed` is required on relations (KB-1/KB-2 already had them). This makes
    digest-pinned sync, review status and staleness uniform across all three KBs instead of a
    KB-1/KB-2-only mechanism.
-3. **`kb-relations.evidence` gains optional `method`** (symmetry with the record evidence blocks).
+3. **`kb-relations.evidence` gains optional `method`**, and the relations `lifecycle` gains optional
+   `reviewedBy`/`reviewRef` (symmetry with the record envelope — review metadata carries forward
+   across re-ingest on relations too).
 4. `$id` paths moved from `specs/knowledge-foundation/schemas/` to `schemas/kb/` — the drafts stay
    in place as the dated review record; this family is the contract the CLI validates against.
 

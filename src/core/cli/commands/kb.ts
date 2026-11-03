@@ -2,8 +2,9 @@
 // digest-driven sync, exact structured query and store validation over the three logical KBs
 // (kb/platform, kb/ui, kb/project/<projectId>, kb/relations). Same run envelope, same exit-code
 // contract and same no-write default as the converter commands: nothing is written without
-// --out, --dry-run never writes, KB-3 queries are default-deny on project scope, and sync is a
-// disk no-op unless a digest actually changed.
+// --out, --dry-run never writes, KB-3 queries (including project-scoped relation edges) are
+// default-deny on project scope, and sync rewrites store partitions only when a digest actually
+// changed (the run receipt itself still lands under --out, like every det command).
 import fs from "node:fs";
 import { artifact, toolVersion, type ArtifactRole } from "../../run-envelope.js";
 import { canonicalize, canonicalStringify, sha256Hex } from "../../canonical.js";
@@ -53,16 +54,21 @@ function kbArtifact(role: ArtifactRole, payload: unknown, opts: { file?: string 
   return record;
 }
 
-function parseRoots(flags: Record<string, string | boolean | string[]>): Record<string, string> {
+// Malformed --root entries are collected and surfaced as usage errors — never silently dropped.
+function parseRoots(flags: Record<string, string | boolean | string[]>): { roots: Record<string, string>; malformed: string[] } {
   const roots: Record<string, string> = {};
+  const malformed: string[] = [];
   const raw = flags["root"];
   const items = Array.isArray(raw) ? raw : typeof raw === "string" ? [raw] : [];
   for (const item of items) {
     const eq = item.indexOf("=");
-    if (eq <= 0 || !/^[a-z][a-z0-9-]*$/.test(item.slice(0, eq))) continue; // malformed --root is a usage error (checked by caller)
+    if (eq <= 0 || !/^[a-z][a-z0-9-]*$/.test(item.slice(0, eq))) {
+      malformed.push(item);
+      continue;
+    }
     roots[item.slice(0, eq)] = item.slice(eq + 1);
   }
-  return roots;
+  return { roots, malformed };
 }
 
 export async function commandKb(flags: Record<string, string | boolean | string[]>, io: CommandIO): Promise<0 | 1 | 2 | 3> {
@@ -74,12 +80,17 @@ export async function commandKb(flags: Record<string, string | boolean | string[
   const outDir = requireValue(flags, "out");
   const dryRun = flags["dry-run"] === true;
   const asJson = flags.json === true;
+  const roots = parseRoots(flags);
+  if (roots.malformed.length > 0) {
+    io.err(`det: malformed --root (expected --root <alias>=<absolute-path>, kebab-case alias): ${roots.malformed.map((m) => `'${m}'`).join(", ")}`);
+    return 2;
+  }
 
   switch (verb) {
     case "ingest":
-      return kbIngest(flags, io, { outDir, dryRun, asJson });
+      return kbIngest(flags, io, { outDir, dryRun, asJson, roots: roots.roots });
     case "sync":
-      return kbSync(flags, io, { outDir, dryRun, asJson });
+      return kbSync(flags, io, { outDir, dryRun, asJson, roots: roots.roots });
     case "query":
       return kbQuery(flags, io, { asJson });
     case "validate":
@@ -91,7 +102,7 @@ export async function commandKb(flags: Record<string, string | boolean | string[
 }
 
 // ---- det kb ingest ---------------------------------------------------------------------------
-async function kbIngest(flags: Record<string, string | boolean | string[]>, io: CommandIO, opts: { outDir: string | null; dryRun: boolean; asJson: boolean }): Promise<0 | 1 | 2 | 3> {
+async function kbIngest(flags: Record<string, string | boolean | string[]>, io: CommandIO, opts: { outDir: string | null; dryRun: boolean; asJson: boolean; roots: Record<string, string> }): Promise<0 | 1 | 2 | 3> {
   const manifestPath = requireValue(flags, "manifest");
   if (!manifestPath) {
     io.err("det: kb ingest requires --manifest <file>.");
@@ -104,11 +115,13 @@ async function kbIngest(flags: Record<string, string | boolean | string[]>, io: 
   const writeIntent = opts.outDir !== null && !opts.dryRun;
   const result = runIngest({
     manifestPath,
-    roots: parseRoots(flags),
+    roots: opts.roots,
     env: io.env,
     scannedAt: new Date().toISOString(),
     toolVersion: toolVersion(),
-    existingStore: writeIntent ? readStore(opts.outDir as string).data : undefined,
+    // Load the target store for review carry-forward regardless of write intent, so a --dry-run
+    // preview is faithful to what a real write would commit.
+    existingStore: opts.outDir ? readStore(opts.outDir as string).data : undefined,
     writeIntent,
   });
 
@@ -153,7 +166,7 @@ async function kbIngest(flags: Record<string, string | boolean | string[]>, io: 
 }
 
 // ---- det kb sync -----------------------------------------------------------------------------
-async function kbSync(flags: Record<string, string | boolean | string[]>, io: CommandIO, opts: { outDir: string | null; dryRun: boolean; asJson: boolean }): Promise<0 | 1 | 2 | 3> {
+async function kbSync(flags: Record<string, string | boolean | string[]>, io: CommandIO, opts: { outDir: string | null; dryRun: boolean; asJson: boolean; roots: Record<string, string> }): Promise<0 | 1 | 2 | 3> {
   const storeDir = requireValue(flags, "store");
   const manifestPath = requireValue(flags, "manifest");
   if (!storeDir || !manifestPath) {
@@ -164,7 +177,7 @@ async function kbSync(flags: Record<string, string | boolean | string[]>, io: Co
     io.err(`det: manifest '${manifestPath}' does not exist (unreadable inputs are usage errors).`);
     return 2;
   }
-  const result = runSync({ storeDir, manifestPath, roots: parseRoots(flags), env: io.env });
+  const result = runSync({ storeDir, manifestPath, roots: opts.roots, env: io.env });
   const changed = result.report.stale > 0;
   const blocking = result.diagnostics.some((d) => d.severity === "error");
   const writeIntent = opts.outDir !== null && !opts.dryRun;
@@ -234,6 +247,11 @@ async function kbQuery(flags: Record<string, string | boolean | string[]>, io: C
   }
   const includeLifecycleRaw = flags["include-lifecycle"];
   const includeLifecycle = Array.isArray(includeLifecycleRaw) ? includeLifecycleRaw : typeof includeLifecycleRaw === "string" ? includeLifecycleRaw.split(",").map((s) => s.trim()).filter(Boolean) : undefined;
+  const LIFECYCLE_STATES = new Set(["ACTIVE", "STALE", "INVALIDATED", "ARCHIVED"]);
+  if (includeLifecycle?.some((s) => !LIFECYCLE_STATES.has(s))) {
+    io.err("det: --include-lifecycle accepts only ACTIVE|STALE|INVALIDATED|ARCHIVED (comma-separated; exact, no guess).");
+    return 2;
+  }
   const requireProof = requireValue(flags, "require-proof");
   if (requireProof && !PROOF_LEVELS.has(requireProof)) {
     io.err("det: --require-proof must be one of DETECTED|ASSUMED|TESTED|UNKNOWN (exact match, no minimum).");

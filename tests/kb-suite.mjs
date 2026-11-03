@@ -319,6 +319,13 @@ export default async function registerKbSuite(checkAsync) {
     assert.ok(result.diagnostics.some((d) => d.code === "CROSS_PROJECT_RECORD_EXCLUDED"), JSON.stringify(result.diagnostics.map((d) => d.code)));
     const other = await runCli(["kb", "query", "--store", store, "--kb", "project", "--project", "synthetic-fashion", "--json"]);
     assert.ok(!JSON.parse(other.out).output.hits.some((h) => h.record.id === "req:synthetic-fashion:leaked-note"), "partition isolation keeps it invisible from its own project too");
+    // Corruption in ANOTHER tenant's partition must neither leak into nor break this query.
+    const fashionFile = path.join(store, "project/synthetic-fashion/records.jsonl");
+    fs.appendFileSync(fashionFile, "{not json at all\n");
+    const q2 = await runCli(["kb", "query", "--store", store, "--kb", "project", "--project", "aurora-tea", "--json"]);
+    assert.equal(q2.code, 0, "aurora query unaffected by synthetic-fashion corruption");
+    assert.ok(!q2.out.includes("not json at all") && !q2.out.includes("synthetic-fashion/records.jsonl"), "foreign partition corruption never leaks into diagnostics");
+    assert.ok(!JSON.parse(q2.out).run.runDiagnostics.some((d) => d.code === "STORE_LINE_INVALID"), "no foreign diagnostics");
     const v = await runCli(["kb", "validate", "--store", store, "--json"]);
     assert.equal(v.code, 1);
     assert.ok(parseJsonRun(v).runDiagnostics.some((d) => d.code === "PARTITION_PROJECT_MISMATCH"), JSON.stringify(parseJsonRun(v).runDiagnostics.map((d) => d.code)));
@@ -362,7 +369,13 @@ export default async function registerKbSuite(checkAsync) {
   });
 
   await checkAsync("KB-19", "query 3 (acceptance): what constrains the hero (relation traversal + constraint record)", async () => {
-    const r = await runCli(["kb", "query", "--store", KB_STORE, "--kb", "relations", "--edge-type", "constrains", "--related-to", "uxi:synthetic-fashion:homepage-hero", "--json"]);
+    // Project-scoped relation edges are KB-3 content: default-deny without --project...
+    const unscoped = await runCli(["kb", "query", "--store", KB_STORE, "--kb", "relations", "--edge-type", "constrains", "--related-to", "uxi:synthetic-fashion:homepage-hero", "--json"]);
+    assert.equal(unscoped.code, 0);
+    const unscopedResult = JSON.parse(unscoped.out).output;
+    assert.equal(unscopedResult.hits.length, 0, "project-scoped edges never surface without a project scope");
+    assert.ok(unscopedResult.diagnostics.some((d) => d.code === "PROJECT_SCOPED_RELATION_EXCLUDED"), JSON.stringify(unscopedResult.diagnostics.map((d) => d.code)));
+    const r = await runCli(["kb", "query", "--store", KB_STORE, "--kb", "relations", "--project", "synthetic-fashion", "--edge-type", "constrains", "--related-to", "uxi:synthetic-fashion:homepage-hero", "--json"]);
     assert.equal(r.code, 0, r.err);
     const result = JSON.parse(r.out).output;
     assert.equal(result.hits.length, 1);
@@ -376,7 +389,10 @@ export default async function registerKbSuite(checkAsync) {
     assert.equal(constraint.id, rel.from.id);
     assert.equal(constraint.strength, "invariant");
     assert.equal(constraint.enforcement, "fail-closed");
-    return "constrains edge resolves to the invariant licensing constraint";
+    // And another project's scope must not see it either.
+    const other = await runCli(["kb", "query", "--store", KB_STORE, "--kb", "relations", "--project", "aurora-tea", "--edge-type", "constrains", "--related-to", "uxi:synthetic-fashion:homepage-hero", "--json"]);
+    assert.equal(JSON.parse(other.out).output.hits.length, 0, "cross-project scoped edge excluded");
+    return "constrains edge resolves under its project scope only";
   });
 
   await checkAsync("KB-20", "query determinism: identical query twice -> identical JSON; exact proof filter never downgrades", async () => {
@@ -482,6 +498,9 @@ export default async function registerKbSuite(checkAsync) {
     assert.equal(unknownKey.code, 1, "unknown filter key is a blocking diagnostic, not a guess");
     assert.ok(parseJsonRun(unknownKey).runDiagnostics.some((d) => d.code === "QUERY_FILTER_UNKNOWN"));
     assert.equal((await runCli(["kb", "query", "--store", KB_STORE, "--kb", "platform", "--require-proof", "probably-fine", "--json"])).code, 2, "bad proof level is usage");
+    assert.equal((await runCli(["kb", "query", "--store", KB_STORE, "--kb", "platform", "--include-lifecycle", "ACTIV", "--json"])).code, 2, "bad lifecycle value is usage");
+    assert.equal((await runCli(["kb", "ingest", "--manifest", path.join(EX_KB, "manifest.json"), "--root", "BadAlias=/tmp", "--json"])).code, 2, "malformed --root alias is usage");
+    assert.equal((await runCli(["validate", "--store", KB_STORE, "--json"])).code, 2, "kb-only flag on a converter command is usage again");
     const unreadable = await runCli(["kb", "ingest", "--manifest", "/definitely/not/a/manifest.json", "--json"]);
     assert.equal(unreadable.code, 2, "unreadable manifest is usage error");
     return "fail-closed usage surface";
@@ -511,6 +530,44 @@ export default async function registerKbSuite(checkAsync) {
       }
     }
     return "3/3 envelopes schema-valid; KB artifact refs honest";
+  });
+
+  await checkAsync("KB-28", "review carry-forward on re-ingest; digest-guarded reset on changed sources", async () => {
+    const store = stageStore();
+    const ex = stageExamples();
+    // Approve one record in every lane that carries lifecycle review status.
+    const approve = (file, id) => {
+      const lines = fs.readFileSync(path.join(store, file), "utf8").trim().split("\n").map((l) => JSON.parse(l));
+      const rec = lines.find((x) => x.id === id);
+      rec.lifecycle.reviewStatus = "approved";
+      rec.lifecycle.reviewedBy = "Coordinator (role)";
+      fs.writeFileSync(path.join(store, file), lines.map((l) => JSON.stringify(l)).join("\n") + "\n");
+    };
+    approve("platform/records.jsonl", "cap:magento-pagebuilder:banner-full-width");
+    approve("ui/records.jsonl", "uic:hyva-ui:hero");
+    approve("project/synthetic-fashion/records.jsonl", "req:synthetic-fashion:hero-merchant-editable");
+    // Relations carry lifecycle optionally — create it when approving.
+    const relFile = path.join(store, "relations/records.jsonl");
+    const relLines = fs.readFileSync(relFile, "utf8").trim().split("\n").map((l) => JSON.parse(l));
+    const rel = relLines.find((x) => x.id === "rel:shared:neighbor-pb-banner-hyva-hero");
+    rel.lifecycle = { ...(rel.lifecycle ?? {}), reviewStatus: "approved", reviewedBy: "Coordinator (role)" };
+    fs.writeFileSync(relFile, relLines.map((l) => JSON.stringify(l)).join("\n") + "\n");
+    // Same inputs, same digests -> review carries forward on all four lanes.
+    const r1 = await runCli(["kb", "ingest", "--manifest", path.join(ex, "manifest.json"), REG_FLAG, REG_VALUE, "--out", store, "--json"]);
+    assert.equal(r1.code, 0, r1.err);
+    const keep = (file, id) => JSON.parse(fs.readFileSync(path.join(store, file), "utf8").trim().split("\n").find((l) => JSON.parse(l).id === id));
+    for (const [file, id] of [["platform/records.jsonl", "cap:magento-pagebuilder:banner-full-width"], ["ui/records.jsonl", "uic:hyva-ui:hero"], ["project/synthetic-fashion/records.jsonl", "req:synthetic-fashion:hero-merchant-editable"], ["relations/records.jsonl", "rel:shared:neighbor-pb-banner-hyva-hero"]]) {
+      assert.equal(keep(file, id).lifecycle.reviewStatus, "approved", `${id} review must survive re-ingest`);
+    }
+    // Changed source -> re-observation resets review with an explicit diagnostic (an approval
+    // is never inherited by content nobody reviewed).
+    fs.appendFileSync(path.join(ex, "ui-inventory.json"), "\n");
+    const r2 = await runCli(["kb", "ingest", "--manifest", path.join(ex, "manifest.json"), REG_FLAG, REG_VALUE, "--out", store, "--json"]);
+    assert.equal(r2.code, 0, r2.err);
+    assert.ok(parseJsonRun(r2).runDiagnostics.some((d) => d.code === "REVIEW_RESET_ON_CHANGED_SOURCE" && d.subject?.id === "uic:hyva-ui:hero"), JSON.stringify(parseJsonRun(r2).runDiagnostics.map((d) => d.code)));
+    assert.equal(keep("ui/records.jsonl", "uic:hyva-ui:hero").lifecycle.reviewStatus, "unreviewed", "changed-source record resets to unreviewed");
+    assert.equal(keep("platform/records.jsonl", "cap:magento-pagebuilder:banner-full-width").lifecycle.reviewStatus, "approved", "unchanged-source review untouched");
+    return "4 lanes carry; changed source resets with diagnostic";
   });
 
   await checkAsync("KB-26", "portability scan: no owner paths, no real file keys, no secret markers in schemas/kb, examples/kb or kb/", async () => {

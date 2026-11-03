@@ -83,3 +83,24 @@ export function requireValue(flags: Record<string, string | boolean | string[]>,
   const v = flags[name];
   return typeof v === "string" && v.length > 0 ? v : null;
 }
+
+// Per-command value-flag whitelists: a flag that parses but does not belong to the command is a
+// usage error (the parser header's contract), not a silently ignored option.
+const COMMAND_VALUE_FLAGS: Record<string, Set<string>> = {
+  validate: new Set(["profile", "adapter", "project", "out"]),
+  inspect: new Set(["profile", "adapter", "project", "out"]),
+  plan: new Set(["profile", "registry", "bindings", "input", "out"]),
+  kb: new Set(["manifest", "store", "out", "root", "where", "text", "kb", "edge-type", "related-to", "include-lifecycle", "require-proof", "project"]),
+};
+
+export function unexpectedFlagsForCommand(command: string, flags: Record<string, string | boolean | string[]>): string[] {
+  const allowed = COMMAND_VALUE_FLAGS[command];
+  if (!allowed) return [];
+  const unexpected: string[] = [];
+  for (const name of Object.keys(flags)) {
+    if (name === "kb-verb") continue;
+    if (BOOL_FLAGS.has(name)) continue; // global boolean flags stay shared
+    if (!allowed.has(name)) unexpected.push(name);
+  }
+  return unexpected;
+}

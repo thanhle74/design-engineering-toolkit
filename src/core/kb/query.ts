@@ -1,10 +1,12 @@
 // Knowledge Engine (issue #15) — deterministic structured query (CONTRACTS.md §5).
 // Structured exact filters first; provenance on every hit (hits embed the whole record — a query
 // layer that cannot fill provenance cannot return the record). KB-3 is default-deny: a query
-// touching the project KB without an explicit --project fails closed. Filtering is EXACT: a
-// "tested capabilities" query never returns ASSUMED records with a downgrade.
-import type { KbDiagnostic, KbName, KbRecord, KbRelationRecord, KbStoreData, StoredRecord } from "./types.js";
-import { readStore } from "./store.js";
+// touching project knowledge without an explicit --project fails closed, and that deny extends
+// to PROJECT-SCOPED RELATIONS (projectId on an edge means KB-3 content). Unscoped relation
+// queries see only shared (unscoped) edges. Filtering is EXACT: a "tested capabilities" query
+// never returns ASSUMED records with a downgrade.
+import type { KbDiagnostic, KbName, KbRecord, KbRelationRecord, StoredRecord } from "./types.js";
+import { readStore, ReadStoreOptions } from "./store.js";
 
 export type KbQueryKb = KbName | "all";
 
@@ -46,6 +48,7 @@ export const FILTER_KEYS = new Set([
 ]);
 
 const KB_RANK: Record<KbName, number> = { platform: 0, ui: 1, project: 2, relations: 3 };
+const LIFECYCLE_STATES = new Set(["ACTIVE", "STALE", "INVALIDATED", "ARCHIVED"]);
 
 function getPath(record: unknown, dotPath: string): unknown {
   let cur: unknown = record;
@@ -71,8 +74,6 @@ function searchableText(record: KbRecord): string {
 
 export function runQuery(spec: KbQuerySpec): QueryResult {
   const diagnostics: KbDiagnostic[] = [];
-  const store = readStore(spec.storeDir);
-  diagnostics.push(...store.diagnostics);
 
   const touchesProject = spec.kb === "project" || spec.kb === "all";
   if (touchesProject && !spec.project) {
@@ -85,9 +86,21 @@ export function runQuery(spec: KbQuerySpec): QueryResult {
       diagnostics.push({ code: "QUERY_FILTER_UNKNOWN", severity: "error", message: `Filter key '${key}' is not in the structured filter set; fail closed rather than guess. Allowed keys: ${[...FILTER_KEYS].sort().join(", ")}.`, subject: { type: "query", id: key } });
     }
   }
+  for (const state of spec.includeLifecycle ?? []) {
+    if (!LIFECYCLE_STATES.has(state)) {
+      diagnostics.push({ code: "QUERY_LIFECYCLE_UNKNOWN", severity: "error", message: `--include-lifecycle value '${state}' is not a lifecycle state (ACTIVE|STALE|INVALIDATED|ARCHIVED); fail closed rather than guess.`, subject: { type: "query", id: state } });
+    }
+  }
   if (diagnostics.some((d) => d.severity === "error")) {
     return { query: spec, hits: [], diagnostics, scanned: 0 };
   }
+
+  // Scoped store read: KB-3 partitions are opened only when the query actually touches project
+  // knowledge, so another tenant's corruption can never leak into (or break) this query.
+  const needsProjectPartitions = spec.kb === "project" || spec.kb === "all";
+  const readOptions: ReadStoreOptions = needsProjectPartitions && spec.project ? { projectPartitions: [spec.project] } : { projectPartitions: [] };
+  const store = readStore(spec.storeDir, readOptions);
+  diagnostics.push(...store.diagnostics);
 
   const includeLifecycle = spec.includeLifecycle && spec.includeLifecycle.length > 0 ? spec.includeLifecycle : ["ACTIVE"];
   const where = spec.where ?? [];
@@ -101,8 +114,16 @@ export function runQuery(spec: KbQuerySpec): QueryResult {
     // Lifecycle honesty: stale/unverified claims are excluded unless explicitly included.
     const state = record.lifecycle?.state ?? "ACTIVE";
     if (!includeLifecycle.includes(state)) return;
-    // KB-3 fail-closed project scope: partition records from another project never surface.
-    if (hit.kb === "project") {
+    // KB-3 default-deny extends to project-scoped relations (projectId on an edge = KB-3 data).
+    if (record.recordType === "relation") {
+      const rel = record as KbRelationRecord;
+      // Cross-project exclusion applies within a project scope; the unscoped case (project
+      // undefined) is handled after filtering so its diagnostic names the right remedy.
+      if (spec.project && rel.projectId && rel.projectId !== spec.project) {
+        diagnostics.push({ code: "CROSS_PROJECT_RECORD_EXCLUDED", severity: "warning", message: `Relation '${rel.id}' (projectId '${rel.projectId}') was excluded from project '${spec.project}' scope.`, subject: { type: "record", id: rel.id } });
+        return;
+      }
+    } else if (hit.kb === "project") {
       const projectId = (record as { projectId?: string }).projectId;
       if (projectId !== spec.project) {
         diagnostics.push({ code: "CROSS_PROJECT_RECORD_EXCLUDED", severity: "warning", message: `Record '${record.id}' (projectId '${projectId}') sits in partition '${hit.partition}' and was excluded from project '${spec.project}' scope.`, subject: { type: "record", id: record.id } });
@@ -122,29 +143,40 @@ export function runQuery(spec: KbQuerySpec): QueryResult {
       const proof = (record as unknown as { evidence?: { proofLevel?: string } }).evidence?.proofLevel;
       if (proof !== spec.requireProof) pass = false; // exact: no minimum, no downgrade
     }
-    if (pass && spec.edgeType && (record.recordType !== "relation" || record.edgeType !== spec.edgeType)) pass = false;
-    const asRel = record as KbRelationRecord;
-    if (pass && spec.relatedTo && record.recordType === "relation") {
-      if (asRel.from.id !== spec.relatedTo && asRel.to.id !== spec.relatedTo) pass = false;
-    } else if (pass && spec.relatedTo && record.recordType !== "relation") {
-      pass = false; // --related-to filters the relations partition only
+    if (pass && spec.edgeType && (record.recordType !== "relation" || (record as KbRelationRecord).edgeType !== spec.edgeType)) pass = false;
+    if (pass && spec.relatedTo) {
+      if (record.recordType !== "relation") pass = false; // --related-to filters the relations lane only
+      else {
+        const rel = record as KbRelationRecord;
+        if (rel.from.id !== spec.relatedTo && rel.to.id !== spec.relatedTo) pass = false;
+      }
     }
     if (pass) hits.push(hit);
   };
 
   const kbs: KbName[] = spec.kb === "all" ? ["platform", "ui", "project", "relations"] : [spec.kb];
-  for (const kb of kbs) {
-    if (kb === "project") {
-      // Project scope reads the requested project's partition; other partitions are not scanned.
-      const partition = spec.project as string;
-      for (const [p, records] of store.data.project) {
-        if (p !== partition) continue;
-        records.forEach((record, idx) => considerRecord({ kb, partition: p, file: `project/${p}/records.jsonl`, line: idx + 1, record }));
+  // Iterate the STORED records (they carry the real file/line locations, surviving any skipped
+  // invalid lines) and keep only the KB lanes this query asked for.
+  const wanted = new Set<KbName>(kbs);
+  for (const stored of store.records) {
+    if (!wanted.has(stored.kb)) continue;
+    const kb = stored.kb;
+    if (kb === "project" && stored.partition !== spec.project) continue; // scoped read already enforces this
+    considerRecord({ kb, partition: stored.partition, file: stored.file, line: stored.line, record: stored.record });
+  }
+
+  // Project-scoped relations are KB-3 content: without a project scope only shared edges surface.
+  if (!spec.project) {
+    const scoped = hits.filter((h) => h.record.recordType === "relation" && (h.record as KbRelationRecord).projectId);
+    for (const h of scoped) {
+      diagnostics.push({ code: "PROJECT_SCOPED_RELATION_EXCLUDED", severity: "warning", message: `Relation '${h.record.id}' is project-scoped (projectId '${(h.record as KbRelationRecord).projectId}') and was excluded; pass --project to query project-scoped edges.`, subject: { type: "record", id: h.record.id } });
+    }
+    const scopedIds = new Set(scoped.map((h) => h.record.id));
+    for (let i = hits.length - 1; i >= 0; i--) {
+      if (scopedIds.has(hits[i].record.id)) {
+        scanned--; // excluded before filters ran — undo the scan count for honesty
+        hits.splice(i, 1);
       }
-    } else {
-      const records: KbRecord[] = kb === "platform" ? store.data.platform : kb === "ui" ? store.data.ui : store.data.relations;
-      const file = kb === "platform" ? "platform/records.jsonl" : kb === "ui" ? "ui/records.jsonl" : "relations/records.jsonl";
-      records.forEach((record, idx) => considerRecord({ kb, file, line: idx + 1, record }));
     }
   }
 

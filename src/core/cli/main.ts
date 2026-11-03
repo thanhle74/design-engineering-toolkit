@@ -5,7 +5,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { parseArgs } from "./args.js";
+import { parseArgs, unexpectedFlagsForCommand } from "./args.js";
 import { setToolVersion } from "../run-envelope.js";
 import { assertSchemasLoad } from "../schema-registry.js";
 import type { CommandIO } from "./io.js";
@@ -97,6 +97,12 @@ export async function main(argv: string[], env: NodeJS.ProcessEnv = process.env,
   }
   if (parsed.command === null) {
     io.err("det: no command given (expected validate|inspect|plan|kb). Run 'det --help' for usage.");
+    return 2;
+  }
+  const unexpectedFlags = unexpectedFlagsForCommand(parsed.command, parsed.flags);
+  if (unexpectedFlags.length > 0) {
+    for (const name of unexpectedFlags) io.err(`det: flag --${name} does not belong to command '${parsed.command}'`);
+    io.err("Run 'det --help' for usage.");
     return 2;
   }
 

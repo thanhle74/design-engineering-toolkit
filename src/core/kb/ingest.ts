@@ -69,7 +69,7 @@ export function parseRecordFile(raw: string): { records: unknown[]; error?: stri
       const parsed = JSON.parse(trimmed);
       return Array.isArray(parsed) ? { records: parsed } : { records: [], error: "top-level JSON must be an array" };
     } catch (e) {
-      return { records: [], error: `invalid JSON array: ${(e as Error).message}` };
+      return { records: [], error: `top-level JSON is not a valid array (parse position and content withheld — raw input is never echoed into diagnostics)` };
     }
   }
   const lines = trimmed.split("\n").filter((l) => l.trim().length > 0);
@@ -78,7 +78,7 @@ export function parseRecordFile(raw: string): { records: unknown[]; error?: stri
     try {
       records.push(JSON.parse(lines[i]));
     } catch (e) {
-      return { records: [], error: `line ${i + 1} is not valid JSON: ${(e as Error).message}` };
+      return { records: [], error: `line ${i + 1} is not valid JSON (parse position and content withheld — raw lines are never echoed into diagnostics)` };
     }
   }
   return { records };
@@ -138,17 +138,48 @@ function resolveManifestInputs(manifest: KbIngestManifest, manifestDir: string, 
   };
 }
 
-// Carry review metadata forward from the existing store (never anything else — a fresh scan
-// re-observes, so lifecycle state resets to ACTIVE).
-function carryReview<T extends KbRecord>(fresh: T, existing: KbRecord | undefined): T {
+// Carry review metadata forward from the existing store — but ONLY when the source digests are
+// unchanged (a fresh scan of changed content must not inherit an approval it was never given,
+// CONTRACTS.md §4.5: moving ASSUMED→TESTED/reviewing requires re-verification of the new
+// evidence). Changed-source records reset to unreviewed with an explicit diagnostic; lifecycle
+// STATE always resets to ACTIVE because this IS a fresh observation.
+function carryReview<T extends KbRecord>(fresh: T, existing: KbRecord | undefined, diagnostics: KbDiagnostic[]): T {
   if (!existing) return fresh;
   const l = fresh.lifecycle as { state: string; reviewStatus?: string; reviewedBy?: string; reviewRef?: string } | undefined;
-  const e = existing.lifecycle as { reviewStatus?: string; reviewedBy?: string; reviewRef?: string } | undefined;
+  const e = existing.lifecycle as { state?: string; reviewStatus?: string; reviewedBy?: string; reviewRef?: string } | undefined;
   if (!l || !e?.reviewStatus) return fresh;
+  const freshDigests = JSON.stringify((fresh.observed as { inputDigests?: unknown } | undefined)?.inputDigests ?? null);
+  const oldDigests = JSON.stringify((existing.observed as { inputDigests?: unknown } | undefined)?.inputDigests ?? null);
+  if (freshDigests !== oldDigests) {
+    diagnostics.push({
+      code: "REVIEW_RESET_ON_CHANGED_SOURCE",
+      severity: "warning",
+      message: `Record '${fresh.id}' was '${e.reviewStatus}' but its pinned sources changed; review metadata is reset and the re-observed record needs re-review before it feeds decisions.`,
+      subject: { type: "record", id: fresh.id },
+    });
+    return fresh;
+  }
   return {
     ...fresh,
     lifecycle: { ...l, reviewStatus: e.reviewStatus, ...(e.reviewedBy ? { reviewedBy: e.reviewedBy } : {}), ...(e.reviewRef ? { reviewRef: e.reviewRef } : {}) },
   } as T;
+}
+
+function carryRelationReview(rel: KbRelationRecord, existing: KbRecord | undefined, diagnostics: KbDiagnostic[]): KbRelationRecord {
+  const e = existing?.lifecycle as { reviewStatus?: string; reviewedBy?: string; reviewRef?: string } | undefined;
+  if (!e?.reviewStatus) return rel;
+  const freshDigests = JSON.stringify(rel.observed?.inputDigests ?? null);
+  const oldDigests = JSON.stringify((existing?.observed as { inputDigests?: unknown } | undefined)?.inputDigests ?? null);
+  if (freshDigests !== oldDigests) {
+    diagnostics.push({
+      code: "REVIEW_RESET_ON_CHANGED_SOURCE",
+      severity: "warning",
+      message: `Relation '${rel.id}' was '${e.reviewStatus}' but its pinned sources changed; review metadata is reset.`,
+      subject: { type: "record", id: rel.id },
+    });
+    return rel;
+  }
+  return { ...rel, lifecycle: { state: "ACTIVE", reviewStatus: e.reviewStatus as "unreviewed" | "reviewed" | "approved", ...(e.reviewedBy ? { reviewedBy: e.reviewedBy } : {}), ...(e.reviewRef ? { reviewRef: e.reviewRef } : {}) } };
 }
 
 function findExisting(data: KbStoreData | undefined, id: string): KbRecord | undefined {
@@ -243,14 +274,22 @@ export function runIngest(options: IngestOptions): IngestResult {
         });
         diagnostics.push(...bridge.diagnostics);
         skippedCapabilities.push(...bridge.skipped);
-        data.platform.push(...bridge.records);
+        for (const record of bridge.records) {
+          data.platform.push(carryReview(record, findExisting(options.existingStore, record.id), diagnostics));
+        }
       }
     }
   }
 
   // --- KB-2: manifest-driven metadata-only inventory ------------------------------------------
   if (resolved.uiInventory) {
-    const raw = fs.readFileSync(resolved.uiInventory.abs, "utf8");
+    let raw: string;
+    try {
+      raw = fs.readFileSync(resolved.uiInventory.abs, "utf8");
+    } catch (e) {
+      diagnostics.push({ code: "INPUT_UNREADABLE", severity: "error", message: `Resolved input '${resolved.uiInventory.key}' could not be read: ${(e as Error).name}.`, subject: { type: "input", id: resolved.uiInventory.key } });
+      raw = "";
+    }
     const parsed = parseRecordFile(raw);
     if (parsed.error) {
       diagnostics.push({ code: "INPUT_INVALID_JSON", severity: "error", message: `UI inventory '${resolved.uiInventory.key}': ${parsed.error}`, subject: { type: "input", id: resolved.uiInventory.key } });
@@ -266,7 +305,7 @@ export function runIngest(options: IngestOptions): IngestResult {
           lifecycle: normalizeLifecycle(base.lifecycle),
           observed: { scannedAt: options.scannedAt, inputDigests: { [key]: digest } },
         };
-        const shaped = carryReview(finishRecord(candidate as KbUiComponentRecord) as KbUiComponentRecord, findExisting(options.existingStore, (base as { id?: string }).id ?? ""));
+        const shaped = carryReview(finishRecord(candidate as KbUiComponentRecord) as KbUiComponentRecord, findExisting(options.existingStore, (base as { id?: string }).id ?? ""), diagnostics);
         data.ui.push(shaped);
       }
     }
@@ -274,7 +313,13 @@ export function runIngest(options: IngestOptions): IngestResult {
 
   // --- KB-3: sanitized/synthetic project records -----------------------------------------------
   for (const input of resolved.projectRecords) {
-    const raw = fs.readFileSync(input.abs, "utf8");
+    let raw: string;
+    try {
+      raw = fs.readFileSync(input.abs, "utf8");
+    } catch (e) {
+      diagnostics.push({ code: "INPUT_UNREADABLE", severity: "error", message: `Resolved input '${input.key}' could not be read: ${(e as Error).name}.`, subject: { type: "input", id: input.key } });
+      continue;
+    }
     const parsed = parseRecordFile(raw);
     if (parsed.error) {
       diagnostics.push({ code: "INPUT_INVALID_JSON", severity: "error", message: `Project records '${input.key}': ${parsed.error}`, subject: { type: "input", id: input.key } });
@@ -292,13 +337,19 @@ export function runIngest(options: IngestOptions): IngestResult {
       };
       const shaped = finishRecord(candidate as KbProjectRecord) as KbProjectRecord;
       const existing = findExisting(options.existingStore, shaped.id);
-      data.project.set(shaped.projectId, [...(data.project.get(shaped.projectId) ?? []), carryReview(shaped, existing)]);
+      data.project.set(shaped.projectId, [...(data.project.get(shaped.projectId) ?? []), carryReview(shaped, existing, diagnostics)]);
     }
   }
 
   // --- relations -------------------------------------------------------------------------------
   if (resolved.relations) {
-    const raw = fs.readFileSync(resolved.relations.abs, "utf8");
+    let raw: string;
+    try {
+      raw = fs.readFileSync(resolved.relations.abs, "utf8");
+    } catch (e) {
+      diagnostics.push({ code: "INPUT_UNREADABLE", severity: "error", message: `Resolved input '${resolved.relations.key}' could not be read: ${(e as Error).name}.`, subject: { type: "input", id: resolved.relations.key } });
+      raw = "";
+    }
     const parsed = parseRecordFile(raw);
     if (parsed.error) {
       diagnostics.push({ code: "INPUT_INVALID_JSON", severity: "error", message: `Relations '${resolved.relations.key}': ${parsed.error}`, subject: { type: "input", id: resolved.relations.key } });
@@ -315,7 +366,7 @@ export function runIngest(options: IngestOptions): IngestResult {
           observed: { scannedAt: options.scannedAt, inputDigests: { [key]: digest } },
         };
         const shaped = finishRecord(candidate as KbRelationRecord) as KbRelationRecord;
-        data.relations.push(shaped);
+        data.relations.push(carryRelationReview(shaped, findExisting(options.existingStore, shaped.id), diagnostics));
       }
     }
   }

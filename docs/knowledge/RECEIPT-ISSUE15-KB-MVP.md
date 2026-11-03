@@ -11,7 +11,7 @@ authorization.
 | Base | `main` @ `f44dcdc8487551e1f0a0cc6fe1a8fa2ef7064e56` (= `origin/main` at start, clean) |
 | Implementation tip | `ec9a7025fa67b1f8e674f990adae0b023767c4e8` |
 | Receipt commit | this commit (docs/skill additions only after the implementation tip) |
-| Gate | `npm test` = tsc strict build + **78/78 checks** (51 unchanged from #9: G1 suite, CLI T-15…T-22; + 27 KB checks KB-01…KB-27) |
+| Gate | `npm test` = tsc strict build + **79/79 checks** (51 unchanged from #9: G1 suite, CLI T-15…T-22; + 28 KB checks KB-01…KB-28) |
 | PR | Draft PR linked from issue #15 by the integrator; normal merge only, no auto-merge |
 | Concurrency | #14 (`NodeIR`/`PageStructure`) untouched — zero edits outside KB-owned paths plus the shared-cli additive extension points |
 
@@ -100,6 +100,29 @@ produce identical JSON (KB-20).
   not self-claim CI status before the run exists.
 - `attested` approval in the KB-3 example fixture is synthetic teaching data only — it satisfies
   no gate.
+
+## Independent review round applied (before push)
+
+A source-level review of the full diff (read-only agent, live CLI verification of leak claims)
+reported 4×P1 + 9×P2 findings; **all 13 were fixed on this branch** before pushing, with
+regressions added (KB-19/KB-25/KB-28 extensions):
+
+- **P1 relations lane bypassed KB-3 default-deny** — project-scoped edges are now KB-3 content:
+  unscoped relation queries return shared edges only (`PROJECT_SCOPED_RELATION_EXCLUDED`),
+  scoped queries exclude other projects (`CROSS_PROJECT_RECORD_EXCLUDED`).
+- **P1 ingest carried approvals onto changed content** — review carry-forward is digest-guarded;
+  changed sources reset to `unreviewed` with `REVIEW_RESET_ON_CHANGED_SOURCE` (KB-28).
+- **P1 re-ingest destroyed review metadata on KB-1/relations** — carry-forward now covers all
+  four lanes; `kb-relations.lifecycle` gained `reviewedBy`/`reviewRef` (schema README note 3).
+- **P1 cross-tenant diagnostics leak/availability coupling** — scoped queries now open only the
+  requested KB-3 partition; foreign corruption can neither leak into nor break another project's
+  query (KB-16 extension).
+- **P2s fixed:** raw-input echo removed from all parse diagnostics (content withheld);
+  `--dry-run` preview now loads the target store so carry-forward is faithful; deny-list
+  matching is case-insensitive; gateway-approved reads are failure-guarded (`INPUT_UNREADABLE`);
+  malformed `--root` and wrong-command flags are usage errors again (per-command flag
+  whitelists); `--include-lifecycle` values are validated; query hits carry real file/line
+  positions (surviving skipped invalid lines); descriptor drift comparison is key-order-safe.
 
 ## Protected boundaries observed
 
