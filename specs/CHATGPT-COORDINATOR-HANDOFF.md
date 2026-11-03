@@ -1,19 +1,28 @@
 # ACTIVE CHATGPT COORDINATOR HANDOFF — Design Engineering Toolkit
 
-## CURRENT COORDINATOR CHECKPOINT — 2026-11-03 (later) — #9 FIRST CLI GATE IMPLEMENTED (DRAFT, PENDING REVIEW)
+## LATEST #9 CHECKPOINT — 2026-11-03 — CLI IMPLEMENTED; CORRECTION_REQUIRED BEFORE MERGE
 
-> **NEWEST checkpoint.** Supersedes the status lines below for Issue #9 only; the #5/#7 integration truth below is unchanged. Live Git/GitHub still beats this file.
-
-**Issue [#9](https://github.com/thanhle74/design-engineering-toolkit/issues/9) first implementation gate is CODE-COMPLETE on branch `thanhle74/9-backlog-executable-cli-engine-via-claude-code` (draft PR, no auto-merge):**
-- TypeScript core graduated from the tested #5 harness to `src/core/` (parity: unchanged 30-check suite, identical hashes); `det` CLI (`validate`/`inspect`/`plan`) with deterministic JSON/exit codes; new independent `schemas/cli/` family (converter family untouched); out-of-process adapter runtime (4 explicit failure diagnostics); **read-only Magento Page Builder adapter** (composer.lock versions, config.php narrow reader, per-file `content_type/` globs, cross-module merge NOT_VERIFIED, widget.xml + DI registries with chrome/precision rule).
-- Gate: `npm test` = build + **44/44** checks (30 G1 + 14 new CLI/adapter incl. deny-list leakage, determinism, portability). Receipt: `docs/converter/RECEIPT-ISSUE9-CLI.md`; decisions ADR-009-001..009 in `docs/converter/DECISIONS.md`; agent skill `.claude/skills/det-cli/`.
-- **Live read-only audit of the Owner's local checkout** (gitignored profile, path never committed): 78 capabilities @ checkout HEAD `66aff1eb`, Magento CE 2.4.8-p5 / PB 2.2.6-p5, all `registered` ceiling with per-capability `NOT_VERIFIED` (declaration-only), two runs hash-identical, `env.php`/`auth.json` deny-listed. `ADMIN_ROUNDTRIP_VERIFIED`=0.
-- **NOT done / NOT claimed:** Figma access, structural mapping of a real design, CMS import, Admin round-trip, visual QA, Theme output, FE. Those remain separate gated stages needing explicit Owner GO.
-- **NEXT:** Owner/Coordinator review of the draft PR → merge GO; then the later-gate sequencing on issue #9 stays as written (G2 read-only design extraction first, separate GO).
+> **Live GitHub supersedes this snapshot.** [Issue #9](https://github.com/thanhle74/design-engineering-toolkit/issues/9) remains OPEN; [Draft PR #13](https://github.com/thanhle74/design-engineering-toolkit/pull/13) at `0c3afecafa3a8f0f6c999e4ccbce82c647b6f597` contains a real TypeScript `det` CLI (`validate/inspect/plan`), out-of-process Magento Page Builder read-only capability adapter, `schemas/cli`, synthetic fixtures and Claude Code `det-cli` skill. Integrator receipt claims 44/44, and Coordinator independently verified exact-tip GitHub Actions `contracts=SUCCESS`. **No Figma extraction, CMS imports, Admin round-trip or storefront QA.**
+>
+> **Coordinator verdict: `CORRECTION_REQUIRED`**, consolidated in [Issue #9 comment 6596713837](https://github.com/thanhle74/design-engineering-toolkit/issues/9#issuecomment-6596713837). Four bounded source findings: (F1/P0) `emit.ts` persists false `wroteFiles` and fails to propagate output write errors into JSON/exit; (F2/P0) adapter path guard checks relative strings but does not stop symlink file/dir escapes or explicit metadata exclusion; (F3/P1) `plan` does not cross-check binding map/registry project identities; (F4/P1) child streams lack output byte caps, raw stderr and descriptor entry traversal risk, and PR #13 needs a normal merge/reconciliation with newer `main` handoff.
+>
+> **NEXT:** Existing #9 Claude Code Integrator implements **one correction pass** directly on the owning PR branch, adds deterministic regressions, runs `npm test` and posts a final BASE→TIP receipt + exact remote checks in the SAME Issue. Coordinator reviews that exact tip and only then ACCEPT/merge/close #9 for first CLI gate. **No new issue, no full #5/#7 audit, no autonomous Figma/DB write.** Main remains stable until #9 passes.
 
 ---
 
-## HISTORICAL COORDINATOR CHECKPOINT — 2026-11-03 — #5/#7 FULLY INTEGRATED
+## NEWEST FIGMA NAMING CHECKPOINT — 2026-11-03 — DESKTOP FRAME 245:2 RENAMED
+
+> **Actual connected Figma read/write evidence.** File key `vNPtfBRpYM3PsExirVqhmt`, Figma page `Home page — Luxury`, source frame ID `245:2`. User explicitly asked to normalize the tree once #5 completed. The Figma plugin read verified 331 descendants (97 FRAME, 102 TEXT, 40 INSTANCE, 28 RECTANGLE, 52 VECTOR, 12 ELLIPSE); then applied **61 label-only changes** after validating all expected old names. **Source IDs, ancestry, child order, top-level section count and all frame geometry matched before/after**. No component instances, text contents, fills, media, or styles were intentionally mutated. No CMS/DB changes.
+>
+> Named top-level children: `SITE/AnnouncementBar`, `SITE/Header`, `SECTION/Hero/Primary`, `SECTION/BrandStatement`, `SECTION/Hero/Secondary`, `SECTION/FeaturedCollections`, `SECTION/FeaturedProducts`, `SECTION/CampaignEditorial`, `SECTION/Lookbook`, `SECTION/EditorialMosaic`, `SECTION/Craftsmanship`, `SECTION/ThePeople`, `SECTION/ProductSpotlight`, `SECTION/Newsletter`, `SITE/Footer`; root renamed to `PAGE/Home/Desktop`. Selected safe normal FRAME descendants renamed `SLOT/...` or `DECOR/...`. Deep instance children, shared-library components and text remain unchanged. **This is partial scoped semantic naming, not a claim that all 331 layers have been standardized.**
+>
+> **Semantic contract:** The converter must inventory every descendant, exclude true site header/footer chrome from Page Builder (but retain them in report), and derive responsibilities using structural/capability evidence rather than trusting name prefixes alone. The normalized Figma source remains a design only, **not evidence of any executable Page Builder converter**. Next code task #9 is still the first real CLI milestone; do not treat this as a GO for G2/G3/Figma→CMS writes. File naming contract: [FIGMA-NODE-SEMANTICS-AND-NAMING.md](FIGMA-NODE-SEMANTICS-AND-NAMING.md).
+>
+> **Next-session rule:** Do not rerun the 61-name rename or assume the old `s_header`, `s_hero` layer labels exist. Re-read live Figma if working with `245:2`; use immutable node IDs and current source version. Do not rename mobile `245:16` automatically — it is a separate scope.
+
+---
+
+## CURRENT COORDINATOR CHECKPOINT — 2026-11-03 — #5/#7 FULLY INTEGRATED
 
 > **CURRENT INTEGRATED TRUTH at this checkpoint.** This section supersedes older dated snapshots and stale PR/GO statements below. New sessions must still re-fetch live GitHub refs, Issue comments, CI and source before asserting status. This is not an authority to write to Figma, Magento CMS/DB or production.
 
