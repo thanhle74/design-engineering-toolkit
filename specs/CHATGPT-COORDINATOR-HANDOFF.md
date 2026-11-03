@@ -1,5 +1,11 @@
 # ACTIVE CHATGPT COORDINATOR HANDOFF — Design Engineering Toolkit
 
+## NEXT TRACKED EXECUTION — G2 Issue #14 (2026-11-03)
+
+**Task:** [#14 G2 Figma read-only structural extraction → NodeIR / PageStructure](https://github.com/thanhle74/design-engineering-toolkit/issues/14). This issue has a full scoped contract and test plan and is **READY_FOR_SYNTHETIC_IMPLEMENTATION**. First develop schemas/ports/semantic extraction and deterministic synthetic tests on #9 CLI. **Live Figma read of `245:2` requires explicit separate Owner GO**; no Figma rename, CMS/DB write, G3 importer or claim of live runtime proof. Reuse source fixture and latest Figma naming receipt (61 names), do not restart #5/#7/#9.
+
+---
+
 ## CURRENT COORDINATOR CHECKPOINT — 2026-11-03 — #9 CLI-FIRST MERGED/ACCEPTED
 
 > This **current** checkpoint supersedes the older dated #9 `CORRECTION_REQUIRED` section below. For any future status, fetch live GitHub Issues/PRs/CI first; a dated handoff is a locator, not a runtime truth.
