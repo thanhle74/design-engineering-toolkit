@@ -1,6 +1,20 @@
 # ACTIVE CHATGPT COORDINATOR HANDOFF — Design Engineering Toolkit
 
-## LATEST #9 CHECKPOINT — 2026-11-03 — CLI IMPLEMENTED; CORRECTION_REQUIRED BEFORE MERGE
+## CURRENT COORDINATOR CHECKPOINT — 2026-11-03 — #9 CLI-FIRST MERGED/ACCEPTED
+
+> This **current** checkpoint supersedes the older dated #9 `CORRECTION_REQUIRED` section below. For any future status, fetch live GitHub Issues/PRs/CI first; a dated handoff is a locator, not a runtime truth.
+
+- **Issue [#9](https://github.com/thanhle74/design-engineering-toolkit/issues/9) — CLI-first milestone REVIEW ACCEPTED and integrated.** [PR #13](https://github.com/thanhle74/design-engineering-toolkit/pull/13) merged into `main` as `5137893e67e76d8ea60bb14628552bd45d3925b2`, preserving the corrected tip `8d3e1ea88e2fe30925f9eafd3d649d6b15177f97` and prior main ancestry. The exact merged commit's [`contracts` CI run 41606269272](https://github.com/thanhle74/design-engineering-toolkit/actions/runs/41606269272) was **SUCCESS**; both exact-tip PR CI runs also SUCCESS. Worker 51/51 test receipt is source-correlated to `tests/cli-suite.mjs` T-19..T-22 and prior G1 tests.
+- **Coordinator independently reviewed correction F1–F4**, [final review comment](https://github.com/thanhle74/design-engineering-toolkit/issues/9#issuecomment-6599256843): receipt/exit honesty, guarded read-only realpath and symlink-escape checks, project identity fail-closed, bounded adapter streams/stderr handling and entry traversal rejection. Runtime `permissions.readOnly` is declarative, **NOT** an OS sandbox; no live CMS/Admin proof exists.
+- **What actually runs:** TypeScript/Node `det validate`, `det inspect`, `det plan`; platform-neutral deterministic core, versioned converter/CLI schemas, out-of-process read-only Magento Page Builder adapter, synthetic Magento-like and non-Magento fixture tests, Claude Code skill calling the same CLI. Live Magento audit receipt records **78 declared capabilities** on a local checkout, `registered` ceiling with `NOT_VERIFIED` semantics; these are not runtime-certified widgets.
+- **Not done and not authorized by this merge:** G2 Figma design-tree extraction into `NodeIR/PageStructure`, G3 isolated Magento CMS importer with true Admin Edit→Save→Reload evidence, G4 visual QA. No Theme/PLP/PDP/Header output, no FE, and no production modifications. Existing Figma `245:2` desktop layer-only normalization already happened (61 names) and **must not be rerun**; mobile `245:16` has not been renamed.
+- **NEXT single major milestone — G2 READ-ONLY Figma structural extraction**: connect the existing `det` pipeline to a Figma subtree source, create stable source identity and semantics under the existing `PAGE/SITE/SECTION/SLOT/DECOR` naming *with structural verification*, retain Header/Footer as reported chrome and exclude them from Page Builder CMS plans, produce G2 `NodeIR` and a deterministic `PageStructure` fixture/report, never write Figma. Require separate exact Owner GO before any live connected Figma access; design/contract work may be prepared independently. G3/G4 require their own gates. One focused task and one integrator; do not restart #5/#7/#9 reviews.
+
+**Compact status:** `#5=CLOSED_G1 | #7=CLOSED_SPEC | #9=CLI_MERGED_MAIN_5137893 | MERGED_CI=SUCCESS | NEXT=G2_FIGMA_READ_ONLY | FIGMA_WRITE=OFF | CMS_WRITE=OFF`.
+
+---
+
+## HISTORICAL #9 CHECKPOINT — 2026-11-03 — CLI IMPLEMENTED; CORRECTION_REQUIRED BEFORE MERGE
 
 > **Live GitHub supersedes this snapshot.** [Issue #9](https://github.com/thanhle74/design-engineering-toolkit/issues/9) remains OPEN; [Draft PR #13](https://github.com/thanhle74/design-engineering-toolkit/pull/13) at `0c3afecafa3a8f0f6c999e4ccbce82c647b6f597` contains a real TypeScript `det` CLI (`validate/inspect/plan`), out-of-process Magento Page Builder read-only capability adapter, `schemas/cli`, synthetic fixtures and Claude Code `det-cli` skill. Integrator receipt claims 44/44, and Coordinator independently verified exact-tip GitHub Actions `contracts=SUCCESS`. **No Figma extraction, CMS imports, Admin round-trip or storefront QA.**
 >
