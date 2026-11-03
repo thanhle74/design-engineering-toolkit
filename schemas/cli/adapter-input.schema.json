@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/adapter-input.schema.json",
+  "$comment": "Design Engineering Toolkit CLI family — AdapterInput. Major version 1. Per-run transport contract from the det core to an adapter subprocess (stdin, single JSON document). Transport only: converter payloads must never carry absolute filesystem paths (locator scheme whitelist), but the RUN needs to tell the adapter where the caller's checked-out source lives. Scopes bound the walk; the adapter must skip anything outside them (LOCATOR_OUT_OF_SCOPE) and any deny-listed surface (secrets, env/credential files).",
+  "title": "Design Engineering Toolkit — Adapter Input (transport)",
+  "type": "object",
+  "required": ["schemaVersion", "profileId", "platformId", "source"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "type": "integer", "const": 1 },
+    "profileId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "platformId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9.-]*$", "description": "Must be one of the adapter's declared platformIds (checked by core before spawn)." },
+    "source": {
+      "type": "object",
+      "required": ["sourceId", "path"],
+      "additionalProperties": false,
+      "properties": {
+        "sourceId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$", "description": "Profile-declared id; evidence locators in the returned registry reference it as source://<sourceId>/... ." },
+        "kind": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+        "path": { "type": "string", "minLength": 1, "description": "Caller-supplied project root, realpath-resolved by core. Runtime transport only — never persisted into a contract payload." },
+        "scopes": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "include": { "type": "array", "items": { "type": "string" }, "description": "Sorted, adapter-defined scope selectors bounding the walk." },
+            "exclude": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      }
+    },
+    "options": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Adapter-defined run options (open vocabulary). Nothing here may widen permissions beyond the profile's scopes or the deny list."
+    }
+  }
+}

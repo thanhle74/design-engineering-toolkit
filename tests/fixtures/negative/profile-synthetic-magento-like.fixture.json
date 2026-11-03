@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "profile": {
+    "id": "synthetic-magento-like",
+    "name": "Synthetic Magento-like (fixture project)",
+    "description": "Magento-shaped synthetic fixture proving the read-only adapter probe: per-file content types, config.php enablement, widget.xml + di.xml registries, deny-listed secret surfaces, scope-limited walk. The project-source path is a placeholder resolved per run via --project (tests point it at the committed fixture tree); a clean clone needs no owner path.",
+    "platformId": "magento-pagebuilder",
+    "projectSources": [
+      {
+        "sourceId": "magento-like-fixtures",
+        "kind": "fixture-checkout",
+        "path": "/path/to/magento-like-checkout",
+        "notes": "Placeholder sentinel — resolved per run via CLI/env/local override only."
+      }
+    ],
+    "scopes": [
+      {
+        "sourceId": "magento-like-fixtures",
+        "include": [
+          "app/code/Example",
+          "vendor/magento/module-page-builder"
+        ],
+        "exclude": []
+      }
+    ],
+    "gates": {
+      "responsiveDeterministicRequired": false
+    },
+    "safety": {
+      "approvedWriteTargets": [],
+      "notes": "Converter major 1 is read-only; write targets are unrepresentable by schema."
+    }
+  }
+}

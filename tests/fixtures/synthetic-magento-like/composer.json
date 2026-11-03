@@ -1,0 +1,8 @@
+{
+    "name": "example/magento-like-project",
+    "description": "Synthetic Magento-shaped fixture project for the read-only adapter probe (issue #9). Contains NO real client code, NO secrets (the planted env.php/auth.json hold inert markers used by the deny-list tests), NO absolute paths.",
+    "require": {
+        "magento/product-community-edition": "2.4.8-p5"
+    },
+    "type": "project"
+}

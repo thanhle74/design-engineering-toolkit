@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="custombanner">
+    <label translate="true">Custom Banner</label>
+    <appearances>
+        <appearance default="true" name="default"/>
+    </appearances>
+</type>

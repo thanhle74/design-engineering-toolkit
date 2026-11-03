@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <type name="Example\CustomWidgets\Model\Component\Registry">
+        <arguments>
+            <argument name="components" xsi:type="array">
+                <item name="hero_a" xsi:type="object">Example\CustomWidgets\Component\HeroA</item>
+                <item name="usp_a" xsi:type="object">Example\CustomWidgets\Component\UspA</item>
+                <item name="banner_a" xsi:type="object">Example\CustomWidgets\Component\BannerA</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Example\CustomWidgets\Model\Service">
+        <arguments>
+            <argument name="helper" xsi:type="object">Example\CustomWidgets\Helper\Data</argument>
+        </arguments>
+    </type>
+</config>

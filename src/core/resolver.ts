@@ -1,19 +1,42 @@
-// Minimal deterministic resolver used by the G1 negative-case test plan.
-// Scope (deliberate): binding-map validation + structure resolution against a pinned registry,
-// producing a ResolutionReport per schemas/converter/resolution-report.schema.json.
-// It resolves structure-section/element fixtures — a real NodeIR/PageStructure pipeline is G2 work.
-import { canonicalStringify, contentHash, sha256Hex, sortDiagnostics } from "./canonical.mjs";
-const cmp = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
+// Minimal deterministic resolver used by the G1 negative-case test plan — now the production
+// structural-mapping core (issue #9). Scope (deliberate): binding-map validation + structure
+// resolution against a pinned registry, producing a ResolutionReport per
+// schemas/converter/resolution-report.schema.json. It resolves structure-section/element
+// fixtures — a real NodeIR/PageStructure pipeline is G2 work.
+// Ported verbatim (logic-identical) from the #5 G1 harness (tests/lib/resolver.mjs); parity is
+// proven by the unchanged T-01..T-08 checks and the committed example hash comparison.
+import { canonicalStringify, contentHash, sha256Hex, sortDiagnostics } from "./canonical.js";
+import type {
+  Binding,
+  BindingMap,
+  Capability,
+  CapabilityCategory,
+  CapabilityRegistry,
+  Diagnostic,
+  DiagnosticSubjectType,
+  DiagnosticSeverity,
+  HarnessSection,
+  PageStructureHarness,
+  ResolutionReport,
+  SectionReport,
+} from "./types.js";
 
-const d = (code, severity, type, id, message) => ({ code, severity, message, subject: { type, id } });
+const cmp = (a: string, b: string) => (a < b ? -1 : a > b ? 1 : 0);
+
+const d = (code: string, severity: DiagnosticSeverity, type: DiagnosticSubjectType, id: string, message: string): Diagnostic => ({
+  code,
+  severity,
+  message,
+  subject: { type, id },
+});
 
 // ---- Binding-map validation -------------------------------------------------
-export function validateBindingMap(registry, map) {
-  const diags = [];
+export function validateBindingMap(registry: CapabilityRegistry, map: BindingMap): { valid: boolean; diagnostics: Diagnostic[] } {
+  const diags: Diagnostic[] = [];
   const caps = new Map(registry.capabilities.map((c) => [`${c.id}␟${c.appearanceId}`, c]));
   const ids = new Set(registry.capabilities.map((c) => c.id));
 
-  const tuples = new Map();
+  const tuples = new Map<string, Binding>();
   for (const b of map.bindings) {
     const tuple = [b.sourceComponentId, canonicalStringify(b.variantConditions), b.target.capabilityId, b.target.appearanceId].join("␟");
     if (tuples.has(tuple)) {
@@ -42,7 +65,7 @@ export function validateBindingMap(registry, map) {
   }
 
   // Ambiguity: same sourceComponentId with overlapping condition sets -> different targets.
-  const byComponent = new Map();
+  const byComponent = new Map<string, Binding[]>();
   for (const b of map.bindings) byComponent.set(b.sourceComponentId, [...(byComponent.get(b.sourceComponentId) ?? []), b]);
   for (const [component, list] of byComponent) {
     for (let i = 0; i < list.length; i++) {
@@ -56,15 +79,15 @@ export function validateBindingMap(registry, map) {
   return { valid: !diags.some((x) => x.severity === "error"), diagnostics: sortDiagnostics(diags) };
 }
 
-function sameTarget(a, b) {
+function sameTarget(a: { capabilityId: string; appearanceId: string }, b: { capabilityId: string; appearanceId: string }): boolean {
   return a.capabilityId === b.capabilityId && a.appearanceId === b.appearanceId;
 }
 
 // Overlap check: exists a hypothetical variant assignment satisfying both condition sets.
-function conditionsOverlap(a, b) {
-  const assignments = (conds) => {
+function conditionsOverlap(a: { prop: string; op?: string; value: string }[], b: { prop: string; op?: string; value: string }[]): boolean {
+  const assignments = (conds: { prop: string; op?: string; value: string }[]): [string, string][] | null => {
     if (conds.length === 0) return null; // null = matches everything
-    const out = [];
+    const out: [string, string][] = [];
     for (const c of conds) {
       const values = c.op === "in" ? c.value.split(",") : [c.value];
       if (c.op === "neq") return null; // conservative: treat neq as overlapping unless proven otherwise
@@ -82,20 +105,27 @@ function conditionsOverlap(a, b) {
   return false;
 }
 
-function matchesVariant(binding, assignment) {
+function matchesVariant(binding: Binding, assignment: Record<string, string> | undefined): boolean {
   for (const c of binding.variantConditions) {
-    const actual = assignment[c.prop];
+    const actual = assignment?.[c.prop];
     if (c.op === "eq" && actual !== c.value) return false;
     if (c.op === "neq" && actual === c.value) return false;
-    if (c.op === "in" && !c.value.split(",").includes(actual)) return false;
+    if (c.op === "in" && !c.value.split(",").includes(actual as string)) return false;
   }
   return true;
 }
 
 // ---- Nesting legality -------------------------------------------------------
-export function isNestingLegal(registry, parentCapId, parentAppearance, childCapId, childAppearance) {
-  const parent = registry.capabilities.find((c) => c.id === parentCapId && c.appearanceId === parentAppearance)
-    ?? registry.capabilities.find((c) => c.id === parentCapId);
+export function isNestingLegal(
+  registry: CapabilityRegistry,
+  parentCapId: string,
+  parentAppearance: string,
+  childCapId: string,
+  childAppearance: string
+): { legal: boolean; conflict: boolean } {
+  const parent =
+    registry.capabilities.find((c) => c.id === parentCapId && c.appearanceId === parentAppearance) ??
+    registry.capabilities.find((c) => c.id === parentCapId);
   if (!parent) return { legal: true, conflict: false }; // unknown parents are caught elsewhere
   let concreteHit = false;
   let allowedByPolicy = false;
@@ -108,9 +138,11 @@ export function isNestingLegal(registry, parentCapId, parentAppearance, childCap
       if (appOk) concreteHit = true;
     }
   }
-  const legal = (concreteHit || (allowedByPolicy && !deniedByPolicy && !(parent.allowedChildren ?? []).some((r) => r.policy === "deny-all"))) && !deniedByPolicy;
-  const child = registry.capabilities.find((c) => c.id === childCapId && c.appearanceId === childAppearance)
-    ?? registry.capabilities.find((c) => c.id === childCapId);
+  const legal =
+    (concreteHit || (allowedByPolicy && !deniedByPolicy && !(parent.allowedChildren ?? []).some((r) => r.policy === "deny-all"))) && !deniedByPolicy;
+  const child =
+    registry.capabilities.find((c) => c.id === childCapId && c.appearanceId === childAppearance) ??
+    registry.capabilities.find((c) => c.id === childCapId);
   let conflict = false;
   if (child && Array.isArray(child.allowedParents) && child.allowedParents.length > 0) {
     const permits = child.allowedParents.some((r) => (r.policy === "allow-all" && !(r.except ?? []).includes(parentCapId)) || r.capabilityId === parentCapId);
@@ -123,27 +155,36 @@ export function isNestingLegal(registry, parentCapId, parentAppearance, childCap
 // structure is the G1 harness fixture shape (see docs/converter/CONTRACTS.md §Harness):
 // { profileId, platformId, source, sections: [{ sectionId, order, name, elements: [{ elementId,
 //   sourceComponentId, variantAssignment, childrenElementIds }] }] }  (elements flat, document order)
-export function resolveStructure(registry, map, structure, options = {}) {
+export interface ResolveOptions {
+  gates?: { responsiveDeterministicRequired?: boolean };
+}
+
+export function resolveStructure(
+  registry: CapabilityRegistry,
+  map: BindingMap,
+  structure: PageStructureHarness,
+  options: ResolveOptions = {}
+): ResolutionReport {
   const bindingDiags = validateBindingMap(registry, map).diagnostics;
   const diags = [...bindingDiags];
-  const capsById = new Map();
+  const capsById = new Map<string, Capability>();
   for (const c of registry.capabilities) capsById.set(`${c.id}␟${c.appearanceId}`, c);
 
-  const bindingsFor = (componentId, assignment) => {
+  const bindingsFor = (componentId: string, assignment: Record<string, string> | undefined): Binding | null => {
     const candidates = map.bindings.filter((b) => b.sourceComponentId === componentId && matchesVariant(b, assignment ?? {}));
     return candidates.length === 1 ? candidates[0] : null;
   };
 
-  const elements = structure.sections.flatMap((s) => s.elements);
+  const elements = structure.sections.flatMap((s: HarnessSection) => s.elements);
   const byId = new Map(elements.map((e) => [e.elementId, e]));
-  const coverage = { native: 0, widget: 0, chrome: 0, "custom-required": 0, unsupported: 0 };
+  const coverage: Record<CapabilityCategory, number> = { native: 0, widget: 0, chrome: 0, "custom-required": 0, unsupported: 0 };
   let total = 0;
 
-  const sectionReports = structure.sections.map((section) => {
-    const sectionDiags = [];
+  const sectionReports: SectionReport[] = structure.sections.map((section): SectionReport => {
+    const sectionDiags: Diagnostic[] = [];
     let mapped = 0;
     let resolvedAny = false;
-    const unsupportedReasons = new Map();
+    const unsupportedReasons = new Map<string, { code: string; message: string }>();
 
     for (const el of section.elements) {
       const binding = bindingsFor(el.sourceComponentId, el.variantAssignment);
@@ -194,7 +235,7 @@ export function resolveStructure(registry, map, structure, options = {}) {
         : mapped < section.elements.length
           ? "partially-mapped"
           : "mapped";
-    const proofLevel = status === "mapped" && section.elements.length > 0 ? "structurally-mapped" : "registered";
+    const proofLevel = status === "mapped" && section.elements.length > 0 ? ("structurally-mapped" as const) : ("registered" as const);
     for (const sd of sectionDiags) diags.push(sd);
     if (status === "blocked") {
       for (const sd of sectionDiags.filter((x) => x.severity === "error")) unsupportedReasons.set(sd.code, { code: sd.code, message: sd.message });
@@ -209,7 +250,7 @@ export function resolveStructure(registry, map, structure, options = {}) {
       // G1 reports element-level coverage via the coverage counters.
       selected: null,
       unsupportedReasons: [...unsupportedReasons.values()].sort((a, b) => a.code.localeCompare(b.code)),
-      mappingConfidence: status === "mapped" ? "high" : status === "partially-mapped" ? "medium" : "low",
+      mappingConfidence: status === "mapped" ? ("high" as const) : status === "partially-mapped" ? ("medium" as const) : ("low" as const),
       proofLevel,
       evidence: [],
     };
@@ -229,9 +270,9 @@ export function resolveStructure(registry, map, structure, options = {}) {
   // proofStatus: the resolver only ever claims registered/structurally-mapped at G1, and its own
   // checks (binding validation, nesting legality, enabled targets) justify exactly that claim.
   // Any inequality here would be an EVIDENCE_MISSING hard reject — recomputed, not hardcoded.
-  const claimed = sectionReports.some((s) => s.proofLevel === "structurally-mapped") ? "structurally-mapped" : "registered";
+  const claimed = sectionReports.some((s) => s.proofLevel === "structurally-mapped") ? ("structurally-mapped" as const) : ("registered" as const);
   const justified = claimed; // justification recomputed above per section; G1 cannot exceed structurally-mapped
-  const report = {
+  const report: ResolutionReport = {
     schemaVersion: 1,
     profileId: structure.profileId,
     platformId: structure.platformId,
@@ -250,6 +291,6 @@ export function resolveStructure(registry, map, structure, options = {}) {
   return report;
 }
 
-export function canonicalReportHash(report) {
+export function canonicalReportHash(report: ResolutionReport): string {
   return sha256Hex(canonicalStringify({ ...report, generatedAt: undefined }));
 }

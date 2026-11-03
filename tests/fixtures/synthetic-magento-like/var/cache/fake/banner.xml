@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!-- DENIED-SURFACE FIXTURE: content-type-shaped file planted under var/ (deny list).
+     The adapter must NEVER read this file; the tests assert this marker never leaks:
+     DENIED_SURFACE_MARKER_never_read_5d4a2 -->
+<type name="should-never-appear">
+    <appearances>
+        <appearance name="leaked"/>
+    </appearances>
+</type>

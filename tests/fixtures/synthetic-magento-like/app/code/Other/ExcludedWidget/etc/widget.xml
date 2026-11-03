@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <widget id="out_of_scope_teaser" class="Other\ExcludedWidget\Block\Teaser">
+        <label translate="true">Out-of-scope teaser (profile include scopes exclude app/code/Other).</label>
+    </widget>
+</widgets>

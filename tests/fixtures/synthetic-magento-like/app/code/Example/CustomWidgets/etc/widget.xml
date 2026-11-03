@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <widget id="example_hero" class="Example\CustomWidgets\Block\Hero">
+        <label translate="true">Example Hero</label>
+        <description translate="true">Synthetic fixture widget.</description>
+        <parameters>
+            <parameter name="title" xsi:type="string" required="1" visible="true"/>
+            <parameter name="cta_url" xsi:type="string" visible="true"/>
+            <parameter name="items_count" xsi:type="number" visible="true"/>
+            <parameter name="show_price" xsi:type="boolean" visible="true"/>
+            <parameter name="product_conditions" xsi:type="block" required="1"/>
+        </parameters>
+    </widget>
+</widgets>

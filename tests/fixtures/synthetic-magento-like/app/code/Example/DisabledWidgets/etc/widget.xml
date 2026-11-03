@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <widget id="disabled_teaser" class="Example\DisabledWidgets\Block\Teaser">
+        <label translate="true">Disabled Teaser</label>
+        <parameters>
+            <parameter name="title" xsi:type="string" required="1" visible="true"/>
+        </parameters>
+    </widget>
+</widgets>

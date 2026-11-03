@@ -8,15 +8,22 @@ import path from "node:path";
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import Ajv from "ajv/dist/2020.js";
-import { canonicalStringify, contentHash, sha256Hex } from "./lib/canonical.mjs";
-import { resolveProjectSource, checkAdapterApplicable } from "./lib/preflight.mjs";
-import { validateBindingMap, resolveStructure, canonicalReportHash } from "./lib/resolver.mjs";
-import { validateRegistry } from "./lib/semantic.mjs";
+// Issue #9: the production core graduated from tests/lib to src/core (TypeScript, compiled to
+// dist/). The harness now tests the real production modules — parity was proven by these
+// checks passing unchanged against the ported implementation.
+import { canonicalStringify, contentHash, sha256Hex } from "../dist/src/core/canonical.js";
+import { resolveProjectSource, checkAdapterApplicable } from "../dist/src/core/preflight.js";
+import { validateBindingMap, resolveStructure, canonicalReportHash } from "../dist/src/core/resolver.js";
+import { validateRegistry } from "../dist/src/core/semantic.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const FIX = path.join(ROOT, "tests", "fixtures");
 const results = [];
 let failed = 0;
+// Issue #9: async checks (the CLI is promise-based; adapters are out-of-process). They run
+// after the sync suite and count into the same gate.
+const asyncChecks = [];
+const checkAsync = (id, name, fn) => asyncChecks.push({ id, name, fn });
 
 function check(id, name, fn) {
   try {
@@ -236,8 +243,10 @@ check("T-06e", "mismatched probe -> ADAPTER_NOT_APPLICABLE", () => {
 
 // ---- T-09: core-neutrality grep guard ----------------------------------------------------
 check("T-09", "neutrality guard: no platform literals/paths/figma-ids in neutral surfaces", () => {
-  // Neutral surfaces: schemas/converter/** and the synthetic fixtures.
+  // Neutral surfaces: schemas/converter/**, schemas/cli/** and the synthetic-flatcms fixtures.
   // V1 schemas are legitimately Figma-typed — scanned separately, only for non-Figma platform leakage.
+  // The synthetic-magento-like fixture tree is deliberately magento-shaped (it is the adapter
+  // fixture) and is covered by T-18b's owner-path/licensing scans instead.
   const neutralTerms = /magento|secomm|pagebuilder|hyva|slaunch|\/home\/|figma|filekey|vNPtfBRpYM3PsExirVqhmt/i;
   const v1Terms = /magento|secomm|pagebuilder|hyva|slaunch|\/home\//i;
   const hits = [];
@@ -247,6 +256,8 @@ check("T-09", "neutrality guard: no platform literals/paths/figma-ids in neutral
   };
   const convDir = path.join(ROOT, "schemas", "converter");
   for (const f of readdirSync(convDir).filter((f) => f.endsWith(".json"))) scanFile(`schemas/converter/${f}`, readFileSync(path.join(convDir, f), "utf8"), neutralTerms);
+  const cliDir = path.join(ROOT, "schemas", "cli");
+  for (const f of readdirSync(cliDir).filter((f) => f.endsWith(".json"))) scanFile(`schemas/cli/${f}`, readFileSync(path.join(cliDir, f), "utf8"), neutralTerms);
   const fixDir = path.join(ROOT, "tests", "fixtures", "synthetic-flatcms");
   for (const f of readdirSync(fixDir)) scanFile(`tests/fixtures/synthetic-flatcms/${f}`, readFileSync(path.join(fixDir, f), "utf8"), neutralTerms);
   for (const f of readdirSync(path.join(ROOT, "schemas")).filter((f) => f.endsWith(".schema.json"))) {
@@ -277,6 +288,19 @@ check("T-14b", "V1 examples validate against V1 schemas", () => {
   }
   return "3/3 V1 examples valid";
 });
+
+// ---- Issue #9 CLI + adapter suite (async) ------------------------------------------------
+const { default: registerCliSuite } = await import("./cli-suite.mjs");
+await registerCliSuite(checkAsync);
+for (const { id, name, fn } of asyncChecks) {
+  try {
+    const detail = await fn();
+    results.push({ id, name, ok: true, detail: detail ?? "" });
+  } catch (e) {
+    failed++;
+    results.push({ id, name, ok: false, detail: String(e.message || e) });
+  }
+}
 
 // ---- Report ------------------------------------------------------------------------------
 console.log("Design Engineering Toolkit — contract test gate");
