@@ -99,3 +99,25 @@ All four start concurrently, read-only. Exactly one **[5] Integrator** merges fi
 - One integrator receipt, PR remains draft until Owner review.
 
 **Exit:** `READY_FOR_COORDINATOR_ARCHITECTURE_REVIEW`. **Do not start G2–G4 without GO.**
+
+## 8. Task naming / Orca traceability (normative)
+
+**Task label format:** `[<GitHub issue number>] <clear task title>`; apply to Orca tasks, worker names, worktrees/branches if useful, receipts, and reports. **For THIS issue** the prefix is `[5]` because its GitHub Issue number is 5; **it is not a phase, release or version**.
+
+Examples: `[5] W-A — OSS research`, `[5] W-B — Page Builder capability audit`, `[5] W-C — Core contracts`, `[5] W-D — Repository hygiene`, `[5] Integrator — Architecture SSOT`.
+
+For future work, resolve the issue ID from the selected work item (e.g., issue #17 → `[17]`) rather than leaving `[5]` hardcoded in reusable scripts, generators, skill templates or CI.
+
+## 9. Local development checkout vs portable shared toolkit (normative)
+
+`/home/thanhle/Sites/Magento/slaunchpad` is **ONLY the current owner's machine-local checkout to inspect/build/test the first Magento adapter**. It is **not** the toolkit install path, default source path, generated artifact path, or a requirement for any other user. Do not assume other users own `/home/thanhle`, the SLAUNCH repository, or Magento at all.
+
+- Core runtime must work without any local Magento checkout, without any Figma credentials during G1, and without the SLAUNCH project profile.
+- Accept optional adapter paths via **per-run CLI flag, environment variable, or local project profile**, with a documented precedence; validate existence/access/required files and show an actionable diagnostic when absent. Never silently fall back to this owner's path.
+- The Magento adapter may discover **a caller-provided path or conventional working directory**, but may not scan arbitrary home directories, create a project, install dependencies, or mutate the checkout during detection.
+- Local profile examples may show the owner's path as an **illustrative value only**, never as a portable default. Committed examples use placeholders such as `/path/to/magento-project`; **ignore local profile overrides in VCS**.
+- Use a second synthetic non-Magento project/profile in tests to prove there is no Magento/Figma/Secomm source path coupling.
+- Path-related error states: `PROJECT_SOURCE_NOT_CONFIGURED`, `PROJECT_SOURCE_NOT_FOUND`, `ADAPTER_NOT_APPLICABLE`, `PROJECT_SOURCE_NOT_READABLE` — no fabricated successful audit.
+- Record the path actually used in local receipts **without recording secrets, user files or sensitive configuration contents**. Never commit `app/etc/env.php`, `auth.json`, local DB credentials or personal home-directory data.
+
+**Multi-project portability gate:** a clean clone on a different machine with no `/home/thanhle` path must load the toolkit's generic contracts/tests; platform-specific audits run only when an appropriate project source is explicitly supplied. This is a prerequisite for G1 acceptance.
