@@ -22,6 +22,18 @@ Start here:
 
 **Portability:** `/home/thanhle/Sites/Magento/slaunchpad` is only the Owner's current local checkout used to develop the first adapter; it is **not** a toolkit dependency or a default path. Future users provide their **own** checkout/profile or use the generic core without Magento.
 
+## Shared Product Architecture and Knowledge Foundation
+
+- [Product scope — Page Builder first, Theme later](specs/PRODUCT-ARCHITECTURE-AND-SCOPE.md): approved product direction and exact boundaries.
+- [Modular Monolith + adapters](specs/MODULAR-ARCHITECTURE-AND-ADAPTERS.md): one CLI core, bounded platform adapters and stage evidence.
+- [Three knowledge domains](specs/knowledge-foundation/README.md) — **architecture/specs only**, not working ingestion yet. [Technology ADR](specs/knowledge-foundation/TECH-ADR.md) recommends TypeScript/Node and JSONL + derived SQLite FTS5 for later implementation.
+- [Figma node naming](specs/FIGMA-NODE-SEMANTICS-AND-NAMING.md): root-tree inventory and Page Builder-vs-Theme semantics.
+- [ChatGPT Coordinator handoff](specs/CHATGPT-COORDINATOR-HANDOFF.md): live GitHub-first session restore.
+- [Executable CLI Issue #9](https://github.com/thanhle74/design-engineering-toolkit/issues/9) — **backlog pending separate implementation GO**.
+- [SEO Writer Engine selective lessons](docs/research/seo-writer-engine-patterns-for-toolkit.md) — reuse architectural/workflow principles, not SEO business logic.
+
+**Proof boundary:** #5 G1 contracts/CI do not prove Figma extraction, CMS Admin round-trip or visual fidelity; #7 delivers knowledge **contracts**, not working knowledge ingestion. Merging specs grants no Figma/Magento write authority.
+
 ## Existing V1 architecture and manual pilot
 
 **V1 intent:** Discover Figma style guide → normalize versioned design tokens/components → compose an editable Figma page into an approved destination → visual QA receipt.
