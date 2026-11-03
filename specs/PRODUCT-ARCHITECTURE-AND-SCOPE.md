@@ -2,6 +2,7 @@
 
 **Status:** OWNER DIRECTION / cross-project scope contract · **Date:** 2026-11-03  
 **Applies to:** future products built with this toolkit; scoped technical implementation still requires its own issue/spec, evidence and GO.  
+**New-session Coordinator bootstrap:** [CHATGPT-COORDINATOR-HANDOFF.md](CHATGPT-COORDINATOR-HANDOFF.md) — read before coordinating work; live GitHub/refs override dated snapshots.  
 **Related work:** [#5 Capability/Structural Architecture](https://github.com/thanhle74/design-engineering-toolkit/issues/5), [#7 Knowledge Foundation](https://github.com/thanhle74/design-engineering-toolkit/issues/7), [Slaunchpad #42](https://github.com/thanhle74/slaunchpad/issues/42), [#32](https://github.com/thanhle74/slaunchpad/issues/32).
 
 > **Current delivery priority:** implement the **Figma → editable Magento Page Builder** path for CMS pages **FIRST**. Everything else below is explicitly longer-term architecture, not a requirement to implement now. #5 and #7 are running independently; do not interrupt or silently expand their current work.
