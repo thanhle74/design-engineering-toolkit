@@ -203,3 +203,9 @@ Figma file/node JSON (read-only, scoped + source version)
 For every proposed section record at least: `sourceFileVersion`, `sourceNodeIds`, observed topology/geometry, inferred semantic role, required data/interaction, selected capability + proof status, editability, responsive assumptions, unhandled properties, confidence, diagnostics and later CMS artifact reference.
 
 **Explicit non-goal now:** This section is a **future extractor spec**, not a request to access Figma or start #5/#7 workers, and not permission to implement the exporter, Page Builder importer or Theme Pipeline. Complete current knowledge/architecture gates first, then open a bounded design-read-only integration task with an explicit Owner GO.
+
+## 11. Shared Figma layer naming & semantic roles (Owner decision)
+
+For future Figma **creation** and Figma → Page Builder **conversion**, follow [FIGMA-NODE-SEMANTICS-AND-NAMING.md](FIGMA-NODE-SEMANTICS-AND-NAMING.md): identity `fileKey + nodeId + sourceVersion` is immutable; names such as `PAGE/Home/Desktop`, `SITE/Header`, `SECTION/Hero`, `COMPONENT/ProductCard` and `SLOT/CTA` are human-readable semantic labels, not conversion authority. Inventory all selected descendants but emit only CMS-owned content to Page Builder; show every excluded/ambiguous node in the mapping report.
+
+**After #5 is finished and accepted**, an Owner-approved **name-only** Figma pass may standardize labels under `node-id=245-2`. First deliver a per-node old→new manifest with risk/consumer checks; no editing frozen Figma before explicit GO; preserve IDs, hierarchy, layout, published component API, media, rendering and evidence. This is *not* part of current #5/#7 work.
