@@ -49,7 +49,7 @@ The same real-world capability may appear in multiple KBs. Exactly **one** recor
 
 - KB-1 owns *capabilities* (what the system can do, including rendering a widget/content type).
 - KB-2 owns *UI composition units* (what a builder composes with) across three distinct sources.
-- A `Secomm_UiWidget` component is **both**: its rendering capability is a KB-1 record; its composition surface (variants/slots/semantics) is a KB-2 record; the two link via `providedBy`/`implements` (§3), and equivalent composition units across the three UI sources link via `mapsTo` — they are **never** counted three times as three capabilities.
+- A `Secomm_UiWidget` component is **both**: its rendering capability is a KB-1 record; its composition surface (variants/slots/semantics) is a KB-2 record; the two link via `providedBy`/`implements` (§3), and equivalent components **within the same editability/capability class** link via `mapsTo`/`equivalentOf`; Page Builder native vs developer-owned Hyvä/UiWidget connects via `neighborOf` only. They are **never** counted three times as three executable capabilities.
 
 ---
 
@@ -120,7 +120,7 @@ Typed, directed, evidence-carrying edges. Every edge records `{type, from, to, e
 | `requires` | A → B: A cannot function without B (hard prerequisite) | n:m |
 | `providedBy` | A → B: capability A is provided by platform element B (module, package, service) | n:1 |
 | `implements` | A → B: A actually delivers the business function B describes (evidence-backed) | n:m |
-| `mapsTo` | A → B: UI-side correspondence (Hyvä UI ↔ `Secomm_UiWidget` ↔ Page Builder native; design concept ↔ component) | n:m |
+| `mapsTo` | A → B: UI-side correspondence **within the same capability/editability class** (e.g. Hyvä UI ↔ `Secomm_UiWidget` component variants; design-intent correspondence that does not imply functionality). Across developer-owned UI and Page Builder-native merchant-editable classes use `neighborOf`, NOT `mapsTo`. | n:m |
 | `compatibleWith` | A → B: verified to work together in a declared environment | n:m |
 | `conflictsWith` | A → B: cannot coexist, or degrades, in a declared environment | n:m |
 | `dependsOn` | A → B: soft dependency (optional enhancement, graceful degradation) | n:m |
@@ -141,7 +141,7 @@ Typed, directed, evidence-carrying edges. Every edge records `{type, from, to, e
 
 **UI appearance is not business functionality.** `mapsTo` never implies `implements`:
 
-- A Page Builder `banner` with a "poster" appearance **mapsTo** a Hyvä UI banner composition — that says nothing about whether checkout, pricing, inventory, or campaign logic works.
+- A Page Builder `banner` with a "poster" appearance is **`neighborOf`** a Hyvä UI banner composition (different editability/capability classes). This does not imply the Hyvä component is merchant-editable or that checkout, pricing, inventory, or campaign logic works.
 - Only `implements` edges — which require `TESTED`-level or explicitly `DETECTED`-with-source evidence of the business behavior — may back statements like "the system supports flash-sale pricing".
 - Planners and queries that answer "can we build X?" must decompose X into functional requirements (KB-3) and match them against `implements` evidence in KB-1, using `mapsTo` only for **composition** reuse. A plan built on `mapsTo` alone must be labeled `APPEARANCE_ONLY`.
 
@@ -170,7 +170,7 @@ Every ingestion is defined by a plan: `{sourceId, adapterKind, allowRoots[], den
 ### 4.3 Incremental sync & dedupe
 
 - Sync is digest-driven: records pin `inputDigests`; a changed digest marks dependents `STALE` (§2.4). Unchanged digests are never re-parsed.
-- Duplicate resolution: same `nativeId` within one source namespace → **update** the record (new `observed`, keep ID); same semantic unit in **different** sources → separate records + `mapsTo`/`equivalentOf` edges (never merge silently).
+- Duplicate resolution: same `nativeId` within one source namespace → **update** the record (new `observed`, keep ID); same semantic unit in **different** sources → separate records + `mapsTo`/`equivalentOf` edges only WITHIN one capability/editability class; use `neighborOf` across classes (never merge silently).
 - Authoritative vs inferred: every record declares `factuality: authoritative | inferred`. Adapter-read declarations are authoritative; cross-source guesses are inferred and never override an authoritative record on merge.
 
 ### 4.4 Re-audit triggers
@@ -284,7 +284,7 @@ On denial: emit diagnostic `DENIED_PATH_SKIPPED {path}` and continue — fail-op
 
 ### 8.3 Licensing gates
 
-- Licensed packages (Hyvä UI is the known case): records hold **identifiers, versions, file-path pointers, counts, capability semantics in neutral language, license facts** — never source, templates, rendered markup, assets, or license keys. `UIInventoryAdapter` output is schema-bounded to metadata (see `kb-ui-component.schema.json`).
+- Licensed packages (Hyvä UI is the known case): records hold **identifiers, versions, file-path pointers, counts, capability semantics in neutral language, license facts** — never source, templates, rendered markup, assets, or license keys. `UIInventoryAdapter` output has metadata-only fields (see `kb-ui-component.schema.json`), but free-text properties still require explicit runtime sanitization, size/character limits, and anti-source-code/secret leakage checks at ingestion AND export; schema structure alone cannot prove licensed bytes never appear.
 - Derived artifacts (plans, specs, documentation) may cite the package only via provenance pointers; before any derived artifact leaves the owner's environment, `licenseStatus` gates apply (V1 gate G5 semantics).
 - Client content in KB-3 must be sanitized before it may appear in this public repo: examples in the toolkit are **synthetic**; real client material stays in the project's private store.
 
