@@ -2,7 +2,7 @@
 
 Versioned, **platform-neutral** contracts for the converter pipeline
 (*Capability Registry → Structural Mapping → Functional Round-trip → Visual Fidelity*, [Issue #5](https://github.com/thanhle74/design-engineering-toolkit/issues) #5 spec: [`specs/ISSUE-5-converter-architecture.md`](../../specs/ISSUE-5-converter-architecture.md)).
-Field definitions for the two **deferred** contracts (`NodeIR`, `PageStructure`) and the `DesignSourcePort` interface live in [`docs/converter/CONTRACTS.md`](../../docs/converter/CONTRACTS.md).
+Field definitions and the G2 materialization record for `NodeIR`, `PageStructure`, `SourceReview` and the `DesignSourcePort` interface live in [`docs/converter/CONTRACTS.md`](../../docs/converter/CONTRACTS.md).
 
 ## Schemas (all Draft 2020-12)
 
@@ -12,6 +12,9 @@ Field definitions for the two **deferred** contracts (`NodeIR`, `PageStructure`)
 | [`capability-registry.schema.json`](capability-registry.schema.json) | Adapter capability probe (read-only) | Resolver; humans reviewing platform coverage |
 | [`component-binding-map.schema.json`](component-binding-map.schema.json) | Authored per project | Resolver |
 | [`resolution-report.schema.json`](resolution-report.schema.json) | Resolver | Stage checkpoints; negative-case tests |
+| [`node-ir.schema.json`](node-ir.schema.json) | `det extract` (G2 design-source extraction) | Structural mapping; humans reviewing the source inventory |
+| [`page-structure.schema.json`](page-structure.schema.json) | `det extract` (G2 structural plan) | `det plan` (additive dual input); later gated serializer stage |
+| [`source-review.schema.json`](source-review.schema.json) | `det extract` (G2 accountability report) | Humans reviewing classification/exclusions; gate evidence |
 | [`common.defs.json`](common.defs.json) | — | Shared `$defs` for the whole family |
 
 Worked examples: [`examples/converter/`](../../examples/converter/) (a real-platform registry derived from the [5] W-B audit, and a resolver report) and `tests/fixtures/synthetic-flatcms/` (a synthetic second platform proving core neutrality). The V1 family ([`../`](../)) stays frozen at its own major — the families are independent (ADR-005-011).
@@ -26,6 +29,7 @@ Worked examples: [`examples/converter/`](../../examples/converter/) (a real-plat
 | Version | Change |
 |---|---|
 | 1.0.0 | Initial family (issue [#5] architecture pass): profile, registry, binding map, report + shared defs. `NodeIR`/`PageStructure` are field-documented in CONTRACTS.md and materialize at the Structural Mapping gate (ADR-005-013). |
+| 1.1.0 | Structural Mapping gate materialized (issue [#14], synthetic design source only): new `node-ir`, `page-structure`, `source-review` payloads + worked examples; `det plan` additively accepts real `PageStructure` next to the G1 harness shape. Additive only — no existing payload, enum or code changed; the closed 21-code diagnostic registry is untouched (G2 reuses existing codes). Materialization deltas recorded in CONTRACTS.md §6. |
 
 ## Closed vs open vocabularies (normative)
 
@@ -44,6 +48,14 @@ Every enum below is **closed**: adding a value is a breaking change (new major +
 | transform `transform` | `identity, map, template, constant, omit` | closed |
 | report/section `status` | `mapped, partially-mapped, unmapped, blocked` | closed |
 | `mappingConfidence` | `high, medium, low` | closed |
+| NodeIR node `kind` | `page-section, container, component, text, media, icon, divider, spacer, unknown` | closed |
+| NodeIR layout `direction` | `row, column, grid, absolute, unknown` | closed |
+| NodeIR layout `positioning` | `static, relative, absolute, sticky, unknown` | closed |
+| NodeIR layout `overflow` | `visible, hidden, scroll, unknown` | closed |
+| layout constraint `axis` | `x, y, width, height` | closed |
+| content slot `kind` | `text, media, icon, component, dynamic` | closed |
+| review `semanticClass` | `SITE_CHROME, EDITORIAL_SECTION, SHARED_COMPONENT, PRESENTATIONAL, UNKNOWN_OR_AMBIGUOUS` | closed |
+| review `disposition` | `MAPPED, EXCLUDED_WITH_REASON, DECORATION_MERGED, REFERENCE_ONLY, NEEDS_REVIEW` | closed |
 | prop `type` | `string, number, boolean, enum, color, length, json, reference, unknown` | closed |
 | capability/prop/provider/scope id strings | adapter-documented formation rules | open (pattern-constrained) |
 | `dataContext.dataSources`, `editorRestrictions`, `responsiveRules.scope/effect` | adapter vocabulary | open |

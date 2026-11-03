@@ -7,8 +7,8 @@ export interface ParsedArgs {
 }
 
 const BOOL_FLAGS = new Set(["help", "h", "version", "json", "dry-run", "quiet"]);
-const VALUE_FLAGS = new Set(["profile", "adapter", "project", "out", "input", "registry", "bindings"]);
-const COMMANDS = new Set(["validate", "inspect", "plan"]);
+const VALUE_FLAGS = new Set(["profile", "adapter", "project", "out", "input", "registry", "bindings", "design-file", "design-node"]);
+const COMMANDS = new Set(["validate", "inspect", "plan", "extract"]);
 
 export function parseArgs(argv: string[]): ParsedArgs {
   const out: ParsedArgs = { command: null, flags: {}, errors: [] };
@@ -51,7 +51,7 @@ export function parseArgs(argv: string[]): ParsedArgs {
     }
     if (out.command !== null) out.errors.push(`unexpected positional argument '${tok}'`);
     else if (COMMANDS.has(tok)) out.command = tok;
-    else out.errors.push(`unknown command '${tok}' (expected validate|inspect|plan)`);
+    else out.errors.push(`unknown command '${tok}' (expected validate|inspect|plan|extract)`);
     i++;
   }
   return out;

@@ -248,3 +248,179 @@ export interface ConverterProfile {
     safety: { approvedWriteTargets: never[]; notes?: string };
   };
 }
+
+// --- G2: design-source structural extraction (schemas/converter/node-ir|page-structure|source-review, major 1) ---
+// Materialized at the Structural Mapping gate (issue #14). Same discipline as above: the JSON
+// Schemas stay canonical (ajv); these types let the core stay type-checked against what it emits.
+
+export type NodeIRKind = "page-section" | "container" | "component" | "text" | "media" | "icon" | "divider" | "spacer" | "unknown";
+
+export interface LayoutConstraint {
+  axis: "x" | "y" | "width" | "height";
+  type: string;
+  value: string;
+}
+
+export interface LayoutRelativeSize {
+  target: string;
+  ratio: number;
+}
+
+export interface NodeIRLayout {
+  direction: "row" | "column" | "grid" | "absolute" | "unknown";
+  positioning: "static" | "relative" | "absolute" | "sticky" | "unknown";
+  constraints: LayoutConstraint[];
+  relativeSizes: LayoutRelativeSize[];
+  overflow: "visible" | "hidden" | "scroll" | "unknown";
+}
+
+export type ContentSlotKind = "text" | "media" | "icon" | "component" | "dynamic";
+
+export interface NodeIRSlot {
+  slotId: string;
+  kind: ContentSlotKind;
+  valueRef: string;
+  evidence?: SourceEvidence;
+  method?: string;
+}
+
+export interface NodeIRNode {
+  nodeId: string;
+  kind: NodeIRKind;
+  name: string;
+  role?: string;
+  visible?: boolean;
+  childrenNodeIds: string[];
+  parentNodeId: string | null;
+  componentRefNodeId?: string;
+  layout: NodeIRLayout;
+  contentSlots?: NodeIRSlot[];
+  sourceEvidence: SourceEvidence[];
+}
+
+export interface NodeIR {
+  schemaVersion: number;
+  profileId: string;
+  generatedAt: string;
+  source: SourceRevision;
+  rootNodeId: string;
+  nodes: NodeIRNode[];
+  diagnostics: Diagnostic[];
+}
+
+export interface PageStructureInputPins {
+  nodeIrContentHash: string;
+  registryRevisionId?: string;
+  bindingMapContentHash?: string;
+}
+
+export interface PageStructureSlot {
+  slotId: string;
+  contentType: "text" | "media" | "icon" | "dynamic";
+  valueRef?: string;
+  aliasRef?: string;
+  fixtureRef?: string;
+}
+
+export interface ResponsiveComposition {
+  scope: string;
+  effect: string;
+}
+
+export interface ElementResolution {
+  status: SectionStatus;
+  mappingConfidence: "high" | "medium" | "low";
+  diagnostics: Diagnostic[];
+}
+
+export interface PageStructureElement {
+  elementId: string;
+  sourceComponentId?: string;
+  variantAssignment?: Record<string, string>;
+  bindingId?: string;
+  target?: { capabilityId: string; appearanceId: string };
+  contentSlots?: PageStructureSlot[];
+  responsiveComposition?: ResponsiveComposition[];
+  childrenElementIds?: string[];
+  resolution: ElementResolution;
+}
+
+export interface PageStructureSection {
+  sectionId: string;
+  order: number;
+  name: string;
+  role?: string;
+  layout: NodeIRLayout;
+  elements: PageStructureElement[];
+  sourceEvidence: SourceEvidence[];
+}
+
+export interface PageStructure {
+  schemaVersion: number;
+  profileId: string;
+  generatedAt: string;
+  source: SourceRevision;
+  inputs: PageStructureInputPins;
+  sections: PageStructureSection[];
+  diagnostics: Diagnostic[];
+}
+
+export type SemanticClass = "SITE_CHROME" | "EDITORIAL_SECTION" | "SHARED_COMPONENT" | "PRESENTATIONAL" | "UNKNOWN_OR_AMBIGUOUS";
+export type ReviewDisposition = "MAPPED" | "EXCLUDED_WITH_REASON" | "DECORATION_MERGED" | "REFERENCE_ONLY" | "NEEDS_REVIEW";
+
+export interface ProvisionalTarget {
+  category: CapabilityCategory;
+  requiresRuntimeData?: boolean;
+  capabilityIds?: string[];
+}
+
+export interface SourceReviewEntry {
+  nodeId: string;
+  semanticClass: SemanticClass;
+  disposition: ReviewDisposition;
+  reason: string;
+  nameHint?: string;
+  sectionId?: string;
+  provisionalTarget?: ProvisionalTarget;
+  evidence?: SourceEvidence[];
+}
+
+export interface SourceReviewCounts {
+  total: number;
+  byClass: Record<SemanticClass, number>;
+  byDisposition: Record<ReviewDisposition, number>;
+}
+
+export interface SourceReview {
+  schemaVersion: number;
+  profileId: string;
+  generatedAt: string;
+  source: SourceRevision;
+  inputs: { nodeIrContentHash: string };
+  counts: SourceReviewCounts;
+  entries: SourceReviewEntry[];
+  diagnostics: Diagnostic[];
+}
+
+// --- G2: design-source transport snapshot (schemas/cli/design-source-snapshot, major 1) ---
+// Adapter-defined (open) vocabulary; the core's extractor maps it onto the closed enums above.
+
+export interface DesignSourceSnapshotNode {
+  locator: string;
+  kind: string;
+  name: string;
+  visible?: boolean;
+  componentRef?: string;
+  properties?: Record<string, unknown>;
+  children: string[];
+}
+
+export interface DesignSourceSnapshot {
+  schemaVersion: number;
+  sourceId: string;
+  providerId?: string;
+  revisionId: string;
+  accessedAt: string;
+  rootLocator: string;
+  nodes: DesignSourceSnapshotNode[];
+}

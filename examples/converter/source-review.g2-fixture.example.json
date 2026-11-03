@@ -1,0 +1,490 @@
+{
+  "schemaVersion": 1,
+  "profileId": "g2-design-fixture",
+  "generatedAt": "2026-11-03T09:50:05.261Z",
+  "source": {
+    "sourceId": "g2-fixture-source",
+    "revisionId": "g2-fixture-rev-0001",
+    "accessedAt": "2026-11-03T09:50:05.250Z"
+  },
+  "inputs": {
+    "nodeIrContentHash": "425028ef84eb7b3c23d1d9d9e60110a9fa9c736c27aa7b2a529c04fd9ec93207"
+  },
+  "counts": {
+    "total": 25,
+    "byClass": {
+      "SITE_CHROME": 3,
+      "EDITORIAL_SECTION": 11,
+      "SHARED_COMPONENT": 6,
+      "PRESENTATIONAL": 2,
+      "UNKNOWN_OR_AMBIGUOUS": 3
+    },
+    "byDisposition": {
+      "MAPPED": 11,
+      "EXCLUDED_WITH_REASON": 5,
+      "DECORATION_MERGED": 2,
+      "REFERENCE_ONLY": 3,
+      "NEEDS_REVIEW": 4
+    }
+  },
+  "entries": [
+    {
+      "nodeId": "n-0e023190f389",
+      "semanticClass": "EDITORIAL_SECTION",
+      "disposition": "MAPPED",
+      "reason": "Structural content within its section. Naming hint 'SECTION/' weighed as evidence, not proof.",
+      "nameHint": "SECTION",
+      "sectionId": "s-388fdf889bf5",
+      "evidence": [
+        {
+          "evidenceId": "e-bcfc292a4ce5",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:15",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-34299cf5ce3f",
+      "semanticClass": "SHARED_COMPONENT",
+      "disposition": "NEEDS_REVIEW",
+      "reason": "Component reference '900:1' does not resolve to an inventoried component definition (external library or invalid).",
+      "sectionId": "s-29b84e9c3e67",
+      "provisionalTarget": {
+        "category": "custom-required"
+      },
+      "evidence": [
+        {
+          "evidenceId": "e-83f614e2c5ee",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:25",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-44d373a36b18",
+      "semanticClass": "SHARED_COMPONENT",
+      "disposition": "REFERENCE_ONLY",
+      "reason": "Part of a shared component definition asset (realized through its instances). Naming hint 'SLOT/' weighed as evidence, not proof.",
+      "nameHint": "SLOT",
+      "evidence": [
+        {
+          "evidenceId": "e-96d181309a30",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:19",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-49613ee131ac",
+      "semanticClass": "EDITORIAL_SECTION",
+      "disposition": "MAPPED",
+      "reason": "Top-level editorial section (naming hint + container evidence) \u2014 planned as a PageStructure section. Naming hint 'SECTION/' weighed as evidence, not proof.",
+      "nameHint": "SECTION",
+      "sectionId": "s-2f529a4dc159",
+      "evidence": [
+        {
+          "evidenceId": "e-0204f0c2172b",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:5",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-65b5ce49c5bb",
+      "semanticClass": "UNKNOWN_OR_AMBIGUOUS",
+      "disposition": "NEEDS_REVIEW",
+      "reason": "Inside an ambiguous top-level subtree: site chrome vs editorial content is undecidable from available evidence \u2014 human decision required. Naming hint 'SLOT/' weighed as evidence, not proof.",
+      "nameHint": "SLOT",
+      "evidence": [
+        {
+          "evidenceId": "e-a0b19a7c5041",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:26",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-70609da0fab1",
+      "semanticClass": "EDITORIAL_SECTION",
+      "disposition": "MAPPED",
+      "reason": "Content slot 'slot-covermedia' of 'SECTION/HeroRow'. Naming hint 'SLOT/' weighed as evidence, not proof.",
+      "nameHint": "SLOT",
+      "sectionId": "s-388fdf889bf5",
+      "evidence": [
+        {
+          "evidenceId": "e-56c6aded9043",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:17",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-71e41e0b40ea",
+      "semanticClass": "SHARED_COMPONENT",
+      "disposition": "MAPPED",
+      "reason": "Shared component instance of 'COMPONENT/ProductCard', resolved against the pinned registry + binding map.",
+      "sectionId": "s-2f529a4dc159",
+      "provisionalTarget": {
+        "category": "native",
+        "capabilityIds": [
+          "flatcms/teaser"
+        ]
+      },
+      "evidence": [
+        {
+          "evidenceId": "e-8b11b56e42b8",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:6",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-74d913255f2e",
+      "semanticClass": "EDITORIAL_SECTION",
+      "disposition": "EXCLUDED_WITH_REASON",
+      "reason": "Hidden in the source at the pinned revision \u2014 inventoried, excluded from the CMS plan. Naming hint 'SECTION/' weighed as evidence, not proof.",
+      "nameHint": "SECTION",
+      "evidence": [
+        {
+          "evidenceId": "e-f7be153ae60f",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:8",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-752a98d455fd",
+      "semanticClass": "EDITORIAL_SECTION",
+      "disposition": "MAPPED",
+      "reason": "Top-level editorial section (naming hint + container evidence) \u2014 planned as a PageStructure section. Naming hint 'SECTION/' weighed as evidence, not proof.",
+      "nameHint": "SECTION",
+      "sectionId": "s-388fdf889bf5",
+      "evidence": [
+        {
+          "evidenceId": "e-ab883bb7af22",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:3",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-7d54c68d9b72",
+      "semanticClass": "SHARED_COMPONENT",
+      "disposition": "REFERENCE_ONLY",
+      "reason": "Shared component definition asset \u2014 reusable reference, content is realized through its instances. Naming hint 'COMPONENT/' weighed as evidence, not proof.",
+      "nameHint": "COMPONENT",
+      "evidence": [
+        {
+          "evidenceId": "e-1cd95289231f",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:4",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-82fd2db60b0c",
+      "semanticClass": "SHARED_COMPONENT",
+      "disposition": "MAPPED",
+      "reason": "Shared component instance of 'COMPONENT/ProductCard', resolved against the pinned registry + binding map.",
+      "sectionId": "s-2f529a4dc159",
+      "provisionalTarget": {
+        "category": "native",
+        "capabilityIds": [
+          "flatcms/teaser"
+        ]
+      },
+      "evidence": [
+        {
+          "evidenceId": "e-c3929ca991b9",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:21",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-8cc28ed8c8ff",
+      "semanticClass": "UNKNOWN_OR_AMBIGUOUS",
+      "disposition": "NEEDS_REVIEW",
+      "reason": "Top-level content node without a recognized semantic hint \u2014 human decision required.",
+      "evidence": [
+        {
+          "evidenceId": "e-8e70c74ab688",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:12",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-97df747bfeb3",
+      "semanticClass": "SITE_CHROME",
+      "disposition": "EXCLUDED_WITH_REASON",
+      "reason": "Inside a site-chrome subtree: theme-owned, retained in audit, excluded from the CMS plan. Naming hint 'SLOT/' weighed as evidence, not proof.",
+      "nameHint": "SLOT",
+      "evidence": [
+        {
+          "evidenceId": "e-963d4e711c71",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:14",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-a3f74fa8790a",
+      "semanticClass": "UNKNOWN_OR_AMBIGUOUS",
+      "disposition": "NEEDS_REVIEW",
+      "reason": "Top-level container without a recognized semantic hint: site chrome vs editorial content is undecidable from available evidence \u2014 human decision required.",
+      "evidence": [
+        {
+          "evidenceId": "e-958823d705d1",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:10",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-a42f45746295",
+      "semanticClass": "PRESENTATIONAL",
+      "disposition": "DECORATION_MERGED",
+      "reason": "Presentational leaf merged into its nearest mapped ancestor; never silently dropped. Naming hint 'DECOR/' weighed as evidence, not proof.",
+      "nameHint": "DECOR",
+      "sectionId": "s-388fdf889bf5",
+      "evidence": [
+        {
+          "evidenceId": "e-ff0619b79e4a",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:18",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-a9d9117c559e",
+      "semanticClass": "PRESENTATIONAL",
+      "disposition": "DECORATION_MERGED",
+      "reason": "Top-level presentational leaf merged into page styling; never silently dropped. Naming hint 'DECOR/' weighed as evidence, not proof.",
+      "nameHint": "DECOR",
+      "evidence": [
+        {
+          "evidenceId": "e-dad9c08f14f7",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:7",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-bd293150ffd5",
+      "semanticClass": "SITE_CHROME",
+      "disposition": "EXCLUDED_WITH_REASON",
+      "reason": "Inside a site-chrome subtree: theme-owned, retained in audit, excluded from the CMS plan. Naming hint 'SITE/' weighed as evidence, not proof.",
+      "nameHint": "SITE",
+      "evidence": [
+        {
+          "evidenceId": "e-a162bf78e84c",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:13",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-be7ebe01c78d",
+      "semanticClass": "SHARED_COMPONENT",
+      "disposition": "REFERENCE_ONLY",
+      "reason": "Part of a shared component definition asset (realized through its instances). Naming hint 'SLOT/' weighed as evidence, not proof.",
+      "nameHint": "SLOT",
+      "evidence": [
+        {
+          "evidenceId": "e-bb76858d9a9c",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:20",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-ccd866ac2e7c",
+      "semanticClass": "EDITORIAL_SECTION",
+      "disposition": "MAPPED",
+      "reason": "Top-level editorial section (naming hint + container evidence) \u2014 planned as a PageStructure section. Naming hint 'SECTION/' weighed as evidence, not proof.",
+      "nameHint": "SECTION",
+      "sectionId": "s-29b84e9c3e67",
+      "evidence": [
+        {
+          "evidenceId": "e-8aac9e8022a7",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:9",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-d49bc8c5281b",
+      "semanticClass": "EDITORIAL_SECTION",
+      "disposition": "MAPPED",
+      "reason": "Selected page root: realized as the PageStructure plan itself (not a section).",
+      "nameHint": "PAGE",
+      "evidence": [
+        {
+          "evidenceId": "e-f0595e91ab6b",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:1",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-d952432ef9fa",
+      "semanticClass": "SITE_CHROME",
+      "disposition": "EXCLUDED_WITH_REASON",
+      "reason": "Top-level site chrome (naming hint + top-level position): theme-owned, excluded from the CMS plan, retained in audit. Naming hint 'SITE/' weighed as evidence, not proof.",
+      "nameHint": "SITE",
+      "evidence": [
+        {
+          "evidenceId": "e-a1b3341ce263",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:2",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-e8ec4384760d",
+      "semanticClass": "EDITORIAL_SECTION",
+      "disposition": "EXCLUDED_WITH_REASON",
+      "reason": "Inside a hidden subtree \u2014 inventoried, excluded from the CMS plan. Naming hint 'SLOT/' weighed as evidence, not proof.",
+      "nameHint": "SLOT",
+      "evidence": [
+        {
+          "evidenceId": "e-b38c4aaa9572",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:23",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-efaa2963fbc3",
+      "semanticClass": "EDITORIAL_SECTION",
+      "disposition": "MAPPED",
+      "reason": "Content slot 'slot-campaignheading' of 'SECTION/CampaignWidget'. Naming hint 'SLOT/' weighed as evidence, not proof.",
+      "nameHint": "SLOT",
+      "sectionId": "s-29b84e9c3e67",
+      "evidence": [
+        {
+          "evidenceId": "e-49bb62598d1d",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:24",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-f46d88eb246a",
+      "semanticClass": "EDITORIAL_SECTION",
+      "disposition": "MAPPED",
+      "reason": "Content slot 'slot-heading' of 'SECTION/HeroRow'. Naming hint 'SLOT/' weighed as evidence, not proof.",
+      "nameHint": "SLOT",
+      "sectionId": "s-388fdf889bf5",
+      "evidence": [
+        {
+          "evidenceId": "e-ac92261ae00c",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:16",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-f55cf22dfa35",
+      "semanticClass": "EDITORIAL_SECTION",
+      "disposition": "MAPPED",
+      "reason": "Content slot 'slot-sectionheading' of 'SECTION/FeaturedProducts'. Naming hint 'SLOT/' weighed as evidence, not proof.",
+      "nameHint": "SLOT",
+      "sectionId": "s-2f529a4dc159",
+      "evidence": [
+        {
+          "evidenceId": "e-b14927e855bb",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:22",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    }
+  ],
+  "diagnostics": [
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "1 source component(s) have no proven target capability (custom-required pending); no CMS content may be generated from them without review.",
+      "subject": {
+        "type": "profile",
+        "id": "g2-design-fixture"
+      }
+    }
+  ]
+}

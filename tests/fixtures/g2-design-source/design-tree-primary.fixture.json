@@ -1,0 +1,123 @@
+{
+  "$comment": "G2 synthetic design-source tree A (issue #14 fixture): one page with site chrome (SITE/), editorial sections (SECTION/), a 40/60 nested row, content slots, a shared component definition + two instances, top-level and nested decorations, a hidden section, an external (unsupported) widget instance, an ambiguous bare 'Footer' (name is a hint, not proof), and an unknown-kind layer. Flat nodes + declared child locators; consumed by the design-source-fixture adapter.",
+  "revisionId": "g2-fixture-rev-0001",
+  "nodes": [
+    {
+      "locator": "100:1",
+      "kind": "page",
+      "name": "PAGE/Home/Desktop",
+      "properties": { "layout": { "direction": "column", "positioning": "static", "constraints": [], "relativeSizes": [], "overflow": "visible" } },
+      "children": ["100:2", "100:3", "100:4", "100:5", "100:7", "100:8", "100:9", "100:10", "100:12"]
+    },
+    {
+      "locator": "100:2",
+      "kind": "frame",
+      "name": "SITE/Header",
+      "properties": { "layout": { "direction": "row", "positioning": "static", "constraints": [{ "axis": "width", "type": "fill", "value": "100%" }], "relativeSizes": [], "overflow": "visible" } },
+      "children": ["100:13"]
+    },
+    {
+      "locator": "100:13",
+      "kind": "frame",
+      "name": "SITE/NavRow",
+      "children": ["100:14"]
+    },
+    { "locator": "100:14", "kind": "text", "name": "SLOT/NavLabel", "children": [] },
+    {
+      "locator": "100:3",
+      "kind": "frame",
+      "name": "SECTION/Hero/Primary",
+      "properties": { "layout": { "direction": "column", "positioning": "static", "constraints": [], "relativeSizes": [], "overflow": "visible" } },
+      "children": ["100:15", "100:18"]
+    },
+    {
+      "locator": "100:15",
+      "kind": "frame",
+      "name": "SECTION/HeroRow",
+      "properties": {
+        "layout": {
+          "direction": "row",
+          "positioning": "static",
+          "constraints": [{ "axis": "height", "type": "fixed", "value": "480" }],
+          "relativeSizes": [
+            { "target": "100:16", "ratio": 0.4 },
+            { "target": "100:17", "ratio": 0.6 }
+          ],
+          "overflow": "visible"
+        }
+      },
+      "children": ["100:16", "100:17"]
+    },
+    { "locator": "100:16", "kind": "text", "name": "SLOT/Heading", "children": [] },
+    { "locator": "100:17", "kind": "image", "name": "SLOT/CoverMedia", "children": [] },
+    { "locator": "100:18", "kind": "vector", "name": "DECOR/GradientBlob", "children": [] },
+    {
+      "locator": "100:4",
+      "kind": "component",
+      "name": "COMPONENT/ProductCard",
+      "properties": { "layout": { "direction": "column", "positioning": "static", "constraints": [], "relativeSizes": [], "overflow": "visible" } },
+      "children": ["100:19", "100:20"]
+    },
+    { "locator": "100:19", "kind": "text", "name": "SLOT/Title", "children": [] },
+    { "locator": "100:20", "kind": "image", "name": "SLOT/Image", "children": [] },
+    {
+      "locator": "100:5",
+      "kind": "frame",
+      "name": "SECTION/FeaturedProducts",
+      "properties": { "layout": { "direction": "row", "positioning": "static", "constraints": [], "relativeSizes": [], "overflow": "visible" } },
+      "children": ["100:22", "100:6", "100:21"]
+    },
+    { "locator": "100:22", "kind": "text", "name": "SLOT/SectionHeading", "children": [] },
+    {
+      "locator": "100:6",
+      "kind": "instance",
+      "name": "INSTANCE/ProductCard/Compact",
+      "componentRef": "100:4",
+      "properties": { "variants": { "layout": "compact" } },
+      "children": []
+    },
+    {
+      "locator": "100:21",
+      "kind": "instance",
+      "name": "INSTANCE/ProductCard/Standard",
+      "componentRef": "100:4",
+      "children": []
+    },
+    { "locator": "100:7", "kind": "shape", "name": "DECOR/PageOrnament", "children": [] },
+    {
+      "locator": "100:8",
+      "kind": "frame",
+      "name": "SECTION/DraftBanner",
+      "visible": false,
+      "children": ["100:23"]
+    },
+    { "locator": "100:23", "kind": "text", "name": "SLOT/DraftNote", "children": [] },
+    {
+      "locator": "100:9",
+      "kind": "frame",
+      "name": "SECTION/CampaignWidget",
+      "properties": {
+        "layout": { "direction": "column", "positioning": "static", "constraints": [], "relativeSizes": [], "overflow": "visible" },
+        "dynamicSlots": [{ "slotId": "product-data", "kind": "dynamic", "valueRef": "design://g2-fixture-source/100:9" }]
+      },
+      "children": ["100:24", "100:25"]
+    },
+    { "locator": "100:24", "kind": "text", "name": "SLOT/CampaignHeading", "children": [] },
+    {
+      "locator": "100:25",
+      "kind": "instance",
+      "name": "INSTANCE/ProductCarousel",
+      "componentRef": "900:1",
+      "children": []
+    },
+    {
+      "locator": "100:10",
+      "kind": "frame",
+      "name": "Footer",
+      "properties": { "layout": { "direction": "column", "positioning": "static", "constraints": [], "relativeSizes": [], "overflow": "visible" } },
+      "children": ["100:26"]
+    },
+    { "locator": "100:26", "kind": "text", "name": "SLOT/CampaignNote", "children": [] },
+    { "locator": "100:12", "kind": "mystery-box", "name": "MysteryBox", "children": [] }
+  ]
+}

@@ -1,0 +1,881 @@
+{
+  "schemaVersion": 1,
+  "profileId": "g2-design-fixture",
+  "generatedAt": "2026-11-03T09:50:05.261Z",
+  "source": {
+    "sourceId": "g2-fixture-source",
+    "revisionId": "g2-fixture-rev-0001",
+    "accessedAt": "2026-11-03T09:50:05.250Z"
+  },
+  "rootNodeId": "n-d49bc8c5281b",
+  "nodes": [
+    {
+      "nodeId": "n-0e023190f389",
+      "kind": "container",
+      "name": "SECTION/HeroRow",
+      "role": "SECTION",
+      "visible": true,
+      "childrenNodeIds": [
+        "n-f46d88eb246a",
+        "n-70609da0fab1"
+      ],
+      "parentNodeId": "n-752a98d455fd",
+      "layout": {
+        "direction": "row",
+        "positioning": "static",
+        "constraints": [
+          {
+            "axis": "height",
+            "type": "fixed",
+            "value": "480"
+          }
+        ],
+        "relativeSizes": [
+          {
+            "target": "100:16",
+            "ratio": 0.4
+          },
+          {
+            "target": "100:17",
+            "ratio": 0.6
+          }
+        ],
+        "overflow": "visible"
+      },
+      "contentSlots": [
+        {
+          "slotId": "slot-covermedia",
+          "kind": "media",
+          "valueRef": "design://g2-fixture-source/100:17",
+          "method": "observed",
+          "evidence": {
+            "evidenceId": "e-56c6aded9043",
+            "kind": "document",
+            "locator": "design://g2-fixture-source/100:17",
+            "retrievedAt": "2026-11-03T09:50:05.250Z",
+            "sourceRevisionId": "g2-fixture-rev-0001",
+            "method": "design-source-adapter"
+          }
+        },
+        {
+          "slotId": "slot-heading",
+          "kind": "text",
+          "valueRef": "design://g2-fixture-source/100:16",
+          "method": "observed",
+          "evidence": {
+            "evidenceId": "e-ac92261ae00c",
+            "kind": "document",
+            "locator": "design://g2-fixture-source/100:16",
+            "retrievedAt": "2026-11-03T09:50:05.250Z",
+            "sourceRevisionId": "g2-fixture-rev-0001",
+            "method": "design-source-adapter"
+          }
+        }
+      ],
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-bcfc292a4ce5",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:15",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-34299cf5ce3f",
+      "kind": "component",
+      "name": "INSTANCE/ProductCarousel",
+      "visible": true,
+      "childrenNodeIds": [],
+      "parentNodeId": "n-ccd866ac2e7c",
+      "layout": {
+        "direction": "unknown",
+        "positioning": "unknown",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "unknown"
+      },
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-83f614e2c5ee",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:25",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-44d373a36b18",
+      "kind": "text",
+      "name": "SLOT/Title",
+      "role": "SLOT",
+      "visible": true,
+      "childrenNodeIds": [],
+      "parentNodeId": "n-7d54c68d9b72",
+      "layout": {
+        "direction": "unknown",
+        "positioning": "unknown",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "unknown"
+      },
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-96d181309a30",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:19",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-49613ee131ac",
+      "kind": "container",
+      "name": "SECTION/FeaturedProducts",
+      "role": "SECTION",
+      "visible": true,
+      "childrenNodeIds": [
+        "n-f55cf22dfa35",
+        "n-71e41e0b40ea",
+        "n-82fd2db60b0c"
+      ],
+      "parentNodeId": "n-d49bc8c5281b",
+      "layout": {
+        "direction": "row",
+        "positioning": "static",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "visible"
+      },
+      "contentSlots": [
+        {
+          "slotId": "slot-sectionheading",
+          "kind": "text",
+          "valueRef": "design://g2-fixture-source/100:22",
+          "method": "observed",
+          "evidence": {
+            "evidenceId": "e-b14927e855bb",
+            "kind": "document",
+            "locator": "design://g2-fixture-source/100:22",
+            "retrievedAt": "2026-11-03T09:50:05.250Z",
+            "sourceRevisionId": "g2-fixture-rev-0001",
+            "method": "design-source-adapter"
+          }
+        }
+      ],
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-0204f0c2172b",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:5",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-65b5ce49c5bb",
+      "kind": "text",
+      "name": "SLOT/CampaignNote",
+      "role": "SLOT",
+      "visible": true,
+      "childrenNodeIds": [],
+      "parentNodeId": "n-a3f74fa8790a",
+      "layout": {
+        "direction": "unknown",
+        "positioning": "unknown",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "unknown"
+      },
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-a0b19a7c5041",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:26",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-70609da0fab1",
+      "kind": "media",
+      "name": "SLOT/CoverMedia",
+      "role": "SLOT",
+      "visible": true,
+      "childrenNodeIds": [],
+      "parentNodeId": "n-0e023190f389",
+      "layout": {
+        "direction": "unknown",
+        "positioning": "unknown",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "unknown"
+      },
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-56c6aded9043",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:17",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-71e41e0b40ea",
+      "kind": "component",
+      "name": "INSTANCE/ProductCard/Compact",
+      "visible": true,
+      "childrenNodeIds": [],
+      "parentNodeId": "n-49613ee131ac",
+      "componentRefNodeId": "n-7d54c68d9b72",
+      "layout": {
+        "direction": "unknown",
+        "positioning": "unknown",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "unknown"
+      },
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-8b11b56e42b8",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:6",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-74d913255f2e",
+      "kind": "container",
+      "name": "SECTION/DraftBanner",
+      "role": "SECTION",
+      "visible": false,
+      "childrenNodeIds": [
+        "n-e8ec4384760d"
+      ],
+      "parentNodeId": "n-d49bc8c5281b",
+      "layout": {
+        "direction": "unknown",
+        "positioning": "unknown",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "unknown"
+      },
+      "contentSlots": [
+        {
+          "slotId": "slot-draftnote",
+          "kind": "text",
+          "valueRef": "design://g2-fixture-source/100:23",
+          "method": "observed",
+          "evidence": {
+            "evidenceId": "e-b38c4aaa9572",
+            "kind": "document",
+            "locator": "design://g2-fixture-source/100:23",
+            "retrievedAt": "2026-11-03T09:50:05.250Z",
+            "sourceRevisionId": "g2-fixture-rev-0001",
+            "method": "design-source-adapter"
+          }
+        }
+      ],
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-f7be153ae60f",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:8",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-752a98d455fd",
+      "kind": "container",
+      "name": "SECTION/Hero/Primary",
+      "role": "SECTION",
+      "visible": true,
+      "childrenNodeIds": [
+        "n-0e023190f389",
+        "n-a42f45746295"
+      ],
+      "parentNodeId": "n-d49bc8c5281b",
+      "layout": {
+        "direction": "column",
+        "positioning": "static",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "visible"
+      },
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-ab883bb7af22",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:3",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-7d54c68d9b72",
+      "kind": "component",
+      "name": "COMPONENT/ProductCard",
+      "role": "COMPONENT",
+      "visible": true,
+      "childrenNodeIds": [
+        "n-44d373a36b18",
+        "n-be7ebe01c78d"
+      ],
+      "parentNodeId": "n-d49bc8c5281b",
+      "layout": {
+        "direction": "column",
+        "positioning": "static",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "visible"
+      },
+      "contentSlots": [
+        {
+          "slotId": "slot-image",
+          "kind": "media",
+          "valueRef": "design://g2-fixture-source/100:20",
+          "method": "observed",
+          "evidence": {
+            "evidenceId": "e-bb76858d9a9c",
+            "kind": "document",
+            "locator": "design://g2-fixture-source/100:20",
+            "retrievedAt": "2026-11-03T09:50:05.250Z",
+            "sourceRevisionId": "g2-fixture-rev-0001",
+            "method": "design-source-adapter"
+          }
+        },
+        {
+          "slotId": "slot-title",
+          "kind": "text",
+          "valueRef": "design://g2-fixture-source/100:19",
+          "method": "observed",
+          "evidence": {
+            "evidenceId": "e-96d181309a30",
+            "kind": "document",
+            "locator": "design://g2-fixture-source/100:19",
+            "retrievedAt": "2026-11-03T09:50:05.250Z",
+            "sourceRevisionId": "g2-fixture-rev-0001",
+            "method": "design-source-adapter"
+          }
+        }
+      ],
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-1cd95289231f",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:4",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-82fd2db60b0c",
+      "kind": "component",
+      "name": "INSTANCE/ProductCard/Standard",
+      "visible": true,
+      "childrenNodeIds": [],
+      "parentNodeId": "n-49613ee131ac",
+      "componentRefNodeId": "n-7d54c68d9b72",
+      "layout": {
+        "direction": "unknown",
+        "positioning": "unknown",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "unknown"
+      },
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-c3929ca991b9",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:21",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-8cc28ed8c8ff",
+      "kind": "unknown",
+      "name": "MysteryBox",
+      "visible": true,
+      "childrenNodeIds": [],
+      "parentNodeId": "n-d49bc8c5281b",
+      "layout": {
+        "direction": "unknown",
+        "positioning": "unknown",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "unknown"
+      },
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-8e70c74ab688",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:12",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-97df747bfeb3",
+      "kind": "text",
+      "name": "SLOT/NavLabel",
+      "role": "SLOT",
+      "visible": true,
+      "childrenNodeIds": [],
+      "parentNodeId": "n-bd293150ffd5",
+      "layout": {
+        "direction": "unknown",
+        "positioning": "unknown",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "unknown"
+      },
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-963d4e711c71",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:14",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-a3f74fa8790a",
+      "kind": "container",
+      "name": "Footer",
+      "visible": true,
+      "childrenNodeIds": [
+        "n-65b5ce49c5bb"
+      ],
+      "parentNodeId": "n-d49bc8c5281b",
+      "layout": {
+        "direction": "column",
+        "positioning": "static",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "visible"
+      },
+      "contentSlots": [
+        {
+          "slotId": "slot-campaignnote",
+          "kind": "text",
+          "valueRef": "design://g2-fixture-source/100:26",
+          "method": "observed",
+          "evidence": {
+            "evidenceId": "e-a0b19a7c5041",
+            "kind": "document",
+            "locator": "design://g2-fixture-source/100:26",
+            "retrievedAt": "2026-11-03T09:50:05.250Z",
+            "sourceRevisionId": "g2-fixture-rev-0001",
+            "method": "design-source-adapter"
+          }
+        }
+      ],
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-958823d705d1",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:10",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-a42f45746295",
+      "kind": "icon",
+      "name": "DECOR/GradientBlob",
+      "role": "DECOR",
+      "visible": true,
+      "childrenNodeIds": [],
+      "parentNodeId": "n-752a98d455fd",
+      "layout": {
+        "direction": "unknown",
+        "positioning": "unknown",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "unknown"
+      },
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-ff0619b79e4a",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:18",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-a9d9117c559e",
+      "kind": "icon",
+      "name": "DECOR/PageOrnament",
+      "role": "DECOR",
+      "visible": true,
+      "childrenNodeIds": [],
+      "parentNodeId": "n-d49bc8c5281b",
+      "layout": {
+        "direction": "unknown",
+        "positioning": "unknown",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "unknown"
+      },
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-dad9c08f14f7",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:7",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-bd293150ffd5",
+      "kind": "container",
+      "name": "SITE/NavRow",
+      "role": "SITE",
+      "visible": true,
+      "childrenNodeIds": [
+        "n-97df747bfeb3"
+      ],
+      "parentNodeId": "n-d952432ef9fa",
+      "layout": {
+        "direction": "unknown",
+        "positioning": "unknown",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "unknown"
+      },
+      "contentSlots": [
+        {
+          "slotId": "slot-navlabel",
+          "kind": "text",
+          "valueRef": "design://g2-fixture-source/100:14",
+          "method": "observed",
+          "evidence": {
+            "evidenceId": "e-963d4e711c71",
+            "kind": "document",
+            "locator": "design://g2-fixture-source/100:14",
+            "retrievedAt": "2026-11-03T09:50:05.250Z",
+            "sourceRevisionId": "g2-fixture-rev-0001",
+            "method": "design-source-adapter"
+          }
+        }
+      ],
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-a162bf78e84c",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:13",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-be7ebe01c78d",
+      "kind": "media",
+      "name": "SLOT/Image",
+      "role": "SLOT",
+      "visible": true,
+      "childrenNodeIds": [],
+      "parentNodeId": "n-7d54c68d9b72",
+      "layout": {
+        "direction": "unknown",
+        "positioning": "unknown",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "unknown"
+      },
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-bb76858d9a9c",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:20",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-ccd866ac2e7c",
+      "kind": "container",
+      "name": "SECTION/CampaignWidget",
+      "role": "SECTION",
+      "visible": true,
+      "childrenNodeIds": [
+        "n-efaa2963fbc3",
+        "n-34299cf5ce3f"
+      ],
+      "parentNodeId": "n-d49bc8c5281b",
+      "layout": {
+        "direction": "column",
+        "positioning": "static",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "visible"
+      },
+      "contentSlots": [
+        {
+          "slotId": "product-data",
+          "kind": "dynamic",
+          "valueRef": "design://g2-fixture-source/100:9",
+          "method": "observed"
+        },
+        {
+          "slotId": "slot-campaignheading",
+          "kind": "text",
+          "valueRef": "design://g2-fixture-source/100:24",
+          "method": "observed",
+          "evidence": {
+            "evidenceId": "e-49bb62598d1d",
+            "kind": "document",
+            "locator": "design://g2-fixture-source/100:24",
+            "retrievedAt": "2026-11-03T09:50:05.250Z",
+            "sourceRevisionId": "g2-fixture-rev-0001",
+            "method": "design-source-adapter"
+          }
+        }
+      ],
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-8aac9e8022a7",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:9",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-d49bc8c5281b",
+      "kind": "page-section",
+      "name": "PAGE/Home/Desktop",
+      "role": "PAGE",
+      "visible": true,
+      "childrenNodeIds": [
+        "n-d952432ef9fa",
+        "n-752a98d455fd",
+        "n-7d54c68d9b72",
+        "n-49613ee131ac",
+        "n-a9d9117c559e",
+        "n-74d913255f2e",
+        "n-ccd866ac2e7c",
+        "n-a3f74fa8790a",
+        "n-8cc28ed8c8ff"
+      ],
+      "parentNodeId": null,
+      "layout": {
+        "direction": "column",
+        "positioning": "static",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "visible"
+      },
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-f0595e91ab6b",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:1",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-d952432ef9fa",
+      "kind": "container",
+      "name": "SITE/Header",
+      "role": "SITE",
+      "visible": true,
+      "childrenNodeIds": [
+        "n-bd293150ffd5"
+      ],
+      "parentNodeId": "n-d49bc8c5281b",
+      "layout": {
+        "direction": "row",
+        "positioning": "static",
+        "constraints": [
+          {
+            "axis": "width",
+            "type": "fill",
+            "value": "100%"
+          }
+        ],
+        "relativeSizes": [],
+        "overflow": "visible"
+      },
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-a1b3341ce263",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:2",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-e8ec4384760d",
+      "kind": "text",
+      "name": "SLOT/DraftNote",
+      "role": "SLOT",
+      "visible": true,
+      "childrenNodeIds": [],
+      "parentNodeId": "n-74d913255f2e",
+      "layout": {
+        "direction": "unknown",
+        "positioning": "unknown",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "unknown"
+      },
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-b38c4aaa9572",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:23",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-efaa2963fbc3",
+      "kind": "text",
+      "name": "SLOT/CampaignHeading",
+      "role": "SLOT",
+      "visible": true,
+      "childrenNodeIds": [],
+      "parentNodeId": "n-ccd866ac2e7c",
+      "layout": {
+        "direction": "unknown",
+        "positioning": "unknown",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "unknown"
+      },
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-49bb62598d1d",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:24",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-f46d88eb246a",
+      "kind": "text",
+      "name": "SLOT/Heading",
+      "role": "SLOT",
+      "visible": true,
+      "childrenNodeIds": [],
+      "parentNodeId": "n-0e023190f389",
+      "layout": {
+        "direction": "unknown",
+        "positioning": "unknown",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "unknown"
+      },
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-ac92261ae00c",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:16",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-f55cf22dfa35",
+      "kind": "text",
+      "name": "SLOT/SectionHeading",
+      "role": "SLOT",
+      "visible": true,
+      "childrenNodeIds": [],
+      "parentNodeId": "n-49613ee131ac",
+      "layout": {
+        "direction": "unknown",
+        "positioning": "unknown",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "unknown"
+      },
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-b14927e855bb",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:22",
+          "retrievedAt": "2026-11-03T09:50:05.250Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    }
+  ],
+  "diagnostics": [
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Component reference '900:1' on 'INSTANCE/ProductCarousel' does not resolve to an inventoried component definition (external library or invalid).",
+      "subject": {
+        "type": "node",
+        "id": "n-34299cf5ce3f"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Source kind 'mystery-box' on 'MysteryBox' is outside the mapped kind table; inventoried as kind 'unknown' \u2014 human review required.",
+      "subject": {
+        "type": "node",
+        "id": "n-8cc28ed8c8ff"
+      }
+    }
+  ]
+}

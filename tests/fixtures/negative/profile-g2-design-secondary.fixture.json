@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "profile": {
+    "id": "g2-design-fixture-b",
+    "name": "G2 synthetic design-source fixture B",
+    "platformId": "synthetic-flatcms",
+    "projectSources": [
+      {
+        "sourceId": "g2-fixture-source-b",
+        "kind": "fixture-tree",
+        "path": "/path/to/design-source-b"
+      }
+    ],
+    "scopes": [
+      {
+        "sourceId": "g2-fixture-source-b",
+        "include": [],
+        "exclude": []
+      }
+    ],
+    "gates": {
+      "responsiveDeterministicRequired": false
+    },
+    "safety": {
+      "approvedWriteTargets": []
+    }
+  }
+}

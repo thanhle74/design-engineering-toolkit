@@ -292,6 +292,9 @@ check("T-14b", "V1 examples validate against V1 schemas", () => {
 // ---- Issue #9 CLI + adapter suite (async) ------------------------------------------------
 const { default: registerCliSuite } = await import("./cli-suite.mjs");
 await registerCliSuite(checkAsync);
+// ---- Issue #14 G2 design-source extraction suite (async) ---------------------------------
+const { default: registerG2Suite } = await import("./g2-suite.mjs");
+await registerG2Suite(checkAsync);
 for (const { id, name, fn } of asyncChecks) {
   try {
     const detail = await fn();

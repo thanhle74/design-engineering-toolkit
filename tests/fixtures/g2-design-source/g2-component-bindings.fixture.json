@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "profileId": "g2-design-fixture",
+  "platformId": "synthetic-flatcms",
+  "generatedAt": "1970-01-01T00:00:00Z",
+  "registry": {
+    "platformId": "synthetic-flatcms",
+    "registryRevisionId": "fixture-rev-0001"
+  },
+  "bindings": [
+    {
+      "bindingId": "b-a00000000001",
+      "sourceComponentId": "n-7d54c68d9b72",
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-a00000000001",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:4",
+          "retrievedAt": "1970-01-01T00:00:00Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "note": "fixture component definition"
+        }
+      ],
+      "variantConditions": [],
+      "target": {
+        "capabilityId": "flatcms/teaser",
+        "appearanceId": "compact"
+      },
+      "propsTransform": [
+        {
+          "from": "title",
+          "to": "entries",
+          "transform": "identity",
+          "required": true
+        }
+      ],
+      "fallbackPolicy": "fail-unsupported"
+    }
+  ],
+  "diagnostics": []
+}
