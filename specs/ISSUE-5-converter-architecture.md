@@ -1,0 +1,101 @@
+# [5] Converter architecture & contract specification
+
+**Status:** PROPOSED / architecture-first. **Target:** [Issue #5](https://github.com/thanhle74/design-engineering-toolkit/issues/5). **No Figma access authorized in this stage.** Approved designs remain frozen.
+
+## 1. Outcomes
+
+Build a multi-project design-engineering framework that can later map **approved structured design source** into a **Page Builder-editable page**, without building one codegen script per project. First adapter is Magento Page Builder + `Secomm_UiWidget` + Hyvä. Keep all other platforms possible without changing core data model.
+
+**One authoritative roadmap:**  
+`Capability Registry → Structural Mapping → Functional Round-trip → Visual Fidelity`
+
+| Gate | Scope | Outputs | Entry condition |
+|---|---|---|---|
+| **G1 / NOW: Capability Registry** | Installed native PB content types, appearances, nesting/props; enabled widget registry; core architecture/contracts, tests + skills | Source-backed machine-readable capability inventory, decisions, schema proposal, proof-level status | Current Owner GO |
+| **G2 / HOLD: Structural Mapping** | Source-node extraction and semantic sections; exact layout hierarchy, ratios, order; mobile correspondence | Versioned `NodeIR`, `PageStructure`, diagnostic/coverage report | Separate GO; read-only design node `245:2`, mobile `245:16` |
+| **G3 / HOLD: Functional Round-trip** | Magento structural adapter; isolated import into disposable CMS page, editor persistence and regeneration | Admin Edit → Save → Reload → Storefront receipts; no lost data, idempotent diff, rollback | Separate scoped LOCAL write GO and approved test site |
+| **G4 / HOLD: Visual Fidelity** | Tailwind v4 CSS-first styling, images/crop, typography, Hyvä UI variants, Alpine CSP, responsive QA | Screenshots & parity at 1440/768/390; a11y, performance, interaction evidence | G2+G3 proven and separate GO |
+
+**G1 is not proof of G2–G4.** Do not mark a capability `ADMIN_ROUNDTRIP_VERIFIED` when only XML/registry code exists.
+
+## 2. Architecture boundaries
+
+```text
+core/
+  contracts/           platform-neutral versioned models, validators
+  sources/             DesignSourcePort (future implementation; current G1 no source calls)
+  normalize/           semantic NodeIR normalization (future)
+  resolve/             CapabilityRegistry, ComponentBindingMap, structural solver
+  reports/             ResolutionReport, evidence/diagnostics, deterministic serialization
+adapters/
+  magento-pagebuilder/ Page Builder capability probe, appearances/master format/importer (G1 read-only probe)
+profiles/
+  project-profile.*    project-specific source refs, local checkout location, mapping overlays
+```
+
+These are **conceptual boundaries**, not an instruction to create empty folders. Do not add implementation code until tests and required APIs are specified.
+
+**No platform contamination:** Core must not import Magento, PHP, Hyvä, Page Builder, Adobe, Magento-only taxonomy or fixed Figma IDs; put bindings and platform-specific mapping in adapters/profile. Local source path `/home/thanhle/Sites/Magento/slaunchpad` may be supplied by a profile/env, not embedded in reusable code.
+
+**Tool is a consumer of installed capabilities:** inventory actual Magento source/config first. Use native PB and `Secomm_UiWidget` before authoring custom appearances. Never create one `content_type.xml` per Figma page, and never silently fall back to HTML Code.
+
+## 3. Proposed contracts (schema drafts, to be validated in G1)
+
+- `CapabilityRegistry`: `schemaVersion`, `platformId`, `sourceRevision`, capabilities `{id, provider, appearanceId, acceptedProps, allowedChildren, responsiveRules, dataContext, editorEditingMode, dependencies, evidence, proofLevel}`. Support `native`, `widget`, `chrome`, `custom-required`, `unsupported`.
+- `DesignSourcePort` (future): read-only, scoped accessor with version and provenance; never requires mutating the approved source.
+- `NodeIR` (future): stable semantic `nodeId`, `kind`, `children`, `layout{direction, positioning, constraints, relativeSizes, overflow}`, `contentSlots`, `sourceRef`. Do not confuse visual pixels with component semantics.
+- `ComponentBindingMap`: versioned mapping `{sourceComponentId, variantConditions, targetCapabilityId, propsTransform, fallbackPolicy}`. Unmatched variants produce `UNSUPPORTED`, not guessed CSS.
+- `PageStructure` (future): `sections[]` with stable IDs, content and media references, responsive composition, capability resolution, source refs. **PageStructure is an intermediate artifact, not raw `cms_page.content`**.
+- `ResolutionReport`: per-section status, candidate/selected capabilities, unsupported reasons, mapping confidence, evidence/pin, missing contracts; summary coverage `native/widget/custom/unsupported/chrome`.
+
+**Proof-level ladder:** `DISCOVERED` → `REGISTERED` → `STRUCTURALLY_MAPPED` → `ADMIN_ROUNDTRIP_VERIFIED` → `VISUALLY_VERIFIED`. Promotion needs evidence for that specific step.
+
+All output types must have explicit schema major/version, stable identifiers, deterministic ordering and provenance. Reuse V1 `schemas/*` where compatible, extend additively where possible; breaking major needs an explicit migration ADR.
+
+## 4. Magento/Hyvä adapter contract
+
+Check source at local path supplied by project profile and **read-only** during G1:
+- Native Page Builder registered content types: start with `Row, Columns, Tabs, Text, Heading, Buttons, Divider, HTML Code, Image, Video, Banner, Slider, Map, Block, Products` but validate the installed version/enablement.
+- Enumerate appearances, master/preview templates, form fields, allowed parents/children, nested structures, responsive properties, data bindings and editor persistence. **A palette screenshot is not source evidence**.
+- `Secomm_UiWidget`: read `.ai/specs/SPEC-FEAT-J06WXZ-secomm-ui-widgets.md`, eligibility matrix, solution design, and live `app/code/Secomm/UiWidget` registry. Approved B1 matrix lists 21 IDs; verify actual enablement rather than assuming all work.
+- Page Builder master content is HTML and uses content-type definitions; don't persist the converter JSON directly into `cms_page.content`.
+- Dynamic product/category data, pricing, inventory and wishlist must resolve against Magento context. Neither Figma demo data nor mock prices is a production source.
+- Magento/Hyvä presentation skill references in the local project: `hyva-ui-component`, `hyva-alpine-component`, `hyva-compile-tailwind-css`, `hyva-global-style-foundation`, `magento-module-analysis`.
+- Tailwind v4 source discovery/build and theme ownership must be checked; Alpine interactions must be instance-safe and CSP-compatible. These are **later G3/G4 constraints**, not a reason to style before structural mapping.
+
+## 5. Architecture QA, risks & deliberate exclusions
+
+| Risk | Architecture decision | Proof |
+|---|---|---|
+| Source auto-layout misunderstood | Preserve layout primitives in IR; report unknown/absolute groups separately | Negative-case fixture tests at G2 |
+| Unsupported PB appearance silently approximated | Fail closed `UNSUPPORTED` with location/reason and candidate mapping | Validator unit tests G1 |
+| Widget parameters lost after Admin save | Do not claim `REGISTERED` equals `ROUNDTRIP`; reject naive directive/string hack | Actual G3 UI receipt required |
+| Core couples to Magento or local path | ports + adapters + profiles, second non-Magento synthetic profile | Architecture test G1 |
+| Pixel-perfect CSS hides structural errors | exact nested layout/relative ratio acceptance before styling | Stage G2 exit |
+| OSS incompatibility / license | source references + licenses; no vendored code without review | W-A receipt |
+| Uncontrolled cleanup destroys pilot evidence | delete only after usage reference and test proof | W-D receipt |
+| Multiworker write conflict | read-only W-A..D; single integrator + bounded branch | issue receipt |
+
+**Explicit non-goals for G1:** access/modify any Figma file, screenshot-to-code, direct CMS importer, PHP Magento runtime changes, active page overwrite, CSS polish, many-framework transpilation, arbitrary HTML import, auto-merge.
+
+## 6. Parallel worker and evidence contract
+
+**[5] W-A:** OSS skills/reuse/license shortlist.  
+**[5] W-B:** Magento/Hyvä native PB + UiWidget source inventory.  
+**[5] W-C:** IR + registry/binding/diagnostics schemas and ADR.  
+**[5] W-D:** Repo inventory, dead/duplicate artifacts and validation gaps.
+
+All four start concurrently, read-only. Exactly one **[5] Integrator** merges findings, edits SSOT once, validates changes and posts `BASE→TIP` receipt. No invented PASS. Work not verifiable from connector/local current state stays `NOT_VERIFIED`.
+
+## 7. G1 acceptance criteria
+
+- Every native PB and enabled UiWidget capability has sourceRef/path and exact proof level.
+- One validated capability schema proposal and mapping/diagnostic semantics; no implicit appearance guessing.
+- Traceable architecture and independent platform-neutral core, including a second synthetic project/platform example.
+- One OSS/agent skill selection matrix and exactly the minimal set of reusable skills/agents.
+- Repo hygiene report `KEEP / UPDATE / REMOVE_CANDIDATE`, no unproven deletions.
+- Focused tests (schema, unknown capability, missing variant, wrong nesting, deterministic results); report what actually ran.
+- Figma untouched, no Magento runtime writes, no unsanctioned CMS/import.
+- One integrator receipt, PR remains draft until Owner review.
+
+**Exit:** `READY_FOR_COORDINATOR_ARCHITECTURE_REVIEW`. **Do not start G2–G4 without GO.**
