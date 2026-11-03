@@ -1,15 +1,22 @@
 {
   "name": "design-engineering-toolkit",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Contract test gate only — the toolkit ships contracts, schemas and docs; ajv is a devDependency for validating them.",
+  "description": "Modular monolith CLI engine (det): deterministic profile validation, read-only capability inspection and structural mapping, per schemas/converter + schemas/cli contracts. Tech ADR-1: TypeScript on Node; core is platform-neutral, adapters are out-of-process.",
   "scripts": {
-    "test": "node tests/run-all.mjs"
+    "build": "tsc -p tsconfig.json",
+    "test": "npm run build && node tests/run-all.mjs"
+  },
+  "bin": {
+    "det": "bin/det.js"
   },
   "engines": {
     "node": ">=20"
   },
   "devDependencies": {
-    "ajv": "^8.20.0"
+    "@types/node": "^22.10.0",
+    "ajv": "^8.20.0",
+    "typescript": "^5.7.0"
   }
 }

@@ -1,0 +1,5 @@
+{
+    "name": "magento/module-page-builder",
+    "description": "Synthetic fixture package (shape only).",
+    "type": "magento2-module"
+}

@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "profile": {
+    "id": "magento-pagebuilder",
+    "name": "Magento Page Builder project (example)",
+    "description": "Read-only capability probe profile for a caller-supplied Magento project root. The path below is a deliberate placeholder: resolve it per run with --project <path>, the DET_PROJECT_SOURCE environment variable, or a gitignored profiles/magento-pagebuilder.local.json. Never commit a real owner path.",
+    "platformId": "magento-pagebuilder",
+    "projectSources": [
+      {
+        "sourceId": "magento-checkout",
+        "kind": "platform-checkout",
+        "path": "/path/to/magento-checkout",
+        "notes": "Placeholder sentinel — resolved per run via CLI/env/local override only."
+      }
+    ],
+    "scopes": [
+      {
+        "sourceId": "magento-checkout",
+        "include": [
+          "app/code",
+          "vendor/magento/module-page-builder",
+          "vendor/magento/module-page-builder-image-attribute"
+        ],
+        "exclude": []
+      }
+    ],
+    "gates": {
+      "responsiveDeterministicRequired": false
+    },
+    "safety": {
+      "approvedWriteTargets": [],
+      "notes": "Converter major 1 is read-only; write targets are unrepresentable by schema. Env.php and auth.json are deny-listed by the adapter and never read."
+    }
+  }
+}

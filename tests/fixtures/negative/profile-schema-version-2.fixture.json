@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 2,
+  "profile": {
+    "id": "schema-version-two",
+    "name": "Schema version 2 fixture (must be rejected)",
+    "platformId": "synthetic-flatcms",
+    "projectSources": []
+  }
+}

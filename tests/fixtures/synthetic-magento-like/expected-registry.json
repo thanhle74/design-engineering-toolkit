@@ -1,0 +1,562 @@
+{
+  "schemaVersion": 1,
+  "platformId": "magento-pagebuilder",
+  "platformVersion": "2.4.8-p5",
+  "profileId": "synthetic-magento-like",
+  "generatedAt": "2026-11-03T05:30:06.224Z",
+  "source": {
+    "sourceId": "magento-like-fixtures",
+    "revisionId": "fixture-revision-0001",
+    "accessedAt": "2026-11-03T05:30:06.224Z"
+  },
+  "generator": {
+    "tool": "det-adapter:magento-pagebuilder",
+    "toolVersion": "1.0.0"
+  },
+  "capabilities": [
+    {
+      "id": "example_customwidgets/component/banner_a",
+      "appearanceId": "default",
+      "provider": "Example_CustomWidgets",
+      "category": "widget",
+      "displayName": "banner_a",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-703221eef607",
+          "kind": "config-declaration",
+          "locator": "source://magento-like-fixtures/app/code/Example/CustomWidgets/etc/di.xml#type=Example\\CustomWidgets\\Model\\Component\\Registry/item=banner_a",
+          "sourceRevisionId": "3a8890a17702815480a02b1096a64366c19fae5c",
+          "retrievedAt": "2026-11-03T05:30:06.224Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered UI component in Example\\CustomWidgets\\Model\\Component\\Registry (registry-in-di.xml) — metadata only; behavior not audited."
+    },
+    {
+      "id": "example_customwidgets/component/hero_a",
+      "appearanceId": "default",
+      "provider": "Example_CustomWidgets",
+      "category": "widget",
+      "displayName": "hero_a",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-ba6e669e3034",
+          "kind": "config-declaration",
+          "locator": "source://magento-like-fixtures/app/code/Example/CustomWidgets/etc/di.xml#type=Example\\CustomWidgets\\Model\\Component\\Registry/item=hero_a",
+          "sourceRevisionId": "3a8890a17702815480a02b1096a64366c19fae5c",
+          "retrievedAt": "2026-11-03T05:30:06.224Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered UI component in Example\\CustomWidgets\\Model\\Component\\Registry (registry-in-di.xml) — metadata only; behavior not audited."
+    },
+    {
+      "id": "example_customwidgets/component/usp_a",
+      "appearanceId": "default",
+      "provider": "Example_CustomWidgets",
+      "category": "widget",
+      "displayName": "usp_a",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-d3145943f4dd",
+          "kind": "config-declaration",
+          "locator": "source://magento-like-fixtures/app/code/Example/CustomWidgets/etc/di.xml#type=Example\\CustomWidgets\\Model\\Component\\Registry/item=usp_a",
+          "sourceRevisionId": "3a8890a17702815480a02b1096a64366c19fae5c",
+          "retrievedAt": "2026-11-03T05:30:06.224Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered UI component in Example\\CustomWidgets\\Model\\Component\\Registry (registry-in-di.xml) — metadata only; behavior not audited."
+    },
+    {
+      "id": "example_customwidgets/custombanner",
+      "appearanceId": "default",
+      "provider": "Example_CustomWidgets",
+      "category": "widget",
+      "displayName": "custombanner",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-b9af8eb43d2f",
+          "kind": "config-declaration",
+          "locator": "source://magento-like-fixtures/app/code/Example/CustomWidgets/view/adminhtml/pagebuilder/content_type/custombanner.xml#type=custombanner",
+          "sourceRevisionId": "3a8890a17702815480a02b1096a64366c19fae5c",
+          "retrievedAt": "2026-11-03T05:30:06.224Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'custombanner' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "example_customwidgets/widget/example_hero",
+      "appearanceId": "default",
+      "provider": "Example_CustomWidgets",
+      "category": "widget",
+      "displayName": "example_hero",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": true,
+        "dataSources": [],
+        "notes": "Runtime catalog data implied by the type's declaration; data sources not audited."
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-d7bada559a3e",
+          "kind": "config-declaration",
+          "locator": "source://magento-like-fixtures/app/code/Example/CustomWidgets/etc/widget.xml#widget=example_hero",
+          "sourceRevisionId": "3a8890a17702815480a02b1096a64366c19fae5c",
+          "retrievedAt": "2026-11-03T05:30:06.224Z",
+          "method": "widget-xml-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Magento widget registration (etc/widget.xml)."
+    },
+    {
+      "id": "example_disabledwidgets/widget/disabled_teaser",
+      "appearanceId": "default",
+      "provider": "Example_DisabledWidgets",
+      "category": "widget",
+      "displayName": "disabled_teaser",
+      "availability": "disabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-a50b9a1791cc",
+          "kind": "config-declaration",
+          "locator": "source://magento-like-fixtures/app/code/Example/DisabledWidgets/etc/widget.xml#widget=disabled_teaser",
+          "sourceRevisionId": "3a8890a17702815480a02b1096a64366c19fae5c",
+          "retrievedAt": "2026-11-03T05:30:06.224Z",
+          "method": "widget-xml-declaration-scan"
+        }
+      ],
+      "proofLevel": "discovered",
+      "description": "Magento widget registration (etc/widget.xml)."
+    },
+    {
+      "id": "example_emailonly/component/account_url",
+      "appearanceId": "default",
+      "provider": "Example_EmailOnly",
+      "category": "chrome",
+      "displayName": "account_url",
+      "availability": "unknown",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-851a41fab65b",
+          "kind": "config-declaration",
+          "locator": "source://magento-like-fixtures/app/code/Example/EmailOnly/etc/di.xml#type=Example\\EmailOnly\\Model\\EmailVariable\\Registry/item=account_url",
+          "sourceRevisionId": "3a8890a17702815480a02b1096a64366c19fae5c",
+          "retrievedAt": "2026-11-03T05:30:06.224Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "discovered",
+      "description": "DI-registered component in Example\\EmailOnly\\Model\\EmailVariable\\Registry (registry-in-di.xml) — out of CMS-page scope (module declares no UI surface); metadata-only discovery."
+    },
+    {
+      "id": "example_emailonly/component/order_summary",
+      "appearanceId": "default",
+      "provider": "Example_EmailOnly",
+      "category": "chrome",
+      "displayName": "order_summary",
+      "availability": "unknown",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-ce1a4a3dc9d3",
+          "kind": "config-declaration",
+          "locator": "source://magento-like-fixtures/app/code/Example/EmailOnly/etc/di.xml#type=Example\\EmailOnly\\Model\\EmailVariable\\Registry/item=order_summary",
+          "sourceRevisionId": "3a8890a17702815480a02b1096a64366c19fae5c",
+          "retrievedAt": "2026-11-03T05:30:06.224Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "discovered",
+      "description": "DI-registered component in Example\\EmailOnly\\Model\\EmailVariable\\Registry (registry-in-di.xml) — out of CMS-page scope (module declares no UI surface); metadata-only discovery."
+    },
+    {
+      "id": "magento_pagebuilder/banner",
+      "appearanceId": "full-width",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "banner",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-c4dbb1db8555",
+          "kind": "config-declaration",
+          "locator": "source://magento-like-fixtures/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/banner.xml#type=banner/appearance=full-width",
+          "sourceRevisionId": "3a8890a17702815480a02b1096a64366c19fae5c",
+          "retrievedAt": "2026-11-03T05:30:06.224Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'banner' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/banner",
+      "appearanceId": "minimal",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "banner",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-b8b9b7748bb5",
+          "kind": "config-declaration",
+          "locator": "source://magento-like-fixtures/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/banner.xml#type=banner/appearance=minimal",
+          "sourceRevisionId": "3a8890a17702815480a02b1096a64366c19fae5c",
+          "retrievedAt": "2026-11-03T05:30:06.224Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'banner' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/heading",
+      "appearanceId": "default",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "heading",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-7c283b5e2a1e",
+          "kind": "config-declaration",
+          "locator": "source://magento-like-fixtures/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/heading.xml#type=heading",
+          "sourceRevisionId": "3a8890a17702815480a02b1096a64366c19fae5c",
+          "retrievedAt": "2026-11-03T05:30:06.224Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'heading' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/products",
+      "appearanceId": "carousel",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "products",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": true,
+        "dataSources": [],
+        "notes": "Runtime catalog data implied by the type's declaration; data sources not audited."
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-c666a98cbf20",
+          "kind": "config-declaration",
+          "locator": "source://magento-like-fixtures/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/products.xml#type=products/appearance=carousel",
+          "sourceRevisionId": "3a8890a17702815480a02b1096a64366c19fae5c",
+          "retrievedAt": "2026-11-03T05:30:06.224Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'products' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/products",
+      "appearanceId": "grid",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "products",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": true,
+        "dataSources": [],
+        "notes": "Runtime catalog data implied by the type's declaration; data sources not audited."
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-cfc80a6fa725",
+          "kind": "config-declaration",
+          "locator": "source://magento-like-fixtures/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/products.xml#type=products/appearance=grid",
+          "sourceRevisionId": "3a8890a17702815480a02b1096a64366c19fae5c",
+          "retrievedAt": "2026-11-03T05:30:06.224Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'products' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    }
+  ],
+  "summary": {
+    "byCategory": {
+      "native": 5,
+      "widget": 6,
+      "chrome": 2,
+      "custom-required": 0,
+      "unsupported": 0
+    },
+    "byProofLevel": {
+      "not-verified": 0,
+      "discovered": 3,
+      "registered": 10,
+      "structurally-mapped": 0,
+      "admin-roundtrip-verified": 0,
+      "visually-verified": 0
+    },
+    "byAvailability": {
+      "enabled": 10,
+      "disabled": 1,
+      "deprecated": 0,
+      "unknown": 2
+    }
+  },
+  "diagnostics": [
+    {
+      "code": "LOCATOR_OUT_OF_SCOPE",
+      "severity": "info",
+      "message": "1 candidate path(s) were skipped: outside profile include scopes.",
+      "subject": {
+        "type": "source",
+        "id": "magento-like-fixtures"
+      }
+    },
+    {
+      "code": "LOCATOR_OUT_OF_SCOPE",
+      "severity": "info",
+      "message": "Sensitive surface 'app/etc/env.php' exists and is deny-listed — never read by this probe.",
+      "subject": {
+        "type": "source",
+        "id": "magento-like-fixtures"
+      }
+    },
+    {
+      "code": "LOCATOR_OUT_OF_SCOPE",
+      "severity": "info",
+      "message": "Sensitive surface 'auth.json' exists and is deny-listed — never read by this probe.",
+      "subject": {
+        "type": "source",
+        "id": "magento-like-fixtures"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'example_customwidgets/component/banner_a#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "example_customwidgets/component/banner_a#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'example_customwidgets/component/hero_a#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "example_customwidgets/component/hero_a#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'example_customwidgets/component/usp_a#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "example_customwidgets/component/usp_a#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'example_customwidgets/custombanner#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "example_customwidgets/custombanner#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'example_customwidgets/widget/example_hero#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "example_customwidgets/widget/example_hero#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'example_disabledwidgets/widget/disabled_teaser#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "example_disabledwidgets/widget/disabled_teaser#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Declaring module 'Example_EmailOnly' of 'example_emailonly/component/account_url' is not present in app/etc/config.php (or the file was unreadable); enablement unknown, proof capped at 'discovered'.",
+      "subject": {
+        "type": "capability",
+        "id": "example_emailonly/component/account_url"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'example_emailonly/component/account_url#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "example_emailonly/component/account_url#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Declaring module 'Example_EmailOnly' of 'example_emailonly/component/order_summary' is not present in app/etc/config.php (or the file was unreadable); enablement unknown, proof capped at 'discovered'.",
+      "subject": {
+        "type": "capability",
+        "id": "example_emailonly/component/order_summary"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'example_emailonly/component/order_summary#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "example_emailonly/component/order_summary#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/banner#full-width' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/banner#full-width"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/banner#minimal' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/banner#minimal"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/heading#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/heading#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/products#carousel' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/products#carousel"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/products#grid' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/products#grid"
+      }
+    }
+  ]
+}

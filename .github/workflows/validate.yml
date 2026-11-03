@@ -1,5 +1,6 @@
 # Contract test gate (ADR-005-015). Validates both schema families + all examples/fixtures,
-# runs the 30-check contract suite (incl. the T-01..T-14 negative plan) and the neutrality guard.
+# runs the contract suite (T-01..T-22: G1 negative plan, CLI write-truth, path-gateway, CLI/adapter behavior, determinism,
+# neutrality, deny-list) and the portability scans. npm test = tsc build + 51 checks.
 # The task/issue prefix is never hardcoded here (spec §8): this workflow is issue-agnostic.
 name: validate-contracts
 on:
@@ -18,6 +19,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
+      - name: CLI invocation smoke (direct terminal, no agent)
+        run: node bin/det.js --version
       - name: JSON parse sanity (all committed JSON)
         run: |
           find schemas examples profiles projects tests/fixtures -name '*.json' -print0 | while IFS= read -r -d '' f; do

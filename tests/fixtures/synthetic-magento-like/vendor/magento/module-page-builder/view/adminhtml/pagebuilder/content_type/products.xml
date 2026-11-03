@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="products">
+    <label translate="true">Products</label>
+    <appearances>
+        <appearance default="true" name="grid"/>
+        <appearance name="carousel"/>
+    </appearances>
+</type>

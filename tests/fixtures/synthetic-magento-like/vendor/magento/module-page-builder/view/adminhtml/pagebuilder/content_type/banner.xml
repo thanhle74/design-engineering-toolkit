@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="banner">
+    <label translate="true">Banner</label>
+    <appearances>
+        <appearance default="true" name="full-width">
+            <elements>
+                <element name="banner_wrapper">
+                    <attribute name="name" source="data-element-name"/>
+                </element>
+            </elements>
+        </appearance>
+        <appearance name="minimal">
+            <elements>
+                <element name="banner_wrapper"/>
+            </elements>
+        </appearance>
+    </appearances>
+</type>

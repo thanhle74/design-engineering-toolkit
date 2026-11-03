@@ -1,0 +1,21 @@
+{
+    "_readme": [
+        "Synthetic fixture lockfile (issue #9). Versions mirror an audited real checkout's SHAPE only."
+    ],
+    "content-hash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "packages": [
+        {
+            "name": "magento/framework",
+            "version": "103.0.8-p5"
+        },
+        {
+            "name": "magento/module-page-builder",
+            "version": "2.2.6-p5"
+        },
+        {
+            "name": "magento/product-community-edition",
+            "version": "2.4.8-p5"
+        }
+    ],
+    "packages-dev": []
+}

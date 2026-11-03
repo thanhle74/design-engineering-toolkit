@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!-- Fixture: a module-internal Registry with NO declared UI surface (no widget.xml, no content
+     types). The adapter must classify these components as 'chrome' (out of CMS-page scope),
+     not as mapping-target widgets. -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <type name="Example\EmailOnly\Model\EmailVariable\Registry">
+        <arguments>
+            <argument name="variables" xsi:type="array">
+                <item name="order_summary" xsi:type="object">Example\EmailOnly\Variable\OrderSummary</item>
+                <item name="account_url" xsi:type="object">Example\EmailOnly\Variable\AccountUrl</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!-- OUTSIDE-THE-PROJECT-ROOT fixture: unique marker + a syntactically valid declaration that
+     WOULD become a capability if the adapter followed the symlink. Tests assert BOTH are absent:
+     ESCAPE_SECRET_MARKER_outside_root_77a3 -->
+<type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="escapeleak">
+    <appearances>
+        <appearance default="true" name="leaked"/>
+    </appearances>
+</type>
