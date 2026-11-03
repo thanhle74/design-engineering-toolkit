@@ -1,0 +1,153 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/specs/knowledge-foundation/schemas/kb-capability.schema.json",
+  "$comment": "Knowledge Foundation draft — KB-1 (Platform Knowledge) record. Example schema for review, not a frozen contract. One record per line in a JSONL store; this schema also serves as the single-record shape. Magento specifics appear only as VALUES (namespace, nativeId, category), never as schema structure — a Shopify adapter emits identical shapes.",
+  "title": "Knowledge Foundation — KB-1 Capability / DataProvider record",
+  "type": "object",
+  "required": ["schemaVersion", "recordType", "id", "namespace", "platform", "origin", "category", "title", "semantics", "sourceRef", "evidence", "lifecycle", "observed"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "recordType": { "enum": ["capability", "data-provider"] },
+    "id": {
+      "type": "string",
+      "pattern": "^(cap|dat):[a-z0-9][a-z0-9-]*:[a-z0-9][a-z0-9-]*$",
+      "$comment": "Version-free: '<prefix>:<source-namespace>:<kebab-slug>'. The upstream identifier is preserved verbatim in nativeId — never re-slugified."
+    },
+    "nativeId": { "type": "string", "$comment": "Identifier exactly as the source declares it, e.g. 'banner_a', 'secomm_ui', 'Magento_PageBuilder'." },
+    "namespace": { "type": "string", "$comment": "Source namespace, e.g. 'magento-pagebuilder', 'secomm-uiwidget', 'magento-catalog'." },
+    "platform": { "type": "string", "$comment": "Platform family, e.g. 'magento'. Absent platform = record is not platform knowledge and fails validation." },
+    "platformVersion": { "type": "string", "$comment": "Pinned platform version this record was observed at, e.g. '2.4.8-p5'." },
+    "origin": { "enum": ["native", "custom", "third-party"] },
+    "category": {
+      "enum": ["layout", "content", "media", "commerce", "platform-glue", "comms", "compliance", "integration"],
+      "$comment": "Capability family in platform-free vocabulary. Non-exhaustive enum: new families are additive minors."
+    },
+    "title": { "type": "string", "minLength": 1 },
+    "semantics": { "type": "string", "$comment": "What it does — from declarations/labels only, never inferred behavior claims." },
+    "entrypoints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["kind", "ref"],
+        "additionalProperties": false,
+        "properties": {
+          "kind": { "enum": ["admin-stage", "admin-widget-form", "admin-grid", "api", "template", "cli", "event", "frontend-route"] },
+          "ref": { "type": "string" }
+        }
+      }
+    },
+    "io": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "inputs": { "type": "array", "items": { "type": "string" }, "$comment": "Field/schema references by name; field VALUES of secrets never captured." },
+        "outputs": { "type": "array", "items": { "type": "string" } },
+        "context": { "type": "array", "items": { "type": "string" }, "$comment": "Required runtime context, e.g. 'product-context', 'store-view'." }
+      }
+    },
+    "prerequisites": { "type": "array", "items": { "type": "string", "pattern": "^(cap|dat):[a-z0-9][a-z0-9-]*:[a-z0-9][a-z0-9-]*$" } },
+    "dependencies": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "hard": { "type": "array", "items": { "type": "string" } },
+        "soft": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "scope": { "enum": ["global", "website", "store", "page", "instance"] },
+    "enablement": {
+      "type": "object",
+      "required": ["state", "source"],
+      "additionalProperties": false,
+      "properties": {
+        "state": { "enum": ["enabled", "disabled", "not-registered", "unknown"], "$comment": "installed-vs-enabled as data. Absent from the enablement map = 'not-registered' (a distinct fact, observed in the audited checkout)." },
+        "source": { "enum": ["declaration", "config-scan", "runtime-check"], "$comment": "config-scan proves file state only; runtime-check is the only state that may back TESTED claims." }
+      }
+    },
+    "installed": { "type": "boolean", "$comment": "Artifact present on disk. Independent of enablement." },
+    "version": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "declared": { "type": "string", "$comment": "Version the module/package declares about itself." },
+        "locked": { "type": "string", "$comment": "Version pinned by the platform's lockfile." },
+        "source": { "type": "string", "$comment": "Upstream source version this capability derives from, e.g. '2.8.0'." },
+        "schema": { "type": "integer", "minimum": 1, "$comment": "Record-schema version the upstream declares (e.g. component schema_version)." }
+      }
+    },
+    "restrictions": { "type": "array", "items": { "type": "string" }, "$comment": "Guards: CSP rules, policy limits, incompatibilities. Facts, not opinions." },
+    "sourceRef": { "$ref": "#/$defs/sourceRef" },
+    "evidence": { "$ref": "#/$defs/evidence" },
+    "lifecycle": { "$ref": "#/$defs/lifecycle" },
+    "observed": { "$ref": "#/$defs/observed" },
+    "diagnostics": { "type": "array", "items": { "$ref": "#/$defs/diagnostic" } },
+    "notes": { "type": "string" }
+  },
+  "$defs": {
+    "sourceRef": {
+      "type": "object",
+      "required": ["kind", "locator"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "enum": ["figma-node", "repo-file", "package", "document", "issue-ref", "db-config"] },
+        "locator": {
+          "type": "object",
+          "$comment": "Shape depends on kind. repo-file MUST use rootAlias (resolved from the project's local ignored config) — absolute owner paths are unrepresentable in shared stores.",
+          "additionalProperties": { "type": "string" }
+        },
+        "lineRange": { "type": "string" },
+        "capturedAt": { "type": "string", "format": "date-time" },
+        "digest": { "type": "string", "$comment": "sha256 of the artifact at capture time; the re-audit trigger key." }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["proofLevel", "confidence", "uncertainty"],
+      "additionalProperties": false,
+      "properties": {
+        "proofLevel": { "enum": ["DETECTED", "ASSUMED", "TESTED", "UNKNOWN"] },
+        "sources": { "type": "array", "items": { "$ref": "#/$defs/sourceRef" } },
+        "method": { "type": "string", "$comment": "How the claim was established, e.g. 'xml-declaration-scan', 'admin-roundtrip', 'llm-classified' (capped at ASSUMED until human-verified)." },
+        "confidence": { "enum": ["high", "medium", "low"] },
+        "verifiedAt": { "type": ["string", "null"], "format": "date-time" },
+        "uncertainty": { "type": "array", "minItems": 1, "items": { "type": "string" }, "$comment": "What could invalidate this record — mandatory, may be ['none identified']." }
+      }
+    },
+    "lifecycle": {
+      "type": "object",
+      "required": ["state", "reviewStatus"],
+      "additionalProperties": false,
+      "properties": {
+        "state": { "enum": ["ACTIVE", "STALE", "INVALIDATED", "ARCHIVED"], "$comment": "STALE = a tracked digest changed since observed; must re-audit before feeding decisions." },
+        "reviewStatus": { "enum": ["unreviewed", "reviewed", "approved"] },
+        "reviewedBy": { "type": "string" },
+        "reviewRef": { "type": "string" }
+      }
+    },
+    "observed": {
+      "type": "object",
+      "required": ["scannedAt"],
+      "additionalProperties": false,
+      "properties": {
+        "scannedAt": { "type": "string", "format": "date-time" },
+        "inputDigests": {
+          "type": "object",
+          "$comment": "path (rootAlias-relative) -> sha256. The re-audit trigger map: any change here marks the record STALE.",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "diagnostic": {
+      "type": "object",
+      "required": ["code", "severity", "message"],
+      "additionalProperties": false,
+      "properties": {
+        "code": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" },
+        "severity": { "enum": ["info", "warning", "error"] },
+        "message": { "type": "string" },
+        "sourceRef": { "$ref": "#/$defs/sourceRef" }
+      }
+    }
+  }
+}

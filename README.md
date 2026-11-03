@@ -15,6 +15,7 @@ Everything below was prepared for issue [#1](https://github.com/thanhle74/design
 3. **[docs/quality-gates.md](docs/quality-gates.md)** · **[docs/safety-and-scope.md](docs/safety-and-scope.md)** · **[docs/pilot-scope.md](docs/pilot-scope.md)** — measurable gates, invariants, and the bounded pilot scope handed to issue #2.
 4. **[schemas/](schemas/)** — four versioned JSON Schema (Draft 2020-12) contracts, machine-validated against all bundled examples.
 5. **[profiles/](profiles/)** — two example project profiles (luxury editorial / commerce promotional) exercising cross-project neutrality; **[examples/](examples/)** — illustrative contract payloads derived from the audit.
+6. **[specs/knowledge-foundation/](specs/knowledge-foundation/README.md)** — DRAFT (issue [#7](https://github.com/thanhle74/design-engineering-toolkit/issues/7)): three knowledge bases (platform / UI component / project), contracts + example schema drafts, technology ADR, source inventory, UX-planning contract, and implementation plan — specification only, no implementation claimed.
 
 ## Work tracking
 
