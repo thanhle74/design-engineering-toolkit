@@ -128,3 +128,36 @@ A proposed implementation must answer:
 8. What is OUT OF SCOPE now, and which issue/GO unlocks it?
 
 **Current answer:** Page Builder CMS pages only. The other outputs are future architecture, not present implementation requirements.
+
+## 9. Product execution model — CODE-FIRST CLI, operated through Claude Code (Owner decision)
+
+**Canonical implementation backlog:** [#9 Executable CLI Engine + local Magento MCP reuse](https://github.com/thanhle74/design-engineering-toolkit/issues/9). This is the delivery model for the **current Figma → Magento Page Builder** priority; it is not authorization to build code while #5/#7 are still in progress.
+
+**Near-term UX:** Developer opens **Claude Code in Orca/terminal**, in an explicitly selected project workspace (or points a CLI/profile to that project), and asks it to run the toolkit. There is **NO proprietary web frontend, separate AI chat UI, login, local server or hosted service in the first product**. A developer must also be able to invoke the same toolkit CLI directly without AI. Later a local web UI may drive the same engine and artifacts, but must not become another engine.
+
+```text
+Developer in Orca / Claude Code            Developer or CI via terminal
+             |                                           |
+    Toolkit Skill / AGENTS                              CLI
+             |                                           |
+             +------------------+------------------------+
+                                v
+                Executable Toolkit CLI + Core
+           schemas | capability audit | mapping | tests
+                                |
+             Magento Page Builder Adapter (first)
+                                |
+              versioned JSON + report + evidence
+     [Figma read-only and CMS import only in approved later gates]
+```
+
+**Responsibility split:**
+- **Code-owned / deterministic:** project profile resolution; adapter discovery; schema validation; source inventory, capability identification and compatibility; structural plan, versioned JSON/diagnostics/diff; serialization, QA, exit codes and repeatable tests (when implementation phases are authorized). Results must be reproducible for fixed version + input.
+- **Claude Code / agent-owned:** understand human request, invoke skills/CLI, consult Magento knowledge, classify ambiguous cases, propose gaps, coordinate reviews and request explicit authorization for writes. Agent does **not** replace CLI rules with recurring unverified reasoning or silently report unsupported capabilities as PASS.
+- **Markdown/specs/skills:** contracts, architectural decisions, acceptance rules, tool invocation, safety gates — important but **not** sufficient as an engine. First usable code milestone must prove a real CLI, fixtures and CI tests; not just documentation.
+- **MCP vs Engine:** Owner's local Claude Code currently has **`magento-specs` MCP configured** (as reported by Owner). Its exact commands, coverage, installed version and scopes **must be discovered at runtime**; do not invent MCP APIs. Treat it as an **optional local knowledge/authoring/checking capability**, not a required runtime dependency of a portable CLI. Prefer using its verified Magento coding references and existing libraries over rebuilding duplicates. Cross-check any reference against the actual installed Magento/Hyvä/Page Builder source/version; runtime capability is never proven solely by generic documentation.
+- **Degraded mode:** when Claude Code or `magento-specs` is absent, deterministic CLI operations and generic fixtures still run; optional agent/MCP-assisted workflows report honest unavailability. Do not upload proprietary code, Hyvä UI licensed files, MCP output or credentials into shareable artifacts.
+- **Portability:** CLI receives project/adapter/profile as arguments or local ignored configuration, never silently assumes `/home/thanhle/Sites/Magento/slaunchpad`; no hardcoded Figma node, client brand or vendor runtime. First release only Page Builder CMS pages, not theme output.
+- **Sequencing:** architectural research #5/#7 → tech ADR and contract review → explicit Owner GO for #9 read-only executable core/CLI → separately authorized Figma adapter and isolated CMS Page Builder Admin round-trip → visual fidelity. No automatic merge or production content writes.
+
+**Boundary check:** If a developer removes Claude Code and the `magento-specs` MCP, the core CLI should still validate a profile, inspect synthetic inputs and produce reproducible reports. Conversely, a beautiful chat UI or a collection of Markdown files without executable contracts/tests **does not satisfy product completion**.
