@@ -1,6 +1,19 @@
 # ACTIVE CHATGPT COORDINATOR HANDOFF — Design Engineering Toolkit
 
-## CURRENT COORDINATOR CHECKPOINT — 2026-11-03 — #5/#7 FULLY INTEGRATED
+## CURRENT COORDINATOR CHECKPOINT — 2026-11-03 (later) — #9 FIRST CLI GATE IMPLEMENTED (DRAFT, PENDING REVIEW)
+
+> **NEWEST checkpoint.** Supersedes the status lines below for Issue #9 only; the #5/#7 integration truth below is unchanged. Live Git/GitHub still beats this file.
+
+**Issue [#9](https://github.com/thanhle74/design-engineering-toolkit/issues/9) first implementation gate is CODE-COMPLETE on branch `thanhle74/9-backlog-executable-cli-engine-via-claude-code` (draft PR, no auto-merge):**
+- TypeScript core graduated from the tested #5 harness to `src/core/` (parity: unchanged 30-check suite, identical hashes); `det` CLI (`validate`/`inspect`/`plan`) with deterministic JSON/exit codes; new independent `schemas/cli/` family (converter family untouched); out-of-process adapter runtime (4 explicit failure diagnostics); **read-only Magento Page Builder adapter** (composer.lock versions, config.php narrow reader, per-file `content_type/` globs, cross-module merge NOT_VERIFIED, widget.xml + DI registries with chrome/precision rule).
+- Gate: `npm test` = build + **44/44** checks (30 G1 + 14 new CLI/adapter incl. deny-list leakage, determinism, portability). Receipt: `docs/converter/RECEIPT-ISSUE9-CLI.md`; decisions ADR-009-001..009 in `docs/converter/DECISIONS.md`; agent skill `.claude/skills/det-cli/`.
+- **Live read-only audit of the Owner's local checkout** (gitignored profile, path never committed): 78 capabilities @ checkout HEAD `66aff1eb`, Magento CE 2.4.8-p5 / PB 2.2.6-p5, all `registered` ceiling with per-capability `NOT_VERIFIED` (declaration-only), two runs hash-identical, `env.php`/`auth.json` deny-listed. `ADMIN_ROUNDTRIP_VERIFIED`=0.
+- **NOT done / NOT claimed:** Figma access, structural mapping of a real design, CMS import, Admin round-trip, visual QA, Theme output, FE. Those remain separate gated stages needing explicit Owner GO.
+- **NEXT:** Owner/Coordinator review of the draft PR → merge GO; then the later-gate sequencing on issue #9 stays as written (G2 read-only design extraction first, separate GO).
+
+---
+
+## HISTORICAL COORDINATOR CHECKPOINT — 2026-11-03 — #5/#7 FULLY INTEGRATED
 
 > **CURRENT INTEGRATED TRUTH at this checkpoint.** This section supersedes older dated snapshots and stale PR/GO statements below. New sessions must still re-fetch live GitHub refs, Issue comments, CI and source before asserting status. This is not an authority to write to Figma, Magento CMS/DB or production.
 

@@ -17,6 +17,10 @@ All schemas use **JSON Schema Draft 2020-12**.
 
 The converter pipeline (Capability Registry → Structural Mapping → Functional Round-trip → Visual Fidelity) has its **own schema family** under [`converter/`](converter/) with an independent integer major: [`converter/capability-registry.schema.json`](converter/capability-registry.schema.json), [`converter/component-binding-map.schema.json`](converter/component-binding-map.schema.json), [`converter/resolution-report.schema.json`](converter/resolution-report.schema.json), [`converter/converter-profile.schema.json`](converter/converter-profile.schema.json) + shared [`converter/common.defs.json`](converter/common.defs.json). Conventions, closed enums, deterministic serialization and its version history: [`converter/README.md`](converter/README.md). This V1 family stays frozen at major 1 (ADR-005-011).
 
+## CLI runtime contract family (issue #9)
+
+The `det` CLI runtime has its **own schema family** under [`cli/`](cli/) with an independent integer major: [`cli/adapter-descriptor.schema.json`](cli/adapter-descriptor.schema.json) (adapter registration), [`cli/adapter-input.schema.json`](cli/adapter-input.schema.json) (per-run transport to an out-of-process adapter) and [`cli/tool-run.schema.json`](cli/tool-run.schema.json) (per-run envelope with artifacts, content hashes and diagnostics). `tool-run` reuses the converter family's closed diagnostic registry via a pinned `$ref`; process-level diagnostics stay open-vocabulary so the converter enums are never extended. Conventions and version history: [`cli/README.md`](cli/README.md).
+
 ## Versioning
 
 - Payloads carry `schemaVersion` (integer, **major** version only — currently `1`).

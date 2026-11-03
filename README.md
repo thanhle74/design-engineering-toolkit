@@ -8,6 +8,21 @@ A **multi-project, platform-neutral** foundation for design-system contracts, se
 
 **Current gate (G1):** source-backed capability inventory, neutral contracts/schema decisions, reusable skills/agents and evidence-based repo hygiene. **No Figma access, no CMS import, no CSS pixel-perfect, no production writes.** Later G2–G4 require separate decisions.
 
+## Executable CLI — `det` (Issue #9, first implementation gate)
+
+The deterministic engine is real code now (TypeScript on Node per [TECH-ADR](specs/knowledge-foundation/TECH-ADR.md) ADR-1), equally runnable by an agent, a human terminal or CI — no AI required:
+
+```bash
+npm ci && npm run build
+node bin/det.js validate --profile profiles/magento-pagebuilder.example.json --project /path/to/magento --json
+node bin/det.js inspect  --profile profiles/magento-pagebuilder.example.json --project /path/to/magento --out out/
+node bin/det.js plan     --profile <p> --registry out/capability-registry.json --bindings <map.json> --input <structure.json> --out out/
+```
+
+- **Commands:** `validate` (profile contract + source preflight) · `inspect` (read-only capability probe via an out-of-process adapter; proof ceiling `registered`, `env.php`/`auth.json` deny-listed) · `plan` (deterministic structural mapping → ResolutionReport; pure computation).
+- **Deterministic:** machine-readable `--json`, `tool-run.json` envelopes with content hashes, exit codes `0` ok / `1` blocking diagnostics / `2` usage / `3` adapter failure; no-write default (`--out` writes, `--dry-run` never does). Source paths come from `--project` > `DET_PROJECT_SOURCE` > gitignored `profiles/*.local.json` — never a default.
+- **Boundaries:** no Figma, no CMS/DB writes, no Admin round-trip in this gate. Agents should use the [`det-cli` skill](.claude/skills/det-cli/SKILL.md) instead of reimplementing logic as prompts; the `magento-specs` MCP is optional and never a runtime dependency. Evidence: [docs/converter/RECEIPT-ISSUE9-CLI.md](docs/converter/RECEIPT-ISSUE9-CLI.md).
+
 Start here:
 - [Current architecture/spec](specs/ISSUE-5-converter-architecture.md) — INTEGRATED_FOR_G1_REVIEW (2026-11-03); integrator receipt: [docs/converter/RECEIPT-ISSUE5-G1.md](docs/converter/RECEIPT-ISSUE5-G1.md)
 - [Converter contracts](schemas/converter/) (materialized schemas) + [contract reference incl. deferred NodeIR/PageStructure](docs/converter/CONTRACTS.md)
@@ -15,7 +30,7 @@ Start here:
 - [Accepted/proposed decisions](docs/converter/DECISIONS.md) (ADR-005-001..016)
 - [OSS source selection](docs/research/oss-adoption-for-pagebuilder.md) · [Agent skills selection](docs/research/agent-skills-adoption.md) — verified live against sources
 - [Repo hygiene baseline](docs/converter/REPO-HYGIENE-BASELINE.md) (incl. [5] TIP audit addendum)
-- **Test gate:** `npm test` — 30 checks: schema validation (V1 + converter families), the T-01..T-14 negative plan, determinism, neutrality guard. Also runs in CI (`.github/workflows/validate.yml`).
+- **Test gate:** `npm test` — 44 checks (build + schema validation for the V1/converter/CLI families, the T-01..T-18 negative/CLI plan, determinism, neutrality + deny-list scans). Also runs in CI (`.github/workflows/validate.yml`).
 - [Agent rules](AGENTS.md), [Claude Code entry](CLAUDE.md), `.claude/skills/` and `.claude/agents/`
 
 **Task naming:** `[<issue number>] <task title>`; `[5]` is this task's GitHub issue number, **not a version**.
@@ -29,7 +44,7 @@ Start here:
 - [Three knowledge domains](specs/knowledge-foundation/README.md) — **architecture/specs only**, not working ingestion yet. [Technology ADR](specs/knowledge-foundation/TECH-ADR.md) recommends TypeScript/Node and JSONL + derived SQLite FTS5 for later implementation.
 - [Figma node naming](specs/FIGMA-NODE-SEMANTICS-AND-NAMING.md): root-tree inventory and Page Builder-vs-Theme semantics.
 - [ChatGPT Coordinator handoff](specs/CHATGPT-COORDINATOR-HANDOFF.md): live GitHub-first session restore.
-- [Executable CLI Issue #9](https://github.com/thanhle74/design-engineering-toolkit/issues/9) — **backlog pending separate implementation GO**.
+- [Executable CLI Issue #9](https://github.com/thanhle74/design-engineering-toolkit/issues/9) — first CLI gate implemented (TypeScript core + `det` + read-only Page Builder adapter); receipt: [docs/converter/RECEIPT-ISSUE9-CLI.md](docs/converter/RECEIPT-ISSUE9-CLI.md). Later stages (Figma extraction, import, Admin round-trip) remain separate gated work.
 - [SEO Writer Engine selective lessons](docs/research/seo-writer-engine-patterns-for-toolkit.md) — reuse architectural/workflow principles, not SEO business logic.
 
 **Proof boundary:** #5 G1 contracts/CI do not prove Figma extraction, CMS Admin round-trip or visual fidelity; #7 delivers knowledge **contracts**, not working knowledge ingestion. Merging specs grants no Figma/Magento write authority.
