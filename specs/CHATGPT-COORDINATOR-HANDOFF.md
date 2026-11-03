@@ -1,5 +1,21 @@
 # ACTIVE CHATGPT COORDINATOR HANDOFF — Design Engineering Toolkit
 
+## NEWEST COORDINATOR CHECKPOINT — 2026-11-03 ~11:17 ICT — #5/#7 SOURCE REVIEW ACCEPTED; PRs NOT MERGED
+
+> **This newer checkpoint supersedes the older Issue #5/#7 status in §5/§9 below.** Live refs/Issue comments always take precedence; it does not authorize an integration merge, Figma access, Magento CMS/DB writes, or #9 execution.
+
+**Confirmed GitHub review truth:**
+- **Issue #5:** [Coordinator verdict `ACCEPT_ARCHITECTURE_G1`](https://github.com/thanhle74/design-engineering-toolkit/issues/5#issuecomment-6595394463), candidate **Draft PR #11** @ `7a2cbfde43f143dd0e7995c17146ebfdb87c3d62`, stacked on Draft PR #6. Two actual GitHub Actions `contracts` checks on this exact SHA **SUCCESS**; committed sample 61 capabilities/114 evidence locators, 30/30 test claim from integrator with CI corroboration. **Not** a running Figma extractor, importer, Admin round-trip or visual pass. G2–G4 HOLD. Magento local-source inventory not independently rerun.
+- **Issue #7:** [Coordinator verdict `ACCEPT_ARCHITECTURE_SPEC_ONLY`](https://github.com/thanhle74/design-engineering-toolkit/issues/7#issuecomment-6595395058), candidate **Draft PR #10**. Three-KB specs, tech ADR recommending **TypeScript/Node + JSON Schema 2020-12 + versioned JSONL/derived SQLite FTS5**. One bounded reviewer correction on the *same PR #10 branch* resolved cross-capability-class `mapsTo` vs `neighborOf` inconsistency and clarified that metadata-only schema fields do **not** by themselves prevent sensitive/licensed code from appearing in free text (must sanitize/test at ingest/export); last reviewer commit `5086efdf`. All four schema drafts parse as JSON; executable schema/KB CI remains a later implementation gate, not an invented PASS.
+- **Draft PR #8** contains our own product scope, modular architecture, selective SEO architecture/skills learning, Figma node taxonomy and **this handoff**. **Draft PRs #6/#8/#10/#11 remain open/unmerged** as of this snapshot. Issues #5/#7 can remain open until approved integration.
+- **Issue #9** is **BACKLOG/NO-GO** without explicit Owner approval. It must reuse #5/#7 contracts; first deliverable code is local CLI + pure registry/mapping/validation + synthetic fixtures. No FE/chat, no Theme output, no Figma writes.
+
+**NEXT — one coherent integration decision:** under a **specific Owner GO MERGE ARCHITECTURE**, review and integrate **#11 as the aggregate #5 branch including #6** (close #6 as superseded after confirming content), then **#10** (resolve README/contract conflicts against merged #11), then **#8** (pure docs/handoff, rebase/reconcile current index/AGENTS navigation once). No duplicate PR merges and no force-push/overwriting parallel commits. Verify exact merged SHAs on `main` and update handoff/issue receipts. Only **after integrated contracts + separate GO #9** may implementation begin. Owner policy items #7 on private KB-3 material, Figma fileKey visibility and approval durability must be resolved before related real-source operations, not before all synthetic CLI work.
+
+**Owner-facing short status format:** `#5=REVIEW_ACCEPTED_G1; #7=REVIEW_ACCEPTED_SPEC; #11/#10/#8=OPEN_DRAFT; NEXT=OWNER MERGE GO for reviewed architecture (no auto-merge); #9=BACKLOG.`
+
+---
+
 > **First checkpoint:** 2026-11-03 (Asia/Ho_Chi_Minh).  
 > **Status:** DRAFT PR #8, branch `docs/pagebuilder-first-product-scope` — **NOT YET MERGED INTO `main`** as of this checkpoint. Re-fetch GitHub truth on each new session.  
 > **Purpose:** durable restoration of **product intent, Owner working style, architecture, authority boundaries, outstanding tasks and exact next decisions** for the ChatGPT Coordinator. This is a **router + dated snapshot, not current Git/Orca/Figma truth**.  
