@@ -1,5 +1,17 @@
 # ACTIVE CHATGPT COORDINATOR HANDOFF — Design Engineering Toolkit
 
+## NEWEST FIGMA NAMING CHECKPOINT — 2026-11-03 — DESKTOP FRAME 245:2 RENAMED
+
+> **Actual connected Figma read/write evidence.** File key `vNPtfBRpYM3PsExirVqhmt`, Figma page `Home page — Luxury`, source frame ID `245:2`. User explicitly asked to normalize the tree once #5 completed. The Figma plugin read verified 331 descendants (97 FRAME, 102 TEXT, 40 INSTANCE, 28 RECTANGLE, 52 VECTOR, 12 ELLIPSE); then applied **61 label-only changes** after validating all expected old names. **Source IDs, ancestry, child order, top-level section count and all frame geometry matched before/after**. No component instances, text contents, fills, media, or styles were intentionally mutated. No CMS/DB changes.
+>
+> Named top-level children: `SITE/AnnouncementBar`, `SITE/Header`, `SECTION/Hero/Primary`, `SECTION/BrandStatement`, `SECTION/Hero/Secondary`, `SECTION/FeaturedCollections`, `SECTION/FeaturedProducts`, `SECTION/CampaignEditorial`, `SECTION/Lookbook`, `SECTION/EditorialMosaic`, `SECTION/Craftsmanship`, `SECTION/ThePeople`, `SECTION/ProductSpotlight`, `SECTION/Newsletter`, `SITE/Footer`; root renamed to `PAGE/Home/Desktop`. Selected safe normal FRAME descendants renamed `SLOT/...` or `DECOR/...`. Deep instance children, shared-library components and text remain unchanged. **This is partial scoped semantic naming, not a claim that all 331 layers have been standardized.**
+>
+> **Semantic contract:** The converter must inventory every descendant, exclude true site header/footer chrome from Page Builder (but retain them in report), and derive responsibilities using structural/capability evidence rather than trusting name prefixes alone. The normalized Figma source remains a design only, **not evidence of any executable Page Builder converter**. Next code task #9 is still the first real CLI milestone; do not treat this as a GO for G2/G3/Figma→CMS writes. File naming contract: [FIGMA-NODE-SEMANTICS-AND-NAMING.md](FIGMA-NODE-SEMANTICS-AND-NAMING.md).
+>
+> **Next-session rule:** Do not rerun the 61-name rename or assume the old `s_header`, `s_hero` layer labels exist. Re-read live Figma if working with `245:2`; use immutable node IDs and current source version. Do not rename mobile `245:16` automatically — it is a separate scope.
+
+---
+
 ## CURRENT COORDINATOR CHECKPOINT — 2026-11-03 — #5/#7 FULLY INTEGRATED
 
 > **CURRENT INTEGRATED TRUTH at this checkpoint.** This section supersedes older dated snapshots and stale PR/GO statements below. New sessions must still re-fetch live GitHub refs, Issue comments, CI and source before asserting status. This is not an authority to write to Figma, Magento CMS/DB or production.
