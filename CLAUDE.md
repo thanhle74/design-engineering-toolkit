@@ -1,7 +1,9 @@
 # Claude Code — Design Engineering Toolkit
 
-Read [AGENTS.md](AGENTS.md) first; it is the single source of truth for workflow, safety, and project-neutral boundaries.
+Read [AGENTS.md](AGENTS.md) as the universal agent router. For a **new ChatGPT Coordinator session**, read [Coordinator Handoff](specs/CHATGPT-COORDINATOR-HANDOFF.md) and refresh GitHub Issue/PR/ref/CI truth.
 
-For current work read [Issue #5 architecture spec](specs/ISSUE-5-converter-architecture.md), then the relevant focused `.claude/skills/*/SKILL.md`. Task names begin with **`[5]`** (GitHub Issue ID). Dispatch independent read-only workers in parallel; keep exactly one shared-branch writer/integrator.
+**Product:** code-first, agent-optional **Modular Monolith CLI Engine**. First target is **Figma → editable Magento Page Builder CMS content**; Hyvä Theme and requirements-to-Figma are later. [Product scope](specs/PRODUCT-ARCHITECTURE-AND-SCOPE.md) · [Modular adapters](specs/MODULAR-ARCHITECTURE-AND-ADAPTERS.md) · [Three-KB architecture](specs/knowledge-foundation/README.md) · [Figma node naming](specs/FIGMA-NODE-SEMANTICS-AND-NAMING.md).
 
-**Current gate:** architecture only; no Figma calls, no Magento CMS/DB writes, no CSS fidelity, no auto-merge.
+Use task labels `[<GitHub issue number>] <title>`; #5 G1 was architecture-only and must not be replayed. Read relevant `.claude/skills/*/SKILL.md`, use independent bounded workers and one integrator. Prefer tested deterministic code over prompt-only mapping. Owner's `magento-specs` MCP is optional when actually available.
+
+**Protected:** no Figma writes or Page Builder CMS/DB mutations without separate GO; no licensed Hyvä source distribution, production writes, auto-merge or invented approval.

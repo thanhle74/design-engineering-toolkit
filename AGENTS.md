@@ -2,7 +2,14 @@
 
 This is the **one agent policy entrypoint** for this reusable, platform-neutral toolkit. Claude Code reads [CLAUDE.md](CLAUDE.md), which points here. Read the selected **current spec**, existing [V1 architecture](docs/ARCHITECTURE.md), [safety rules](docs/safety-and-scope.md), and decision log before editing anything.
 
-## Current task
+## Session and authority bootstrap (current policy)
+
+- For a **Coordinator / new session**, read [CHATGPT-COORDINATOR-HANDOFF.md](specs/CHATGPT-COORDINATOR-HANDOFF.md) and the live GitHub Issue/PR/comments; handoff is a dated locator, not authority over live Git. Read task-relevant [product scope](specs/PRODUCT-ARCHITECTURE-AND-SCOPE.md), [modular architecture](specs/MODULAR-ARCHITECTURE-AND-ADAPTERS.md), and [three-KB contracts](specs/knowledge-foundation/README.md).
+- The `[N]` prefix is the **GitHub issue number** for the current task, not a permanent `[5]` label. Do not relaunch #5's reviewed architecture audit automatically.
+- First executable CLI target is Magento Page Builder CMS; requirements-to-Figma, Hyvä Theme system pages, web FE/chat and CMS/Figma writes are separate later gates. Local `magento-specs` MCP is optional agent-side help, never a portable Core dependency.
+- Coordinator verifies actual source, test and receipt; never self-claims Admin/visual/production PASS without that exact evidence.
+
+## Historical [5] task-specific guidance (do not replay automatically)
 - **[5]** = GitHub Issue [#5](https://github.com/thanhle74/design-engineering-toolkit/issues/5), not a version number. Begin worker/Orca task labels with `[5]`.
 - Canonical new pipeline: **Capability Registry → Structural Mapping → Functional Round-trip → Visual Fidelity**.
 - **Stage 1 only: ARCHITECTURE FIRST.** Do not access Figma (including read tools), write to Magento, generate a CMS page, modify production or polish CSS under [#5](https://github.com/thanhle74/design-engineering-toolkit/issues/5) until explicit subsequent gates.
