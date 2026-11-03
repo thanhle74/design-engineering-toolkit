@@ -1,0 +1,25 @@
+# Contract test gate (ADR-005-015). Validates both schema families + all examples/fixtures,
+# runs the 30-check contract suite (incl. the T-01..T-14 negative plan) and the neutrality guard.
+# The task/issue prefix is never hardcoded here (spec §8): this workflow is issue-agnostic.
+name: validate-contracts
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - name: JSON parse sanity (all committed JSON)
+        run: |
+          find schemas examples profiles projects tests/fixtures -name '*.json' -print0 | while IFS= read -r -d '' f; do
+            node -e "JSON.parse(require('fs').readFileSync(process.argv[1],'utf8'))" "$f" || exit 1
+          done

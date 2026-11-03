@@ -1,0 +1,25 @@
+{
+  "$comment": "G1 harness fixture shape for the resolver tests. PageStructure is NOT materialized until the Structural Mapping gate; this shape is documented in docs/converter/CONTRACTS.md (Harness section) and is tests-only until then. This is the POSITIVE fixture: every nesting edge is legal.",
+  "profileId": "synthetic-flatcms",
+  "platformId": "synthetic-flatcms",
+  "source": { "sourceId": "flatcms-design", "revisionId": "design-fixture-0001", "accessedAt": "1970-01-01T00:00:00Z" },
+  "sections": [
+    {
+      "sectionId": "s-000000000001",
+      "order": 0,
+      "name": "intro",
+      "elements": [
+        { "elementId": "n-000000000001", "sourceComponentId": "content-stack", "variantAssignment": {}, "childrenElementIds": ["n-000000000002", "n-000000000003"] },
+        { "elementId": "n-000000000002", "sourceComponentId": "hero-title", "variantAssignment": {}, "childrenElementIds": [] },
+        { "elementId": "n-000000000003", "sourceComponentId": "teaser-grid", "variantAssignment": { "layout": "compact" }, "childrenElementIds": [] },
+        { "elementId": "n-000000000004", "sourceComponentId": "promo-banner", "variantAssignment": {}, "childrenElementIds": [] }
+      ]
+    },
+    {
+      "sectionId": "s-000000000002",
+      "order": 1,
+      "name": "faq",
+      "elements": [{ "elementId": "n-000000000005", "sourceComponentId": "faq-accordion", "variantAssignment": {}, "childrenElementIds": [] }]
+    }
+  ]
+}

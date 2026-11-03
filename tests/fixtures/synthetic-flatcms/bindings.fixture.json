@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "profileId": "synthetic-flatcms",
+  "platformId": "synthetic-flatcms",
+  "generatedAt": "1970-01-01T00:00:00Z",
+  "registry": { "platformId": "synthetic-flatcms", "registryRevisionId": "fixture-rev-0001" },
+  "bindings": [
+    {
+      "bindingId": "b-000000000001",
+      "sourceComponentId": "hero-title",
+      "sourceEvidence": [
+        { "evidenceId": "e-100000000001", "kind": "document", "locator": "design://flatcms-design/page-1/heading-1", "retrievedAt": "1970-01-01T00:00:00Z", "note": "fixture component source" }
+      ],
+      "variantConditions": [],
+      "target": { "capabilityId": "flatcms/heading", "appearanceId": "default" },
+      "propsTransform": [{ "from": "text", "to": "value", "transform": "identity", "required": true }],
+      "fallbackPolicy": "fail-unsupported"
+    },
+    {
+      "bindingId": "b-000000000002",
+      "sourceComponentId": "teaser-grid",
+      "sourceEvidence": [
+        { "evidenceId": "e-100000000002", "kind": "document", "locator": "design://flatcms-design/page-1/teaser-grid-1", "retrievedAt": "1970-01-01T00:00:00Z", "note": "fixture component source" }
+      ],
+      "variantConditions": [{ "prop": "layout", "op": "eq", "value": "compact" }],
+      "target": { "capabilityId": "flatcms/teaser", "appearanceId": "compact" },
+      "propsTransform": [{ "from": "items", "to": "entries", "transform": "identity", "required": true }],
+      "fallbackPolicy": "fail-unsupported"
+    },
+    {
+      "bindingId": "b-000000000003",
+      "sourceComponentId": "teaser-grid",
+      "sourceEvidence": [
+        { "evidenceId": "e-100000000003", "kind": "document", "locator": "design://flatcms-design/page-1/teaser-grid-1", "retrievedAt": "1970-01-01T00:00:00Z", "note": "fixture component source" }
+      ],
+      "variantConditions": [{ "prop": "layout", "op": "eq", "value": "expanded" }],
+      "target": { "capabilityId": "flatcms/teaser", "appearanceId": "expanded" },
+      "propsTransform": [{ "from": "items", "to": "entries", "transform": "identity", "required": true }, { "from": "intro", "to": "lead", "transform": "identity", "required": false }],
+      "fallbackPolicy": "fail-unsupported"
+    },
+    {
+      "bindingId": "b-000000000004",
+      "sourceComponentId": "faq-accordion",
+      "sourceEvidence": [
+        { "evidenceId": "e-100000000004", "kind": "document", "locator": "design://flatcms-design/page-1/accordion-1", "retrievedAt": "1970-01-01T00:00:00Z", "note": "fixture component source" }
+      ],
+      "variantConditions": [],
+      "target": { "capabilityId": "flatui/accordion", "appearanceId": "default" },
+      "propsTransform": [{ "from": "entries", "to": "items", "transform": "identity", "required": true }],
+      "fallbackPolicy": "fail-unsupported"
+    },
+    {
+      "bindingId": "b-000000000006",
+      "sourceComponentId": "content-stack",
+      "sourceEvidence": [
+        { "evidenceId": "e-100000000006", "kind": "document", "locator": "design://flatcms-design/page-1/stack-1", "retrievedAt": "1970-01-01T00:00:00Z", "note": "fixture container source" }
+      ],
+      "variantConditions": [],
+      "target": { "capabilityId": "flatcms/stack", "appearanceId": "default" },
+      "propsTransform": [{ "from": "axis", "to": "direction", "transform": "identity", "required": false }],
+      "fallbackPolicy": "fail-unsupported"
+    },
+    {
+      "bindingId": "b-000000000005",
+      "sourceComponentId": "promo-banner",
+      "sourceEvidence": [
+        { "evidenceId": "e-100000000005", "kind": "document", "locator": "design://flatcms-design/page-1/promo-1", "retrievedAt": "1970-01-01T00:00:00Z", "note": "fixture component source" }
+      ],
+      "variantConditions": [],
+      "target": { "capabilityId": "custom/promo-strip", "appearanceId": "default" },
+      "propsTransform": [{ "from": "text", "to": "message", "transform": "identity", "required": true }],
+      "fallbackPolicy": "degrade-advisory",
+      "fallbackNote": "Custom capability: degrade to a plain notice and record an advisory when the authored appearance is unavailable."
+    }
+  ],
+  "diagnostics": []
+}

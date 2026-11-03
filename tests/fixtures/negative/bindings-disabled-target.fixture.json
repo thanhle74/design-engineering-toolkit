@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "profileId": "synthetic-flatcms",
+  "platformId": "synthetic-flatcms",
+  "generatedAt": "1970-01-01T00:00:00Z",
+  "registry": {
+    "platformId": "synthetic-flatcms",
+    "registryRevisionId": "fixture-rev-0001"
+  },
+  "bindings": [
+    {
+      "bindingId": "b-0000000f0013",
+      "sourceComponentId": "slider-thing",
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-100000000004",
+          "kind": "document",
+          "locator": "design://flatcms-design/page-1/accordion-1",
+          "retrievedAt": "1970-01-01T00:00:00Z",
+          "note": "fixture component source"
+        }
+      ],
+      "variantConditions": [],
+      "target": {
+        "capabilityId": "flatui/carousel",
+        "appearanceId": "default"
+      },
+      "propsTransform": [
+        {
+          "from": "entries",
+          "to": "items",
+          "transform": "identity",
+          "required": true
+        }
+      ],
+      "fallbackPolicy": "fail-unsupported"
+    }
+  ],
+  "diagnostics": []
+}
