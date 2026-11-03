@@ -209,3 +209,11 @@ For every proposed section record at least: `sourceFileVersion`, `sourceNodeIds`
 For future Figma **creation** and Figma → Page Builder **conversion**, follow [FIGMA-NODE-SEMANTICS-AND-NAMING.md](FIGMA-NODE-SEMANTICS-AND-NAMING.md): identity `fileKey + nodeId + sourceVersion` is immutable; names such as `PAGE/Home/Desktop`, `SITE/Header`, `SECTION/Hero`, `COMPONENT/ProductCard` and `SLOT/CTA` are human-readable semantic labels, not conversion authority. Inventory all selected descendants but emit only CMS-owned content to Page Builder; show every excluded/ambiguous node in the mapping report.
 
 **After #5 is finished and accepted**, an Owner-approved **name-only** Figma pass may standardize labels under `node-id=245-2`. First deliver a per-node old→new manifest with risk/consumer checks; no editing frozen Figma before explicit GO; preserve IDs, hierarchy, layout, published component API, media, rendering and evidence. This is *not* part of current #5/#7 work.
+
+## 12. Modular monolith and transferable engineering discipline (Owner decision)
+
+The toolkit is a **Modular Monolith with bounded, pluggable adapters and versioned contracts**. See [MODULAR-ARCHITECTURE-AND-ADAPTERS.md](MODULAR-ARCHITECTURE-AND-ADAPTERS.md) for domain ownership, dependency directions, lifecycle and contract/gate tests.
+
+The model is **one local executable CLI/library** operated by Claude Code/Orca or directly in terminal. Agent skills route to code rather than replace it; do not build a frontend or microservices in the first release. **First output remains editable Magento Page Builder CMS pages**, with separate future theme/Hyvä target; each should share semantic Figma IR and knowledge contracts without coupling Core to vendor SDKs.
+
+Selective reusable lessons from the existing SEO Writer Engine — bounded extension points, capability/provenance, specs index, issue-based Coordinator, fast targeted tests, evidence receipts, correction discipline and confidence-based audits — are documented with real source references in [SEO Writer Engine selective pattern review](../docs/research/seo-writer-engine-patterns-for-toolkit.md). **Do not copy its SEO business code, production infrastructure, model routing or whole skill frameworks.** Reconcile with concurrent #5/#7 work before implementing, and require Owner GO for code changes.
