@@ -36,3 +36,10 @@ This is the **one agent policy entrypoint** for this reusable, platform-neutral 
 - [OSS adoption](docs/research/oss-adoption-for-pagebuilder.md)
 - [Agent skills adoption](docs/research/agent-skills-adoption.md)
 - Focused skills under `.claude/skills/` (use only when relevant).
+
+## Naming & portability invariants (Issue #5)
+
+- Use `[<GitHub issue number>] <task name>` for tasks and parallel workers in Orca. **`[5]` is only this issue's ID**; reusable generators must derive the current issue number instead of hardcoding 5.
+- The absolute path `/home/thanhle/Sites/Magento/slaunchpad` is **only the owner's local source checkout for the current Magento adapter development/audit**. It is **never** a default, assumption, or dependency for users of this toolkit. Other users supply their own project/source path, or no Magento path at all for non-Magento adapters.
+- Keep local paths outside generic core, schemas, templates, emitted JSON and runtime defaults. Per-run CLI/env/local config may supply paths; error clearly if missing. Committed examples use placeholders, local overrides must remain gitignored.
+- Always test a clean clone / non-Magento profile without access to the owner's machine path. The objective is a shareable, multi-client, multi-platform toolkit.
