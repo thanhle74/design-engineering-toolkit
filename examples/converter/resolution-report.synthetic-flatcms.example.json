@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "profileId": "synthetic-flatcms",
+  "platformId": "synthetic-flatcms",
+  "generatedAt": "2026-11-03T02:23:54Z",
+  "inputs": {
+    "registryRevisionId": "fixture-rev-0001",
+    "bindingMapContentHash": "7e5630f8bc303032d81981b9b5ef565d579afe202107e383a8b8d41dec7957f7",
+    "pageStructureContentHash": "085bf8cfe301bbc1dd42bf67636e1cdf064d200be0de77928697d3d282a7c559"
+  },
+  "sections": [
+    {
+      "sectionId": "s-000000000001",
+      "order": 0,
+      "name": "intro",
+      "status": "mapped",
+      "candidates": [],
+      "selected": null,
+      "unsupportedReasons": [],
+      "mappingConfidence": "high",
+      "proofLevel": "structurally-mapped",
+      "evidence": []
+    },
+    {
+      "sectionId": "s-000000000002",
+      "order": 1,
+      "name": "faq",
+      "status": "mapped",
+      "candidates": [],
+      "selected": null,
+      "unsupportedReasons": [],
+      "mappingConfidence": "high",
+      "proofLevel": "structurally-mapped",
+      "evidence": []
+    }
+  ],
+  "coverage": {
+    "native": 3,
+    "widget": 1,
+    "chrome": 0,
+    "custom-required": 1,
+    "unsupported": 0,
+    "total": 5
+  },
+  "counts": {
+    "errors": 0,
+    "warnings": 1,
+    "infos": 0
+  },
+  "proofStatus": {
+    "maxClaimedProofLevel": "structurally-mapped",
+    "maxJustifiedProofLevel": "structurally-mapped"
+  },
+  "diagnostics": [
+    {
+      "code": "RESPONSIVE_UNCERTAIN",
+      "severity": "warning",
+      "message": "Capability 'custom/promo-strip' has non-deterministic responsive behavior.",
+      "subject": {
+        "type": "capability",
+        "id": "custom/promo-strip"
+      }
+    }
+  ]
+}

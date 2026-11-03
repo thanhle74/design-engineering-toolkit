@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/common.defs.json",
+  "$comment": "Design Engineering Toolkit converter contract family — shared definitions. Major version 1. Platform-neutral: no platform name, no design-source node-id grammar, and no filesystem path is representable in these defs. Canonical ordering and hashing rules are normative for every emitter; see README.md in this directory.",
+  "title": "Converter family shared definitions",
+  "$defs": {
+    "schemaVersionMajor": {
+      "type": "integer",
+      "const": 1,
+      "description": "Integer major version only. Additive minors are tracked in schemas/converter/README.md. Unknown majors must be rejected (SCHEMA_VERSION_UNSUPPORTED) — never best-effort parsed."
+    },
+    "sourceRevision": {
+      "type": "object",
+      "required": ["sourceId", "revisionId", "accessedAt"],
+      "additionalProperties": false,
+      "properties": {
+        "sourceId": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "description": "Profile-declared source id. The mapping sourceId -> actual local path lives only in the per-run profile/env/CLI, never in any emitted payload."
+        },
+        "revisionId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Opaque adapter-defined revision token (e.g. a VCS commit SHA of the audited checkout, or a fixture version tag)."
+        },
+        "accessedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "sourceEvidence": {
+      "type": "object",
+      "required": ["evidenceId", "kind", "locator", "retrievedAt"],
+      "additionalProperties": false,
+      "properties": {
+        "evidenceId": {
+          "type": "string",
+          "pattern": "^e-[0-9a-f]{12}$",
+          "description": "Stable identity: 'e-' + first 12 lowercase hex of SHA-256 over kind, locator and sourceRevisionId joined by the canonical separator U+241F. Stable across re-runs on the same revision."
+        },
+        "kind": {
+          "enum": ["source-file", "config-declaration", "document", "rendered-artifact", "runtime-observation", "test-receipt"],
+          "description": "Closed enum. 'config-declaration' means evidence read from the platform's own registration surface at the pinned revision; doc-only or screenshot-only evidence cannot justify proofLevel 'registered'."
+        },
+        "locator": {
+          "type": "string",
+          "pattern": "^(source|design|doc|https)://\\S+$",
+          "description": "Scheme whitelist makes absolute filesystem paths unrepresentable. Schemes: source://<sourceId>/<path-relative-to-source-root>[#fragment]; design://<sourceId>/<adapter-defined-node-locator>; doc://<document-id>; https://... ."
+        },
+        "sourceRevisionId": { "type": "string", "description": "Revision this evidence was read at; references sourceRevision.revisionId." },
+        "retrievedAt": { "type": "string", "format": "date-time" },
+        "method": { "type": "string", "description": "Tool/query that produced this evidence; adapter-defined vocabulary." },
+        "note": { "type": "string" }
+      }
+    },
+    "diagnostic": {
+      "type": "object",
+      "required": ["code", "severity", "message"],
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "enum": [
+            "UNSUPPORTED_CAPABILITY",
+            "UNSUPPORTED_APPEARANCE",
+            "VARIANT_NOT_MAPPED",
+            "INCOMPATIBLE_NESTING",
+            "MISSING_REQUIRED_PROP",
+            "AMBIGUOUS_BINDING",
+            "DUPLICATE_BINDING",
+            "RESPONSIVE_UNCERTAIN",
+            "CAPABILITY_DISABLED",
+            "EDITOR_RESTRICTION_CONFLICT",
+            "NESTING_DECLARATION_CONFLICT",
+            "NODE_ID_COLLISION",
+            "LOCATOR_OUT_OF_SCOPE",
+            "DESIGN_SOURCE_UNAVAILABLE",
+            "PROJECT_SOURCE_NOT_CONFIGURED",
+            "PROJECT_SOURCE_NOT_FOUND",
+            "PROJECT_SOURCE_NOT_READABLE",
+            "ADAPTER_NOT_APPLICABLE",
+            "EVIDENCE_MISSING",
+            "NOT_VERIFIED",
+            "SCHEMA_VERSION_UNSUPPORTED"
+          ],
+          "description": "Closed converter-family code registry (21 codes). The 12 V1-family diagnostic codes stay in the V1 schemas; families keep independent majors. Blocking semantics: severity error = BLOCK_STAGE; NOT_VERIFIED = BLOCK_EXIT (blocks the stage-exit claim, not payload validity); other warnings are advisory unless a profile gate escalates them. Gates may escalate, never demote."
+        },
+        "severity": { "enum": ["info", "warning", "error"] },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "description": "One actionable sentence: what failed + subject id + next action. Never the only signal — free text must not substitute for the structured code."
+        },
+        "subject": {
+          "type": "object",
+          "required": ["type", "id"],
+          "additionalProperties": false,
+          "properties": {
+            "type": { "enum": ["capability", "appearance", "binding", "section", "node", "prop", "profile", "source"] },
+            "id": { "type": "string", "minLength": 1 }
+          }
+        },
+        "evidence": { "$ref": "#/$defs/sourceEvidence" }
+      }
+    },
+    "capabilityId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_.-]*(/[a-z0-9][a-z0-9_.-]*){1,3}$",
+      "description": "Formation rule is adapter-documented: <provider-namespace>/<type>[/<sub-type>...] lowercase. Segments allow underscores so a platform's own identifiers are carried faithfully (traceability beats renaming); the namespace prefix scopes the vocabulary. The same id recurs per appearance."
+    },
+    "appearanceId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_-]*$",
+      "description": "Adapter-faithful appearance identifier, lowercase. Use 'default' when the type has a single unnamed appearance. (id, appearanceId) is the unique capability identity."
+    },
+    "proofLevel": {
+      "enum": ["not-verified", "discovered", "registered", "structurally-mapped", "admin-roundtrip-verified", "visually-verified"],
+      "description": "Closed, totally ordered ladder. Promotion requires stage-specific evidence: registered needs >=1 config-declaration evidence from the platform's own registration surface at the pinned revision; structurally-mapped needs a pinned binding + mapped report section + legal nesting + zero blocking diagnostics; admin-roundtrip-verified and visually-verified can only be justified by later-stage receipts (G3/G4). Claiming a level above what pinned evidence justifies is a hard reject (EVIDENCE_MISSING) — never a silent downgrade."
+    },
+    "mappingConfidence": {
+      "enum": ["high", "medium", "low"],
+      "description": "Confidence never promotes a blocked mapping: status 'blocked' requires >=1 error-severity diagnostic naming the section regardless of confidence."
+    }
+  }
+}

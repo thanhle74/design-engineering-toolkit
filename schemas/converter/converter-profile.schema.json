@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/converter-profile.schema.json",
+  "$comment": "Design Engineering Toolkit converter family — Converter Profile. Major version 1. Stage input contract for capability probes and the resolver. Local project-source paths are supplied per run (CLI > env > this local profile file, in that precedence); a committed example uses placeholder paths and NEVER an owner's real path. Placeholder paths matching the sentinel pattern are treated as PROJECT_SOURCE_NOT_CONFIGURED. The V1 profile family stays frozen at its own major; the two families are independent.",
+  "title": "Design Engineering Toolkit — Converter Profile",
+  "type": "object",
+  "required": ["schemaVersion", "profile"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "$ref": "common.defs.json#/$defs/schemaVersionMajor" },
+    "profile": {
+      "type": "object",
+      "required": ["id", "name", "platformId"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+        "name": { "type": "string", "minLength": 1 },
+        "description": { "type": "string" },
+        "platformId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9.-]*$", "description": "Adapter-declared platform id. A probe applied to an unsupported platformId fails with ADAPTER_NOT_APPLICABLE." },
+        "platformVersionConstraint": { "type": "string", "description": "Optional observed-version expectation (informational; the registry records what was actually observed)." },
+        "projectSources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["sourceId", "kind"],
+            "additionalProperties": false,
+            "properties": {
+              "sourceId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$", "description": "Referenced by evidence locators as source://<sourceId>/... ." },
+              "kind": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$", "description": "Adapter-defined source kind (e.g. a platform checkout, or a fixture pack for synthetic profiles)." },
+              "path": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Optional local checkout path. Committed examples use placeholders like /path/to/<project> (sentinel: any path containing '/path/to/' is treated as not configured). Never commit a real owner path; local overrides live in gitignored *.local.* files."
+              },
+              "notes": { "type": "string" }
+            }
+          },
+          "description": "May be empty: generic core tasks run with no project source at all."
+        },
+        "scopes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["sourceId"],
+            "additionalProperties": false,
+            "properties": {
+              "sourceId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+              "include": { "type": "array", "items": { "type": "string" }, "description": "Sorted, adapter-defined scope selectors." },
+              "exclude": { "type": "array", "items": { "type": "string" } }
+            }
+          },
+          "description": "Visibility bounds for read-only probes. Requests outside scopes fail closed (LOCATOR_OUT_OF_SCOPE at the source-port layer)."
+        },
+        "gates": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "responsiveDeterministicRequired": { "type": "boolean", "description": "Escalates RESPONSIVE_UNCERTAIN from advisory to blocking when true. Gates may tighten, never loosen." }
+          },
+          "description": "Gate overlay: tighten-only. Profiles may escalate advisories to blocking; nothing may demote an error."
+        },
+        "safety": {
+          "type": "object",
+          "required": ["approvedWriteTargets"],
+          "additionalProperties": false,
+          "properties": {
+            "approvedWriteTargets": { "type": "array", "maxItems": 0, "$comment": "Converter major 1 covers read-only capability probes and resolution only. Any approved write target requires a new schema major plus a stage GO ADR — fail closed by construction." },
+            "notes": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

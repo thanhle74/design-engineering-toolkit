@@ -1,0 +1,223 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/capability-registry.schema.json",
+  "$comment": "Design Engineering Toolkit converter family — CapabilityRegistry. Major version 1. Machine-readable, source-backed inventory of what a platform instance actually offers, with proof status. The converter is a consumer of installed capabilities; it never invents a capability to fit a design. Payload VALUES may name platforms; this SCHEMA must stay platform-neutral (guarded by the repo neutrality test).",
+  "title": "Design Engineering Toolkit — Capability Registry",
+  "type": "object",
+  "required": ["schemaVersion", "platformId", "generatedAt", "source", "capabilities", "summary", "diagnostics"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "$ref": "common.defs.json#/$defs/schemaVersionMajor" },
+    "platformId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9.-]*$",
+      "description": "Adapter-declared platform id, e.g. a real platform or a synthetic fixture platform. A value, never a schema literal."
+    },
+    "platformVersion": { "type": "string", "description": "Platform version as observed." },
+    "profileId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$", "description": "Audit context. A registry is reusable across projects of the same platform revision." },
+    "generatedAt": { "type": "string", "format": "date-time", "description": "Excluded from the content hash (reproducibility)." },
+    "source": { "$ref": "common.defs.json#/$defs/sourceRevision" },
+    "generator": {
+      "type": "object",
+      "required": ["tool"],
+      "additionalProperties": false,
+      "properties": {
+        "tool": { "type": "string", "minLength": 1 },
+        "toolVersion": { "type": "string" }
+      },
+      "description": "Provenance of the probe that produced this registry."
+    },
+    "capabilities": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/capability" },
+      "description": "One entry per capability x appearance. MUST be sorted by (id, appearanceId) in Unicode code-point order — deterministic ordering is normative."
+    },
+    "summary": {
+      "type": "object",
+      "required": ["byCategory", "byProofLevel", "byAvailability"],
+      "additionalProperties": false,
+      "properties": {
+        "byCategory": {
+          "type": "object",
+          "required": ["native", "widget", "chrome", "custom-required", "unsupported"],
+          "additionalProperties": false,
+          "properties": {
+            "native": { "type": "integer", "minimum": 0 },
+            "widget": { "type": "integer", "minimum": 0 },
+            "chrome": { "type": "integer", "minimum": 0 },
+            "custom-required": { "type": "integer", "minimum": 0 },
+            "unsupported": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "byProofLevel": {
+          "type": "object",
+          "required": ["not-verified", "discovered", "registered", "structurally-mapped", "admin-roundtrip-verified", "visually-verified"],
+          "additionalProperties": false,
+          "properties": {
+            "not-verified": { "type": "integer", "minimum": 0 },
+            "discovered": { "type": "integer", "minimum": 0 },
+            "registered": { "type": "integer", "minimum": 0 },
+            "structurally-mapped": { "type": "integer", "minimum": 0 },
+            "admin-roundtrip-verified": { "type": "integer", "minimum": 0 },
+            "visually-verified": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "byAvailability": {
+          "type": "object",
+          "required": ["enabled", "disabled", "deprecated", "unknown"],
+          "additionalProperties": false,
+          "properties": {
+            "enabled": { "type": "integer", "minimum": 0 },
+            "disabled": { "type": "integer", "minimum": 0 },
+            "deprecated": { "type": "integer", "minimum": 0 },
+            "unknown": { "type": "integer", "minimum": 0 }
+          }
+        }
+      },
+      "description": "Derived counts. The semantic validator asserts they match the capabilities array (unit test; not expressible in JSON Schema)."
+    },
+    "diagnostics": {
+      "type": "array",
+      "items": { "$ref": "common.defs.json#/$defs/diagnostic" },
+      "description": "Sorted by (code, severity rank info<warning<error, subject.id, message)."
+    }
+  },
+  "$defs": {
+    "capability": {
+      "type": "object",
+      "required": ["id", "appearanceId", "provider", "category", "availability", "acceptedProps", "allowedChildren", "responsiveDeterministic", "dataContext", "editorEditingMode", "evidence", "proofLevel"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "common.defs.json#/$defs/capabilityId" },
+        "appearanceId": { "$ref": "common.defs.json#/$defs/appearanceId" },
+        "provider": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "description": "Platform namespace as observed (value-level), e.g. an owning module/extension name carried verbatim for traceability."
+        },
+        "category": {
+          "enum": ["native", "widget", "chrome", "custom-required", "unsupported"],
+          "description": "Closed enum. 'unsupported' entries are recorded explicitly with unsupportedReason — never omitted (fail closed). 'chrome' marks platform/theme chrome that is out of CMS-page scope."
+        },
+        "displayName": { "type": "string" },
+        "availability": {
+          "enum": ["enabled", "disabled", "deprecated", "unknown"],
+          "description": "Closed enum. Captures observed enablement; 'unknown' requires a NOT_VERIFIED diagnostic and blocks promotion beyond 'discovered'."
+        },
+        "acceptedProps": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/prop" },
+          "description": "Sorted by name."
+        },
+        "allowedChildren": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/nestingRule" },
+          "description": "Sorted by (policy presence, capabilityId): policy entries first (allow-all before deny-all), then concrete entries by capabilityId."
+        },
+        "allowedParents": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/nestingRule" },
+          "description": "Same shape as allowedChildren. Disagreement between a parent's allowedChildren and a child's allowedParents emits NESTING_DECLARATION_CONFLICT (warning)."
+        },
+        "responsiveRules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["scope", "effect"],
+            "additionalProperties": false,
+            "properties": {
+              "scope": { "type": "string", "minLength": 1, "description": "Adapter-defined scope token (e.g. a viewport or breakpoint name)." },
+              "effect": { "type": "string", "minLength": 1 },
+              "evidence": { "$ref": "common.defs.json#/$defs/sourceEvidence" }
+            }
+          },
+          "description": "Sorted by scope. Core constrains shape only; scope/effect vocabularies are adapter-defined."
+        },
+        "responsiveDeterministic": {
+          "type": "boolean",
+          "default": true,
+          "description": "false means the resolver must emit RESPONSIVE_UNCERTAIN for any mapped use of this capability."
+        },
+        "dataContext": {
+          "type": "object",
+          "required": ["requiresRuntimeData"],
+          "additionalProperties": false,
+          "properties": {
+            "requiresRuntimeData": { "type": "boolean" },
+            "dataSources": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Sorted, adapter-defined data-source ids. Business/runtime data resolves against the platform context — never against design-source demo data."
+            },
+            "notes": { "type": "string" }
+          }
+        },
+        "editorEditingMode": {
+          "enum": ["form", "wysiwyg", "code", "none", "unknown"],
+          "description": "Closed enum. How the platform's editor edits this capability."
+        },
+        "editorRestrictions": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Sorted, adapter-defined (e.g. no-nested-tabs)."
+        },
+        "dependencies": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Sorted; capability ids or adapter module ids (values)."
+        },
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "common.defs.json#/$defs/sourceEvidence" },
+          "description": "What backs every field above. Rendered artifacts alone cannot justify proofLevel 'registered'."
+        },
+        "proofLevel": { "$ref": "common.defs.json#/$defs/proofLevel" },
+        "unsupportedReason": { "type": "string", "minLength": 1 },
+        "description": { "type": "string" }
+      },
+      "if": { "properties": { "category": { "const": "unsupported" } } },
+      "then": { "properties": { "unsupportedReason": {} }, "required": ["unsupportedReason"] }
+    },
+    "prop": {
+      "type": "object",
+      "required": ["name", "type", "required"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.\\-[\\]/]*$", "description": "Adapter-faithful field name or payload path (brackets allowed, e.g. items[].title)." },
+        "type": {
+          "enum": ["string", "number", "boolean", "enum", "color", "length", "json", "reference", "unknown"],
+          "description": "Closed enum. 'unknown' is honest when a probe did not audit the field's type; it must be paired with a NOT_VERIFIED diagnostic at payload level."
+        },
+        "required": { "type": "boolean" },
+        "values": { "type": "array", "items": { "type": "string" }, "description": "Sorted; for type 'enum'." },
+        "default": {},
+        "description": { "type": "string" },
+        "responsive": { "type": "boolean", "description": "true when the prop has per-breakpoint forms." }
+      }
+    },
+    "nestingRule": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["capabilityId"],
+          "additionalProperties": false,
+          "properties": {
+            "capabilityId": { "$ref": "common.defs.json#/$defs/capabilityId" },
+            "appearances": { "type": "array", "items": { "$ref": "common.defs.json#/$defs/appearanceId" }, "description": "When present and non-empty, the child's appearanceId must be in this set." },
+            "maxChildren": { "type": "integer", "minimum": 0 }
+          }
+        },
+        {
+          "type": "object",
+          "required": ["policy"],
+          "additionalProperties": false,
+          "properties": {
+            "policy": { "enum": ["allow-all", "deny-all"], "description": "Real registries declare policies, not always enumerations. A child is legal iff for every ancestor rule that applies: policy allow-all and child not in except, or an explicit concrete rule matches, and no deny-all/except rule matches." },
+            "except": { "type": "array", "items": { "$ref": "common.defs.json#/$defs/capabilityId" }, "description": "Sorted." }
+          }
+        }
+      ]
+    }
+  }
+}
