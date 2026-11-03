@@ -13,4 +13,9 @@ Status values distinguish `ACCEPTED_FOR_G1` (current Owner GO), `PROPOSED`, `DEF
 | ADR-005-007 | ACCEPTED_FOR_G1 | External OSS skills provide patterns, not automatic dependencies | Small maintainable toolkit; license/provenance checks prevent unsafe code reuse. |
 | ADR-005-008 | PROPOSED | Preserve V1 pilot/evidence while auditing obsolete docs and references | Historical pilot files are not dead code. Remove only with evidence and approval. |
 
+
+| ADR-005-009 | ACCEPTED_FOR_G1 | Orca/task titles use `[<GitHub issue number>] <task title>` (current `[5]`) | Issue-based traceability; never treat this as a version or hardcode it into shared tooling. |
+| ADR-005-010 | ACCEPTED_FOR_G1 | `/home/thanhle/Sites/Magento/slaunchpad` is an owner's **temporary/local adapter development input only**, not a shared runtime default | Tool must support any user's project path and non-Magento projects via optional per-run/profile configuration. Verify portability with clean environment. |
+
+
 **Change procedure:** Add an ADR row with evidence and migration/compatibility consequences. Never silently rewrite accepted architecture decisions.
