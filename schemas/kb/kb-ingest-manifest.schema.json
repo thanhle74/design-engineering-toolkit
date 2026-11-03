@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-ingest-manifest.schema.json",
+  "$comment": "Knowledge Engine — KB ingest manifest (the plan-shaped ingestion contract from knowledge-foundation CONTRACTS.md §4.1 / KNOWLEDGE-ARCHITECTURE.md §4.1). A manifest is DATA: reviewable, diffable, and the only way det kb ingest reads anything. Paths are never absolute owner paths: each input names a rootAlias resolved per run via --root alias=path (or DET_KB_ROOT_<ALIAS>) plus an alias-relative path, or a manifest-relative path with no alias. denyGlobs may ADD to the structural baseline deny-set (auth.json, app/etc/env.php, .env*, *credentials*, *.pem, *.key, var/**, generated/**, pub/media/**, *.sql.gz, *.dump*, **/node_modules/**) — profiles may add, never remove.",
+  "title": "Knowledge Engine — KB ingest manifest",
+  "type": "object",
+  "required": ["schemaVersion", "manifestId", "platform", "inputs"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "manifestId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$", "$comment": "Stable manifest identity, e.g. 'synthetic-fashion-kb'." },
+    "platform": {
+      "type": "object",
+      "required": ["id"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9.-]*$", "$comment": "Platform family the KB-1 records describe, e.g. 'magento'. A non-Magento manifest emits identical shapes." },
+        "version": { "type": "string", "$comment": "Pinned platform version observed, e.g. '2.4.8-p5'." }
+      }
+    },
+    "visibilityPolicy": { "enum": ["example-only", "any"], "default": "example-only", "$comment": "example-only (default): KB-3 records with visibility != example are rejected — private material cannot enter the store this manifest feeds. 'any' is for local protected stores outside the public repository." },
+    "inputs": {
+      "type": "object",
+      "required": ["capabilityRegistry", "uiInventory", "projectRecords", "relations"],
+      "additionalProperties": false,
+      "properties": {
+        "capabilityRegistry": { "$ref": "#/$defs/input", "$comment": "A det inspect CapabilityRegistry payload (issue #9 contract) bridged read-only into KB-1 records. The registry file is the sole ingest input — the bridge never opens the platform tree." },
+        "uiInventory": { "$ref": "#/$defs/input", "$comment": "A KB-2 metadata-only component inventory (array of kb-ui-component records). Manifest-driven: no source-tree parsing, no licensed package reads." },
+        "projectRecords": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/input" }, "$comment": "One or more KB-3 record files (JSON array or JSONL), one file per project partition." },
+        "relations": { "$ref": "#/$defs/input", "$comment": "A relation-records file (JSON array or JSONL) validated against the store-wide endpoint graph." }
+      }
+    },
+    "denyGlobs": { "type": "array", "items": { "type": "string", "minLength": 1 }, "$comment": "ADDED to the structural baseline (never replaces it). Glob syntax: ** crosses directories, * stays in one segment, ? matches one character. Denials are recorded as DENIED_PATH_SKIPPED diagnostics — fail-open per file, fail-closed per run." },
+    "notes": { "type": "string" }
+  },
+  "$defs": {
+    "input": {
+      "type": "object",
+      "required": ["path"],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^(?!/)(?!.*(^|/)\\.\\.(/|$))[A-Za-z0-9._/-]+$",
+          "$comment": "Relative to rootAlias when rootAlias is set, otherwise relative to the manifest file's own directory. Never absolute, never traversal."
+        },
+        "rootAlias": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$", "$comment": "Resolved per run: --root <alias>=<absolute-path> (repeatable) > DET_KB_ROOT_<ALIAS> env. No default, no owner path inside this manifest — unresolvable aliases fail closed with ROOT_ALIAS_NOT_RESOLVED." },
+        "label": { "type": "string", "$comment": "Human-facing label for receipts." }
+      }
+    }
+  }
+}

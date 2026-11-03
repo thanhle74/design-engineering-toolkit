@@ -43,3 +43,4 @@ Integer major only (`schemaVersion: 1`); additive minors tracked here; unknown m
 | Version | Change |
 |---|---|
 | 1.0.0 | Initial family (issue [#9] CLI engine): adapter descriptor, adapter input transport, tool-run envelope. Revised **pre-release** (family unreleased outside this PR): descriptor `entry` pattern tightened to reject interior traversal; trust-boundary descriptions added — no payload valid under the initial pattern is invalid under the tightened one except traversal-carrying entries, which were never legitimately shippable. |
+| 1.1.0 (additive minor) | Knowledge Engine (issue [#15]): `tool-run.command` gains `"kb"` and the artifact `role` enum gains `kb-ingest-manifest`, `kb-records`, `kb-query-result`, `kb-sync-report`, `kb-store-descriptor`. Purely additive — every payload valid under 1.0.0 stays valid. |

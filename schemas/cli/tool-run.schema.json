@@ -17,7 +17,7 @@
         "toolVersion": { "type": "string", "minLength": 1 }
       }
     },
-    "command": { "enum": ["validate", "inspect", "plan"], "description": "Closed for major 1; new commands are additive minors of this family." },
+    "command": { "enum": ["validate", "inspect", "plan", "kb"], "description": "Closed for major 1; new commands are additive minors of this family ('kb' = Knowledge Engine commands, issue #15)." },
     "exitCode": { "type": "integer", "enum": [0, 1, 2, 3], "description": "0 = succeeded; 1 = completed with blocking (error-severity) diagnostics; 2 = usage error (bad flags / unreadable input file); 3 = adapter runtime failure (crash, timeout, or output contract violation)." },
     "generatedAt": { "type": "string", "format": "date-time", "description": "Excluded from content hashes (reproducibility)." },
     "profileId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
@@ -39,7 +39,7 @@
         "required": ["role", "schemaRef", "contentHash"],
         "additionalProperties": false,
         "properties": {
-          "role": { "enum": ["registry", "resolution-report", "profile-input", "binding-map", "structure-input", "adapter-descriptor"], "description": "Closed for major 1." },
+          "role": { "enum": ["registry", "resolution-report", "profile-input", "binding-map", "structure-input", "adapter-descriptor", "kb-ingest-manifest", "kb-records", "kb-query-result", "kb-sync-report", "kb-store-descriptor"], "description": "Closed for major 1; kb-* roles are the additive minor for the Knowledge Engine (issue #15)." },
           "file": { "type": "string", "pattern": "^(?!/)(?!.*(^|/)\\.\\.(/|$))[A-Za-z0-9._/-]+$", "description": "Filename as written under --out, relative. Never an absolute path." },
           "schemaRef": { "type": "string", "minLength": 1, "description": "$id of the schema the payload validates against." },
           "contentHash": { "type": "string", "pattern": "^[0-9a-f]{64}$", "description": "SHA-256 over canonical JSON minus generatedAt (converter-family rule)." },

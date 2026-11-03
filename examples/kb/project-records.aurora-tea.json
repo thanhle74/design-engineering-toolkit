@@ -1,0 +1,35 @@
+[
+  {
+    "schemaVersion": 1,
+    "recordType": "requirement",
+    "id": "req:aurora-tea:calm-welcome",
+    "projectId": "aurora-tea",
+    "tenantId": "tenant-aurora",
+    "title": "Calm welcome section",
+    "statement": "The welcome section must feel calm and tea-focused (synthetic non-Magento project used for the neutrality twin).",
+    "source": { "kind": "spec", "locator": "project-records.aurora-tea.json", "accessedAt": "2026-11-03T00:00:00Z" },
+    "status": "approved",
+    "kind": "aesthetic",
+    "traceStatus": "INFERRED_FROM_ARTIFACT",
+    "visibility": "example",
+    "createdAt": "2026-11-03T00:00:00Z"
+  },
+  {
+    "schemaVersion": 1,
+    "recordType": "ux-intent",
+    "id": "uxi:aurora-tea:welcome-hero",
+    "projectId": "aurora-tea",
+    "tenantId": "tenant-aurora",
+    "title": "Welcome hero section",
+    "statement": "Quiet opening section with a single headline and a soft media surface.",
+    "source": { "kind": "spec", "locator": "project-records.aurora-tea.json", "accessedAt": "2026-11-03T00:00:00Z" },
+    "status": "candidate",
+    "page": "home",
+    "priority": "should",
+    "contentPolicy": "fixture",
+    "renderOwnerIntent": "composition-pattern",
+    "dataOwner": "none",
+    "visibility": "example",
+    "createdAt": "2026-11-03T00:00:00Z"
+  }
+]

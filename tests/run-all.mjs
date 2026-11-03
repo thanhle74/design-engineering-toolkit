@@ -292,6 +292,10 @@ check("T-14b", "V1 examples validate against V1 schemas", () => {
 // ---- Issue #9 CLI + adapter suite (async) ------------------------------------------------
 const { default: registerCliSuite } = await import("./cli-suite.mjs");
 await registerCliSuite(checkAsync);
+
+// ---- Issue #15 Knowledge Engine MVP suite (async) ------------------------------------------
+const { default: registerKbSuite } = await import("./kb-suite.mjs");
+await registerKbSuite(checkAsync);
 for (const { id, name, fn } of asyncChecks) {
   try {
     const detail = await fn();

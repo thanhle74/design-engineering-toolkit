@@ -1,0 +1,156 @@
+[
+  {
+    "schemaVersion": 1,
+    "recordType": "ui-component",
+    "id": "uic:hyva-ui:hero",
+    "nativeId": "hero",
+    "sourcePackage": { "kind": "hyva-ui", "name": "hyva-themes/hyva-ui", "version": "2.8.0" },
+    "title": "Hero (licensed upstream, metadata only)",
+    "uxSemantics": {
+      "concept": "hero",
+      "description": "Large opening section for a page: headline, supporting copy, optional calls to action and a media surface. Metadata record from an authorized metadata-only inventory; no upstream source, templates or assets are stored.",
+      "notSupported": ["merchant CMS editing (developer-owned surface)", "catalog/business data behavior"]
+    },
+    "availability": { "state": "available-upstream" },
+    "variants": [
+      { "name": "A-default", "availability": "available-upstream" },
+      { "name": "B-overlay", "availability": "available-upstream" }
+    ],
+    "slots": ["media", "headline", "copy", "cta"],
+    "configOptions": [
+      { "name": "headline", "kind": "field" },
+      { "name": "media", "kind": "field" },
+      { "name": "cta", "kind": "behavior" }
+    ],
+    "behavior": { "interactive": true, "jsModel": "alpine-csp", "cssSystem": "tailwind-v4", "cmsEditable": false },
+    "dependencies": ["alpine-csp", "tailwind-v4"],
+    "license": { "status": "unconfirmed", "regime": "commercial", "derivedArtifactPolicy": "metadata-only" },
+    "sourceRef": { "kind": "document", "locator": { "path": "ui-inventory.json" } },
+    "evidence": {
+      "proofLevel": "DETECTED",
+      "sources": [{ "kind": "document", "locator": { "path": "ui-inventory.json" } }],
+      "method": "metadata-inventory-declaration",
+      "confidence": "medium",
+      "verifiedAt": null,
+      "uncertainty": ["Metadata-only inventory: component behavior and runtime styling are not verified from source.", "Variant list is a metadata declaration; the active theme may ship a subset."]
+    },
+    "notes": "Synthetic example record for the licensed-source boundary: identifiers and pointers only."
+  },
+  {
+    "schemaVersion": 1,
+    "recordType": "ui-component",
+    "id": "uic:hyva-ui:banner",
+    "nativeId": "banner",
+    "sourcePackage": { "kind": "hyva-ui", "name": "hyva-themes/hyva-ui", "version": "2.8.0" },
+    "title": "Banner (licensed upstream, metadata only)",
+    "uxSemantics": {
+      "concept": "other",
+      "description": "Compact promotional surface combining media and a message; visually similar to Page Builder banner appearances but developer-owned. 'other' concept: no exact banner entry exists in the UX vocabulary yet.",
+      "notSupported": ["merchant CMS editing", "runtime campaign targeting"]
+    },
+    "availability": { "state": "available-upstream" },
+    "variants": [{ "name": "A-default", "availability": "available-upstream" }],
+    "slots": ["media", "message", "cta"],
+    "behavior": { "interactive": false, "jsModel": "none", "cssSystem": "tailwind-v4", "cmsEditable": false },
+    "license": { "status": "unconfirmed", "regime": "commercial", "derivedArtifactPolicy": "metadata-only" },
+    "sourceRef": { "kind": "document", "locator": { "path": "ui-inventory.json" } },
+    "evidence": {
+      "proofLevel": "DETECTED",
+      "sources": [{ "kind": "document", "locator": { "path": "ui-inventory.json" } }],
+      "method": "metadata-inventory-declaration",
+      "confidence": "medium",
+      "verifiedAt": null,
+      "uncertainty": ["Metadata-only inventory; behavior not verified from source."]
+    },
+    "notes": "Same-appearance/different-editability example: this record is the developer-owned class neighbor of the Page Builder native banner."
+  },
+  {
+    "schemaVersion": 1,
+    "recordType": "ui-component",
+    "id": "uic:secomm-uiwidget:banner-a",
+    "nativeId": "banner_a",
+    "sourcePackage": { "kind": "secomm-uiwidget", "name": "secomm/module-uiwidget", "version": "1.4.2" },
+    "title": "Imported widget banner_a",
+    "uxSemantics": {
+      "concept": "other",
+      "description": "Developer-owned widget imported from the licensed upstream banner composition (adaptedFrom), registered in the platform DI registry and editable by merchants through its widget form fields.",
+      "notSupported": ["Page Builder native content-type surface (separate capability class)"]
+    },
+    "availability": { "state": "imported-runtime" },
+    "usageLinks": [{ "kind": "secomm-widget", "refId": "cap:example-customwidgets:component-banner-a" }],
+    "variants": [{ "name": "default", "availability": "imported-runtime" }],
+    "slots": ["media", "message", "cta"],
+    "configOptions": [{ "name": "headline", "kind": "field" }, { "name": "media", "kind": "field" }, { "name": "link", "kind": "field" }],
+    "behavior": { "interactive": false, "jsModel": "unknown", "cssSystem": "tailwind-v4", "cmsEditable": true },
+    "license": { "status": "confirmed", "regime": "not-applicable", "derivedArtifactPolicy": "local-use-authorized" },
+    "sourceRef": { "kind": "document", "locator": { "path": "ui-inventory.json" } },
+    "evidence": {
+      "proofLevel": "DETECTED",
+      "sources": [{ "kind": "document", "locator": { "path": "ui-inventory.json" } }],
+      "method": "metadata-inventory-declaration",
+      "confidence": "medium",
+      "verifiedAt": null,
+      "uncertainty": ["Runtime rendering of the imported widget is declared, not Admin-roundtrip verified."]
+    },
+    "notes": "Synthetic example of the developer-owned composition class."
+  },
+  {
+    "schemaVersion": 1,
+    "recordType": "ui-component",
+    "id": "uic:page-builder-native:banner",
+    "nativeId": "banner",
+    "sourcePackage": { "kind": "page-builder-native", "name": "magento/module-page-builder", "version": "2.4.8-p5" },
+    "title": "Page Builder native banner",
+    "uxSemantics": {
+      "concept": "other",
+      "description": "Native Page Builder banner content type: merchant-editable in the Admin stage with appearance variants; the merchant-editable capability class.",
+      "notSupported": ["developer-owned upstream behavior", "campaign/business logic"]
+    },
+    "availability": { "state": "editable-in-page-builder" },
+    "usageLinks": [{ "kind": "page-builder", "refId": "cap:magento-pagebuilder:banner-full-width" }],
+    "variants": [
+      { "name": "full-width", "availability": "editable-in-page-builder" },
+      { "name": "minimal", "availability": "editable-in-page-builder" }
+    ],
+    "configOptions": [{ "name": "message", "kind": "field" }, { "name": "appearance", "kind": "appearance" }, { "name": "link", "kind": "field" }],
+    "behavior": { "interactive": false, "jsModel": "none", "cssSystem": "tailwind-v4", "cmsEditable": true },
+    "license": { "status": "confirmed", "regime": "not-applicable", "derivedArtifactPolicy": "local-use-authorized" },
+    "sourceRef": { "kind": "document", "locator": { "path": "ui-inventory.json" } },
+    "evidence": {
+      "proofLevel": "DETECTED",
+      "sources": [{ "kind": "document", "locator": { "path": "ui-inventory.json" } }],
+      "method": "metadata-inventory-declaration",
+      "confidence": "high",
+      "verifiedAt": null,
+      "uncertainty": ["Admin-editability is the declared capability class; a real Admin Edit→Save→Reload receipt is a later gated stage."]
+    },
+    "notes": "Merchant-editable class anchor for the same-appearance/different-editability fixture pair."
+  },
+  {
+    "schemaVersion": 1,
+    "recordType": "ui-component",
+    "id": "uic:page-builder-native:heading",
+    "nativeId": "heading",
+    "sourcePackage": { "kind": "page-builder-native", "name": "magento/module-page-builder", "version": "2.4.8-p5" },
+    "title": "Page Builder native heading",
+    "uxSemantics": {
+      "concept": "other",
+      "description": "Native Page Builder heading text content type (merchant-editable).",
+      "notSupported": ["rich editorial blocks"]
+    },
+    "availability": { "state": "editable-in-page-builder" },
+    "variants": [{ "name": "default", "availability": "editable-in-page-builder" }],
+    "behavior": { "interactive": false, "jsModel": "none", "cssSystem": "tailwind-v4", "cmsEditable": true },
+    "license": { "status": "confirmed", "regime": "not-applicable", "derivedArtifactPolicy": "local-use-authorized" },
+    "sourceRef": { "kind": "document", "locator": { "path": "ui-inventory.json" } },
+    "evidence": {
+      "proofLevel": "DETECTED",
+      "sources": [{ "kind": "document", "locator": { "path": "ui-inventory.json" } }],
+      "method": "metadata-inventory-declaration",
+      "confidence": "high",
+      "verifiedAt": null,
+      "uncertainty": ["Declaration-level evidence only."]
+    },
+    "notes": "Synthetic example record."
+  }
+]

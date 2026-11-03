@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "storeId": "synthetic-kb-examples",
+  "generator": {
+    "tool": "det",
+    "toolVersion": "0.1.0"
+  },
+  "platforms": [
+    {
+      "id": "magento",
+      "version": "2.4.8-p5"
+    }
+  ],
+  "projects": [
+    "aurora-tea",
+    "synthetic-fashion"
+  ],
+  "counts": {
+    "platform": 13,
+    "ui": 5,
+    "project": 10,
+    "relations": 9
+  },
+  "notes": "Public synthetic example manifest for the committed kb/ store. Resolve the registry alias per run: --root reg=<repo>/tests/fixtures/synthetic-magento-like. No owner paths, no licensed bytes, no real client material."
+}

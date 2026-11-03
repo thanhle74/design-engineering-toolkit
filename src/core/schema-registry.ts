@@ -21,7 +21,7 @@ const Ajv = AjvDefault as unknown as new (options?: Record<string, unknown>) => 
 
 export const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
 
-const SCHEMA_DIRS = [path.join(REPO_ROOT, "schemas", "converter"), path.join(REPO_ROOT, "schemas", "cli"), path.join(REPO_ROOT, "schemas")];
+const SCHEMA_DIRS = [path.join(REPO_ROOT, "schemas", "converter"), path.join(REPO_ROOT, "schemas", "cli"), path.join(REPO_ROOT, "schemas", "kb"), path.join(REPO_ROOT, "schemas")];
 
 let instance: AjvInstance | null = null;
 
@@ -54,6 +54,13 @@ const ids = new Map<string, string>([
   ["adapter-descriptor", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/adapter-descriptor.schema.json"],
   ["adapter-input", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/adapter-input.schema.json"],
   ["tool-run", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/tool-run.schema.json"],
+  // Knowledge Engine family (issue #15)
+  ["kb-capability", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-capability.schema.json"],
+  ["kb-ui-component", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-ui-component.schema.json"],
+  ["kb-project-record", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-project-record.schema.json"],
+  ["kb-relations", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-relations.schema.json"],
+  ["kb-ingest-manifest", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-ingest-manifest.schema.json"],
+  ["kb-store", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-store.schema.json"],
 ]);
 
 export type SchemaName = keyof typeof ids extends string ? string : never;

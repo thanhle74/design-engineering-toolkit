@@ -21,6 +21,19 @@ The converter pipeline (Capability Registry → Structural Mapping → Functiona
 
 The `det` CLI runtime has its **own schema family** under [`cli/`](cli/) with an independent integer major: [`cli/adapter-descriptor.schema.json`](cli/adapter-descriptor.schema.json) (adapter registration), [`cli/adapter-input.schema.json`](cli/adapter-input.schema.json) (per-run transport to an out-of-process adapter) and [`cli/tool-run.schema.json`](cli/tool-run.schema.json) (per-run envelope with artifacts, content hashes and diagnostics). `tool-run` reuses the converter family's closed diagnostic registry via a pinned `$ref`; process-level diagnostics stay open-vocabulary so the converter enums are never extended. Conventions and version history: [`cli/README.md`](cli/README.md).
 
+## Knowledge Engine contract family (issue #15)
+
+The `det kb` engine has its **own schema family** under [`kb/`](kb/) with an independent integer
+major: [`kb/kb-capability.schema.json`](kb/kb-capability.schema.json) (KB-1 platform records),
+[`kb/kb-ui-component.schema.json`](kb/kb-ui-component.schema.json) (KB-2 UI components,
+license-bounded), [`kb/kb-project-record.schema.json`](kb/kb-project-record.schema.json) (KB-3
+tenant-isolated project records), [`kb/kb-relations.schema.json`](kb/kb-relations.schema.json)
+(cross-KB typed edges), [`kb/kb-ingest-manifest.schema.json`](kb/kb-ingest-manifest.schema.json)
+(plan-shaped ingest) and [`kb/kb-store.schema.json`](kb/kb-store.schema.json) (store descriptor).
+The family is frozen from the reviewed issue #7 drafts with documented freeze adjustments; the
+repository's `kb/` directory carries the resulting **public synthetic example store** only.
+Conventions, store layout and version history: [`kb/README.md`](kb/README.md).
+
 ## Versioning
 
 - Payloads carry `schemaVersion` (integer, **major** version only — currently `1`).

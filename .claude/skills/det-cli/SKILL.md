@@ -33,6 +33,31 @@ node bin/det.js plan --profile <profile.json> --registry out/capability-registry
 node bin/det.js plan ... --out out/   # writes resolution-report.json + tool-run.json
 ```
 
+## Knowledge Engine commands (issue #15 — det kb)
+
+```bash
+# Deterministic ingest from a manifest (the only way records enter a KB store; report-only by default)
+node bin/det.js kb ingest --manifest examples/kb/manifest.json \
+  --root reg="$(pwd)/tests/fixtures/synthetic-magento-like" --json
+
+# Digest-driven sync (changed sources -> records marked STALE; writes only when something went stale)
+node bin/det.js kb sync --store kb --manifest examples/kb/manifest.json --root reg=... --out kb
+
+# Structured query — provenance on every hit; KB-3 is default-deny (--project required)
+node bin/det.js kb query --store kb --kb platform --where category=content --text banner --json
+node bin/det.js kb query --store kb --kb project --project synthetic-fashion --where recordType=constraint --json
+
+# Store validation (schemas, graph integrity, project isolation, descriptor honesty)
+node bin/det.js kb validate --store kb --json
+```
+
+KB rules for agents:
+1. Same exit-code contract as above; KB diagnostics live in `run.runDiagnostics` with codes like `DENIED_PATH_SKIPPED`, `PROJECT_SCOPE_REQUIRED`, `CLASS_BOUNDARY_EDGE_FORBIDDEN`, `SOURCE_DIGEST_CHANGED`, `SECRET_PATTERN_DETECTED`.
+2. KB-1 records from the #9 registry bridge are DETECTED (declaration-only) — never treat them as runtime/Admin-verified. STALE records are excluded from queries unless `--include-lifecycle STALE` is explicit.
+3. `mapsTo` across the Page Builder native / developer-owned class boundary is forbidden by the engine (`neighborOf` only) — do not hand-write such edges into manifests.
+4. The committed `kb/` store is **public synthetic examples only**; real client material stays in gitignored local stores and requires a separate Owner GO (M4 gate).
+5. Root aliases resolve per run: `--root <alias>=<path>` > `DET_KB_ROOT_<ALIAS>` env — never commit a real path into a manifest.
+
 ## Rules for agents
 
 1. **Exit codes are the contract:** `0` ok · `1` blocking diagnostics · `2` usage error · `3` adapter runtime failure. Never guess an outcome the exit code already states.

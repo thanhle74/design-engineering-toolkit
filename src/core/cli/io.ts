@@ -60,6 +60,9 @@ export function writeOutFiles(outDir: string | null, files: { name: string; cont
   for (const f of files) {
     const target = path.join(outDir, f.name);
     try {
+      // Names may carry relative subpaths (e.g. the KB store's project/<id>/records.jsonl);
+      // create the parent chain so nested artifact names are first-class, then write.
+      fs.mkdirSync(path.dirname(target), { recursive: true });
       fs.writeFileSync(target, f.content, "utf8");
       written.push(f.name);
     } catch (e) {

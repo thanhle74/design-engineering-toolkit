@@ -19,3 +19,6 @@ tmp/
 
 # Per-project local notes/overrides
 projects/*/*.local.*
+
+# KB store run receipts (timestamped; store content is the committed truth)
+kb/tool-run.json
