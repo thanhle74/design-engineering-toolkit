@@ -161,3 +161,45 @@ Developer in Orca / Claude Code            Developer or CI via terminal
 - **Sequencing:** architectural research #5/#7 → tech ADR and contract review → explicit Owner GO for #9 read-only executable core/CLI → separately authorized Figma adapter and isolated CMS Page Builder Admin round-trip → visual fidelity. No automatic merge or production content writes.
 
 **Boundary check:** If a developer removes Claude Code and the `magento-specs` MCP, the core CLI should still validate a profile, inspect synthetic inputs and produce reproducible reports. Conversely, a beautiful chat UI or a collection of Markdown files without executable contracts/tests **does not satisfy product completion**.
+
+## 10. Figma structural source contract (future read-only extractor)
+
+**Owner insight:** Figma is a structured node tree, **not an image or a literal filesystem directory**. Its file API exposes a `DOCUMENT` root containing `CANVAS`/Pages and nested `FRAME`, `GROUP`, `COMPONENT`, `INSTANCE`, `TEXT`, and graphics nodes. The tree, Figma metadata and asset references provide a much stronger mapping source than screenshot-only reasoning.
+
+**Official source of truth:** [Figma REST API: file endpoints](https://developers.figma.com/docs/rest-api/file-endpoints/), [node/global properties](https://developers.figma.com/docs/rest-api/files/), [node types](https://developers.figma.com/docs/rest-api/file-node-types/). These references define the available API fields; an actual project's data and API permissions must still be verified in the later authorized integration gate.
+
+### Required read-only extraction inventory
+
+| Category | Capture when available | Why it matters |
+|---|---|---|
+| Identity/topology | file key, file version, page/canvas, frame, stable node IDs, node type, parent→children order, names, visibility | Trace every output section/element back to an approved source |
+| Geometry/structure | x/y, width/height, relative vs absolute positioning, rotations, clipping, constraints, scroll settings | Container widths, sections, nesting, responsive structural intent |
+| Layout | Auto Layout mode, grid data if exposed, padding, spacing, alignment, wrapping, sizing/fill/hug, responsive constraints | Structural Mapping before CSS, with explicit unsupported cases |
+| Design semantics | text content, fonts/weights/line heights, fills, strokes, effects, radius, color/style/variable references and modes | Token resolution, semantic hierarchy and visual fidelity later |
+| Components | component/instance/set keys, variants/properties/overrides, slots and references | Preserve reusable semantics and map to Page Builder / Secomm_UiWidget |
+| Assets | image/vector references, render/export URI and asset license/provenance (separate from tree) | Resolve media without pretending all image bytes are embedded in JSON |
+| Interaction | available prototype links/interaction data or instance state when exposed by the chosen interface | Signal behavior intent; do not infer real Magento/Alpine business logic |
+| Source/evidence | acquisition method, observed file/version, node ID, timestamp, permissions, missing/partial fields, evidence class | Auditability and invalidation after a design revision |
+
+**Important distinctions:**
+- A **Figma node tree ≠ semantic website structure**. A group named `Products` is not automatically a functioning product collection. Absolutely positioned rectangles may *look* like grid columns but have no responsive Auto Layout definition. The resolver must derive a proposed semantic structure and report `INFERRED` vs `OBSERVED`, confidence, gaps and competing mappings.
+- **JSON tree ≠ complete rendered page or image payload.** Some graphics/media require separate export or asset APIs; style/library references may require resolving dependencies and permissions; textual bounds/styles may need validation against a render. No claim that one `GET file` includes all inputs for pixel fidelity.
+- Read only **approved frame(s) and necessary dependencies**; support per-node/subtree scoped access and content version pinning. Avoid bulk dumping whole private Figma files or committing huge raw JSON/media/licensed assets into the generic repo.
+- Capture canonical snapshot **per run** in project-local, access-controlled outputs; keep derived **versioned, normalized intermediate representation (IR)** with deterministic ordering and hashes. Generic toolkit stores schemas/synthetic fixtures, not client design dumps.
+- Respect Figma source freeze: reading/normalization is a **later authorized gate**; do not alter, duplicate or recompose the original approved design automatically.
+
+### Stage contracts and conversion boundaries
+
+```text
+Figma file/node JSON (read-only, scoped + source version)
+  → Source Inventory (nodes + dependencies + provenance)
+  → Semantic Layout IR (sections, containers, rows/columns, slots, text, media)
+  → Structural Resolver (candidate Page Builder content type + constraints)
+  → Page Builder Editable Master Content Plan (not direct raw node-to-HTML)
+  → Isolated Admin Edit → Save → Reload → Storefront verification
+  → Visual Fidelity QA using screenshots, node geometry and design tokens
+```
+
+For every proposed section record at least: `sourceFileVersion`, `sourceNodeIds`, observed topology/geometry, inferred semantic role, required data/interaction, selected capability + proof status, editability, responsive assumptions, unhandled properties, confidence, diagnostics and later CMS artifact reference.
+
+**Explicit non-goal now:** This section is a **future extractor spec**, not a request to access Figma or start #5/#7 workers, and not permission to implement the exporter, Page Builder importer or Theme Pipeline. Complete current knowledge/architecture gates first, then open a bounded design-read-only integration task with an explicit Owner GO.
