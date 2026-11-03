@@ -1,0 +1,14 @@
+{
+  "$comment": "T-03: teaser-grid with variant layout=hero matches no binding — resolver must emit VARIANT_NOT_MAPPED (fail closed, never guessed).",
+  "profileId": "synthetic-flatcms",
+  "platformId": "synthetic-flatcms",
+  "source": { "sourceId": "flatcms-design", "revisionId": "design-fixture-0001", "accessedAt": "1970-01-01T00:00:00Z" },
+  "sections": [
+    {
+      "sectionId": "s-000000000001",
+      "order": 0,
+      "name": "unmapped-variant",
+      "elements": [{ "elementId": "n-000000000001", "sourceComponentId": "teaser-grid", "variantAssignment": { "layout": "hero" }, "childrenElementIds": [] }]
+    }
+  ]
+}

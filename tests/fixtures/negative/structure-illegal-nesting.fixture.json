@@ -1,0 +1,17 @@
+{
+  "$comment": "T-04: teaser compact denies children, yet this structure nests a heading under it — resolver must emit INCOMPATIBLE_NESTING.",
+  "profileId": "synthetic-flatcms",
+  "platformId": "synthetic-flatcms",
+  "source": { "sourceId": "flatcms-design", "revisionId": "design-fixture-0001", "accessedAt": "1970-01-01T00:00:00Z" },
+  "sections": [
+    {
+      "sectionId": "s-000000000001",
+      "order": 0,
+      "name": "bad-nesting",
+      "elements": [
+        { "elementId": "n-000000000001", "sourceComponentId": "teaser-grid", "variantAssignment": { "layout": "compact" }, "childrenElementIds": ["n-000000000002"] },
+        { "elementId": "n-000000000002", "sourceComponentId": "hero-title", "variantAssignment": {}, "childrenElementIds": [] }
+      ]
+    }
+  ]
+}

@@ -132,7 +132,7 @@
           "required": ["adapter"],
           "additionalProperties": false,
           "properties": {
-            "adapter": { "enum": ["figma-only"], "$comment": "V1. Future majors may add e.g. 'magento-hyva', 'page-builder' as downstream consumers of the contracts." },
+            "adapter": { "enum": ["figma-only"], "$comment": "V1. Future majors may add downstream platform adapters as consumers of these contracts." },
             "futureAdapters": { "type": "array", "items": { "type": "string" } }
           }
         },

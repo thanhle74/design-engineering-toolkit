@@ -2,7 +2,7 @@
 
 > Per-project profile per [issue #1][i1] requirement 1. All project-specific choices live here, not in toolkit core.
 > Status: **pilot file built 2026-10-27** after an in-session Owner go (approval not captured as a GitHub record) —
-> awaiting Owner acceptance on [issue #2][i2]. Manual design proof; [PR #3][i3] architecture remains DRAFT/unmerged,
+> awaiting Owner acceptance on [issue #2][i2]. Manual design proof; [PR #3][i3] architecture (merged 2026-10-28 — this note was written while it was DRAFT/unmerged),
 > so this was **not** an automated pipeline run. Gate-level verification: NOT measured (see pilot-plan.md
 > "Verification status").
 

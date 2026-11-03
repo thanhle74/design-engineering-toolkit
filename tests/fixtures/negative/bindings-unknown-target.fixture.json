@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "profileId": "synthetic-flatcms",
+  "platformId": "synthetic-flatcms",
+  "generatedAt": "1970-01-01T00:00:00Z",
+  "registry": {
+    "platformId": "synthetic-flatcms",
+    "registryRevisionId": "fixture-rev-0001"
+  },
+  "bindings": [
+    {
+      "bindingId": "b-0000000f0001",
+      "sourceComponentId": "ghost-component",
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-100000000006",
+          "kind": "document",
+          "locator": "design://flatcms-design/page-1/stack-1",
+          "retrievedAt": "1970-01-01T00:00:00Z",
+          "note": "fixture container source"
+        }
+      ],
+      "variantConditions": [],
+      "target": {
+        "capabilityId": "flatcms/nonexistent",
+        "appearanceId": "default"
+      },
+      "propsTransform": [
+        {
+          "from": "axis",
+          "to": "direction",
+          "transform": "identity",
+          "required": false
+        }
+      ],
+      "fallbackPolicy": "fail-unsupported"
+    }
+  ],
+  "diagnostics": []
+}

@@ -36,7 +36,7 @@ Normative safety rules for the Design Engineering Toolkit V1 (issue [#1](https:/
 
 - **Slaunchpad #40 / PR #41** (Brand vs Promo homepage design): fully independent; this toolkit neither depends on nor modifies it. The `luxury-editorial` / `commerce-promotional` profile examples mirror its business framing without touching its artifacts.
 - **Slaunchpad #42** (Figma→Page Builder idea): its canonical-JSON intent is honored by making these contracts platform-neutral; its Magento-specific contracts stay out of this repo until a future major adds an adapter.
-- **Toolkit issue #2** (pilot): the only authorized consumer of V1 contracts; blocked on this PR's approval for its inputs and on a human GO for its destination (see [pilot-scope.md](pilot-scope.md)).
+- **Toolkit issue #2** (pilot, closed 2026-10-28): was the authorized consumer of V1 contracts; its dependency on PR #3 approval is past (merged 2026-10-28) and its destination GO was granted for the manual pilot (see [pilot-scope.md](pilot-scope.md)). Invariants below still apply to any future consumer.
 
 ## 5. When a rule conflicts
 

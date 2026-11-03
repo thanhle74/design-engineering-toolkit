@@ -1,0 +1,185 @@
+{
+  "schemaVersion": 1,
+  "platformId": "synthetic-flatcms",
+  "platformVersion": "fixture-1",
+  "profileId": "synthetic-flatcms",
+  "generatedAt": "1970-01-01T00:00:00Z",
+  "source": { "sourceId": "flatcms-fixtures", "revisionId": "fixture-rev-0001", "accessedAt": "1970-01-01T00:00:00Z" },
+  "generator": { "tool": "contract-exercising fixture", "toolVersion": "1.0.0" },
+  "capabilities": [
+    {
+      "id": "chrome/site-header",
+      "appearanceId": "default",
+      "provider": "fixture-theme",
+      "category": "chrome",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [{ "policy": "deny-all" }],
+      "responsiveDeterministic": true,
+      "dataContext": { "requiresRuntimeData": false, "dataSources": [] },
+      "editorEditingMode": "none",
+      "evidence": [
+        { "evidenceId": "e-000000000001", "kind": "config-declaration", "locator": "source://flatcms-fixtures/theme/layout/header.cfg#L1", "retrievedAt": "1970-01-01T00:00:00Z", "note": "fixture layout declaration" }
+      ],
+      "proofLevel": "registered",
+      "description": "Site chrome; out of page scope, recorded so the resolver can exclude it explicitly."
+    },
+    {
+      "id": "custom/promo-strip",
+      "appearanceId": "default",
+      "provider": "fixture-theme",
+      "category": "custom-required",
+      "availability": "enabled",
+      "acceptedProps": [{ "name": "message", "type": "string", "required": true }],
+      "allowedChildren": [{ "policy": "deny-all" }],
+      "responsiveDeterministic": false,
+      "dataContext": { "requiresRuntimeData": false, "dataSources": [] },
+      "editorEditingMode": "form",
+      "evidence": [
+        { "evidenceId": "e-000000000002", "kind": "config-declaration", "locator": "source://flatcms-fixtures/extensions/promo.cfg#L3", "retrievedAt": "1970-01-01T00:00:00Z", "note": "custom strip requires a project-authored appearance" }
+      ],
+      "proofLevel": "registered",
+      "description": "No native equivalent exists; needs a project-authored capability (custom-required)."
+    },
+    {
+      "id": "flatcms/heading",
+      "appearanceId": "default",
+      "provider": "flatcms-core",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [{ "name": "value", "type": "string", "required": true }, { "name": "weight", "type": "enum", "required": false, "values": ["display", "regular"] }],
+      "allowedChildren": [{ "policy": "deny-all" }],
+      "responsiveDeterministic": true,
+      "dataContext": { "requiresRuntimeData": false, "dataSources": [] },
+      "editorEditingMode": "form",
+      "evidence": [
+        { "evidenceId": "e-000000000003", "kind": "config-declaration", "locator": "source://flatcms-fixtures/core/types.cfg#L10", "retrievedAt": "1970-01-01T00:00:00Z", "note": "fixture native declaration" }
+      ],
+      "proofLevel": "registered"
+    },
+    {
+      "id": "flatcms/section-root",
+      "appearanceId": "default",
+      "provider": "flatcms-core",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [{ "policy": "allow-all" }],
+      "responsiveDeterministic": true,
+      "dataContext": { "requiresRuntimeData": false, "dataSources": [] },
+      "editorEditingMode": "form",
+      "evidence": [
+        { "evidenceId": "e-000000000004", "kind": "config-declaration", "locator": "source://flatcms-fixtures/core/types.cfg#L1", "retrievedAt": "1970-01-01T00:00:00Z", "note": "page root accepts top-level types" }
+      ],
+      "proofLevel": "registered",
+      "description": "Page root container."
+    },
+    {
+      "id": "flatcms/stack",
+      "appearanceId": "default",
+      "provider": "flatcms-core",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [{ "name": "direction", "type": "enum", "required": false, "values": ["column", "row"] }],
+      "allowedChildren": [{ "capabilityId": "flatcms/heading" }, { "capabilityId": "flatcms/teaser" }],
+      "allowedParents": [{ "capabilityId": "flatcms/section-root" }],
+      "responsiveDeterministic": true,
+      "dataContext": { "requiresRuntimeData": false, "dataSources": [] },
+      "editorEditingMode": "form",
+      "evidence": [
+        { "evidenceId": "e-000000000005", "kind": "config-declaration", "locator": "source://flatcms-fixtures/core/types.cfg#L20", "retrievedAt": "1970-01-01T00:00:00Z", "note": "stack accepts heading and teaser children only" }
+      ],
+      "proofLevel": "registered"
+    },
+    {
+      "id": "flatcms/teaser",
+      "appearanceId": "compact",
+      "provider": "flatcms-core",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [{ "name": "entries", "type": "json", "required": true }],
+      "allowedChildren": [{ "policy": "deny-all" }],
+      "responsiveDeterministic": true,
+      "dataContext": { "requiresRuntimeData": false, "dataSources": [] },
+      "editorEditingMode": "form",
+      "evidence": [
+        { "evidenceId": "e-000000000006", "kind": "config-declaration", "locator": "source://flatcms-fixtures/core/types.cfg#L30", "retrievedAt": "1970-01-01T00:00:00Z", "note": "teaser compact appearance" }
+      ],
+      "proofLevel": "registered"
+    },
+    {
+      "id": "flatcms/teaser",
+      "appearanceId": "expanded",
+      "provider": "flatcms-core",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [{ "name": "entries", "type": "json", "required": true }, { "name": "lead", "type": "string", "required": false }],
+      "allowedChildren": [{ "policy": "deny-all" }],
+      "responsiveDeterministic": true,
+      "dataContext": { "requiresRuntimeData": false, "dataSources": [] },
+      "editorEditingMode": "form",
+      "evidence": [
+        { "evidenceId": "e-000000000007", "kind": "config-declaration", "locator": "source://flatcms-fixtures/core/types.cfg#L31", "retrievedAt": "1970-01-01T00:00:00Z", "note": "teaser expanded appearance" }
+      ],
+      "proofLevel": "registered"
+    },
+    {
+      "id": "flatui/accordion",
+      "appearanceId": "default",
+      "provider": "flatui-kit",
+      "category": "widget",
+      "availability": "enabled",
+      "acceptedProps": [{ "name": "items", "type": "json", "required": true }],
+      "allowedChildren": [{ "policy": "deny-all" }],
+      "responsiveDeterministic": true,
+      "dataContext": { "requiresRuntimeData": false, "dataSources": [] },
+      "editorEditingMode": "form",
+      "evidence": [
+        { "evidenceId": "e-000000000008", "kind": "config-declaration", "locator": "source://flatcms-fixtures/widgets/registry.cfg#L5", "retrievedAt": "1970-01-01T00:00:00Z", "note": "widget registry entry" }
+      ],
+      "proofLevel": "registered"
+    },
+    {
+      "id": "flatui/carousel",
+      "appearanceId": "default",
+      "provider": "flatui-kit",
+      "category": "widget",
+      "availability": "disabled",
+      "acceptedProps": [{ "name": "slides", "type": "json", "required": true }],
+      "allowedChildren": [{ "policy": "deny-all" }],
+      "responsiveDeterministic": true,
+      "dataContext": { "requiresRuntimeData": false, "dataSources": [] },
+      "editorEditingMode": "form",
+      "evidence": [
+        { "evidenceId": "e-000000000009", "kind": "config-declaration", "locator": "source://flatcms-fixtures/widgets/registry.cfg#L9", "retrievedAt": "1970-01-01T00:00:00Z", "note": "registered but disabled in this fixture platform instance" }
+      ],
+      "proofLevel": "registered",
+      "description": "Registered but disabled — feeds the CAPABILITY_DISABLED negative case."
+    },
+    {
+      "id": "unsupported/canvas-embed",
+      "appearanceId": "default",
+      "provider": "flatcms-core",
+      "category": "unsupported",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [{ "policy": "deny-all" }],
+      "responsiveDeterministic": true,
+      "dataContext": { "requiresRuntimeData": false, "dataSources": [] },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        { "evidenceId": "e-00000000000a", "kind": "document", "locator": "doc://fixture-notes#canvas-embed", "retrievedAt": "1970-01-01T00:00:00Z", "note": "recorded as unsupported, never silently dropped" }
+      ],
+      "proofLevel": "not-verified",
+      "unsupportedReason": "Free-form canvas embedding has no structural equivalent in this platform; explicit UNSUPPORTED by design."
+    }
+  ],
+  "summary": {
+    "byCategory": { "native": 5, "widget": 2, "chrome": 1, "custom-required": 1, "unsupported": 1 },
+    "byProofLevel": { "not-verified": 1, "discovered": 0, "registered": 9, "structurally-mapped": 0, "admin-roundtrip-verified": 0, "visually-verified": 0 },
+    "byAvailability": { "enabled": 9, "disabled": 1, "deprecated": 0, "unknown": 0 }
+  },
+  "diagnostics": [
+    { "code": "NOT_VERIFIED", "severity": "warning", "message": "Fixture registry: no admin round-trip exists for a synthetic platform; every proofLevel stays at 'registered'.", "subject": { "type": "source", "id": "flatcms-fixtures" } }
+  ]
+}

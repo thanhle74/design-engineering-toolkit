@@ -1,0 +1,4434 @@
+{
+  "schemaVersion": 1,
+  "platformId": "magento-pagebuilder",
+  "platformVersion": "2.4.8-p5",
+  "profileId": "slaunchpad-fashion",
+  "generatedAt": "2026-11-03T02:23:54Z",
+  "source": {
+    "sourceId": "slaunch-checkout",
+    "revisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+    "accessedAt": "2026-11-03T02:23:54Z"
+  },
+  "generator": {
+    "tool": "read-only source probe ([5] W-B capability audit)",
+    "toolVersion": "issue-5-2026-11-03"
+  },
+  "capabilities": [
+    {
+      "id": "chrome/absolute-footer",
+      "appearanceId": "default",
+      "provider": "theme",
+      "category": "chrome",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "none",
+      "evidence": [
+        {
+          "evidenceId": "e-f42b85363658",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/hyva-themes/magento2-default-theme/Magento_Theme/layout/default.xml#L119",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "theme layout handle declaration"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Absolute footer scripts container. Out of CMS-page scope."
+    },
+    {
+      "id": "chrome/breadcrumbs-back-to-top",
+      "appearanceId": "default",
+      "provider": "theme",
+      "category": "chrome",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "none",
+      "evidence": [
+        {
+          "evidenceId": "e-d9b54e97f7dd",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/design/frontend/Secomm/launchpad/Magento_Theme/layout/default.xml#L1",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "theme layout handle declaration"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Breadcrumbs and back-to-top theme templates. Out of CMS-page scope."
+    },
+    {
+      "id": "chrome/cart-drawer",
+      "appearanceId": "default",
+      "provider": "theme",
+      "category": "chrome",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "none",
+      "evidence": [
+        {
+          "evidenceId": "e-de00f87e3561",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/hyva-themes/magento2-default-theme/Magento_Theme/layout/default.xml#L58",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "theme layout handle declaration"
+        },
+        {
+          "evidenceId": "e-b16b382cd0a6",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/design/frontend/Secomm/launchpad/Magento_Theme/layout/default.xml#L36",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "theme layout handle declaration"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Cart drawer / minicart incl. coupon form and promo CMS block; checkout owned by a third-party module. Out of CMS-page scope."
+    },
+    {
+      "id": "chrome/footer-content",
+      "appearanceId": "default",
+      "provider": "theme",
+      "category": "chrome",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": [
+          "magento-cms-block"
+        ],
+        "notes": "Chrome-owned CMS block references."
+      },
+      "editorEditingMode": "none",
+      "evidence": [
+        {
+          "evidenceId": "e-d44b8872f3d8",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/hyva-themes/magento2-default-theme/Magento_Theme/layout/default.xml#L97",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "theme layout handle declaration"
+        },
+        {
+          "evidenceId": "e-e09282c135ca",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/design/frontend/Secomm/launchpad/Magento_Theme/layout/default.xml#L54",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "theme layout handle declaration"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Footer composed of chrome-owned CMS blocks (newsletter, links, social, trust/payments). Out of CMS-page scope."
+    },
+    {
+      "id": "chrome/header",
+      "appearanceId": "default",
+      "provider": "theme",
+      "category": "chrome",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "none",
+      "evidence": [
+        {
+          "evidenceId": "e-ac00f5159b39",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/hyva-themes/magento2-default-theme/Magento_Theme/layout/default.xml#L40",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "theme layout handle declaration"
+        },
+        {
+          "evidenceId": "e-9ece44ee7138",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/design/frontend/Secomm/launchpad/Magento_Theme/layout/default.xml#L10",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "theme layout handle declaration"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Header container: logo, search, compare, topmenu desktop+mobile, store languages, wishlist. Theme layout handle — out of CMS-page scope."
+    },
+    {
+      "id": "chrome/navigation-menu",
+      "appearanceId": "default",
+      "provider": "theme",
+      "category": "chrome",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "none",
+      "evidence": [
+        {
+          "evidenceId": "e-9ece44ee7138",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/design/frontend/Secomm/launchpad/Magento_Theme/layout/default.xml#L10",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "theme layout handle declaration"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Menu drawer + third-party navigation module structure. Out of CMS-page scope."
+    },
+    {
+      "id": "magento-pagebuilder/banner",
+      "appearanceId": "collage-centered",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "message",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "button_text",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "link_url",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "show_overlay",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "overlay_color",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "min_height",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/root-container"
+        }
+      ],
+      "responsiveRules": [
+        {
+          "scope": "mobile",
+          "effect": "dedicated mobile breakpoint form fields",
+          "evidence": {
+            "evidenceId": "e-77b71e6950f2",
+            "kind": "source-file",
+            "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/banner.xml#L1",
+            "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+            "retrievedAt": "2026-11-03T02:23:54Z",
+            "method": "read-only source inspection ([5] W-B capability audit)",
+            "note": "mobile breakpoint form declaration"
+          }
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-e487116992b5",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/banner.xml:113-115",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "appearance collage-centered"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML"
+    },
+    {
+      "id": "magento-pagebuilder/banner",
+      "appearanceId": "collage-left",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "message",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "button_text",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "link_url",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "show_overlay",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "overlay_color",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "min_height",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/root-container"
+        }
+      ],
+      "responsiveRules": [
+        {
+          "scope": "mobile",
+          "effect": "dedicated mobile breakpoint form fields",
+          "evidence": {
+            "evidenceId": "e-77b71e6950f2",
+            "kind": "source-file",
+            "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/banner.xml#L1",
+            "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+            "retrievedAt": "2026-11-03T02:23:54Z",
+            "method": "read-only source inspection ([5] W-B capability audit)",
+            "note": "mobile breakpoint form declaration"
+          }
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-24eb16122876",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/banner.xml:25-27",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "appearance collage-left"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML"
+    },
+    {
+      "id": "magento-pagebuilder/banner",
+      "appearanceId": "collage-right",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "message",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "button_text",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "link_url",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "show_overlay",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "overlay_color",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "min_height",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/root-container"
+        }
+      ],
+      "responsiveRules": [
+        {
+          "scope": "mobile",
+          "effect": "dedicated mobile breakpoint form fields",
+          "evidence": {
+            "evidenceId": "e-77b71e6950f2",
+            "kind": "source-file",
+            "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/banner.xml#L1",
+            "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+            "retrievedAt": "2026-11-03T02:23:54Z",
+            "method": "read-only source inspection ([5] W-B capability audit)",
+            "note": "mobile breakpoint form declaration"
+          }
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-ad4ef51ce950",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/banner.xml:201-203",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "appearance collage-right"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML"
+    },
+    {
+      "id": "magento-pagebuilder/banner",
+      "appearanceId": "poster",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "message",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "button_text",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "button_type",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "link_url",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "show_button",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "show_overlay",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "overlay_color",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "min_height",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "alt",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "title_attribute",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/root-container"
+        }
+      ],
+      "responsiveRules": [
+        {
+          "scope": "mobile",
+          "effect": "dedicated mobile breakpoint form fields",
+          "evidence": {
+            "evidenceId": "e-77b71e6950f2",
+            "kind": "source-file",
+            "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/banner.xml#L1",
+            "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+            "retrievedAt": "2026-11-03T02:23:54Z",
+            "method": "read-only source inspection ([5] W-B capability audit)",
+            "note": "mobile breakpoint form declaration"
+          }
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-17aed794334f",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/banner.xml:289-292",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "appearance poster default"
+        },
+        {
+          "evidenceId": "e-757b9cc6aff6",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/ui_component/pagebuilder_banner_form.xml",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "10 fields"
+        },
+        {
+          "evidenceId": "e-13c88dfcf64a",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/web/template/content-type/banner/poster/master.html#L8",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "master renderer binds data.main.attributes"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML data-content-type=banner data-appearance=poster"
+    },
+    {
+      "id": "magento-pagebuilder/block",
+      "appearanceId": "default",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "block_id",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "template",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/root-container"
+        },
+        {
+          "capabilityId": "magento-pagebuilder/row"
+        },
+        {
+          "capabilityId": "magento-pagebuilder/column"
+        },
+        {
+          "capabilityId": "magento-pagebuilder/tab-item"
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": true,
+        "dataSources": [
+          "magento-cms-block"
+        ],
+        "notes": "block_id resolved from the CMS block chooser."
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-d9826a0ebabf",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/block.xml:18-24",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "parents root-container/row/column/tab-item declared"
+        },
+        {
+          "evidenceId": "e-8cbfd4617c02",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/ui_component/pagebuilder_block_form.xml",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "3 fields"
+        },
+        {
+          "evidenceId": "e-dd642e28c6dd",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/hyva-themes/magento2-cms-tailwind-jit/src/view/adminhtml/pagebuilder/content_type/block.xml",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "hyva JIT amendment"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML data-content-type=block; renders CMS block by id"
+    },
+    {
+      "id": "magento-pagebuilder/button-item",
+      "appearanceId": "default",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "button_text",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "button_type",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "text_align",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "border",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "border_width",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "border_radius",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "link_url",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/buttons"
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-a4345a537c53",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/button_item.xml:18-22",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "parents buttons; children deny"
+        },
+        {
+          "evidenceId": "e-afdaaf88959c",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/ui_component/pagebuilder_button_item_form.xml",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "7 fields"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML data-content-type=button-item"
+    },
+    {
+      "id": "magento-pagebuilder/buttons",
+      "appearanceId": "inline",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "is_same_width",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "capabilityId": "magento-pagebuilder/button-item"
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/root-container"
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-9c417dfda039",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/buttons.xml:19-24",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "children button-item; appearance inline default"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML data-content-type=buttons"
+    },
+    {
+      "id": "magento-pagebuilder/buttons",
+      "appearanceId": "stacked",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "is_same_width",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "capabilityId": "magento-pagebuilder/button-item"
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/root-container"
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-1602866ac72d",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/buttons.xml:45-48",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "appearance stacked"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML"
+    },
+    {
+      "id": "magento-pagebuilder/column-group",
+      "appearanceId": "default",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "min_height",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "grid_size",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "non_empty_column_count",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "max_grid_size",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "capabilityId": "magento-pagebuilder/column-line"
+        },
+        {
+          "capabilityId": "magento-pagebuilder/column"
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/root-container"
+        },
+        {
+          "capabilityId": "magento-pagebuilder/row"
+        },
+        {
+          "capabilityId": "magento-pagebuilder/column-group"
+        },
+        {
+          "capabilityId": "magento-pagebuilder/tab-item"
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-924df1c1f191",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/column_group.xml:19-28",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "parents root-container/row/column-group/tab-item; children column-line+column"
+        },
+        {
+          "evidenceId": "e-43a9b04a6b77",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/ui_component/pagebuilder_column_group_form.xml",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "5 fields"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML data-content-type=column-group"
+    },
+    {
+      "id": "magento-pagebuilder/column-line",
+      "appearanceId": "default",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "background_type",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "capabilityId": "magento-pagebuilder/column"
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/column-group"
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-e082c26c6464",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/column-line.xml:16-21",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "parents column-group; children column"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML"
+    },
+    {
+      "id": "magento-pagebuilder/column",
+      "appearanceId": "align-bottom",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "width",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "min_height",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "justify_content",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "allow-all",
+          "except": [
+            "magento-pagebuilder/row",
+            "magento-pagebuilder/column",
+            "magento-pagebuilder/column-line"
+          ]
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/column-line"
+        },
+        {
+          "capabilityId": "magento-pagebuilder/column"
+        }
+      ],
+      "responsiveRules": [
+        {
+          "scope": "mobile",
+          "effect": "dedicated mobile breakpoint form fields",
+          "evidence": {
+            "evidenceId": "e-1489a0540ece",
+            "kind": "source-file",
+            "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/column.xml#L1",
+            "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+            "retrievedAt": "2026-11-03T02:23:54Z",
+            "method": "read-only source inspection ([5] W-B capability audit)",
+            "note": "mobile breakpoint form declaration"
+          }
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-7413a6ea6db6",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/column.xml:180-182",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "reuses full-height templates"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML"
+    },
+    {
+      "id": "magento-pagebuilder/column",
+      "appearanceId": "align-center",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "width",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "min_height",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "justify_content",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "allow-all",
+          "except": [
+            "magento-pagebuilder/row",
+            "magento-pagebuilder/column",
+            "magento-pagebuilder/column-line"
+          ]
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/column-line"
+        },
+        {
+          "capabilityId": "magento-pagebuilder/column"
+        }
+      ],
+      "responsiveRules": [
+        {
+          "scope": "mobile",
+          "effect": "dedicated mobile breakpoint form fields",
+          "evidence": {
+            "evidenceId": "e-1489a0540ece",
+            "kind": "source-file",
+            "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/column.xml#L1",
+            "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+            "retrievedAt": "2026-11-03T02:23:54Z",
+            "method": "read-only source inspection ([5] W-B capability audit)",
+            "note": "mobile breakpoint form declaration"
+          }
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-22567a4f8557",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/column.xml:132-134",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "reuses full-height templates"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML"
+    },
+    {
+      "id": "magento-pagebuilder/column",
+      "appearanceId": "align-top",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "width",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "min_height",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "justify_content",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "allow-all",
+          "except": [
+            "magento-pagebuilder/row",
+            "magento-pagebuilder/column",
+            "magento-pagebuilder/column-line"
+          ]
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/column-line"
+        },
+        {
+          "capabilityId": "magento-pagebuilder/column"
+        }
+      ],
+      "responsiveRules": [
+        {
+          "scope": "mobile",
+          "effect": "dedicated mobile breakpoint form fields",
+          "evidence": {
+            "evidenceId": "e-1489a0540ece",
+            "kind": "source-file",
+            "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/column.xml#L1",
+            "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+            "retrievedAt": "2026-11-03T02:23:54Z",
+            "method": "read-only source inspection ([5] W-B capability audit)",
+            "note": "mobile breakpoint form declaration"
+          }
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-41ccfa891092",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/column.xml:84-86",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "reuses full-height preview/master templates"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML"
+    },
+    {
+      "id": "magento-pagebuilder/column",
+      "appearanceId": "full-height",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "width",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "min_height",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "justify_content",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "background_type",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "margins_and_padding",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "allow-all",
+          "except": [
+            "magento-pagebuilder/row",
+            "magento-pagebuilder/column",
+            "magento-pagebuilder/column-line"
+          ]
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/column-line"
+        },
+        {
+          "capabilityId": "magento-pagebuilder/column"
+        }
+      ],
+      "responsiveRules": [
+        {
+          "scope": "mobile",
+          "effect": "dedicated mobile breakpoint form fields",
+          "evidence": {
+            "evidenceId": "e-1489a0540ece",
+            "kind": "source-file",
+            "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/column.xml#L1",
+            "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+            "retrievedAt": "2026-11-03T02:23:54Z",
+            "method": "read-only source inspection ([5] W-B capability audit)",
+            "note": "mobile breakpoint form declaration"
+          }
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-0d99ce47a26d",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/column.xml:24-33",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "parents column-line/column; children deny row,column,column-line"
+        },
+        {
+          "evidenceId": "e-ed3fc9f4fc3d",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/ui_component/pagebuilder_column_form.xml",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "4 fields + mobile width"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML"
+    },
+    {
+      "id": "magento-pagebuilder/divider",
+      "appearanceId": "default",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "line_color",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "line_thickness",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "line_width",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/root-container"
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-5c56b2fedbf3",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/divider.xml:18-20",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "children deny"
+        },
+        {
+          "evidenceId": "e-10fea978fd5d",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/ui_component/pagebuilder_divider_form.xml",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "4 fields"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML data-content-type=divider"
+    },
+    {
+      "id": "magento-pagebuilder/heading",
+      "appearanceId": "default",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "heading_type",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "heading_text",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "text_align",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/root-container"
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-125d77f933af",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/heading.xml:18-20",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "children deny"
+        },
+        {
+          "evidenceId": "e-c52d040d7c93",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/ui_component/pagebuilder_heading_form.xml",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "3 fields"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML data-content-type=heading"
+    },
+    {
+      "id": "magento-pagebuilder/html",
+      "appearanceId": "default",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "html",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/root-container"
+        },
+        {
+          "capabilityId": "magento-pagebuilder/row"
+        },
+        {
+          "capabilityId": "magento-pagebuilder/column"
+        },
+        {
+          "capabilityId": "magento-pagebuilder/tab-item"
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": [],
+        "notes": "Admin-entered raw HTML stored in master HTML; classes reach the storefront only via safelist or the CMS Tailwind JIT."
+      },
+      "editorEditingMode": "code",
+      "evidence": [
+        {
+          "evidenceId": "e-6e6e5a9a4cfb",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/html.xml:18-26",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "parents root-container/row/column/tab-item declared"
+        },
+        {
+          "evidenceId": "e-04e8522d848d",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/Model/Filter/Template.php#L213",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "XPath @data-content-type=html handling"
+        },
+        {
+          "evidenceId": "e-ff1d1e718c73",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/hyva-themes/magento2-cms-tailwind-jit/src/view/adminhtml/pagebuilder/content_type/html.xml",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "hyva amendment"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML data-content-type=html; content stored escaped/decoded via data-decoded marker"
+    },
+    {
+      "id": "magento-pagebuilder/image",
+      "appearanceId": "full-width",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "image",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "mobile_image",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "image_caption",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "alt",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "title_attribute",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "link_url",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/root-container"
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-ace67d03f134",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/image.xml:19-21",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "children deny; appearance full-width default"
+        },
+        {
+          "evidenceId": "e-89797725b23c",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/ui_component/pagebuilder_image_form.xml",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "6 fields"
+        },
+        {
+          "evidenceId": "e-844bb7ecd7f0",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder-image-attribute/view/adminhtml/pagebuilder/content_type/image.xml",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "image-attribute module amendment"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML data-content-type=image"
+    },
+    {
+      "id": "magento-pagebuilder/map",
+      "appearanceId": "default",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "location_name",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "phone",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "address",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "city",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "state",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "zipcode",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "country",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "height",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "show_controls",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/root-container"
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": true,
+        "dataSources": [
+          "google-maps-api"
+        ],
+        "notes": "Requires a store-config API key; key presence NOT_VERIFIED."
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-04079827b108",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/map.xml:18-20",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "children deny"
+        },
+        {
+          "evidenceId": "e-715612d0c3ef",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/etc/adminhtml/system.xml#L32",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "google_maps_api_key required to use Map"
+        },
+        {
+          "evidenceId": "e-bacdc9a545e7",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/ui_component/pagebuilder_map_form.xml",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "10 fields + map_location_form 11 fields"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML data-content-type=map"
+    },
+    {
+      "id": "magento-pagebuilder/products",
+      "appearanceId": "carousel",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "products_count",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "carousel_products_count",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "carousel_mode",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "autoplay",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "autoplay_speed",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "is_infinite",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "show_arrows",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "show_dots",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/root-container"
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": true,
+        "dataSources": [
+          "magento-catalog-products"
+        ],
+        "notes": "Persists as a {{widget}} directive; business data resolves from the platform catalog, never from design fixtures."
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-57b9abb97d20",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/products.xml:49-51",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "carousel appearance uses grid preview/master"
+        },
+        {
+          "evidenceId": "e-d4711a970e44",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/ui_component/pagebuilder_products_carousel_form.xml",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "9 fields"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML; {{widget}} directive"
+    },
+    {
+      "id": "magento-pagebuilder/products",
+      "appearanceId": "grid",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "condition_option",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "category_ids",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "sku",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "sort_order",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "products_count",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "product_totals",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/root-container"
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": true,
+        "dataSources": [
+          "magento-catalog-products"
+        ],
+        "notes": "Persists as a {{widget}} directive; business data resolves from the platform catalog, never from design fixtures."
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-702928f42c44",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/products.xml#L42",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "widget_directive mass-converter"
+        },
+        {
+          "evidenceId": "e-9ebcff2aac7a",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/ui_component/pagebuilder_products_form.xml",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "7 fields"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML; persisted as {{widget}} directive via widget-directive mass-converter"
+    },
+    {
+      "id": "magento-pagebuilder/root-container",
+      "appearanceId": "default",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "Stage root container",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [
+        {
+          "policy": "allow-all"
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-b372c0d0b174",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/Model/Config/ContentType/Reader.php#L59",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "content_type/*.xml reader; types with no declared parents get allowed_parents = []"
+        },
+        {
+          "evidenceId": "e-6e51956e2080",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/web/js/drag-drop/matrix.js#L8",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "drag-drop matrix: allowed_parents=[] => droppable only into the stage root container"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Stage root container; accepts every top-level content type."
+    },
+    {
+      "id": "magento-pagebuilder/row",
+      "appearanceId": "contained",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "min_height",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "justify_content",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "background_type",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "parallax_speed",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "margins_and_padding",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "css_classes",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "text_align",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "appearance",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "allow-all",
+          "except": [
+            "magento-pagebuilder/row"
+          ]
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/root-container"
+        }
+      ],
+      "responsiveRules": [
+        {
+          "scope": "mobile",
+          "effect": "dedicated mobile breakpoint form fields",
+          "evidence": {
+            "evidenceId": "e-9f5c4fedcbf5",
+            "kind": "source-file",
+            "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/row.xml#L1",
+            "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+            "retrievedAt": "2026-11-03T02:23:54Z",
+            "method": "read-only source inspection ([5] W-B capability audit)",
+            "note": "mobile breakpoint form declaration"
+          }
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-8315efa56439",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/row.xml#L31",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "appearance contained default=true; parents root-container only; children allow-all except row"
+        },
+        {
+          "evidenceId": "e-bd6630cf51df",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/ui_component/pagebuilder_row_form.xml",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "5 fields"
+        },
+        {
+          "evidenceId": "e-388b92431802",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/web/template/content-type/row/contained/master.html",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "master renderer"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML data-content-type=row"
+    },
+    {
+      "id": "magento-pagebuilder/row",
+      "appearanceId": "full-bleed",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "min_height",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "justify_content",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "background_type",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "allow-all",
+          "except": [
+            "magento-pagebuilder/row"
+          ]
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/root-container"
+        }
+      ],
+      "responsiveRules": [
+        {
+          "scope": "mobile",
+          "effect": "dedicated mobile breakpoint form fields",
+          "evidence": {
+            "evidenceId": "e-9f5c4fedcbf5",
+            "kind": "source-file",
+            "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/row.xml#L1",
+            "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+            "retrievedAt": "2026-11-03T02:23:54Z",
+            "method": "read-only source inspection ([5] W-B capability audit)",
+            "note": "mobile breakpoint form declaration"
+          }
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-7d7dc044f335",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/row.xml#L165",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "appearance full-bleed"
+        },
+        {
+          "evidenceId": "e-62f641f248ac",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/web/template/content-type/row/full-bleed/master.html",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "master renderer"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML"
+    },
+    {
+      "id": "magento-pagebuilder/row",
+      "appearanceId": "full-width",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "min_height",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "justify_content",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "background_type",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "allow-all",
+          "except": [
+            "magento-pagebuilder/row"
+          ]
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/root-container"
+        }
+      ],
+      "responsiveRules": [
+        {
+          "scope": "mobile",
+          "effect": "dedicated mobile breakpoint form fields",
+          "evidence": {
+            "evidenceId": "e-9f5c4fedcbf5",
+            "kind": "source-file",
+            "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/row.xml#L1",
+            "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+            "retrievedAt": "2026-11-03T02:23:54Z",
+            "method": "read-only source inspection ([5] W-B capability audit)",
+            "note": "mobile breakpoint form declaration"
+          }
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-1b2e3c118698",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/row.xml#L99",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "appearance full-width"
+        },
+        {
+          "evidenceId": "e-fed32990a30c",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/web/template/content-type/row/full-width/master.html",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "master renderer"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML"
+    },
+    {
+      "id": "magento-pagebuilder/slider",
+      "appearanceId": "default",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "min_height",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "autoplay",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "autoplay_speed",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "fade",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "is_infinite",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "show_arrows",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "show_dots",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "background_type",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "capabilityId": "magento-pagebuilder/slide"
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/root-container"
+        }
+      ],
+      "responsiveRules": [
+        {
+          "scope": "mobile",
+          "effect": "dedicated mobile breakpoint form fields",
+          "evidence": {
+            "evidenceId": "e-90d471eafe38",
+            "kind": "source-file",
+            "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/slider.xml#L1",
+            "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+            "retrievedAt": "2026-11-03T02:23:54Z",
+            "method": "read-only source inspection ([5] W-B capability audit)",
+            "note": "mobile breakpoint form declaration"
+          }
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-b663a74f6d3e",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/slider.xml:24-26",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "children slide only"
+        },
+        {
+          "evidenceId": "e-668dbbf7ed68",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/ui_component/pagebuilder_slider_form.xml",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "8 fields"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML data-content-type=slider"
+    },
+    {
+      "id": "magento-pagebuilder/slide",
+      "appearanceId": "collage-centered",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "slide_name",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "min_height",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "content",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "show_button",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "show_overlay",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/slider"
+        }
+      ],
+      "responsiveRules": [
+        {
+          "scope": "mobile",
+          "effect": "dedicated mobile breakpoint form fields",
+          "evidence": {
+            "evidenceId": "e-32602fa84f33",
+            "kind": "source-file",
+            "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/slide.xml#L1",
+            "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+            "retrievedAt": "2026-11-03T02:23:54Z",
+            "method": "read-only source inspection ([5] W-B capability audit)",
+            "note": "mobile breakpoint form declaration"
+          }
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-65fd2f22bb14",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/slide.xml:115-119",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "appearance collage-centered"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML"
+    },
+    {
+      "id": "magento-pagebuilder/slide",
+      "appearanceId": "collage-left",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "slide_name",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "min_height",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "content",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "show_button",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "show_overlay",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/slider"
+        }
+      ],
+      "responsiveRules": [
+        {
+          "scope": "mobile",
+          "effect": "dedicated mobile breakpoint form fields",
+          "evidence": {
+            "evidenceId": "e-32602fa84f33",
+            "kind": "source-file",
+            "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/slide.xml#L1",
+            "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+            "retrievedAt": "2026-11-03T02:23:54Z",
+            "method": "read-only source inspection ([5] W-B capability audit)",
+            "note": "mobile breakpoint form declaration"
+          }
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-2764e8213282",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/slide.xml:27-31",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "appearance collage-left"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML"
+    },
+    {
+      "id": "magento-pagebuilder/slide",
+      "appearanceId": "collage-right",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "slide_name",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "min_height",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "content",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "show_button",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "show_overlay",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/slider"
+        }
+      ],
+      "responsiveRules": [
+        {
+          "scope": "mobile",
+          "effect": "dedicated mobile breakpoint form fields",
+          "evidence": {
+            "evidenceId": "e-32602fa84f33",
+            "kind": "source-file",
+            "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/slide.xml#L1",
+            "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+            "retrievedAt": "2026-11-03T02:23:54Z",
+            "method": "read-only source inspection ([5] W-B capability audit)",
+            "note": "mobile breakpoint form declaration"
+          }
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-aa2018475733",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/slide.xml:202-206",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "appearance collage-right"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML"
+    },
+    {
+      "id": "magento-pagebuilder/slide",
+      "appearanceId": "poster",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "slide_name",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "min_height",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "background_attachment",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "content",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "show_button",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "button_text",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "button_type",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "show_overlay",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "overlay_color",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "alt",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "title_attribute",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/slider"
+        }
+      ],
+      "responsiveRules": [
+        {
+          "scope": "mobile",
+          "effect": "dedicated mobile breakpoint form fields",
+          "evidence": {
+            "evidenceId": "e-32602fa84f33",
+            "kind": "source-file",
+            "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/slide.xml#L1",
+            "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+            "retrievedAt": "2026-11-03T02:23:54Z",
+            "method": "read-only source inspection ([5] W-B capability audit)",
+            "note": "mobile breakpoint form declaration"
+          }
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-e0624266f80d",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/slide.xml:22-25",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "parents slider; children deny"
+        },
+        {
+          "evidenceId": "e-a8f7692dc222",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/ui_component/pagebuilder_slide_form.xml",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "12 fields"
+        },
+        {
+          "evidenceId": "e-ff70644ee025",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/web/template/content-type/slide/poster/master.html",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "master renderer"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML data-content-type=slide"
+    },
+    {
+      "id": "magento-pagebuilder/tab-item",
+      "appearanceId": "default",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "tab_name",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "min_height",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "justify_content",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "border",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "allow-all",
+          "except": [
+            "magento-pagebuilder/row",
+            "magento-pagebuilder/tabs"
+          ]
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/tabs"
+        }
+      ],
+      "responsiveRules": [
+        {
+          "scope": "mobile",
+          "effect": "dedicated mobile breakpoint form fields",
+          "evidence": {
+            "evidenceId": "e-ff0612c8d220",
+            "kind": "source-file",
+            "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/tab-item.xml#L1",
+            "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+            "retrievedAt": "2026-11-03T02:23:54Z",
+            "method": "read-only source inspection ([5] W-B capability audit)",
+            "note": "mobile breakpoint form declaration"
+          }
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-0facc48370d9",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/tab_item.xml:24-30",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "parents tabs; children allow-all except row,tabs"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML"
+    },
+    {
+      "id": "magento-pagebuilder/tabs",
+      "appearanceId": "default",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "default_active",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "min_height",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "navigation_alignment",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "border_width",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "capabilityId": "magento-pagebuilder/tab-item"
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/root-container"
+        },
+        {
+          "capabilityId": "magento-pagebuilder/row"
+        },
+        {
+          "capabilityId": "magento-pagebuilder/column"
+        }
+      ],
+      "responsiveRules": [
+        {
+          "scope": "mobile",
+          "effect": "dedicated mobile breakpoint form fields",
+          "evidence": {
+            "evidenceId": "e-1feb3b94eeeb",
+            "kind": "source-file",
+            "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/tabs.xml#L1",
+            "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+            "retrievedAt": "2026-11-03T02:23:54Z",
+            "method": "read-only source inspection ([5] W-B capability audit)",
+            "note": "mobile breakpoint form declaration"
+          }
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-3d713748fc0b",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/tabs.xml:24-31",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "parents root-container/row/column; children tab-item"
+        },
+        {
+          "evidenceId": "e-af2c6cf10f64",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/ui_component/pagebuilder_tabs_form.xml",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "5 fields"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML data-content-type=tabs"
+    },
+    {
+      "id": "magento-pagebuilder/text",
+      "appearanceId": "default",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "content",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "text_align",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "border",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "border_color",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "border_width",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "border_radius",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "margins_and_padding",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "css_classes",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/root-container"
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": [],
+        "notes": "WYSIWYG content stored in master HTML."
+      },
+      "editorEditingMode": "wysiwyg",
+      "evidence": [
+        {
+          "evidenceId": "e-62a4dc53b1a8",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/text.xml:35-37",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "data-content-type/data-appearance attributes + html content element"
+        },
+        {
+          "evidenceId": "e-c61c36e518d1",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/text.xml:43-47",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "wysiwygConfig additional data"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML data-content-type=text (html element via directive converter)"
+    },
+    {
+      "id": "magento-pagebuilder/video",
+      "appearanceId": "default",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "video_source",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "max_width",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "autoplay",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [
+        {
+          "capabilityId": "magento-pagebuilder/root-container"
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-b0c483c2f4f8",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/video.xml:19-21",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "children deny"
+        },
+        {
+          "evidenceId": "e-e78acdfd3a6f",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/ui_component/pagebuilder_video_form.xml",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "4 fields"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "master HTML data-content-type=video"
+    },
+    {
+      "id": "secomm-uiwidget/accordion_a",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "items[].title",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "items[].content",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "open_mode",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": [],
+        "notes": "Resolves from the widget's own encoded payload envelope (16 KiB / depth 6 / 50 items caps)."
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-d25b43e2fc49",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/Model/Component/AccordionADefinition.php#L23",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "id accordion_a, 6 fields"
+        },
+        {
+          "evidenceId": "e-2bca93ee147d",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#L24",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "registry injection"
+        },
+        {
+          "evidenceId": "e-f08fbf8e7d54",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/widget.xml#L9",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "widget id secomm_ui"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "{{widget}} directive payload=base64url JSON envelope (Codec MAX 16384B/depth6/50 items) Registry-gated widget component; placement rules via the platform widget-insertion flow are NOT_VERIFIED."
+    },
+    {
+      "id": "secomm-uiwidget/banner_a",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "title",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "subtitle",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "mobile_image",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "desktop_image",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "image_alt",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "loading",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "cta_label",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "cta_url",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "open_in_new",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "content_alignment",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "text_alignment",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "background_tone",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "text_tone",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": [],
+        "notes": "Resolves from the widget's own encoded payload envelope (16 KiB / depth 6 / 50 items caps)."
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-62eccbf9b6c6",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/Model/Component/BannerADefinition.php#L23",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "id banner_a sourceComponent banner/A-default, 17 fields"
+        },
+        {
+          "evidenceId": "e-2a05af9c93c3",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#L20",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "registry injection"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "{{widget}} directive base64url payload Registry-gated widget component; placement rules via the platform widget-insertion flow are NOT_VERIFIED."
+    },
+    {
+      "id": "secomm-uiwidget/banner_b",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "title",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "content",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "image",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "cta",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "image_side",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "colors",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": [],
+        "notes": "Resolves from the widget's own encoded payload envelope (16 KiB / depth 6 / 50 items caps)."
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-5fdbb56e6c14",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/Model/Component/BannerBDefinition.php#L20",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "id banner_b, 14 fields"
+        },
+        {
+          "evidenceId": "e-e5596c2ca278",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#L21",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "registry injection"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "{{widget}} directive base64url payload Registry-gated widget component; placement rules via the platform widget-insertion flow are NOT_VERIFIED."
+    },
+    {
+      "id": "secomm-uiwidget/banner_c",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "title",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "content",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "cta",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "alignment",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "colors",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": [],
+        "notes": "Resolves from the widget's own encoded payload envelope (16 KiB / depth 6 / 50 items caps)."
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-11d19ccca53b",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/Model/Component/BannerCDefinition.php#L20",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "id banner_c, 11 fields"
+        },
+        {
+          "evidenceId": "e-7b0a246e446e",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#L22",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "registry injection"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "{{widget}} directive base64url payload Registry-gated widget component; placement rules via the platform widget-insertion flow are NOT_VERIFIED."
+    },
+    {
+      "id": "secomm-uiwidget/card_a",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "title",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "body",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "mobile_image",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "desktop_image",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "cta",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "appearance",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": [],
+        "notes": "Resolves from the widget's own encoded payload envelope (16 KiB / depth 6 / 50 items caps)."
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-ba13ee0e7ea9",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/Model/Component/CardADefinition.php#L20",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "id card_a, 10 fields"
+        },
+        {
+          "evidenceId": "e-62ac21ef4bd1",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#L26",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "registry injection"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "{{widget}} directive base64url payload Registry-gated widget component; placement rules via the platform widget-insertion flow are NOT_VERIFIED."
+    },
+    {
+      "id": "secomm-uiwidget/card_b",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "title",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "body",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "image",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "cta",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "image_position",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": [],
+        "notes": "Resolves from the widget's own encoded payload envelope (16 KiB / depth 6 / 50 items caps)."
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-7280d8bbae85",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/Model/Component/CardBDefinition.php#L20",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "id card_b, 10 fields"
+        },
+        {
+          "evidenceId": "e-0522e6be6ed0",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#L27",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "registry injection"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "{{widget}} directive base64url payload Registry-gated widget component; placement rules via the platform widget-insertion flow are NOT_VERIFIED."
+    },
+    {
+      "id": "secomm-uiwidget/categories_a",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "items[].label",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "items[].image",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "items[].url",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "slider_toggle",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": [],
+        "notes": "Resolves from the widget's own encoded payload envelope (16 KiB / depth 6 / 50 items caps)."
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-b885d14583c3",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/Model/Component/CategoriesADefinition.php#L20",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "id categories_a sourceComponent categories/A-grid-images, 17 fields"
+        },
+        {
+          "evidenceId": "e-950e4fbed74d",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/design/frontend/Secomm/launchpad/Secomm_UiWidget/templates/components/categories/a.phtml",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "theme override"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "{{widget}} directive base64url payload (repeated items) Registry-gated widget component; placement rules via the platform widget-insertion flow are NOT_VERIFIED."
+    },
+    {
+      "id": "secomm-uiwidget/categories_b",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "items[].label",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "items[].url",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "pattern",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": [],
+        "notes": "Resolves from the widget's own encoded payload envelope (16 KiB / depth 6 / 50 items caps)."
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-8adf2c1df888",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/Model/Component/CategoriesBDefinition.php#L20",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "id categories_b, 11 fields"
+        },
+        {
+          "evidenceId": "e-cbec981084b9",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#L29",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "registry injection"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "{{widget}} directive base64url payload Registry-gated widget component; placement rules via the platform widget-insertion flow are NOT_VERIFIED."
+    },
+    {
+      "id": "secomm-uiwidget/embed_a",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "provider",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "video_url",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "title",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "aspect_ratio",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "privacy_options",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": [],
+        "notes": "Resolves from the widget's own encoded payload envelope (16 KiB / depth 6 / 50 items caps)."
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-644b7f9f8f5e",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/Model/Component/EmbedADefinition.php#L20",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "id embed_a sourceComponent embed/A-basic, 8 fields"
+        },
+        {
+          "evidenceId": "e-bcdaef960367",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#L31",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "registry injection"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "{{widget}} directive base64url payload Registry-gated widget component; placement rules via the platform widget-insertion flow are NOT_VERIFIED."
+    },
+    {
+      "id": "secomm-uiwidget/generic_content_a",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "heading",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "content",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "alignment",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "width",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": [],
+        "notes": "Resolves from the widget's own encoded payload envelope (16 KiB / depth 6 / 50 items caps)."
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-e8831bab7429",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/Model/Component/GenericContentADefinition.php#L20",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "id generic_content_a, 4 fields"
+        },
+        {
+          "evidenceId": "e-577d2a86b944",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/Block/Widget/SecommUi.php#L60",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "renderTrustedHtml"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "{{widget}} directive base64url payload; rich text via TrustedHtmlRenderer Registry-gated widget component; placement rules via the platform widget-insertion flow are NOT_VERIFIED."
+    },
+    {
+      "id": "secomm-uiwidget/generic_content_b",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "heading",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "body",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "media",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "cta",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "layout",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": [],
+        "notes": "Resolves from the widget's own encoded payload envelope (16 KiB / depth 6 / 50 items caps)."
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-2f2d187cef31",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/Model/Component/GenericContentBDefinition.php#L20",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "id generic_content_b, 13 fields"
+        },
+        {
+          "evidenceId": "e-6f35a8179126",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#L32",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "registry injection"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "{{widget}} directive base64url payload Registry-gated widget component; placement rules via the platform widget-insertion flow are NOT_VERIFIED."
+    },
+    {
+      "id": "secomm-uiwidget/modal_a",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "trigger_label",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "title",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "body",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "close_labels",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": [],
+        "notes": "Resolves from the widget's own encoded payload envelope (16 KiB / depth 6 / 50 items caps)."
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-52784d683a03",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/Model/Component/ModalADefinition.php#L20",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "id modal_a sourceComponent modal/A-simple, 5 fields"
+        },
+        {
+          "evidenceId": "e-6308bf590f0c",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/Block/Widget/SecommUi.php#L51",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "instanceId uniqueness"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "{{widget}} directive base64url payload Registry-gated widget component; placement rules via the platform widget-insertion flow are NOT_VERIFIED."
+    },
+    {
+      "id": "secomm-uiwidget/product_highlights_c",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "highlights[].title",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "highlights[].text",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "highlights[].image",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": [],
+        "notes": "Resolves from the widget's own encoded payload envelope (16 KiB / depth 6 / 50 items caps)."
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-8ca7a5d82852",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/Model/Component/ProductHighlightsCDefinition.php#L20",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "id product_highlights_c sourceComponent product-data/C-highlights, 7 fields"
+        },
+        {
+          "evidenceId": "e-8b3a3b32e5b9",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#L34",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "registry injection"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "{{widget}} directive base64url payload Registry-gated widget component; placement rules via the platform widget-insertion flow are NOT_VERIFIED."
+    },
+    {
+      "id": "secomm-uiwidget/shortcuts_a",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "items[].label",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "items[].url",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "items[].icon",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": [],
+        "notes": "Resolves from the widget's own encoded payload envelope (16 KiB / depth 6 / 50 items caps)."
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-9f983d6bc4ef",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/Model/Component/ShortcutsADefinition.php#L20",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "id shortcuts_a, 8 fields"
+        },
+        {
+          "evidenceId": "e-219eea10c026",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#L35",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "registry injection"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "{{widget}} directive base64url payload Registry-gated widget component; placement rules via the platform widget-insertion flow are NOT_VERIFIED."
+    },
+    {
+      "id": "secomm-uiwidget/slider_a",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "slides[].media",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "slides[].content",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "slides[].cta",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "arrows",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "dots",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "eager",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": [],
+        "notes": "Resolves from the widget's own encoded payload envelope (16 KiB / depth 6 / 50 items caps)."
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-63696773248f",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/Model/Component/SliderADefinition.php#L20",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "id slider_a, 12 fields"
+        },
+        {
+          "evidenceId": "e-660b87fd6b84",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#L36",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "registry injection"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "{{widget}} directive base64url payload Registry-gated widget component; placement rules via the platform widget-insertion flow are NOT_VERIFIED."
+    },
+    {
+      "id": "secomm-uiwidget/slider_b",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "items[].image",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "items[].link",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "items[].alt",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "speed",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "direction",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": [],
+        "notes": "Resolves from the widget's own encoded payload envelope (16 KiB / depth 6 / 50 items caps)."
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-d3b6258c21a9",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/Model/Component/SliderBDefinition.php#L20",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "id slider_b sourceComponent slider/B-marquee, 15 fields"
+        },
+        {
+          "evidenceId": "e-eee51c0a1092",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#L37",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "registry injection"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "{{widget}} directive base64url payload Registry-gated widget component; placement rules via the platform widget-insertion flow are NOT_VERIFIED."
+    },
+    {
+      "id": "secomm-uiwidget/testimonial_a",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "quote",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "author",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "role",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "avatar",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "rating",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": [],
+        "notes": "Resolves from the widget's own encoded payload envelope (16 KiB / depth 6 / 50 items caps)."
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-47619a080d78",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/Model/Component/TestimonialADefinition.php#L20",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "id testimonial_a, 7 fields"
+        },
+        {
+          "evidenceId": "e-228cee6d4ea8",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#L38",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "registry injection"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "{{widget}} directive base64url payload Registry-gated widget component; placement rules via the platform widget-insertion flow are NOT_VERIFIED."
+    },
+    {
+      "id": "secomm-uiwidget/testimonial_b",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "quote",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "author",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "role",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "avatar",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "rating",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": [],
+        "notes": "Resolves from the widget's own encoded payload envelope (16 KiB / depth 6 / 50 items caps)."
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-94079f0a1dcb",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/Model/Component/TestimonialBDefinition.php#L20",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "id testimonial_b, 7 fields"
+        },
+        {
+          "evidenceId": "e-c94d85325a87",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#L39",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "registry injection"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "{{widget}} directive base64url payload Registry-gated widget component; placement rules via the platform widget-insertion flow are NOT_VERIFIED."
+    },
+    {
+      "id": "secomm-uiwidget/usp_a",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "items[].icon",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "items[].title",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "items[].text",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "items[].url",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": [],
+        "notes": "Resolves from the widget's own encoded payload envelope (16 KiB / depth 6 / 50 items caps)."
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-34d244854eab",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/Model/Component/UspADefinition.php#L20",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "id usp_a, 10 fields"
+        },
+        {
+          "evidenceId": "e-e8be4120942b",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#L40",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "registry injection"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "{{widget}} directive base64url payload Registry-gated widget component; placement rules via the platform widget-insertion flow are NOT_VERIFIED."
+    },
+    {
+      "id": "secomm-uiwidget/usp_b",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "items[].title",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "items[].text",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "items[].icon",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "items[].cta",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": [],
+        "notes": "Resolves from the widget's own encoded payload envelope (16 KiB / depth 6 / 50 items caps)."
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-17c39ea15507",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/Model/Component/UspBDefinition.php#L20",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "id usp_b, 11 fields"
+        },
+        {
+          "evidenceId": "e-573ab2081eb0",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#L41",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "registry injection"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "{{widget}} directive base64url payload Registry-gated widget component; placement rules via the platform widget-insertion flow are NOT_VERIFIED."
+    },
+    {
+      "id": "secomm-uiwidget/usp_c",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "items[].icon",
+          "type": "unknown",
+          "required": false
+        },
+        {
+          "name": "items[].label",
+          "type": "unknown",
+          "required": false
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "allowedParents": [],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": [],
+        "notes": "Resolves from the widget's own encoded payload envelope (16 KiB / depth 6 / 50 items caps)."
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-5668c17d2b8f",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/Model/Component/UspCDefinition.php#L20",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "id usp_c sourceComponent usp/C-compact, 4 fields"
+        },
+        {
+          "evidenceId": "e-a1bfd95044e2",
+          "kind": "source-file",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#L42",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-03T02:23:54Z",
+          "method": "read-only source inspection ([5] W-B capability audit)",
+          "note": "registry injection"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "{{widget}} directive base64url payload Registry-gated widget component; placement rules via the platform widget-insertion flow are NOT_VERIFIED."
+    }
+  ],
+  "summary": {
+    "byCategory": {
+      "native": 34,
+      "widget": 21,
+      "chrome": 6,
+      "custom-required": 0,
+      "unsupported": 0
+    },
+    "byProofLevel": {
+      "not-verified": 0,
+      "discovered": 0,
+      "registered": 61,
+      "structurally-mapped": 0,
+      "admin-roundtrip-verified": 0,
+      "visually-verified": 0
+    },
+    "byAvailability": {
+      "enabled": 61,
+      "disabled": 0,
+      "deprecated": 0,
+      "unknown": 0
+    }
+  },
+  "diagnostics": [
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Per-prop types/requiredness were not audited field-by-field in the architecture-only probe; acceptedProps entries carry type 'unknown' pending a field-level audit.",
+      "subject": {
+        "type": "prop",
+        "id": "all-capabilities"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Admin Edit-Save-Reload round-trip was not executed (architecture-only gate); every proofLevel stays at 'registered' and widget placement rules are unverified.",
+      "subject": {
+        "type": "source",
+        "id": "slaunch-checkout"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Google Maps API key presence (store config) unverified; map stays registered with runtime data context unconfirmed.",
+      "subject": {
+        "type": "capability",
+        "id": "magento-pagebuilder/map"
+      }
+    }
+  ]
+}

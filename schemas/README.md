@@ -13,6 +13,10 @@ Versioned, platform-neutral JSON contracts for the Design Engineering Toolkit (V
 
 All schemas use **JSON Schema Draft 2020-12**.
 
+## Converter contract family (issue #5)
+
+The converter pipeline (Capability Registry → Structural Mapping → Functional Round-trip → Visual Fidelity) has its **own schema family** under [`converter/`](converter/) with an independent integer major: [`converter/capability-registry.schema.json`](converter/capability-registry.schema.json), [`converter/component-binding-map.schema.json`](converter/component-binding-map.schema.json), [`converter/resolution-report.schema.json`](converter/resolution-report.schema.json), [`converter/converter-profile.schema.json`](converter/converter-profile.schema.json) + shared [`converter/common.defs.json`](converter/common.defs.json). Conventions, closed enums, deterministic serialization and its version history: [`converter/README.md`](converter/README.md). This V1 family stays frozen at major 1 (ADR-005-011).
+
 ## Versioning
 
 - Payloads carry `schemaVersion` (integer, **major** version only — currently `1`).
@@ -27,7 +31,7 @@ All schemas use **JSON Schema Draft 2020-12**.
 
 ## Validation strategy
 
-1. **CI (implementation phase P1):** every schema and every `examples/*.json` + `profiles/*.json` validates with [`ajv`](https://ajv.js.org/) (Draft 2020-12) on push. Failing validation fails the build.
+1. **CI (live since the issue #5 architecture pass — ADR-005-015):** `.github/workflows/validate.yml` runs `npm test` — every schema and every example/fixture validates with [`ajv`](https://ajv.js.org/) (Draft 2020-12), the 30-check contract suite (incl. the T-01..T-14 negative plan) runs, and the neutrality guard greps neutral surfaces. Failing validation fails the build. The orchestrator runtime itself remains P1.
 2. **Runtime (S0/S3):** the orchestrator validates inputs/outputs with the same schemas before a stage's checkpoint will pass. Invalid contract output blocks the pipeline — it is never "fixed forward".
 3. **Semantic checks beyond JSON Schema** (encoded in the orchestrator, not the schemas): alias references resolve to declared primitives; every `illustrative` provenance entry blocks S4; `diagnostics` with severity `error` block S4; profile `gates` may tighten but not loosen defaults.
 4. **Until P1 lands**, examples are hand-checked against the schemas; this PR's review is that check.

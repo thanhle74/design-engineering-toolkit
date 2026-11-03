@@ -1,6 +1,6 @@
 # Design Engineering Toolkit — Architecture (V1 SSOT)
 
-> **Status:** DRAFT for human review (issue [#1](https://github.com/thanhle74/design-engineering-toolkit/issues/1)).
+> **Status:** APPROVED & MERGED via [PR #3](https://github.com/thanhle74/design-engineering-toolkit/pull/3) (2026-10-28); issue #1 closed. Retained as the historical V1 SSOT until formally superseded; converter work evolves in [specs/ISSUE-5-converter-architecture.md](../specs/ISSUE-5-converter-architecture.md).
 > This document is the single source of truth for V1 architecture, contracts, and boundaries. Other docs and schemas are normative annexes linked from here. Nothing in this repository has been executed against a live target; all Figma findings come from read-only audits.
 
 ## 1. Purpose and V1 boundary

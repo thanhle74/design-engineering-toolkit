@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "platformId": "synthetic-flatcms",
+  "platformVersion": "fixture-1",
+  "profileId": "synthetic-flatcms",
+  "generatedAt": "1970-01-01T00:00:00Z",
+  "source": {
+    "sourceId": "flatcms-fixtures",
+    "revisionId": "fixture-rev-0001",
+    "accessedAt": "1970-01-01T00:00:00Z"
+  },
+  "generator": {
+    "tool": "contract-exercising fixture",
+    "toolVersion": "1.0.0"
+  },
+  "capabilities": [
+    {
+      "id": "flatcms/heading",
+      "appearanceId": "default",
+      "provider": "flatcms-core",
+      "category": "native",
+      "availability": "enabled",
+      "acceptedProps": [
+        {
+          "name": "value",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "weight",
+          "type": "enum",
+          "required": false,
+          "values": [
+            "display",
+            "regular"
+          ]
+        }
+      ],
+      "allowedChildren": [
+        {
+          "policy": "deny-all"
+        }
+      ],
+      "responsiveDeterministic": true,
+      "dataContext": {
+        "requiresRuntimeData": false,
+        "dataSources": []
+      },
+      "editorEditingMode": "form",
+      "evidence": [
+        {
+          "evidenceId": "e-ffffffffff12",
+          "kind": "document",
+          "locator": "doc://fixture-notes#heading",
+          "retrievedAt": "1970-01-01T00:00:00Z"
+        }
+      ],
+      "proofLevel": "registered"
+    }
+  ],
+  "summary": {
+    "byCategory": {
+      "native": 1,
+      "widget": 0,
+      "chrome": 0,
+      "custom-required": 0,
+      "unsupported": 0
+    },
+    "byProofLevel": {
+      "not-verified": 0,
+      "discovered": 0,
+      "registered": 1,
+      "structurally-mapped": 0,
+      "admin-roundtrip-verified": 0,
+      "visually-verified": 0
+    },
+    "byAvailability": {
+      "enabled": 1,
+      "disabled": 0,
+      "deprecated": 0,
+      "unknown": 0
+    }
+  },
+  "diagnostics": []
+}

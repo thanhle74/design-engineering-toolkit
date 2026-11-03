@@ -1,0 +1,20 @@
+# Local project configuration and credentials; shared examples live in profiles/*.example.json
+.env
+.env.*
+!.env.example
+profiles/*.local.*
+profiles/local/
+projects/*/local/
+*.local.json
+*.local.yaml
+*.local.yml
+
+# Runtime/editor scratch
+node_modules/
+.cache/
+.tmp/
+tmp/
+.DS_Store
+
+# Per-project local notes/overrides
+projects/*/*.local.*

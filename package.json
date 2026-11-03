@@ -1,0 +1,15 @@
+{
+  "name": "design-engineering-toolkit",
+  "private": true,
+  "type": "module",
+  "description": "Contract test gate only — the toolkit ships contracts, schemas and docs; ajv is a devDependency for validating them.",
+  "scripts": {
+    "test": "node tests/run-all.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "ajv": "^8.20.0"
+  }
+}
