@@ -12,8 +12,13 @@
 //   scanning a legacy single etc/content_type.xml would silently find zero types.
 // - The same <type>/<appearance> may be re-declared across modules (merge semantics); entries are
 //   grouped by (type, appearance) with per-module evidence retained.
-// - Everything is bounded allow-glob scanning + a deny list; denied/out-of-scope candidates are
-//   never read and produce LOCATOR_OUT_OF_SCOPE diagnostics.
+// - Everything is bounded allow-glob scanning behind ONE central path gateway (Coordinator F2):
+//   every actual read — scan surfaces AND metadata — passes deny-list + realpath containment
+//   (symlink escapes are rejected BEFORE access, never followed); scan surfaces additionally
+//   pass profile include/exclude scopes. Metadata exception (documented + tested): the bounded
+//   known paths composer.lock, app/etc/config.php, package composer.json and app/code module.xml
+//   are read for version/name truth even outside profile scopes — a scan include list is not an
+//   explicit metadata deny; deny-listed and root-escaping metadata is still never read.
 // - Proof ceiling: REGISTERED via config-declaration evidence when the declaring module is
 //   enabled in config.php; otherwise DISCOVERED. Unknown stays unknown (NOT_VERIFIED) — never
 //   installed=enabled=runtime-proven.
@@ -53,8 +58,8 @@ function readStdinJson(): unknown {
   return JSON.parse(Buffer.concat(chunks).toString("utf8"));
 }
 
-// ---- Bounded filesystem surfaces ------------------------------------------------------------
-// Never-read surfaces (deny list). These are checked BEFORE any file is opened.
+// ---- Path gateway (the single filesystem entry point) ----------------------------------------
+// Never-read surfaces (deny list). Checked BEFORE any file is opened, on every read.
 const DENY_RULES: { pattern: RegExp; label: string }[] = [
   { pattern: /(^|\/)env\.php$/, label: "env.php" },
   { pattern: /(^|\/)auth\.json$/, label: "auth.json" },
@@ -84,6 +89,8 @@ function scopeAllows(rel: string, scopes?: { include?: string[]; exclude?: strin
 }
 
 // Expand one segment pattern (supports '*' within a segment) against a directory, deterministically.
+// Enumeration may descend through symlinked directories; every CONTENT read is gated by the
+// central path gateway below, so enumeration alone can never expose denied or escaped bytes.
 function globOne(root: string, pattern: string): string[] {
   const segments = pattern.split("/");
   let current = [""];
@@ -110,76 +117,6 @@ function globOne(root: string, pattern: string): string[] {
   return current;
 }
 
-// ---- Narrow readers -------------------------------------------------------------------------
-
-// config.php reader: returns the modules map. Observed shape:
-//   <?php return ['modules' => [ 'Vendor_Module' => 1, ... ], 'system' => [...]];
-// Reads ONLY the 'modules' block; returns null when absent/unparseable (never guesses).
-function readConfigPhpModules(root: string, rel = "app/etc/config.php"): { modules: Record<string, number> | null; readable: boolean } {
-  const abs = path.join(root, rel);
-  if (deniedLabel(rel)) return { modules: null, readable: false };
-  let text: string;
-  try {
-    text = fs.readFileSync(abs, "utf8");
-  } catch {
-    return { modules: null, readable: false };
-  }
-  const start = text.indexOf("'modules'");
-  if (start === -1) return { modules: null, readable: true };
-  const end = text.indexOf("'system'", start);
-  const block = end === -1 ? text.slice(start) : text.slice(start, end);
-  const modules: Record<string, number> = {};
-  const re = /'([A-Za-z0-9_]+)'\s*=>\s*([01])/g;
-  let m: RegExpExecArray | null;
-  while ((m = re.exec(block)) !== null) modules[m[1]] = Number(m[2]);
-  return { modules, readable: true };
-}
-
-interface LockPackage {
-  name: string;
-  version: string;
-}
-
-function readComposerLockPackages(root: string): { packages: LockPackage[]; readable: boolean } {
-  let text: string;
-  try {
-    text = fs.readFileSync(path.join(root, "composer.lock"), "utf8");
-  } catch {
-    return { packages: [], readable: false };
-  }
-  try {
-    const lock = JSON.parse(text) as { packages?: LockPackage[] };
-    return { packages: lock.packages ?? [], readable: true };
-  } catch {
-    return { packages: [], readable: false };
-  }
-}
-
-// composer package name -> Magento module name (convention: vendor/module-page-builder ->
-// Magento_PageBuilder; secomm/module-uiwidget -> Secomm_UiWidget).
-function composerNameToModuleName(composerName: string): string {
-  const [vendor, pkg] = composerName.split("/");
-  const pascal = (s: string) =>
-    s
-      .split("-")
-      .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
-      .join("");
-  return pascal(vendor) + "_" + pascal((pkg ?? "").replace(/^module-/, ""));
-}
-
-// app/code/<Vendor>/<Module> -> module name from etc/module.xml <module name="...">, else dir concat.
-function readAppModuleName(root: string, moduleDir: string): string {
-  const rel = path.join(moduleDir, "etc", "module.xml");
-  let text: string;
-  try {
-    text = fs.readFileSync(path.join(root, rel), "utf8");
-  } catch {
-    return moduleDir.split(path.sep).join("_");
-  }
-  const m = /<module[^>]*name="([A-Za-z0-9_]+)"/.exec(text);
-  return m ? m[1] : moduleDir.split(path.sep).join("_");
-}
-
 // XML bounded extraction helpers (declarations only — no deep template/AST parsing in this probe).
 function extractTypeBlocks(text: string): { name: string; block: string }[] {
   const out: { name: string; block: string }[] = [];
@@ -201,6 +138,14 @@ function extractAppearanceNames(block: string): string[] {
   return [...new Set(names)].sort();
 }
 
+function parseWidgetParameters(block: string): { name: string; type: string }[] {
+  const out: { name: string; type: string }[] = [];
+  const re = /<parameter\b[^>]*\bname="([^"]+)"[^>]*\bxsi:type="([^"]+)"/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(block)) !== null) out.push({ name: m[1], type: m[2] });
+  return out;
+}
+
 function availabilityFor(moduleName: string, modules: Record<string, number> | null): Availability {
   if (modules === null || !(moduleName in modules)) return "unknown";
   return modules[moduleName] === 1 ? "enabled" : "disabled";
@@ -210,10 +155,16 @@ function proofFor(availability: Availability): ProofLevel {
   return availability === "enabled" ? "registered" : "discovered";
 }
 
-function makeEvidence(kind: EvidenceKind, sourceId: string, rel: string, fragment: string, revisionId: string, now: string, method: string): SourceEvidence {
-  const locator = `source://${sourceId}/${rel.split(path.sep).join("/")}${fragment ? "#" + fragment : ""}`;
-  const evidenceId = "e-" + sha256Hex([kind, locator, revisionId].join("␟")).slice(0, 12);
-  return { evidenceId, kind, locator, sourceRevisionId: revisionId, retrievedAt: now, method };
+// composer package name -> Magento module name (convention: vendor/module-page-builder ->
+// Magento_PageBuilder; secomm/module-uiwidget -> Secomm_UiWidget).
+function composerNameToModuleName(composerName: string): string {
+  const [vendor, pkg] = composerName.split("/");
+  const pascal = (s: string) =>
+    s
+      .split("-")
+      .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
+      .join("");
+  return pascal(vendor) + "_" + pascal((pkg ?? "").replace(/^module-/, ""));
 }
 
 // ---- Registry assembly ----------------------------------------------------------------------
@@ -238,29 +189,65 @@ export function buildRegistry(input: AdapterInput, root: string): CapabilityRegi
   const sourceId = input.source.sourceId;
   const scopes = input.source.scopes;
 
+  // The root itself is canonicalized once; every read must resolve inside it.
+  let rootReal: string;
+  try {
+    rootReal = fs.realpathSync(root);
+  } catch {
+    throw new Error(`project root '${root}' could not be canonicalized`);
+  }
+
+  // Aggregate skip counters (bounded diagnostics — one per reason, never per-file spam).
   const denied: Record<string, number> = {};
   const outOfScope: Record<string, number> = {};
-  const guard = (rel: string): boolean => {
-    const label = deniedLabel(rel);
+  const escapes: Record<string, number> = {};
+
+  // Central path gateway. opts.scope=true for scan surfaces (include/exclude enforced);
+  // opts.scope=false ONLY for the documented bounded metadata exception (composer.lock,
+  // app/etc/config.php, package composer.json, app/code module.xml) — deny + containment
+  // ALWAYS apply, nothing else may set scope=false.
+  const readBounded = (rel: string, opts: { scope: boolean }): { text: string | null; reason?: string } => {
+    const normRel = rel.split(path.sep).join("/");
+    const label = deniedLabel(normRel);
     if (label) {
       denied[label] = (denied[label] ?? 0) + 1;
-      return false;
+      return { text: null, reason: "denied" };
     }
-    const s = scopeAllows(rel.split(path.sep).join("/"), scopes);
-    if (!s.allowed) {
-      outOfScope[s.reason ?? "out-of-scope"] = (outOfScope[s.reason ?? "out-of-scope"] ?? 0) + 1;
-      return false;
+    if (opts.scope) {
+      const s = scopeAllows(normRel, scopes);
+      if (!s.allowed) {
+        outOfScope[s.reason ?? "out-of-scope"] = (outOfScope[s.reason ?? "out-of-scope"] ?? 0) + 1;
+        return { text: null, reason: s.reason };
+      }
     }
-    return true;
+    let real: string;
+    try {
+      real = fs.realpathSync(path.join(rootReal, normRel));
+    } catch {
+      escapes["unreadable-or-missing"] = (escapes["unreadable-or-missing"] ?? 0) + 1;
+      return { text: null, reason: "unreadable" };
+    }
+    const relToRoot = path.relative(rootReal, real);
+    if (relToRoot.startsWith("..") || path.isAbsolute(relToRoot)) {
+      escapes["symlink-escape"] = (escapes["symlink-escape"] ?? 0) + 1;
+      return { text: null, reason: "symlink-escape" };
+    }
+    try {
+      return { text: fs.readFileSync(real, "utf8") };
+    } catch {
+      escapes["unreadable-or-missing"] = (escapes["unreadable-or-missing"] ?? 0) + 1;
+      return { text: null, reason: "unreadable" };
+    }
   };
 
+  // Metadata reader (deny + containment; scope-exception documented in the header).
+  const readMetadata = (rel: string): string | null => readBounded(rel, { scope: false }).text;
+
   // 1. Versions from composer.lock (pinned truth).
-  const lock = readComposerLockPackages(root);
-  const product = lock.packages.find((p) => p.name === "magento/product-community-edition" || p.name === "magento/product-enterprise-edition");
-  const pbLock = lock.packages.find((p) => p.name === "magento/module-page-builder");
+  const lock = readComposerLockPackages(readMetadata);
 
   // 2. Enablement from config.php (narrow reader).
-  const config = readConfigPhpModules(root);
+  const config = readConfigPhpModules(readMetadata);
   if (!config.readable || config.modules === null) {
     diags.push({ code: "NOT_VERIFIED", severity: "warning", message: "app/etc/config.php could not be read or has no 'modules' block; module enablement is unknown — all proof levels stay at 'discovered'.", subject: { type: "source", id: sourceId } });
   }
@@ -269,19 +256,9 @@ export function buildRegistry(input: AdapterInput, root: string): CapabilityRegi
   // 3. Revision token: git HEAD when available (read-only query), else deterministic content hash.
   let revisionId = "";
   try {
-    revisionId = execFileSync("git", ["-C", root, "rev-parse", "HEAD"], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
+    revisionId = execFileSync("git", ["-C", rootReal, "rev-parse", "HEAD"], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
   } catch {
-    const composerText = (() => {
-      try {
-        return fs.readFileSync(path.join(root, "composer.lock"), "utf8");
-      } catch {
-        try {
-          return fs.readFileSync(path.join(root, "composer.json"), "utf8");
-        } catch {
-          return "";
-        }
-      }
-    })();
+    const composerText = readMetadata("composer.lock") ?? readMetadata("composer.json") ?? "";
     revisionId = "content:" + createHash("sha256").update(composerText).digest("hex").slice(0, 16);
   }
   const source: SourceRevision = { sourceId, revisionId, accessedAt: now };
@@ -295,19 +272,13 @@ export function buildRegistry(input: AdapterInput, root: string): CapabilityRegi
   // scope ('chrome'), discovered as metadata only.
   const uiIntentModules = new Set<string>();
 
-  const pbModuleVersion = pbLock?.version;
+  // app/code/<Vendor>/<Module> -> module name from etc/module.xml <module name="...">, else dir concat.
+  const readAppModuleName = (moduleDir: string): string => {
+    const m = /<module[^>]*name="([A-Za-z0-9_]+)"/.exec(readMetadata(path.join(moduleDir, "etc", "module.xml")) ?? "");
+    return m ? m[1] : moduleDir.split(path.sep).join("_");
+  };
 
-  // Sensitive surfaces: report existence only (no content read) so runs and receipts can show
-  // that credential-adjacent files were present but deny-listed out of the probe.
-  for (const sensitive of ["app/etc/env.php", "auth.json"]) {
-    try {
-      if (fs.existsSync(path.join(root, sensitive))) {
-        diags.push({ code: "LOCATOR_OUT_OF_SCOPE", severity: "info", message: `Sensitive surface '${sensitive}' exists and is deny-listed — never read by this probe.`, subject: { type: "source", id: sourceId } });
-      }
-    } catch {
-      /* existence check only; unreadable = simply not reported */
-    }
-  }
+  const pbModuleVersion = (lock.packages.find((p) => p.name === "magento/module-page-builder") ?? { version: undefined as string | undefined }).version;
 
   // 4. Content types: per-file declarations. Real Magento vendor layout nests packages as
   //    vendor/<vendor>/<package>/ (optionally with a src/ prefix, e.g. Hyvä), so the glob needs
@@ -323,29 +294,26 @@ export function buildRegistry(input: AdapterInput, root: string): CapabilityRegi
   const byKey = new Map<string, RawEntry>();
   for (const pattern of contentTypePatterns) {
     for (const rel of globOne(root, pattern)) {
-      if (!guard(rel)) continue;
-      const abs = path.join(root, rel);
-      let text: string;
-      try {
-        text = fs.readFileSync(abs, "utf8");
-      } catch {
-        continue;
-      }
+      const text = readBounded(rel, { scope: true }).text;
+      if (text === null) continue;
       // Declaring provider module from the path.
       const segments = rel.split(path.sep);
       let provider: string;
       let namespace: string;
       if (segments[0] === "app" && segments[1] === "code") {
-        provider = readAppModuleName(root, path.join(segments[0], segments[1], segments[2], segments[3]));
+        provider = readAppModuleName(path.join(segments[0], segments[1], segments[2], segments[3]));
         namespace = provider.toLowerCase();
       } else if (segments[0] === "vendor") {
         // vendor/<vendor>/<pkg>/... (vendor dirs holding multiple packages handled by glob depth)
         const composerRel = path.join(segments[0], segments[1], segments[2], "composer.json");
         let composerName = `${segments[1]}/${segments[2]}`;
-        try {
-          composerName = (JSON.parse(fs.readFileSync(path.join(root, composerRel), "utf8")) as { name?: string }).name ?? composerName;
-        } catch {
-          /* fall back to directory naming */
+        const composerRaw = readMetadata(composerRel);
+        if (composerRaw !== null) {
+          try {
+            composerName = (JSON.parse(composerRaw) as { name?: string }).name ?? composerName;
+          } catch {
+            /* fall back to directory naming */
+          }
         }
         provider = composerNameToModuleName(composerName);
         // Capability namespace = declaring module name lowercased (traceability beats renaming).
@@ -392,15 +360,10 @@ export function buildRegistry(input: AdapterInput, root: string): CapabilityRegi
 
   // 5. Widgets: per-module etc/widget.xml under app/code.
   for (const rel of globOne(root, "app/code/*/*/etc/widget.xml")) {
-    if (!guard(rel)) continue;
+    const text = readBounded(rel, { scope: true }).text;
+    if (text === null) continue;
     const segments = rel.split(path.sep);
-    const provider = readAppModuleName(root, path.join(segments[0], segments[1], segments[2], segments[3]));
-    let text: string;
-    try {
-      text = fs.readFileSync(path.join(root, rel), "utf8");
-    } catch {
-      continue;
-    }
+    const provider = readAppModuleName(path.join(segments[0], segments[1], segments[2], segments[3]));
     const widgetRe = /<widget\b[^>]*\bid="([^"]+)"[^>]*>/g;
     let wm: RegExpExecArray | null;
     const availability = availabilityFor(provider, modules);
@@ -427,15 +390,10 @@ export function buildRegistry(input: AdapterInput, root: string): CapabilityRegi
 
   // 6. DI component registries (e.g. a module's Registry class assembling named components).
   for (const rel of globOne(root, "app/code/*/*/etc/di.xml")) {
-    if (!guard(rel)) continue;
+    const text = readBounded(rel, { scope: true }).text;
+    if (text === null) continue;
     const segments = rel.split(path.sep);
-    const provider = readAppModuleName(root, path.join(segments[0], segments[1], segments[2], segments[3]));
-    let text: string;
-    try {
-      text = fs.readFileSync(path.join(root, rel), "utf8");
-    } catch {
-      continue;
-    }
+    const provider = readAppModuleName(path.join(segments[0], segments[1], segments[2], segments[3]));
     for (const { name: typeName, block } of extractTypeBlocks(text)) {
       if (!/(^|\\|\b)Registry$/.test(typeName)) continue;
       const itemRe = /<item\b[^>]*\bname="([^"]+)"/g;
@@ -522,15 +480,30 @@ export function buildRegistry(input: AdapterInput, root: string): CapabilityRegi
       });
     }
   }
-  // Deny/scope aggregates (bounded; never per-file spam).
+  // Skip aggregates (bounded; never per-file spam). Deny first, then scope, then escapes.
   for (const [label, count] of Object.entries(denied).sort()) {
     diags.push({ code: "LOCATOR_OUT_OF_SCOPE", severity: "warning", message: `${count} candidate path(s) matched the deny list (${label}) and were never read.`, subject: { type: "source", id: sourceId } });
   }
   for (const [reason, count] of Object.entries(outOfScope).sort()) {
     diags.push({ code: "LOCATOR_OUT_OF_SCOPE", severity: "info", message: `${count} candidate path(s) were skipped: ${reason}.`, subject: { type: "source", id: sourceId } });
   }
+  for (const [reason, count] of Object.entries(escapes).sort()) {
+    diags.push({ code: "LOCATOR_OUT_OF_SCOPE", severity: "warning", message: `${count} candidate path(s) rejected by the path gateway (${reason}) — never read, never followed.`, subject: { type: "source", id: sourceId } });
+  }
   if (!lock.readable) {
     diags.push({ code: "NOT_VERIFIED", severity: "warning", message: "composer.lock unreadable; platform/module versions are unknown.", subject: { type: "source", id: sourceId } });
+  }
+
+  // Sensitive surfaces: report existence only (no content read) so runs and receipts can show
+  // that credential-adjacent files were present but deny-listed out of the probe.
+  for (const sensitive of ["app/etc/env.php", "auth.json"]) {
+    try {
+      if (fs.existsSync(path.join(rootReal, sensitive))) {
+        diags.push({ code: "LOCATOR_OUT_OF_SCOPE", severity: "info", message: `Sensitive surface '${sensitive}' exists and is deny-listed — never read by this probe.`, subject: { type: "source", id: sourceId } });
+      }
+    } catch {
+      /* existence check only; unreadable = simply not reported */
+    }
   }
 
   // Summary counts over ALL closed enum keys (schema requires every key, zero included).
@@ -547,7 +520,7 @@ export function buildRegistry(input: AdapterInput, root: string): CapabilityRegi
   const registry: CapabilityRegistry = {
     schemaVersion: 1,
     platformId: input.platformId,
-    platformVersion: product?.version,
+    platformVersion: (lock.packages.find((p) => p.name === "magento/product-community-edition" || p.name === "magento/product-enterprise-edition") ?? { version: undefined as string | undefined }).version,
     profileId: input.profileId,
     generatedAt: now,
     source,
@@ -559,14 +532,46 @@ export function buildRegistry(input: AdapterInput, root: string): CapabilityRegi
   return registry;
 }
 
-function parseWidgetParameters(block: string): { name: string; type: string }[] {
-  const out: { name: string; type: string }[] = [];
-  const re = /<parameter\b[^>]*\bname="([^"]+)"[^>]*\bxsi:type="([^"]+)"/g;
-  let m: RegExpExecArray | null;
-  while ((m = re.exec(block)) !== null) out.push({ name: m[1], type: m[2] });
-  return out;
+function makeEvidence(kind: EvidenceKind, sourceId: string, rel: string, fragment: string, revisionId: string, now: string, method: string): SourceEvidence {
+  const locator = `source://${sourceId}/${rel.split(path.sep).join("/")}${fragment ? "#" + fragment : ""}`;
+  const evidenceId = "e-" + sha256Hex([kind, locator, revisionId].join("␟")).slice(0, 12);
+  return { evidenceId, kind, locator, sourceRevisionId: revisionId, retrievedAt: now, method };
 }
-void parseWidgetParameters;
+
+interface LockPackage {
+  name: string;
+  version: string;
+}
+
+// Narrow, gateway-routed readers. `read` is the central readMetadata gateway (deny + containment;
+// scope exception documented in the file header).
+function readComposerLockPackages(read: (rel: string) => string | null): { packages: LockPackage[]; readable: boolean } {
+  const text = read("composer.lock");
+  if (text === null) return { packages: [], readable: false };
+  try {
+    const lock = JSON.parse(text) as { packages?: LockPackage[] };
+    return { packages: lock.packages ?? [], readable: true };
+  } catch {
+    return { packages: [], readable: false };
+  }
+}
+
+// config.php reader: returns the modules map. Observed shape:
+//   <?php return ['modules' => [ 'Vendor_Module' => 1, ... ], 'system' => [...]];
+// Reads ONLY the 'modules' block; returns null when absent/unparseable (never guesses).
+function readConfigPhpModules(read: (rel: string) => string | null): { modules: Record<string, number> | null; readable: boolean } {
+  const text = read("app/etc/config.php");
+  if (text === null) return { modules: null, readable: false };
+  const start = text.indexOf("'modules'");
+  if (start === -1) return { modules: null, readable: true };
+  const end = text.indexOf("'system'", start);
+  const block = end === -1 ? text.slice(start) : text.slice(start, end);
+  const modules: Record<string, number> = {};
+  const re = /'([A-Za-z0-9_]+)'\s*=>\s*([01])/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(block)) !== null) modules[m[1]] = Number(m[2]);
+  return { modules, readable: true };
+}
 
 // ---- Subprocess entry -----------------------------------------------------------------------
 function main(): void {

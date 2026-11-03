@@ -29,10 +29,17 @@ artifact: SHA-256 over the canonical payload with **all** observation timestamps
 (`generatedAt`, `retrievedAt`, `accessedAt`) removed — this is the hash two runs of the same
 tool version on the same inputs can be compared against.
 
+## Trust boundaries (normative)
+
+- `permissions.readOnly: true` is a **declarative statement validated by schema — it is not OS sandbox enforcement**. Adapters run as subprocesses with the invoking user's local privileges; the enforcement layers are the descriptor contract, the schema-checked output contract, the deny list/scopes inside each adapter, and the realpath containment checks at spawn time. Document this whenever distributing third-party adapters.
+- Adapter `stderr` is **terminal-only**: machine-readable diagnostics and persisted `tool-run.json` receipts carry the failure *fact* (exit code, bounded-output verdict), never untrusted adapter bytes.
+- Child `stdout`/`stderr` are collected under deterministic byte caps (defaults 8 MiB / 64 KiB); exceeding the stdout cap is `ADAPTER_OUTPUT_OVERFLOW` — the process is killed and nothing is parsed.
+- Adapter `entry` must contain no traversal segments and must realpath-resolve inside the repository root (checked twice: schema pattern + runtime containment).
+
 ## Versioning
 
 Integer major only (`schemaVersion: 1`); additive minors tracked here; unknown majors rejected.
 
 | Version | Change |
 |---|---|
-| 1.0.0 | Initial family (issue [#9] CLI engine): adapter descriptor, adapter input transport, tool-run envelope. |
+| 1.0.0 | Initial family (issue [#9] CLI engine): adapter descriptor, adapter input transport, tool-run envelope. Revised **pre-release** (family unreleased outside this PR): descriptor `entry` pattern tightened to reject interior traversal; trust-boundary descriptions added — no payload valid under the initial pattern is invalid under the tightened one except traversal-carrying entries, which were never legitimately shippable. |

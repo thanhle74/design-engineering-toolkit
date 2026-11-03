@@ -6,7 +6,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { main } from "../dist/src/core/cli/main.js";
-import { runAdapter } from "../dist/src/core/adapter-runtime.js";
+import { runAdapter, validateAdapterEntry } from "../dist/src/core/adapter-runtime.js";
 import { stableContentHash } from "../dist/src/core/canonical.js";
 
 const FIX = path.join(path.dirname(new URL(import.meta.url).pathname), "fixtures");
@@ -24,7 +24,7 @@ function parseJsonRun(result) {
   return JSON.parse(result.out).run;
 }
 
-const SECRET_MARKERS = ["MAGENTO_LIKE_FIXTURE_SECRET_MARKER_9f3e1", "FIXTURE_AUTH_MARKER_do_not_leak_1c2b3", "DENIED_SURFACE_MARKER_never_read_5d4a2", "should-never-appear"];
+const SECRET_MARKERS = ["MAGENTO_LIKE_FIXTURE_SECRET_MARKER_9f3e1", "FIXTURE_AUTH_MARKER_do_not_leak_1c2b3", "DENIED_SURFACE_MARKER_never_read_5d4a2", "should-never-appear", "ESCAPE_SECRET_MARKER_outside_root_77a3", "escapeleak", "escape_widget"];
 
 // Normalized projection for cross-commit comparison (timestamps and the containing repo's git
 // revision are environment-dependent and excluded).
@@ -241,6 +241,138 @@ export default async function registerCliSuite(checkAsync) {
     const wrong = await runAdapter(process.cwd(), { ...baseDescriptor, entry: "tests/fixtures/fake-adapter/wrongcontract.mjs" }, input);
     assert.ok(!wrong.ok && wrong.diagnostics.some((d) => d.code === "ADAPTER_OUTPUT_CONTRACT_VIOLATION"), JSON.stringify(wrong.diagnostics));
     return "4 runtime failure paths explicit";
+  });
+
+  checkAsync("T-19a", "F1: --out writes a truthful receipt (wroteFiles:true readable from disk) and exit stays 0", async () => {
+    const outDir = fs.mkdtempSync(path.join(os.tmpdir(), "det-f1-out-"));
+    const r = await runCli([
+      "plan",
+      "--profile", path.join(FIX, "negative/profile-synthetic-flatcms.fixture.json"),
+      "--registry", path.join(FIX, "synthetic-flatcms/registry.fixture.json"),
+      "--bindings", path.join(FIX, "synthetic-flatcms/bindings.fixture.json"),
+      "--input", path.join(FIX, "synthetic-flatcms/structure.fixture.json"),
+      "--out", outDir,
+      "--json",
+    ]);
+    assert.equal(r.code, 0, `exit ${r.code}: ${r.err}`);
+    const persisted = JSON.parse(fs.readFileSync(path.join(outDir, "tool-run.json"), "utf8"));
+    assert.equal(persisted.wroteFiles, true, "persisted receipt must say wroteFiles:true when files were written");
+    assert.equal(persisted.exitCode, 0);
+    const terminal = JSON.parse(r.out).run;
+    assert.equal(terminal.wroteFiles, true, "terminal JSON must agree with the persisted receipt");
+    assert.deepEqual(fs.readdirSync(outDir).sort(), ["resolution-report.json", "tool-run.json"]);
+    return "persisted receipt == terminal JSON == disk truth";
+  });
+
+  checkAsync("T-19b", "F1: unwritable --out fails closed (nonzero + OUTPUT_NOT_WRITABLE), terminal JSON carries it", async () => {
+    const outDir = fs.mkdtempSync(path.join(os.tmpdir(), "det-f1-bad-"));
+    const occupied = path.join(outDir, "occupied"); // a regular FILE where a directory is needed
+    fs.writeFileSync(occupied, "not a directory\n");
+    const r = await runCli([
+      "plan",
+      "--profile", path.join(FIX, "negative/profile-synthetic-flatcms.fixture.json"),
+      "--registry", path.join(FIX, "synthetic-flatcms/registry.fixture.json"),
+      "--bindings", path.join(FIX, "synthetic-flatcms/bindings.fixture.json"),
+      "--input", path.join(FIX, "synthetic-flatcms/structure.fixture.json"),
+      "--out", occupied,
+      "--json",
+    ]);
+    assert.ok(r.code !== 0, `unwritable --out must exit nonzero, got ${r.code}`);
+    assert.ok(r.err.includes("OUTPUT_NOT_WRITABLE"), `stderr must name the diagnostic: ${r.err}`);
+    const terminal = JSON.parse(r.out).run;
+    assert.equal(terminal.exitCode, 1, "terminal envelope exit must be 1");
+    assert.ok(terminal.runDiagnostics.some((d) => d.code === "OUTPUT_NOT_WRITABLE" && d.severity === "error"), JSON.stringify(terminal.runDiagnostics));
+    assert.equal(terminal.wroteFiles, false, "nothing written -> wroteFiles:false everywhere");
+    return `exit ${r.code}, diagnostic propagated to JSON`;
+  });
+
+  checkAsync("T-20a", "F2: symlink escapes are rejected before read (no leak, gateway diagnostic)", async () => {
+    const r = await runCli(["inspect", "--profile", path.join(FIX, "negative/profile-synthetic-magento-like.fixture.json"), "--project", MAGENTO_LIKE, "--json"]);
+    assert.equal(r.code, 0);
+    const parsed = JSON.parse(r.out);
+    const reg = parsed.output;
+    const gateway = reg.diagnostics.filter((d) => d.message.includes("symlink-escape"));
+    assert.ok(gateway.length >= 1 && gateway.every((d) => d.severity === "warning"), JSON.stringify(gateway));
+    assert.ok(gateway[0].message.includes("2 candidate path(s)"), "both planted escapes counted");
+    for (const marker of SECRET_MARKERS) assert.ok(!r.out.includes(marker), `leak: ${marker}`);
+    const ids = reg.capabilities.map((c) => c.id).join(",");
+    assert.ok(!ids.includes("escapeleak") && !ids.includes("escape_widget"), "no capability from outside the project root");
+    return "2 escapes rejected, zero leakage";
+  });
+
+  checkAsync("T-20b", "F2: explicit exclude honored on scan surfaces; bounded metadata exception documented", async () => {
+    const descriptor = {
+      schemaVersion: 1,
+      id: "magento-pagebuilder",
+      platformIds: ["magento-pagebuilder"],
+      entry: "dist/adapters/magento-pagebuilder/inspect.js",
+      outputContract: "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/capability-registry.schema.json",
+      permissions: { readOnly: true },
+    };
+    const input = {
+      schemaVersion: 1,
+      profileId: "synthetic-magento-like",
+      platformId: "magento-pagebuilder",
+      source: {
+        sourceId: "magento-like-fixtures",
+        path: MAGENTO_LIKE,
+        scopes: { include: ["app/code/Example"], exclude: ["app/code/Example/EmailOnly"] },
+      },
+    };
+    const run = await runAdapter(process.cwd(), descriptor, input);
+    assert.ok(run.ok, `adapter run failed: ${JSON.stringify(run.diagnostics)}`);
+    const reg = run.payload;
+    assert.ok(!reg.capabilities.some((c) => c.provider === "Example_EmailOnly"), "explicit exclude must remove the module's scan surfaces from the inventory");
+    assert.equal(reg.platformVersion, "2.4.8-p5", "documented metadata exception: composer.lock is version truth regardless of scan scopes");
+    return "exclude enforced; metadata exception explicit";
+  });
+
+  checkAsync("T-21", "F3: cross-project inputs fail closed with INPUT_CONTRACT_MISMATCH", async () => {
+    // flatcms profile + a registry pinned to the magento-like project: identity must not resolve.
+    const r = await runCli([
+      "plan",
+      "--profile", path.join(FIX, "negative/profile-synthetic-flatcms.fixture.json"),
+      "--registry", path.join(MAGENTO_LIKE, "expected-registry.json"),
+      "--bindings", path.join(FIX, "synthetic-flatcms/bindings.fixture.json"),
+      "--input", path.join(FIX, "synthetic-flatcms/structure.fixture.json"),
+      "--json",
+    ]);
+    assert.equal(r.code, 1, `exit ${r.code}`);
+    const run = JSON.parse(r.out).run;
+    const codes = run.runDiagnostics.map((d) => d.code);
+    assert.ok(codes.includes("INPUT_CONTRACT_MISMATCH"), JSON.stringify(run.runDiagnostics));
+    assert.ok(run.runDiagnostics.some((d) => d.message.includes("Registry platform 'magento-pagebuilder' != profile platform 'synthetic-flatcms'")), "registry-vs-profile mismatch named");
+    return "project isolation enforced structurally";
+  });
+
+  checkAsync("T-22a", "F4: descriptor entry traversal rejected (schema pattern + runtime containment)", async () => {
+    assert.equal(validateAdapterEntry(process.cwd(), "dist/adapters/magento-pagebuilder/inspect.js").ok, true, "legit entry accepted");
+    for (const bad of ["tests/../../malicious.js", "src/../evil.js", "a/b/../../c.js", "/abs/path.js"]) {
+      const res = validateAdapterEntry(process.cwd(), bad);
+      assert.ok(!res.ok, `entry '${bad}' must be rejected: ${JSON.stringify(res)}`);
+    }
+    const adapter = await runCli(["validate", "--profile", path.join(FIX, "negative/profile-synthetic-magento-like.fixture.json"), "--adapter", "magento-pagebuilder", "--json"]);
+    assert.equal(adapter.code, 1, "placeholder profile still fails preflight (no audit)");
+    return "traversal rejected in 3 shapes; legit entry accepted";
+  });
+
+  checkAsync("T-22b", "F4: stdout flood hits ADAPTER_OUTPUT_OVERFLOW; adapter stderr never enters diagnostics", async () => {
+    const base = {
+      schemaVersion: 1,
+      id: "fake",
+      platformIds: ["fake"],
+      outputContract: "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/capability-registry.schema.json",
+      permissions: { readOnly: true },
+    };
+    const input = { schemaVersion: 1, profileId: "t", platformId: "fake", source: { sourceId: "s", path: process.cwd() } };
+    const flood = await runAdapter(process.cwd(), { ...base, entry: "tests/fixtures/fake-adapter/flood.mjs" }, input, { maxStdoutBytes: 50_000, timeoutMs: 10_000 });
+    assert.ok(!flood.ok && flood.diagnostics.some((d) => d.code === "ADAPTER_OUTPUT_OVERFLOW"), JSON.stringify(flood.diagnostics));
+    const crash = await runAdapter(process.cwd(), { ...base, entry: "tests/fixtures/fake-adapter/crash.mjs" }, input);
+    assert.ok(!crash.ok && crash.diagnostics.some((d) => d.code === "ADAPTER_EXIT_NONZERO"), JSON.stringify(crash.diagnostics));
+    assert.ok(crash.stderrTail && crash.stderrTail.includes("fake adapter crashed"), "stderr tail returned for the TERMINAL");
+    const receiptText = JSON.stringify(crash.diagnostics);
+    assert.ok(!receiptText.includes("fake adapter crashed"), "raw adapter stderr must NOT be embedded in machine-readable diagnostics");
+    return "overflow bounded; stderr terminal-only";
   });
 
   checkAsync("T-18b", "core/adapters separation + no absolute owner paths anywhere in shipped surfaces", async () => {

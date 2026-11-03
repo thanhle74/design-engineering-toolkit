@@ -3,6 +3,14 @@
 // Contract: stdin = one AdapterInput JSON document; stdout = one JSON payload validating
 // against the descriptor's outputContract; stderr = diagnostics for humans.
 // An absent/crashing adapter yields an explicit run diagnostic — never a guess.
+//
+// Coordinator F4 fixes: child stdout/stderr are collected under deterministic byte caps
+// (overflow = ADAPTER_OUTPUT_OVERFLOW, child killed); raw adapter stderr is NEVER embedded in
+// machine-readable diagnostics or persisted receipts (returned separately for the terminal
+// only); descriptor entries with interior traversal are rejected, and the resolved entry must
+// stay inside the repository root. NOTE (honest trust boundary): permissions.readOnly is a
+// DECLARATIVE statement validated by schema — it is not OS sandbox enforcement; adapters run
+// with the invoking user's local privileges.
 import { spawn } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
@@ -46,6 +54,25 @@ export function sortRunDiagnostics(diags: RunDiagnostic[]): RunDiagnostic[] {
   );
 }
 
+// Entry-path rule: repo-relative, no traversal segments anywhere (leading or interior), and —
+// enforced again at spawn time by realpath containment — resolves inside the repository root.
+const ENTRY_PATTERN = /^(?!\/)(?!.*(^|\/)\.\.(\/|$))[A-Za-z0-9._/-]+$/;
+
+export function validateAdapterEntry(repoRoot: string, entry: string): { ok: true; abs: string } | { ok: false; reason: string } {
+  if (!ENTRY_PATTERN.test(entry)) return { ok: false, reason: `entry '${entry}' must be a repo-relative path without traversal segments` };
+  const abs = path.join(repoRoot, entry);
+  if (!fs.existsSync(abs)) return { ok: false, reason: `entry '${entry}' does not exist — run the build (npm run build) before inspecting` };
+  try {
+    const rootReal = fs.realpathSync(repoRoot);
+    const entryReal = fs.realpathSync(abs);
+    const rel = path.relative(rootReal, entryReal);
+    if (rel.startsWith("..") || path.isAbsolute(rel)) return { ok: false, reason: `entry '${entry}' resolves outside the repository root` };
+  } catch {
+    return { ok: false, reason: `entry '${entry}' could not be resolved to a real path` };
+  }
+  return { ok: true, abs };
+}
+
 // Discover adapters: adapters/<id>/descriptor.json, each validated against the descriptor schema.
 // Invalid descriptors are skipped with an error diagnostic — a broken registration must never
 // silently vanish, nor take the whole CLI down.
@@ -72,8 +99,9 @@ export function loadAdapters(repoRoot: string): { adapters: AdapterDescriptor[];
       continue;
     }
     const desc = parsed as AdapterDescriptor;
-    if (!fs.existsSync(path.join(repoRoot, desc.entry))) {
-      diagnostics.push(rd("ADAPTER_ENTRY_MISSING", "error", `Adapter '${desc.id}' entry '${desc.entry}' does not exist — run the build (npm run build) before inspecting.`, { type: "adapter", id: desc.id }));
+    const entryCheck = validateAdapterEntry(repoRoot, desc.entry);
+    if (!entryCheck.ok) {
+      diagnostics.push(rd("ADAPTER_ENTRY_OUT_OF_ROOT", "error", `Adapter '${desc.id}': ${entryCheck.reason}.`, { type: "adapter", id: desc.id }));
       continue;
     }
     adapters.push(desc);
@@ -89,18 +117,35 @@ export interface AdapterRunResult {
   ok: boolean;
   payload?: unknown;
   diagnostics: RunDiagnostic[];
+  /** Terminal-only adapter stderr tail (bounded). Never embed in machine receipts. */
+  stderrTail?: string;
 }
 
-// Spawn the adapter: process.execPath + entry path (no shell), input JSON on stdin, bounded time.
-// Deterministic and least-privilege by construction; stderr is captured (bounded) for messages only.
+export interface AdapterRunOptions {
+  timeoutMs?: number;
+  maxStdoutBytes?: number;
+  maxStderrBytes?: number;
+}
+
+const DEFAULT_MAX_STDOUT = 8 * 1024 * 1024; // registries are small; 8 MiB is a hard honesty cap
+const DEFAULT_MAX_STDERR = 64 * 1024;
+
+// Spawn the adapter: process.execPath + entry path (no shell), input JSON on stdin, bounded
+// time AND bounded output. Deterministic and least-privilege by construction.
 export function runAdapter(
   repoRoot: string,
   descriptor: AdapterDescriptor,
   input: unknown,
-  options: { timeoutMs?: number } = {}
+  options: AdapterRunOptions = {}
 ): Promise<AdapterRunResult> {
   const timeoutMs = options.timeoutMs ?? 60_000;
-  const entryAbs = path.join(repoRoot, descriptor.entry);
+  const maxStdout = options.maxStdoutBytes ?? DEFAULT_MAX_STDOUT;
+  const maxStderr = options.maxStderrBytes ?? DEFAULT_MAX_STDERR;
+  const entryCheck = validateAdapterEntry(repoRoot, descriptor.entry);
+  if (!entryCheck.ok) {
+    return Promise.resolve({ ok: false, diagnostics: [rd("ADAPTER_ENTRY_OUT_OF_ROOT", "error", `Adapter '${descriptor.id}': ${entryCheck.reason}.`, { type: "adapter", id: descriptor.id })] });
+  }
+  const entryAbs = entryCheck.abs;
   const diagnostics: RunDiagnostic[] = [];
   return new Promise((resolve) => {
     let child;
@@ -110,6 +155,13 @@ export function runAdapter(
       resolve({ ok: false, diagnostics: [rd("ADAPTER_SPAWN_FAILED", "error", `Adapter '${descriptor.id}' could not be spawned: ${(e as Error).message}`, { type: "adapter", id: descriptor.id })] });
       return;
     }
+    let settled = false;
+    const finish = (result: AdapterRunResult) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      resolve(result);
+    };
     let timedOut = false;
     const timer = setTimeout(() => {
       timedOut = true;
@@ -117,41 +169,58 @@ export function runAdapter(
     }, timeoutMs);
 
     let stdout = "";
+    let stdoutBytes = 0;
     let stderr = "";
-    child.stdout.on("data", (chunk: Buffer) => (stdout += chunk.toString("utf8")));
-    child.stderr.on("data", (chunk: Buffer) => (stderr += chunk.toString("utf8")));
+    let stderrBytes = 0;
+    child.stdout.on("data", (chunk: Buffer) => {
+      stdoutBytes += chunk.length;
+      if (stdoutBytes > maxStdout) {
+        child.kill("SIGKILL");
+        return;
+      }
+      stdout += chunk.toString("utf8");
+    });
+    child.stderr.on("data", (chunk: Buffer) => {
+      stderrBytes += chunk.length;
+      if (stderrBytes > maxStderr) return; // bounded: keep the first maxStderr bytes only
+      stderr += chunk.toString("utf8");
+    });
     child.on("error", (e: Error) => {
-      clearTimeout(timer);
-      resolve({ ok: false, diagnostics: [rd("ADAPTER_SPAWN_FAILED", "error", `Adapter '${descriptor.id}' failed to start: ${e.message}`, { type: "adapter", id: descriptor.id })] });
+      finish({ ok: false, diagnostics: [rd("ADAPTER_SPAWN_FAILED", "error", `Adapter '${descriptor.id}' failed to start: ${e.message}`, { type: "adapter", id: descriptor.id })] });
     });
     child.on("close", (code) => {
-      clearTimeout(timer);
-      const stderrTail = stderr.trim().slice(-400);
+      const stderrTail = stderrBytes > 0 ? stderr.trim().slice(-400) : undefined;
+      if (stdoutBytes > maxStdout) {
+        finish({ ok: false, diagnostics: [rd("ADAPTER_OUTPUT_OVERFLOW", "error", `Adapter '${descriptor.id}' stdout exceeded the ${maxStdout}-byte bound and was killed; nothing was parsed.`, { type: "adapter", id: descriptor.id })], stderrTail });
+        return;
+      }
       if (timedOut) {
-        resolve({ ok: false, diagnostics: [rd("ADAPTER_TIMEOUT", "error", `Adapter '${descriptor.id}' exceeded ${timeoutMs}ms and was killed.`, { type: "adapter", id: descriptor.id })] });
+        finish({ ok: false, diagnostics: [rd("ADAPTER_TIMEOUT", "error", `Adapter '${descriptor.id}' exceeded ${timeoutMs}ms and was killed.`, { type: "adapter", id: descriptor.id })], stderrTail });
         return;
       }
       if (code !== 0) {
-        resolve({ ok: false, diagnostics: [rd("ADAPTER_EXIT_NONZERO", "error", `Adapter '${descriptor.id}' exited with code ${code}.${stderrTail ? " stderr: " + stderrTail : ""}`, { type: "adapter", id: descriptor.id })] });
+        // Raw stderr stays terminal-only: machine receipts carry the fact, not untrusted bytes.
+        finish({ ok: false, diagnostics: [rd("ADAPTER_EXIT_NONZERO", "error", `Adapter '${descriptor.id}' exited with code ${code} (adapter stderr omitted from receipts; see terminal output).`, { type: "adapter", id: descriptor.id })], stderrTail });
         return;
       }
       let payload: unknown;
       try {
         payload = JSON.parse(stdout);
       } catch {
-        resolve({ ok: false, diagnostics: [rd("ADAPTER_OUTPUT_INVALID_JSON", "error", `Adapter '${descriptor.id}' stdout is not a single JSON document (got ${stdout.length} bytes).`, { type: "adapter", id: descriptor.id })] });
+        finish({ ok: false, diagnostics: [rd("ADAPTER_OUTPUT_INVALID_JSON", "error", `Adapter '${descriptor.id}' stdout is not a single JSON document (got ${stdoutBytes} bytes).`, { type: "adapter", id: descriptor.id })], stderrTail });
         return;
       }
       const outputCheck = validateContractSchemaId(descriptor.outputContract, payload);
       if (!outputCheck.valid) {
-        resolve({
+        finish({
           ok: false,
           payload,
           diagnostics: [rd("ADAPTER_OUTPUT_CONTRACT_VIOLATION", "error", `Adapter '${descriptor.id}' stdout fails ${descriptor.outputContract}: ${outputCheck.errors[0] ?? "unknown"}`, { type: "adapter", id: descriptor.id })],
+          stderrTail,
         });
         return;
       }
-      resolve({ ok: true, payload, diagnostics });
+      finish({ ok: true, payload, diagnostics });
     });
     child.stdin.on("error", () => {
       /* adapter died before reading stdin; close handler reports the real cause */
@@ -167,5 +236,5 @@ function validateContractSchemaId(schemaId: string, payload: unknown): { valid: 
   const validate = ajv.getSchema(schemaId);
   if (!validate) return { valid: false, errors: [`schema '${schemaId}' is not registered`] };
   const ok = validate(payload);
-  return { valid: ok, errors: ok ? [] : (validate.errors ?? []).map((e) => `${e.instancePath || "/"} ${e.message ?? ""}`.trim()) };
+  return { valid: ok, errors: ok ? [] : (validate.errors ?? []).map((e: { instancePath: string; message?: string }) => `${e.instancePath || "/"} ${e.message ?? ""}`.trim()) };
 }

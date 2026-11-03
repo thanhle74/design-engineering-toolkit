@@ -76,9 +76,20 @@ export async function commandPlan(flags: Record<string, string | boolean>, io: C
   const structureDiags = checkStructureShape(structure);
   if (structureDiags.length > 0) return emit({ command: "plan", exitCode: 1, profileId: profile.profile.id, platformId: profile.profile.platformId, converterDiagnostics: [], runDiagnostics: structureDiags, artifacts: [], outDir: null, dryRun, asJson }, io);
 
-  // Cross-consistency: pinned revisions and platform identity must line up (fail closed).
+  // Cross-consistency: pinned revisions AND project/platform identity must line up (fail closed).
+  // A schema-valid binding map or registry from ANOTHER project must never be resolvable here
+  // (Coordinator F3 — project isolation is enforced structurally, not by convention).
+  if (map.profileId !== profile.profile.id) {
+    runDiagnostics.push({ code: "INPUT_CONTRACT_MISMATCH", severity: "error", message: `Binding map belongs to project '${map.profileId}' but the profile declares '${profile.profile.id}'.`, subject: { type: "input", id: "bindings" } });
+  }
   if (map.platformId !== registry.platformId) {
     runDiagnostics.push({ code: "INPUT_CONTRACT_MISMATCH", severity: "error", message: `Binding map platform '${map.platformId}' != registry platform '${registry.platformId}'.`, subject: { type: "input", id: "bindings" } });
+  }
+  if (registry.platformId !== profile.profile.platformId) {
+    runDiagnostics.push({ code: "INPUT_CONTRACT_MISMATCH", severity: "error", message: `Registry platform '${registry.platformId}' != profile platform '${profile.profile.platformId}'.`, subject: { type: "input", id: "registry" } });
+  }
+  if (registry.profileId !== undefined && registry.profileId !== profile.profile.id) {
+    runDiagnostics.push({ code: "INPUT_CONTRACT_MISMATCH", severity: "error", message: `Registry is pinned to project '${registry.profileId}' but the profile declares '${profile.profile.id}'.`, subject: { type: "input", id: "registry" } });
   }
   if (map.registry.registryRevisionId !== registry.source.revisionId) {
     converterDiagnostics.push({

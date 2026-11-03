@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<!-- Out-of-root widget reached (if unsafe) through a symlinked module directory.
+     ESCAPE_SECRET_MARKER_outside_root_77a3 -->
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <widget id="escape_widget" class="Escape\Outside\Block\Widget"/>
+</widgets>

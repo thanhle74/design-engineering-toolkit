@@ -17,8 +17,8 @@
     },
     "entry": {
       "type": "string",
-      "pattern": "^(?!/)(?!\\.\\./)[A-Za-z0-9._/-]+$",
-      "description": "Adapter executable path relative to the repository root (e.g. the compiled subprocess entry). Never absolute, never traversal."
+      "pattern": "^(?!/)(?!.*(^|/)\\.\\.(/|$))[A-Za-z0-9._/-]+$",
+      "description": "Adapter executable path relative to the repository root (e.g. the compiled subprocess entry). Never absolute and no traversal segments anywhere — interior '..' is rejected by this pattern AND re-checked at spawn time by realpath containment against the repository root."
     },
     "inputContract": { "type": "string", "minLength": 1, "description": "$id of the input-transport schema the adapter expects (adapters re-validate defensively)." },
     "outputContract": { "type": "string", "minLength": 1, "description": "$id of the schema the adapter's stdout payload must validate against. The CLI hard-rejects stdout that fails it (ADAPTER_OUTPUT_CONTRACT_VIOLATION)." },
@@ -27,7 +27,7 @@
       "required": ["readOnly"],
       "additionalProperties": false,
       "properties": {
-        "readOnly": { "type": "boolean", "const": true, "description": "Major 1 registers read-only probes only. A write-capable adapter requires a new schema major plus a stage GO ADR — fail closed by construction." }
+        "readOnly": { "type": "boolean", "const": true, "description": "Major 1 registers read-only probes only. A write-capable adapter requires a new schema major plus a stage GO ADR — fail closed by construction. TRUST BOUNDARY: this is a DECLARATIVE statement validated by schema, not OS sandbox enforcement; adapters run with the invoking user's local privileges." }
       }
     },
     "version": { "type": "string", "minLength": 1 },

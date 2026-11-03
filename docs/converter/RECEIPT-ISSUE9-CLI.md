@@ -1,6 +1,21 @@
 # Integrator receipt — Issue #9, first executable CLI gate
 
-**Status:** `IMPLEMENTED_TESTED` (synthetic + live read-only audit). This receipt claims **no** Figma access, **no** CMS/DB writes, **no** Admin round-trip, **no** visual verification, **no** runtime-functional claims. Later gates (G2 design extraction, G3 isolated Admin, G4 visual) need separate GOs.
+**Status:** `IMPLEMENTED_TESTED` (synthetic + live read-only audit) + **one Coordinator correction round applied** (2026-11-03, findings F1–F4 from the [source review](https://github.com/thanhle74/design-engineering-toolkit/issues/9#issuecomment-6596713837)). This receipt claims **no** Figma access, **no** CMS/DB writes, **no** Admin round-trip, **no** visual verification, **no** runtime-functional claims. Later gates (G2 design extraction, G3 isolated Admin, G4 visual) need separate GOs.
+
+## Correction round (BASE `e77536e`+`0c3afec` → correction tip; BASE→TIP in the Issue receipt comment)
+
+| Finding | Fix (source evidence) | Regression |
+|---|---|---|
+| F1/P0 — persisted receipt said `wroteFiles:false` on success; write failures never reached JSON/exit | `src/core/cli/commands/emit.ts`: envelope states write intent before serialization; failures become error-severity `OUTPUT_NOT_WRITABLE` runDiagnostics, force nonzero exit, and the receipt is rewritten truthfully on partial failure | T-19a (persisted `tool-run.json` says `wroteFiles:true`, agrees with terminal JSON and disk), T-19b (unwritable `--out` = regular file → nonzero + diagnostic in stderr **and** terminal JSON) |
+| F2/P0 — relative-string guard only; symlink file/dir escapes could read outside the project root; metadata readers outside the gateway | `adapters/magento-pagebuilder/inspect.ts`: ONE central path gateway — deny list + realpath containment on EVERY read (scan surfaces and metadata), symlink escapes rejected before access and counted (`symlink-escape` aggregate warning); explicit include/exclude scopes enforced on all scan surfaces; bounded metadata exception documented + tested (composer.lock / config.php / package composer.json / app module.xml — deny + containment still apply) | T-20a (two planted symlink escapes: markers + would-be capabilities absent, gateway warning counts exactly 2), T-20b (explicit exclude removes the module's surfaces; metadata exception proven) |
+| F3/P1 — `plan` accepted schema-valid inputs from another project | `src/core/cli/commands/plan.ts`: `map.profileId`, `registry.platformId`, `registry.profileId` (when present) must all equal the profile's identity → structured `INPUT_CONTRACT_MISMATCH` | T-21 (flatcms profile + magento-like registry → exit 1, mismatch named) |
+| F4/P1 — unbounded child streams; raw stderr in receipts; descriptor entry interior traversal; readOnly trust framing | `src/core/adapter-runtime.ts`: byte caps with deterministic `ADAPTER_OUTPUT_OVERFLOW` (child killed, nothing parsed); adapter stderr returned terminal-only, never embedded in diagnostics/receipts; entry pattern + `validateAdapterEntry` realpath containment reject interior traversal; trust boundary documented: `permissions.readOnly` is declarative, **not OS sandbox enforcement** (`schemas/cli/README.md`, descriptor schema) | T-22a (3 traversal shapes rejected, legit entry accepted), T-22b (stdout flood → overflow; crash stderr present in terminal tail, absent from receipt text) |
+
+Integration: `origin/main` merged normally (merge commit `515a0c0`, no force/rewrite) preserving the Figma 245:2 naming receipt and the Coordinator #9 review checkpoint; one full CI gate runs on the integrated tip.
+
+**Live audit re-verified post-corrections:** 78 capabilities @ `66aff1eb`, exit 0, two runs hash-identical, persisted receipt now truthfully `wroteFiles:true`, zero gateway rejections on the real checkout (no symlinks present).
+
+## Scope delivered
 
 ## Scope delivered
 
@@ -18,7 +33,7 @@ One integration branch, no schema change to the frozen converter/V1 families, no
 
 ## Test gate
 
-`npm test` = build (tsc strict, noEmitOnError) + **44/44 checks**: the 30-check G1 suite (schema validation, 14-case negative plan, determinism, neutrality, two-family portability) + 14 CLI/adapter checks. Exit code of the gate is the CI gate (`.github/workflows/validate.yml`).
+`npm test` = build (tsc strict, noEmitOnError) + **51/51 checks**: the 30-check G1 suite (schema validation, 14-case negative plan, determinism, neutrality, two-family portability) + 21 CLI/adapter checks (T-15…T-22 incl. the F1–F4 correction regressions). Exit code of the gate is the CI gate (`.github/workflows/validate.yml`).
 
 ## Deterministic exit codes
 

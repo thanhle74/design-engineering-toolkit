@@ -96,6 +96,8 @@ export async function commandInspect(flags: Record<string, string | boolean>, io
   }
 
   const run = await runAdapter(REPO_ROOT, descriptor, adapterInput);
+  // Adapter stderr is terminal-only (F4): never embedded in diagnostics or persisted receipts.
+  if (run.stderrTail) io.err(`[adapter stderr] ${run.stderrTail.split("\n").slice(-5).join(" | ")}`);
   if (!run.ok) {
     const timedOut = run.diagnostics.some((x) => x.code === "ADAPTER_TIMEOUT");
     return emit({
