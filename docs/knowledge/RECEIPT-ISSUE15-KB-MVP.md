@@ -9,7 +9,7 @@ authorization.
 |---|---|
 | Issue | [#15 — Reusable Magento + Hyvä UI + Project knowledge ingestion, index & query](https://github.com/thanhle74/design-engineering-toolkit/issues/15) |
 | Base | `main` @ `f44dcdc8487551e1f0a0cc6fe1a8fa2ef7064e56` (= `origin/main` at start, clean) |
-| Implementation commits | `ec9a7025fa67b1f8e674f990adae0b023767c4e8` (engine), `915359a` (docs), `6b0236d` (engine-output schema), `9cf456e8` head at push (review round) — see the PR for the final tip |
+| Implementation commits | `ec9a702` (engine) · `915359a` (docs) · `6b0236d` (engine-output schema) · `9cf456e1` (internal review round) · `422df76` (Coordinator K1/K2 correction tip, CI-verified) · docs-only commits after the code tip edit markdown only |
 | Gate | `npm test` = tsc strict build + **80/80 checks** (51 unchanged from #9: G1 suite, CLI T-15…T-22; + 29 KB checks KB-01…KB-29) |
 | PR | Draft PR linked from issue #15 by the integrator; normal merge only, no auto-merge |
 | Concurrency | #14 (`NodeIR`/`PageStructure`) untouched — zero edits outside KB-owned paths plus the shared-cli additive extension points |
