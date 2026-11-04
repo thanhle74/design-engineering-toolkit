@@ -1,5 +1,14 @@
 # ACTIVE CHATGPT COORDINATOR HANDOFF — Design Engineering Toolkit
 
+## NEXT EXECUTION TRACKS — 2026-11-04 — LIVE READ-ONLY GATES AWAITING OWNER GO
+
+- **[#18](https://github.com/thanhle74/design-engineering-toolkit/issues/18)** `[18] G2 — Live Figma read-only extraction pilot (245:2)`: existing #14 `DesignSourcePort`/snapshot → live read-only provider adapter → one selected real frame only → `NodeIR` / `SourceReview` / `PageStructure` / `det plan` + unresolved map. **Gate `AWAITING_OWNER_GO_LIVE_FIGMA_READ_ONLY`.** No Figma read or write until exact Owner GO; no mobile `245:16`, CMS/DB work or visual acceptance.
+- **[#19](https://github.com/thanhle74/design-engineering-toolkit/issues/19)** `[19] M4 — Read-only Magento + Hyvä UI real-source Knowledge ingestion`: owners' approved local Magento/Hyvä/Secomm_UiWidget/native Page Builder source roots only → reuse #15 `det kb` + metadata-only commercial guard → locally scoped private evidence-backed KB1/KB2/KB3. **Gate `AWAITING_OWNER_GO_2_M4_REAL_SOURCES`.** Never publish licensed/private code or client material; no production writes.
+- **Parallelism:** #18 and #19 have separate integrator branches/workspaces; review source+CI independently, integrate sequentially if shared CLI/schema surfaces touched. No duplicate engine/research work, no new tasks for G3 before these real-source gates reveal actual mapping gaps. Issue/PR/Orca prefixes must match actual number.
+- **Owner approval needed to begin reads:** explicit `GO READ-ONLY #18 #19` (scoped to the current known selected desktop frame and locally authorized Magento/Hyvä sources, no source modifications). G3 CMS import still separately gated.
+
+---
+
 ## CURRENT COORDINATOR CHECKPOINT — 2026-11-04 — #14 + #15 INTEGRATED INTO MAIN
 
 > **Live GitHub is the authority.** Both tasks are integrated as **SYNTHETIC GATES** only. Do not confuse code/fixture proof with real Figma/Hyvä ingestion or Magento Admin proof.
