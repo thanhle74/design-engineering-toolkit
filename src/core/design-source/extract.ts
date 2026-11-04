@@ -405,9 +405,15 @@ export function extractStructures(input: ExtractInput): ExtractOutcome {
     } else if (branch === "definition") {
       result = { semanticClass: "SHARED_COMPONENT", disposition: "REFERENCE_ONLY", reason: `Part of a shared component definition asset (realized through its instances).${hintSuffix}`, ...hintProp };
     } else if (parentIsRoot) {
-      // Top-level children decide their whole branch from combined evidence.
-      if (inv.hint === "SITE") {
-        result = { semanticClass: "SITE_CHROME", disposition: "EXCLUDED_WITH_REASON", reason: `Top-level site chrome (naming hint + top-level position): theme-owned, excluded from the CMS plan, retained in audit.${hintSuffix}`, ...hintProp };
+      // Top-level children decide their whole branch from combined evidence. A naming hint
+      // NEVER classifies site chrome alone (Coordinator C1 correction): a SITE/ label classifies
+      // chrome only WITH container evidence at top-level position; a SITE/-labelled
+      // non-container is ambiguous (hint conflicts with structural evidence) — retained in the
+      // review as NEEDS_REVIEW, never silently dropped and never excluded by label alone.
+      if (inv.hint === "SITE" && isContainerish) {
+        result = { semanticClass: "SITE_CHROME", disposition: "EXCLUDED_WITH_REASON", reason: `Top-level site chrome (naming hint + top-level position + container evidence): theme-owned, excluded from the CMS plan, retained in audit.${hintSuffix}`, ...hintProp };
+      } else if (inv.hint === "SITE") {
+        result = { semanticClass: "UNKNOWN_OR_AMBIGUOUS", disposition: "NEEDS_REVIEW", reason: `Site-chrome naming hint on a top-level node without container evidence — a label alone never excludes; chrome vs content vs component is undecidable from available evidence, human decision required.${hintSuffix}`, ...hintProp };
       } else if (isContainerish && inv.hint === "SECTION") {
         result = { semanticClass: "EDITORIAL_SECTION", disposition: "MAPPED", reason: `Top-level editorial section (naming hint + container evidence) — planned as a PageStructure section.${hintSuffix}`, ...hintProp };
         sectionLocators.push(locator);
@@ -580,7 +586,8 @@ export function extractStructures(input: ExtractInput): ExtractOutcome {
     let disposition = cls.disposition;
     let reason = cls.reason;
     let provisionalTarget: SourceReviewEntry["provisionalTarget"];
-    if (disposition === "NEEDS_REVIEW" && isUnboundInstance(inv) && componentRefTarget.get(inv.locator) !== null) {
+    const labelConflict = cls.semanticClass === "UNKNOWN_OR_AMBIGUOUS"; // C1: hint/structure conflict keeps its own actionable reason
+    if (disposition === "NEEDS_REVIEW" && isUnboundInstance(inv) && componentRefTarget.get(inv.locator) !== null && !labelConflict) {
       // Resolving instance without a proven target: custom-required pending — never approximated.
       provisionalTarget = { category: resolution ? (resolution.category as NonNullable<SourceReviewEntry["provisionalTarget"]>["category"]) : "custom-required" };
       if (!resolution) reason = "Source component without a proven target capability — custom-required pending; no CMS content may be generated from it without review.";

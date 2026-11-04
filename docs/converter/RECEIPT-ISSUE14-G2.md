@@ -1,8 +1,14 @@
 # Integrator receipt — Issue #14, G2 read-only structural extraction (synthetic gate)
 
-**Status:** `SYNTHETIC_G2_PASS` — implemented and tested against synthetic design-source fixtures only. This receipt claims **no** live design-tool access of any kind (no read of any external design file, including the reserved `245:2`/`245:16` subtrees), **no** design-source write/rename, **no** CMS/DB/storefront write, **no** Admin round-trip, **no** visual verification. `LIVE_FIGMA_READ_ONLY_VERIFIED` is **NOT claimed** — a live read-only provider requires a separate exact Owner GO per the issue gate.
+**Status:** `SYNTHETIC_G2_PASS` — implemented and tested against synthetic design-source fixtures only, **plus one Coordinator correction round applied** (C1, 2026-11-04, from the [source review](https://github.com/thanhle74/design-engineering-toolkit/issues/14) of Draft PR #16 tip `a4092ef`). This receipt claims **no** live design-tool access of any kind (no read of any external design file, including the reserved `245:2`/`245:16` subtrees), **no** design-source write/rename, **no** CMS/DB/storefront write, **no** Admin round-trip, **no** visual verification. `LIVE_FIGMA_READ_ONLY_VERIFIED` is **NOT claimed** — a live read-only provider requires a separate exact Owner GO per the issue gate.
 
-**Gate:** all 51 pre-existing #9 checks pass unchanged; the gate is **64/64** (`npm test` = tsc build + 30 G1 + 21 CLI/adapter + 13 G2 checks). CI: `.github/workflows/validate.yml` on the PR tip.
+## Correction round C1 (drop-safety: site-chrome classification)
+
+| Finding | Fix (source evidence) | Regression |
+|---|---|---|
+| C1/P1 — top-level `classify()` branch classified `SITE_CHROME`/`EXCLUDED_WITH_REASON` from the `SITE/` hint alone: a top-level TEXT or INSTANCE merely named `SITE/…` was silently excluded from the CMS plan on a label, violating the design-node semantics spec §3 | `src/core/design-source/extract.ts`: chrome now requires `hint === "SITE"` **AND** container evidence at top-level position; a top-level `SITE/` label on a non-container classifies `UNKNOWN_OR_AMBIGUOUS`/`NEEDS_REVIEW` (retained, never dropped) with an explicit hint-conflict reason; the generic custom-required reason no longer overrides that conflict | `tests/fixtures/g2-design-source/design-tree-spoofed-chrome.fixture.json` + **G2-T29**: authentic `SITE/Header` container still excluded (reason names hint+position+container evidence; subtree inherits chrome); spoofed `SITE/BrandTagline` (text) and `SITE/BadgeInstance` (instance) stay inventoried `visible:true`, `NEEDS_REVIEW`, unplanned; exact disposition counts asserted. Gate grew 64 → **65** | This receipt claims **no** live design-tool access of any kind (no read of any external design file, including the reserved `245:2`/`245:16` subtrees), **no** design-source write/rename, **no** CMS/DB/storefront write, **no** Admin round-trip, **no** visual verification. `LIVE_FIGMA_READ_ONLY_VERIFIED` is **NOT claimed** — a live read-only provider requires a separate exact Owner GO per the issue gate.
+
+**Gate:** all 51 pre-existing #9 checks pass unchanged; the gate is **65/65** (`npm test` = tsc build + 30 G1 + 21 CLI/adapter + 14 G2 checks). CI: `.github/workflows/validate.yml` on the PR tip.
 
 ## Scope delivered
 

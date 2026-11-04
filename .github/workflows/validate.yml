@@ -2,7 +2,7 @@
 # runs the contract suite (T-01..T-22 #9 CLI/adapter/deny-list/determinism + G2-T23..T-28 #14
 # design-source extraction: accountability, chrome exclusion, stable ids, negative graphs,
 # scope escapes, plan-on-PageStructure, source neutrality) and the portability scans.
-# npm test = tsc build + 64 checks. The task/issue prefix is never hardcoded here (spec §8).
+# npm test = tsc build + 65 checks. The task/issue prefix is never hardcoded here (spec §8).
 # The task/issue prefix is never hardcoded here (spec §8): this workflow is issue-agnostic.
 name: validate-contracts
 on:

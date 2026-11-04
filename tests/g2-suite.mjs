@@ -306,6 +306,35 @@ export default async function registerG2Suite(checkAsync) {
     return "7 nodes, 2 sections, invalid ref flagged";
   });
 
+  checkAsync("G2-T29", "C1 regression: site chrome requires container evidence - spoofed SITE/ labels stay NEEDS_REVIEW, authentic chrome still excludes", async () => {
+    const r = await runCli(["extract", "--profile", PROFILE, "--project", G2, "--design-file", "design-tree-spoofed-chrome.fixture.json", "--design-node", "300:1", "--json"]);
+    assert.equal(r.code, 0, `exit ${r.code}: ${r.err.slice(0, 400)}`);
+    const o = JSON.parse(r.out).output;
+    const { nodeIr, pageStructure, review } = o;
+    assert.equal(nodeIr.nodes.length, 9);
+    assert.equal(review.counts.total, 9, "every node retained - nothing dropped by label");
+    // Authentic chrome (top-level SITE/ container): still excluded, with container evidence named.
+    const chrome = review.entries.filter((e) => e.semanticClass === "SITE_CHROME");
+    assert.equal(chrome.length, 3, "SITE/Header + inherited subtree");
+    assert.ok(chrome.every((e) => e.disposition === "EXCLUDED_WITH_REASON"), "all chrome excluded with reason");
+    const topLevelChrome = chrome.find((e) => e.reason.includes("Top-level site chrome"));
+    assert.ok(topLevelChrome && topLevelChrome.reason.includes("container evidence"), "authentic chrome excluded on hint + position + CONTAINER evidence");
+    assert.ok(!pageStructure.sections.some((s) => s.name.startsWith("SITE/")), "authentic chrome not planned");
+    // Spoofed labels (top-level non-containers named SITE/): ambiguous NEEDS_REVIEW, retained.
+    const spoofed = review.entries.filter((e) => e.reason.includes("a label alone never excludes"));
+    assert.equal(spoofed.length, 2, "SITE/BrandTagline (text) + SITE/BadgeInstance (instance)");
+    assert.ok(spoofed.every((e) => e.semanticClass === "UNKNOWN_OR_AMBIGUOUS" && e.disposition === "NEEDS_REVIEW"));
+    for (const name of ["SITE/BrandTagline", "SITE/BadgeInstance"]) {
+      const node = nodeIr.nodes.find((n) => n.name === name);
+      assert.ok(node, `${name} stays inventoried in the NodeIR`);
+      assert.ok(review.entries.some((e) => e.nodeId === node.nodeId && e.disposition === "NEEDS_REVIEW"), `${name} retained as NEEDS_REVIEW`);
+    }
+    assert.equal(nodeIr.nodes.find((n) => n.name === "SITE/BrandTagline")?.visible, true, "spoofed nodes are NOT hidden-flagged - retained on merit");
+    assert.deepEqual(review.counts.byDisposition, { MAPPED: 3, EXCLUDED_WITH_REASON: 3, DECORATION_MERGED: 0, REFERENCE_ONLY: 1, NEEDS_REVIEW: 2 });
+    // Ambiguity inherits: a spoofed-chrome SUBTREE would also stay reviewable.
+    return "authentic chrome excluded with container evidence; spoofed labels reviewed, retained";
+  });
+
   checkAsync("G2-T28", "id derivation + neutrality over the new G2 surfaces", async () => {
     // Stable, kind-sensitive, locator-keyed ids.
     const a = deriveNodeId("s", "loc", "container");
