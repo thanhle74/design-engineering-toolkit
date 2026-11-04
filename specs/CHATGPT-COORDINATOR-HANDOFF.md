@@ -1,5 +1,15 @@
 # ACTIVE CHATGPT COORDINATOR HANDOFF — Design Engineering Toolkit
 
+## LIVE READ-ONLY GO CHECKPOINT — 2026-11-04 — #18 #19
+
+- **Owner GO received** explicitly for live read-only #18 and M4 read-only #19, recorded in their issue comments. Does **not** authorize Figma Code Connect edits, any design write, Magento/CMS/DB/prod write, commercial-source redistribution or G3.
+- **#18 [live pilot](https://github.com/thanhle74/design-engineering-toolkit/issues/18):** direct connected Figma read-only `get_metadata` for selected Design Desktop root `245:2` succeeded: root `PAGE/Home/Desktop` 1440×9891; **162 exposed XML nodes / 162 unique IDs** (61 frames, 59 texts, 30 instances, 12 rounded rectangles); 15 top-level frames = 3 SITE chrome containers + 12 SECTION frames. This is **metadata-only partial source evidence**, with **no revision pin or complete source transport**, not `LIVE_FIGMA_READ_ONLY_VERIFIED`. Code Connect asked for mapping; no mappings written, as outside read-only grant. Full Figma adapter, complete revision-pinned NodeIR/PageStructure/plan and source reconciliation remain task scope. Branch: `task/18-figma-live-readonly-pilot`; no code in branch yet.
+- **#19 [M4 KB real source](https://github.com/thanhle74/design-engineering-toolkit/issues/19):** read-only Owner GO-2 recorded, but current Coordinator tools **cannot access user's local Fedora Magento/Hyvä source roots**. Status `BLOCKED_LOCAL_SOURCE_NOT_MOUNTED` for real corpus. Locally authorized coding agent may use explicit root aliases and metadata-only licensed adapter, local gitignored corpus, sanitised proof. No false claim of M4 real-source validation. Branch: `task/19-m4-magento-hyva-kb-ingest`; no code in branch yet.
+- Both branches are isolated and prepared for local Orca/Claude Code execution. **No workers are running from this ChatGPT session**. Workers must read this handoff and the respective issue/GO comments, implement/test/post receipt in one PR each, avoid duplicate engine work, and integrate sequentially if touching shared files. Naming `[18]` and `[19]`.
+- Once both gates are source-verified, separately scope G3 isolated Magento Page Builder serializer + Admin edit/save/reload. G3 NOT authorized.
+
+---
+
 ## NEXT EXECUTION TRACKS — 2026-11-04 — LIVE READ-ONLY GATES AWAITING OWNER GO
 
 - **[#18](https://github.com/thanhle74/design-engineering-toolkit/issues/18)** `[18] G2 — Live Figma read-only extraction pilot (245:2)`: existing #14 `DesignSourcePort`/snapshot → live read-only provider adapter → one selected real frame only → `NodeIR` / `SourceReview` / `PageStructure` / `det plan` + unresolved map. **Gate `AWAITING_OWNER_GO_LIVE_FIGMA_READ_ONLY`.** No Figma read or write until exact Owner GO; no mobile `245:16`, CMS/DB work or visual acceptance.
