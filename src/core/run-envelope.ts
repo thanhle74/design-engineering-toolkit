@@ -6,9 +6,9 @@ import type { Diagnostic } from "./types.js";
 
 export const TOOL_NAME = "det";
 
-export type CommandName = "validate" | "inspect" | "plan";
+export type CommandName = "validate" | "inspect" | "plan" | "extract";
 export type ExitCode = 0 | 1 | 2 | 3;
-export type ArtifactRole = "registry" | "resolution-report" | "profile-input" | "binding-map" | "structure-input" | "adapter-descriptor";
+export type ArtifactRole = "registry" | "resolution-report" | "node-ir" | "page-structure" | "source-review" | "profile-input" | "binding-map" | "structure-input" | "adapter-descriptor";
 
 export interface ArtifactRecord {
   role: ArtifactRole;
@@ -47,6 +47,9 @@ export function setToolVersion(v: string): void {
 const SCHEMA_REFS: Record<string, string> = {
   registry: "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/capability-registry.schema.json",
   "resolution-report": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/resolution-report.schema.json",
+  "node-ir": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/node-ir.schema.json",
+  "page-structure": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/page-structure.schema.json",
+  "source-review": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/source-review.schema.json",
   "profile-input": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/converter-profile.schema.json",
   "binding-map": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/component-binding-map.schema.json",
   "structure-input": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/CONTRACTS-harness-shape",

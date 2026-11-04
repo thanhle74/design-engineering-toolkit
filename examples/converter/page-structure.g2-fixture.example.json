@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 1,
+  "profileId": "g2-design-fixture",
+  "generatedAt": "2026-11-04T02:25:38.304Z",
+  "source": {
+    "sourceId": "g2-fixture-source",
+    "revisionId": "g2-fixture-rev-0001",
+    "accessedAt": "2026-11-04T02:25:38.293Z"
+  },
+  "inputs": {
+    "nodeIrContentHash": "425028ef84eb7b3c23d1d9d9e60110a9fa9c736c27aa7b2a529c04fd9ec93207",
+    "registryRevisionId": "fixture-rev-0001",
+    "bindingMapContentHash": "ed4f28b8f4a85dc961339fe2cb18fbdb500136e275659fa57ec5e07e7772b8e7"
+  },
+  "sections": [
+    {
+      "sectionId": "s-388fdf889bf5",
+      "order": 0,
+      "name": "SECTION/Hero/Primary",
+      "role": "SECTION",
+      "layout": {
+        "direction": "column",
+        "positioning": "static",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "visible"
+      },
+      "elements": [
+        {
+          "elementId": "n-0e023190f389",
+          "contentSlots": [
+            {
+              "slotId": "slot-covermedia",
+              "contentType": "media",
+              "valueRef": "design://g2-fixture-source/100:17"
+            },
+            {
+              "slotId": "slot-heading",
+              "contentType": "text",
+              "valueRef": "design://g2-fixture-source/100:16"
+            }
+          ],
+          "childrenElementIds": [],
+          "resolution": {
+            "status": "unmapped",
+            "mappingConfidence": "low",
+            "diagnostics": []
+          }
+        }
+      ],
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-ab883bb7af22",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:3",
+          "retrievedAt": "2026-11-04T02:25:38.293Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "sectionId": "s-2f529a4dc159",
+      "order": 1,
+      "name": "SECTION/FeaturedProducts",
+      "role": "SECTION",
+      "layout": {
+        "direction": "row",
+        "positioning": "static",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "visible"
+      },
+      "elements": [
+        {
+          "elementId": "n-71e41e0b40ea",
+          "sourceComponentId": "n-7d54c68d9b72",
+          "variantAssignment": {
+            "layout": "compact"
+          },
+          "bindingId": "b-a00000000001",
+          "target": {
+            "capabilityId": "flatcms/teaser",
+            "appearanceId": "compact"
+          },
+          "childrenElementIds": [],
+          "resolution": {
+            "status": "mapped",
+            "mappingConfidence": "high",
+            "diagnostics": []
+          }
+        },
+        {
+          "elementId": "n-82fd2db60b0c",
+          "sourceComponentId": "n-7d54c68d9b72",
+          "bindingId": "b-a00000000001",
+          "target": {
+            "capabilityId": "flatcms/teaser",
+            "appearanceId": "compact"
+          },
+          "childrenElementIds": [],
+          "resolution": {
+            "status": "mapped",
+            "mappingConfidence": "high",
+            "diagnostics": []
+          }
+        }
+      ],
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-0204f0c2172b",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:5",
+          "retrievedAt": "2026-11-04T02:25:38.293Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "sectionId": "s-29b84e9c3e67",
+      "order": 2,
+      "name": "SECTION/CampaignWidget",
+      "role": "SECTION",
+      "layout": {
+        "direction": "column",
+        "positioning": "static",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "visible"
+      },
+      "elements": [],
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-8aac9e8022a7",
+          "kind": "document",
+          "locator": "design://g2-fixture-source/100:9",
+          "retrievedAt": "2026-11-04T02:25:38.293Z",
+          "sourceRevisionId": "g2-fixture-rev-0001",
+          "method": "design-source-adapter"
+        }
+      ]
+    }
+  ],
+  "diagnostics": []
+}

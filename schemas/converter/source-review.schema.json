@@ -1,0 +1,236 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/source-review.schema.json",
+  "$comment": "Design Engineering Toolkit converter family \u2014 SourceReview. Major version 1. Materialized at the Structural Mapping gate (issue #14 G2). The every-node accountability ledger for one extracted design subtree: for EACH inventoried node it records the combined-evidence semantic classification and one of the closed dispositions, so nothing is silently omitted, dropped or mapped without review. Classification is derived from combined ancestry + node kind + layout + naming hints + capability evidence \u2014 a name prefix is a strong hint, never sufficient proof alone.",
+  "title": "Design Engineering Toolkit \u2014 SourceReview (accountability report)",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "profileId",
+    "generatedAt",
+    "source",
+    "inputs",
+    "counts",
+    "entries",
+    "diagnostics"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "$ref": "common.defs.json#/$defs/schemaVersionMajor"
+    },
+    "profileId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Excluded from the content hash."
+    },
+    "source": {
+      "$ref": "common.defs.json#/$defs/sourceRevision",
+      "description": "Design-source revision; must equal the pinned NodeIR's source revision."
+    },
+    "inputs": {
+      "type": "object",
+      "required": [
+        "nodeIrContentHash"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "nodeIrContentHash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "STABLE content hash of the exact NodeIR payload this review accounts for: SHA-256 over canonical JSON with ALL observation timestamps removed \u2014 re-extraction of the same source revision reproduces it."
+        }
+      }
+    },
+    "counts": {
+      "type": "object",
+      "required": [
+        "total",
+        "byClass",
+        "byDisposition"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Must equal the pinned NodeIR's node count \u2014 every inventoried node is accounted for exactly once."
+        },
+        "byClass": {
+          "type": "object",
+          "required": [
+            "SITE_CHROME",
+            "EDITORIAL_SECTION",
+            "SHARED_COMPONENT",
+            "PRESENTATIONAL",
+            "UNKNOWN_OR_AMBIGUOUS"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "SITE_CHROME": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "EDITORIAL_SECTION": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "SHARED_COMPONENT": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "PRESENTATIONAL": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "UNKNOWN_OR_AMBIGUOUS": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "byDisposition": {
+          "type": "object",
+          "required": [
+            "MAPPED",
+            "EXCLUDED_WITH_REASON",
+            "DECORATION_MERGED",
+            "REFERENCE_ONLY",
+            "NEEDS_REVIEW"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "MAPPED": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "EXCLUDED_WITH_REASON": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "DECORATION_MERGED": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "REFERENCE_ONLY": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "NEEDS_REVIEW": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/entry"
+      },
+      "description": "Exactly one entry per NodeIR node. Sorted by nodeId."
+    },
+    "diagnostics": {
+      "type": "array",
+      "items": {
+        "$ref": "common.defs.json#/$defs/diagnostic"
+      },
+      "description": "Review-level findings in canonical diagnostic order."
+    }
+  },
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "required": [
+        "nodeId",
+        "semanticClass",
+        "disposition",
+        "reason"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "nodeId": {
+          "type": "string",
+          "pattern": "^n-[0-9a-f]{12}$"
+        },
+        "semanticClass": {
+          "enum": [
+            "SITE_CHROME",
+            "EDITORIAL_SECTION",
+            "SHARED_COMPONENT",
+            "PRESENTATIONAL",
+            "UNKNOWN_OR_AMBIGUOUS"
+          ],
+          "description": "Closed enum. SITE_CHROME = shared theme-owned chrome (excluded from the CMS plan, retained here with its source ref). Site chrome is distinguished from page-local editorial content by combined evidence \u2014 a label like 'Footer' alone never decides."
+        },
+        "disposition": {
+          "enum": [
+            "MAPPED",
+            "EXCLUDED_WITH_REASON",
+            "DECORATION_MERGED",
+            "REFERENCE_ONLY",
+            "NEEDS_REVIEW"
+          ],
+          "description": "Closed enum; exactly one per node \u2014 no silent omission."
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "description": "One actionable sentence naming the evidence behind the classification/disposition decision."
+        },
+        "nameHint": {
+          "type": "string",
+          "description": "The naming-convention signal used (e.g. a SITE/ or DECOR/ label prefix), recorded because it was weighed as a hint \u2014 never as the sole proof."
+        },
+        "sectionId": {
+          "type": "string",
+          "pattern": "^s-[0-9a-f]{12}$",
+          "description": "The PageStructure section this node belongs to (present for MAPPED nodes inside a planned section)."
+        },
+        "provisionalTarget": {
+          "type": "object",
+          "required": [
+            "category"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "category": {
+              "enum": [
+                "native",
+                "widget",
+                "chrome",
+                "custom-required",
+                "unsupported"
+              ],
+              "description": "Reuses the registry capability category vocabulary verbatim. 'custom-required' marks a source component with no proven target; 'chrome' marks theme-owned surfaces."
+            },
+            "requiresRuntimeData": {
+              "type": "boolean",
+              "description": "true = the matched capability's dataContext requires runtime data: content is data-provider-backed (DATA_PROVIDER_PENDING), never fabricated."
+            },
+            "capabilityIds": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Registry capability ids actually matched (sorted, unique) \u2014 only from a pinned registry, never invented."
+            }
+          },
+          "description": "Capability-evidence outcome for this node, when a pinned registry/binding map was supplied."
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "common.defs.json#/$defs/sourceEvidence"
+          },
+          "description": "Design-source locators backing this decision."
+        }
+      }
+    }
+  }
+}

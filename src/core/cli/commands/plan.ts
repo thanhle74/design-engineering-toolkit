@@ -4,6 +4,7 @@
 // Exit 0 = report produced with no error diagnostics; 1 = blocking diagnostics; 2 = usage error.
 import { validateBindingMap, resolveStructure } from "../../resolver.js";
 import { validateRegistry } from "../../semantic.js";
+import { bindingMapPinHash } from "../../design-source/extract.js";
 import { artifact } from "../../run-envelope.js";
 import { validateContract } from "../../schema-registry.js";
 import { readJsonFile, serializeJson, type CommandIO } from "../io.js";
@@ -11,7 +12,7 @@ import { requireValue } from "../args.js";
 import { emit } from "./emit.js";
 import { isBlocking, loadProfile } from "./shared.js";
 import type { RunDiagnostic } from "../../adapter-runtime.js";
-import type { BindingMap, CapabilityRegistry, Diagnostic, PageStructureHarness } from "../../types.js";
+import type { BindingMap, CapabilityRegistry, Diagnostic, PageStructure, PageStructureHarness } from "../../types.js";
 
 export async function commandPlan(flags: Record<string, string | boolean>, io: CommandIO): Promise<0 | 1 | 2 | 3> {
   const outDir = requireValue(flags, "out");
@@ -68,13 +69,53 @@ export async function commandPlan(flags: Record<string, string | boolean>, io: C
   const mapCheck = validateContract("component-binding-map", map);
   if (!mapCheck.valid) return emitSchemaInvalid("component-binding-map", mapCheck.errors, io, dryRun, asJson);
 
-  // Structure: the G1 harness shape (no schema family yet by design — ADR-005-013). Enforce the
-  // subset of constraints the ResolutionReport depends on, with explicit diagnostics.
+  // Structure input: EITHER the materialized PageStructure contract (G2, issue #14) OR the G1
+  // harness shape (docs/converter/CONTRACTS.md §4 — still accepted additively until its staged
+  // retirement; the existing #9 tests depend on it). Both normalize onto the same resolver input.
   const structLoaded = readJsonFile(structurePath as string);
   if (!structLoaded.ok) return emitUsage(structLoaded.diagnostic, io, dryRun, asJson);
-  const structure = structLoaded.data as PageStructureHarness;
-  const structureDiags = checkStructureShape(structure);
-  if (structureDiags.length > 0) return emit({ command: "plan", exitCode: 1, profileId: profile.profile.id, platformId: profile.profile.platformId, converterDiagnostics: [], runDiagnostics: structureDiags, artifacts: [], outDir: null, dryRun, asJson }, io);
+  const rawStructure = structLoaded.data;
+  const psCheck = validateContract("page-structure", rawStructure);
+  let structure: PageStructureHarness;
+  if (psCheck.valid) {
+    const ps = rawStructure as PageStructure;
+    // Identity + provenance pins (fail closed): a PageStructure from another project or pinned
+    // to a different registry revision must never resolve here (cross-project/cross-revision).
+    if (ps.profileId !== profile.profile.id) {
+      runDiagnostics.push({ code: "INPUT_CONTRACT_MISMATCH", severity: "error", message: `PageStructure belongs to project '${ps.profileId}' but the profile declares '${profile.profile.id}'.`, subject: { type: "input", id: "structure" } });
+    }
+    if (ps.inputs.registryRevisionId !== undefined && ps.inputs.registryRevisionId !== registry.source.revisionId) {
+      converterDiagnostics.push({
+        code: "EVIDENCE_MISSING",
+        severity: "error",
+        message: `PageStructure is pinned to registry revision '${ps.inputs.registryRevisionId}' but the supplied registry is revision '${registry.source.revisionId}'; re-extract or re-pin before resolving.`,
+        subject: { type: "binding", id: map.profileId },
+      });
+    }
+    if (ps.inputs.bindingMapContentHash !== undefined && ps.inputs.bindingMapContentHash !== bindingMapPinHash(map)) {
+      converterDiagnostics.push({
+        code: "EVIDENCE_MISSING",
+        severity: "error",
+        message: `PageStructure input pin does not match the supplied binding map (hash mismatch); the structure was not derived from this map.`,
+        subject: { type: "binding", id: map.profileId },
+      });
+    }
+    if (isBlocking(converterDiagnostics, runDiagnostics)) {
+      return emit({ command: "plan", exitCode: 1, profileId: profile.profile.id, platformId: profile.profile.platformId, converterDiagnostics, runDiagnostics, artifacts: [], outDir: null, dryRun, asJson }, io);
+    }
+    structure = pageStructureToHarness(ps, profile.profile.platformId);
+  } else {
+    structure = rawStructure as PageStructureHarness;
+    // Harness shape: enforce the subset of constraints the ResolutionReport depends on.
+    const structureDiags = checkStructureShape(structure);
+    if (structureDiags.length > 0) return emit({ command: "plan", exitCode: 1, profileId: profile.profile.id, platformId: profile.profile.platformId, converterDiagnostics: [], runDiagnostics: structureDiags, artifacts: [], outDir: null, dryRun, asJson }, io);
+    if (structure.profileId !== profile.profile.id || structure.platformId !== profile.profile.platformId) {
+      runDiagnostics.push({ code: "INPUT_CONTRACT_MISMATCH", severity: "error", message: `Structure identifies '${(structure as PageStructureHarness).profileId}'/'${(structure as PageStructureHarness).platformId}' but the profile declares '${profile.profile.id}'/'${profile.profile.platformId}'.`, subject: { type: "input", id: "structure" } });
+    }
+    if (isBlocking(converterDiagnostics, runDiagnostics)) {
+      return emit({ command: "plan", exitCode: 1, profileId: profile.profile.id, platformId: profile.profile.platformId, converterDiagnostics, runDiagnostics, artifacts: [], outDir: null, dryRun, asJson }, io);
+    }
+  }
 
   // Cross-consistency: pinned revisions AND project/platform identity must line up (fail closed).
   // A schema-valid binding map or registry from ANOTHER project must never be resolvable here
@@ -98,9 +139,6 @@ export async function commandPlan(flags: Record<string, string | boolean>, io: C
       message: `Binding map is pinned to registry revision '${map.registry.registryRevisionId}' but the supplied registry is revision '${registry.source.revisionId}'; re-pin before resolving.`,
       subject: { type: "binding", id: map.profileId },
     });
-  }
-  if (structure.platformId !== profile.profile.platformId || structure.profileId !== profile.profile.id) {
-    runDiagnostics.push({ code: "INPUT_CONTRACT_MISMATCH", severity: "error", message: `Structure identifies '${structure.profileId}'/'${structure.platformId}' but the profile declares '${profile.profile.id}'/'${profile.profile.platformId}'.`, subject: { type: "input", id: "structure" } });
   }
   if (isBlocking(converterDiagnostics, runDiagnostics)) {
     return emit({ command: "plan", exitCode: 1, profileId: profile.profile.id, platformId: profile.profile.platformId, converterDiagnostics, runDiagnostics, artifacts: [], outDir: null, dryRun, asJson }, io);
@@ -139,6 +177,39 @@ export async function commandPlan(flags: Record<string, string | boolean>, io: C
     },
     io
   );
+}
+
+// Normalize a materialized PageStructure onto the resolver's harness input. Only elements with a
+// component identity are converted — the binding layer resolves component instances; structural
+// containers without one are represented in the PageStructure/NodeIR artifacts and resolved by
+// the later gated platform-serializer stage, not here.
+function pageStructureToHarness(ps: PageStructure, platformId: string): PageStructureHarness {
+  return {
+    profileId: ps.profileId,
+    platformId,
+    source: ps.source,
+    sections: ps.sections.map((section) => {
+      const flat = (elements: NonNullable<PageStructure["sections"][number]["elements"]>): PageStructureHarness["sections"][number]["elements"] => {
+        const out: PageStructureHarness["sections"][number]["elements"] = [];
+        for (const el of elements) {
+          if (!el.sourceComponentId) continue;
+          out.push({
+            elementId: el.elementId,
+            sourceComponentId: el.sourceComponentId,
+            ...(el.variantAssignment ? { variantAssignment: el.variantAssignment } : {}),
+            childrenElementIds: (el.childrenElementIds ?? []).filter(() => true),
+          });
+        }
+        return out;
+      };
+      return {
+        sectionId: section.sectionId,
+        order: section.order,
+        name: section.name,
+        elements: flat(section.elements),
+      };
+    }),
+  };
 }
 
 function checkStructureShape(structure: PageStructureHarness): RunDiagnostic[] {

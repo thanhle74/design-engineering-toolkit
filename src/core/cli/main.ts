@@ -12,6 +12,7 @@ import type { CommandIO } from "./io.js";
 import { commandValidate } from "./commands/validate.js";
 import { commandInspect } from "./commands/inspect.js";
 import { commandPlan } from "./commands/plan.js";
+import { commandExtract } from "./commands/extract.js";
 
 // This module compiles to dist/src/core/cli/main.js — four levels up to the repository root.
 export const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..", "..", "..");
@@ -30,6 +31,14 @@ Usage:
   det plan --profile <file> --registry <file> --bindings <file> --input <structure-file> [--out <dir>] [--dry-run] [--json]
       Deterministically resolve a pinned design structure against a pinned registry + binding
       map and emit a ResolutionReport. Pure computation: no source checkout, no adapter, no AI.
+      Accepts the G1 harness structure shape or a schema-valid PageStructure payload.
+
+  det extract --profile <file> --design-file <id> --design-node <locator> [--adapter <id>] [--registry <file>] [--bindings <file>] [--project <path>] [--out <dir>] [--dry-run] [--json]
+      Read-only design-source extraction (G2): spawn the design-source adapter for the profile's
+      source kind, inventory the caller-selected subtree and emit NodeIR + PageStructure +
+      SourceReview. The selected root comes ONLY from these two flags — never a default. The
+      core never talks to any design-source provider itself; adapters are out-of-process and
+      read-only by descriptor contract.
 
 Global flags:
   --json        Machine-readable JSON on stdout (the human summary is a presentation of it).
@@ -71,7 +80,7 @@ export async function main(argv: string[], env: NodeJS.ProcessEnv = process.env,
     return 2;
   }
   if (parsed.command === null) {
-    io.err("det: no command given (expected validate|inspect|plan). Run 'det --help' for usage.");
+    io.err("det: no command given (expected validate|inspect|plan|extract). Run 'det --help' for usage.");
     return 2;
   }
 
@@ -91,6 +100,8 @@ export async function main(argv: string[], env: NodeJS.ProcessEnv = process.env,
       return commandInspect(flags, io);
     case "plan":
       return commandPlan(flags, io);
+    case "extract":
+      return commandExtract(flags, io);
     default:
       io.err(`det: unknown command '${parsed.command}'`);
       return 2;

@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "profile": {
+    "id": "g2-design-fixture",
+    "name": "G2 synthetic design-source fixture",
+    "platformId": "synthetic-flatcms",
+    "projectSources": [
+      {
+        "sourceId": "g2-fixture-source",
+        "kind": "fixture-tree",
+        "path": "/path/to/design-source",
+        "notes": "Placeholder sentinel \u2014 resolved per run via --project; never a default or owner path."
+      }
+    ],
+    "scopes": [
+      {
+        "sourceId": "g2-fixture-source",
+        "include": [],
+        "exclude": []
+      }
+    ],
+    "gates": {
+      "responsiveDeterministicRequired": false
+    },
+    "safety": {
+      "approvedWriteTargets": [],
+      "notes": "G2 is read-only extraction; no design-source or CMS writes are representable."
+    }
+  }
+}

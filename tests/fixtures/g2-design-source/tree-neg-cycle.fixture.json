@@ -1,0 +1,8 @@
+{
+  "$comment": "G2 negative fixture: cyclic child references — the source subtree is not a tree; extraction must fail closed (EVIDENCE_MISSING), never truncate silently.",
+  "revisionId": "g2-neg-rev-0001",
+  "nodes": [
+    { "locator": "neg:1", "kind": "page", "name": "PAGE/Cyclic", "children": ["neg:2"] },
+    { "locator": "neg:2", "kind": "frame", "name": "SECTION/Loop", "children": ["neg:1"] }
+  ]
+}

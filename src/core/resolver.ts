@@ -115,6 +115,14 @@ function matchesVariant(binding: Binding, assignment: Record<string, string> | u
   return true;
 }
 
+// Single source of truth for binding lookup (G1 structure resolution AND the G2 extractor):
+// exactly one binding must match a component identity + variant assignment; zero or ambiguous
+// matches yield null and the caller reports the honest pending state.
+export function findBinding(map: BindingMap, sourceComponentId: string, assignment: Record<string, string> | undefined): Binding | null {
+  const candidates = map.bindings.filter((b) => b.sourceComponentId === sourceComponentId && matchesVariant(b, assignment ?? {}));
+  return candidates.length === 1 ? candidates[0] : null;
+}
+
 // ---- Nesting legality -------------------------------------------------------
 export function isNestingLegal(
   registry: CapabilityRegistry,
@@ -170,10 +178,8 @@ export function resolveStructure(
   const capsById = new Map<string, Capability>();
   for (const c of registry.capabilities) capsById.set(`${c.id}␟${c.appearanceId}`, c);
 
-  const bindingsFor = (componentId: string, assignment: Record<string, string> | undefined): Binding | null => {
-    const candidates = map.bindings.filter((b) => b.sourceComponentId === componentId && matchesVariant(b, assignment ?? {}));
-    return candidates.length === 1 ? candidates[0] : null;
-  };
+  const bindingsFor = (componentId: string, assignment: Record<string, string> | undefined): Binding | null =>
+    findBinding(map, componentId, assignment);
 
   const elements = structure.sections.flatMap((s: HarnessSection) => s.elements);
   const byId = new Map(elements.map((e) => [e.elementId, e]));

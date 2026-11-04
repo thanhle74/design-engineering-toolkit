@@ -1,6 +1,6 @@
 ---
 name: det-cli
-description: Run the toolkit's deterministic det CLI (validate/inspect/plan) from Claude Code — profile validation, read-only Magento Page Builder capability inspection and structural mapping with exit codes and JSON artifacts. Use whenever a task needs project/adapter evidence instead of reimplementing parsing, validation or mapping as a prompt.
+description: Run the toolkit's deterministic det CLI (validate/inspect/plan/extract) from Claude Code — profile validation, read-only capability inspection, structural mapping, and read-only synthetic design-source extraction to NodeIR/PageStructure/SourceReview with exit codes and JSON artifacts. Use whenever a task needs project/adapter evidence instead of reimplementing parsing, validation or mapping as a prompt.
 ---
 
 # det CLI operations
@@ -31,6 +31,13 @@ node bin/det.js plan --profile <profile.json> --registry out/capability-registry
   --bindings <component-binding-map.json> --input <design-structure.json> \
   --dry-run          # compute, write nothing
 node bin/det.js plan ... --out out/   # writes resolution-report.json + tool-run.json
+
+# 4. Read-only design-source extraction (G2, SYNTHETIC fixtures only — see gate note)
+node bin/det.js extract --profile profiles/your-profile.json --project /path/to/design-source \
+  --design-file <tree-document> --design-node <root-locator> \
+  [--registry <capability-registry.json> --bindings <binding-map.json>] [--out out/] [--dry-run]
+# Emits node-ir.json (full inventory), page-structure.json (editorial-only plan),
+# source-review.json (every-node accountability: class + disposition + reason).
 ```
 
 ## Rules for agents
@@ -38,7 +45,7 @@ node bin/det.js plan ... --out out/   # writes resolution-report.json + tool-run
 1. **Exit codes are the contract:** `0` ok · `1` blocking diagnostics · `2` usage error · `3` adapter runtime failure. Never guess an outcome the exit code already states.
 2. Parse `--json` output (`{"run": <tool-run envelope>, "output": <registry|report>}`), not the human summary. Diagnostics carry structured codes (`PROJECT_SOURCE_NOT_CONFIGURED`, `ADAPTER_NOT_APPLICABLE`, `VARIANT_NOT_MAPPED`, `NOT_VERIFIED`, `LOCATOR_OUT_OF_SCOPE`, …) — act on codes, not message text.
 3. **Proof discipline:** registry proof levels never exceed what pinned evidence justifies (`registered` = declaration evidence + enabled; never treat installed/enabled/declared as runtime-proven or Admin-verified). `NOT_VERIFIED` diagnostics mark unaudited fields — report them, don't smooth them over.
-4. **Boundaries:** the CLI never writes to CMS/DB/storefront/design sources; adapters are read-only by schema contract. Figma reads, CMS import, Admin round-trips and visual QA are separate gated stages — do not attempt them under this skill.
+4. **Boundaries:** the CLI never writes to CMS/DB/storefront/design sources; adapters are read-only by schema contract. `det extract` is authorized for SYNTHETIC design-source fixtures only in this gate — a live design-tool read (e.g. the approved Figma subtree) requires a separate explicit Owner GO and a live source adapter; never point `extract` at a provider before that GO, never rename any layer, never attempt CMS import, Admin round-trips or visual QA under this skill. The selected root comes ONLY from `--design-file`/`--design-node`; never guess or hardcode one.
 5. **Paths:** supply the project root per run (`--project` > `DET_PROJECT_SOURCE` env > gitignored `profiles/*.local.json`). Never commit a real owner path; never read `env.php`/`auth.json` yourself — the adapter deny-lists them.
 6. Determinism: same inputs + same tool version ⇒ identical `contentHash`/`volatileContentHash` in `tool-run.json`. If hashes drift, stop and investigate — do not re-run until it passes.
 
