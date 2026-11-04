@@ -45,9 +45,12 @@ Usage:
   det kb query --store <dir> [--kb platform|ui|project|relations|all] [--project <id>]
                [--where <key>=<value>]... [--text <substring>] [--require-proof <level>]
                [--edge-type <type>] [--related-to <recordId>] [--include-lifecycle <states>] [--json]
-      Deterministic structured query; provenance on every hit. KB-3 is default-deny: --project
-      is required to query project knowledge, and STALE/ARCHIVED records are excluded unless
-      explicitly included. Proof filters are EXACT (no minimum, no downgrade).
+      Deterministic structured query and trust gate: every hit is schema-checked and passes the
+      secret/licensed content guards — unsafe records never surface, and an unsafe scope exits
+      nonzero. Provenance on every hit. KB-3 is default-deny (project-scoped relation edges
+      included): --project is required for project knowledge, foreign-project records are
+      excluded without naming them, and STALE/ARCHIVED records are excluded unless explicitly
+      included. Proof filters are EXACT (no minimum, no downgrade).
 
   det kb validate --store <dir> [--json]
       Validate a store directory: per-record schemas, JSONL integrity, descriptor honesty,

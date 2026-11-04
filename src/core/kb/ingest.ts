@@ -10,12 +10,13 @@ import crypto from "node:crypto";
 import { validateContract } from "../schema-registry.js";
 import type { KbIngestManifest, KbDiagnostic, KbProjectRecord, KbRecord, KbRelationRecord, KbStoreData, KbUiComponentRecord, ManifestInput, StoreDescriptor } from "./types.js";
 import { digestKey } from "./types.js";
-import { resolveManifestInput, resolveRootAliases, scanForOversizedStrings, scanForSecrets, ResolvedInput } from "./path-gateway.js";
+import { resolveManifestInput, resolveRootAliases, ResolvedInput } from "./path-gateway.js";
 import type { CapabilityRegistry } from "../types.js";
 import { bridgeRegistryToKb } from "./bridge.js";
 import { buildSemanticContext, duplicateRecordCheck, semanticChecks } from "./semantic.js";
 import { readDescriptor } from "./store.js";
 import { idGrammarError } from "./ids.js";
+import { LICENSED_TEXT_LIMIT, recordSafetyViolations, schemaNameForRecord } from "./safety.js";
 
 const sha256File = (abs: string): string => crypto.createHash("sha256").update(fs.readFileSync(abs)).digest("hex");
 
@@ -46,20 +47,7 @@ export interface IngestResult {
   partial: boolean;
 }
 
-// Pick the contract a record validates against; unknown record types are refused.
-export function schemaNameForRecord(recordType: string): string | null {
-  if (recordType === "capability" || recordType === "data-provider") return "kb-capability";
-  if (recordType === "ui-component") return "kb-ui-component";
-  if (recordType === "relation") return "kb-relations";
-  if (["requirement", "ux-intent", "composition", "decision", "approval", "risk", "open-question", "constraint", "source-document"].includes(recordType)) return "kb-project-record";
-  return null;
-}
 
-export function validateRecordShape(record: KbRecord): { valid: boolean; errors: string[] } {
-  const name = schemaNameForRecord(record.recordType);
-  if (!name) return { valid: false, errors: [`unknown recordType '${record.recordType}'`] };
-  return validateContract(name, record);
-}
 
 // JSON array or JSONL — both accepted for record files (explicit, deterministic parse either way).
 export function parseRecordFile(raw: string): { records: unknown[]; error?: string } {
@@ -84,15 +72,7 @@ export function parseRecordFile(raw: string): { records: unknown[]; error?: stri
   return { records };
 }
 
-// Deterministic free-text cap for licensed-package records (metadata-only by structure; this
-// guards the free-text channel a schema cannot close, CONTRACTS.md §8.3).
-export const LICENSED_TEXT_LIMIT = 500;
 
-export function licensedRecordViolations(record: KbUiComponentRecord): string[] {
-  const licensed = record.license?.regime === "commercial" || record.license?.derivedArtifactPolicy === "metadata-only";
-  if (!licensed) return [];
-  return scanForOversizedStrings(record, LICENSED_TEXT_LIMIT);
-}
 
 interface ResolvedInputs {
   registry?: ResolvedInput;
@@ -379,17 +359,15 @@ export function runIngest(options: IngestOptions): IngestResult {
     if (grammar) {
       diagnostics.push({ code: "RECORD_ID_GRAMMAR_INVALID", severity: "error", message: grammar, subject: { type: "record", id: record.id } });
     }
-    const shape = validateRecordShape(record);
-    if (!shape.valid) {
-      diagnostics.push({ code: "RECORD_SCHEMA_INVALID", severity: "error", message: `Record '${record.id}' fails ${schemaNameForRecord(record.recordType)}: ${shape.errors[0] ?? "unknown"}`, subject: { type: "record", id: record.id } });
-    }
-    if (record.recordType === "ui-component") {
-      for (const field of licensedRecordViolations(record as KbUiComponentRecord)) {
-        diagnostics.push({ code: "LICENSED_FIELD_TOO_LARGE", severity: "error", message: `Licensed UI record '${record.id}' carries an oversized free-text field '${field}' (limit ${LICENSED_TEXT_LIMIT} chars); licensed packages are metadata-only.`, subject: { type: "record", id: record.id } });
+    const violations = recordSafetyViolations(record);
+    for (const v of violations) {
+      if (v.startsWith("schema:")) {
+        diagnostics.push({ code: "RECORD_SCHEMA_INVALID", severity: "error", message: `Record '${record.id}' fails ${schemaNameForRecord(record.recordType)}: ${v.slice("schema: ".length)}`, subject: { type: "record", id: record.id } });
+      } else if (v.startsWith("licensed-oversize:")) {
+        diagnostics.push({ code: "LICENSED_FIELD_TOO_LARGE", severity: "error", message: `Licensed UI record '${record.id}' carries an oversized free-text field '${v.slice("licensed-oversize: ".length)}' (limit ${LICENSED_TEXT_LIMIT} chars); licensed packages are metadata-only.`, subject: { type: "record", id: record.id } });
+      } else {
+        diagnostics.push({ code: "SECRET_PATTERN_DETECTED", severity: "error", message: `Record '${record.id}' field '${v.slice("secret-pattern: ".length)}' matches a secret pattern; refused (store metadata, never credentials).`, subject: { type: "record", id: record.id } });
       }
-    }
-    for (const field of scanForSecrets(record)) {
-      diagnostics.push({ code: "SECRET_PATTERN_DETECTED", severity: "error", message: `Record '${record.id}' field '${field}' matches a secret pattern; refused (store metadata, never credentials).`, subject: { type: "record", id: record.id } });
     }
   }
   // Duplicate identity is checked on the FRESH regenerated set (the combined context below

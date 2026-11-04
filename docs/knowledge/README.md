@@ -74,6 +74,12 @@ human summary; act on diagnostic codes (`DENIED_PATH_SKIPPED`, `INGEST_PARTIAL_D
   queries see shared edges only); partitions are per-project, a scoped query opens only its own
   partition (another tenant's corruption can neither leak in nor break the run), and validate
   flags misplaced records.
+- **Query is a trust gate.** Every candidate hit is schema-checked and passes the secret/licensed
+  content guards before it can surface (`QUERY_RECORD_UNSAFE`); an unsafe scope exits nonzero
+  with the record id + violation kind named, the content itself withheld. Foreign-project
+  records and project-scoped relation edges are excluded before any diagnostic is composed and
+  reported only as a count (`FOREIGN_PROJECT_RECORDS_EXCLUDED`) — no cross-tenant identifiers
+  in diagnostics.
 - **Review metadata survives re-ingest — but never inherits.** `det kb ingest` carries
   `reviewStatus`/`reviewedBy`/`reviewRef` forward on unchanged digests across all four lanes;
   changed sources reset the record to `unreviewed` with an explicit

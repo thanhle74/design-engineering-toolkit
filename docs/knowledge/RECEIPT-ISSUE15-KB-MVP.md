@@ -10,7 +10,7 @@ authorization.
 | Issue | [#15 — Reusable Magento + Hyvä UI + Project knowledge ingestion, index & query](https://github.com/thanhle74/design-engineering-toolkit/issues/15) |
 | Base | `main` @ `f44dcdc8487551e1f0a0cc6fe1a8fa2ef7064e56` (= `origin/main` at start, clean) |
 | Implementation commits | `ec9a7025fa67b1f8e674f990adae0b023767c4e8` (engine), `915359a` (docs), `6b0236d` (engine-output schema), `9cf456e8` head at push (review round) — see the PR for the final tip |
-| Gate | `npm test` = tsc strict build + **79/79 checks** (51 unchanged from #9: G1 suite, CLI T-15…T-22; + 28 KB checks KB-01…KB-28) |
+| Gate | `npm test` = tsc strict build + **80/80 checks** (51 unchanged from #9: G1 suite, CLI T-15…T-22; + 29 KB checks KB-01…KB-29) |
 | PR | Draft PR linked from issue #15 by the integrator; normal merge only, no auto-merge |
 | Concurrency | #14 (`NodeIR`/`PageStructure`) untouched — zero edits outside KB-owned paths plus the shared-cli additive extension points |
 
@@ -122,6 +122,25 @@ regressions added (KB-19/KB-25/KB-28 extensions):
   malformed `--root` and wrong-command flags are usage errors again (per-command flag
   whitelists); `--include-lifecycle` values are validated; query hits carry real file/line
   positions (surviving skipped invalid lines); descriptor drift comparison is key-order-safe.
+
+## Coordinator correction round (issue #15 comment 2026-11-04) — K1/K2 fixed
+
+The Coordinator source review of tip `c96f3cfe` reported two bounded P1 findings; both are fixed
+on this branch with regressions (KB-29; KB-16/KB-19 extensions):
+
+- **K1 — query is now a trust gate.** `det kb query` runs the shared per-record safety gate
+  (schema shape via ajv + licensed free-text caps + secret-pattern scan — one code path in
+  `src/core/kb/safety.ts`, reused by ingest refusal and store validation) on every candidate
+  before it can become a hit. Unsafe records (`QUERY_RECORD_UNSAFE`, error severity) never
+  appear in hits or machine receipts; an unsafe scope exits nonzero naming the record id and
+  violation kind — never the content. Regression KB-29 covers a manually corrupted JSONL line
+  (`STORE_LINE_INVALID`, raw content withheld), an evidence-stripped record and a planted
+  secret value (asserted absent from the whole output).
+- **K2 — no cross-tenant identifiers in diagnostics.** Foreign-project records and
+  project-scoped relation edges are prefetched out of the result set BEFORE any diagnostic is
+  composed; the only report is one aggregate warning (`FOREIGN_PROJECT_RECORDS_EXCLUDED`,
+  counts only, "identifiers withheld"). KB-16 asserts the WHOLE tenant-A JSON output contains
+  no tenant-B identifiers; KB-19 asserts shared edges stay queryable unscoped.
 
 ## Protected boundaries observed
 

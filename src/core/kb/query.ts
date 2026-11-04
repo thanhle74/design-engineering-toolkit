@@ -7,6 +7,7 @@
 // never returns ASSUMED records with a downgrade.
 import type { KbDiagnostic, KbName, KbRecord, KbRelationRecord, StoredRecord } from "./types.js";
 import { readStore, ReadStoreOptions } from "./store.js";
+import { recordSafetyViolations } from "./safety.js";
 
 export type KbQueryKb = KbName | "all";
 
@@ -106,30 +107,42 @@ export function runQuery(spec: KbQuerySpec): QueryResult {
   const where = spec.where ?? [];
   const text = spec.text?.toLowerCase() ?? null;
   const hits: QueryHit[] = [];
+  const unsafeRecords: { id: string; violations: string[] }[] = [];
   let scanned = 0;
+  // K2 counters: foreign-project records/edges are prefetched OUT before any diagnostic is
+  // composed, and reported only as a count — no foreign ids or project names ever enter the
+  // diagnostics lane (identifiers withheld).
+  let foreignRecordsExcluded = 0;
+  let foreignRelationsExcluded = 0;
 
   const considerRecord = (hit: QueryHit) => {
-    scanned++;
     const record = hit.record;
-    // Lifecycle honesty: stale/unverified claims are excluded unless explicitly included.
-    const state = record.lifecycle?.state ?? "ACTIVE";
-    if (!includeLifecycle.includes(state)) return;
-    // KB-3 default-deny extends to project-scoped relations (projectId on an edge = KB-3 data).
+    // K2: project-scoped relations are KB-3 content — exclude silently (aggregate below),
+    // never via a per-record diagnostic that would name foreign identifiers.
     if (record.recordType === "relation") {
       const rel = record as KbRelationRecord;
-      // Cross-project exclusion applies within a project scope; the unscoped case (project
-      // undefined) is handled after filtering so its diagnostic names the right remedy.
-      if (spec.project && rel.projectId && rel.projectId !== spec.project) {
-        diagnostics.push({ code: "CROSS_PROJECT_RECORD_EXCLUDED", severity: "warning", message: `Relation '${rel.id}' (projectId '${rel.projectId}') was excluded from project '${spec.project}' scope.`, subject: { type: "record", id: rel.id } });
+      if (rel.projectId && (!spec.project || rel.projectId !== spec.project)) {
+        foreignRelationsExcluded++;
         return;
       }
-    } else if (hit.kb === "project") {
+    } else if (hit.kb === "project" && spec.project) {
       const projectId = (record as { projectId?: string }).projectId;
       if (projectId !== spec.project) {
-        diagnostics.push({ code: "CROSS_PROJECT_RECORD_EXCLUDED", severity: "warning", message: `Record '${record.id}' (projectId '${projectId}') sits in partition '${hit.partition}' and was excluded from project '${spec.project}' scope.`, subject: { type: "record", id: record.id } });
+        foreignRecordsExcluded++;
         return;
       }
     }
+    // K1 trust gate: an unsafe record (schema-invalid, licensed-oversize, secret-bearing)
+    // never surfaces in hits or receipts. Violations name the record id + field PATH only.
+    const violations = recordSafetyViolations(record);
+    if (violations.length > 0) {
+      unsafeRecords.push({ id: record.id, violations });
+      return;
+    }
+    scanned++;
+    // Lifecycle honesty: stale/unverified claims are excluded unless explicitly included.
+    const state = record.lifecycle?.state ?? "ACTIVE";
+    if (!includeLifecycle.includes(state)) return;
     let pass = true;
     for (const [key, expected] of where) {
       const actual = getPath(record, key);
@@ -165,18 +178,24 @@ export function runQuery(spec: KbQuerySpec): QueryResult {
     considerRecord({ kb, partition: stored.partition, file: stored.file, line: stored.line, record: stored.record });
   }
 
-  // Project-scoped relations are KB-3 content: without a project scope only shared edges surface.
-  if (!spec.project) {
-    const scoped = hits.filter((h) => h.record.recordType === "relation" && (h.record as KbRelationRecord).projectId);
-    for (const h of scoped) {
-      diagnostics.push({ code: "PROJECT_SCOPED_RELATION_EXCLUDED", severity: "warning", message: `Relation '${h.record.id}' is project-scoped (projectId '${(h.record as KbRelationRecord).projectId}') and was excluded; pass --project to query project-scoped edges.`, subject: { type: "record", id: h.record.id } });
-    }
-    const scopedIds = new Set(scoped.map((h) => h.record.id));
-    for (let i = hits.length - 1; i >= 0; i--) {
-      if (scopedIds.has(hits[i].record.id)) {
-        scanned--; // excluded before filters ran — undo the scan count for honesty
-        hits.splice(i, 1);
-      }
+  // Aggregate diagnostics only — no foreign ids or project names (K2). The unsafe-record
+  // diagnostic is an ERROR: the queried scope holds records that must never feed decisions.
+  if (foreignRecordsExcluded + foreignRelationsExcluded > 0) {
+    diagnostics.push({
+      code: "FOREIGN_PROJECT_RECORDS_EXCLUDED",
+      severity: "warning",
+      message: `${foreignRecordsExcluded} record(s) and ${foreignRelationsExcluded} project-scoped relation edge(s) from other projects were excluded from this scope (identifiers withheld); pass --project with the owning project to query them.`,
+      subject: { type: "query", id: spec.kb },
+    });
+  }
+  if (unsafeRecords.length > 0) {
+    for (const u of unsafeRecords) {
+      diagnostics.push({
+        code: "QUERY_RECORD_UNSAFE",
+        severity: "error",
+        message: `Record '${u.id}' failed the query trust gate (${u.violations.join("; ")}); excluded from hits. Run 'det kb validate --store' and re-ingest — unsafe records never surface in query results.`,
+        subject: { type: "record", id: u.id },
+      });
     }
   }
 

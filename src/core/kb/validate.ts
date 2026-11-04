@@ -2,14 +2,14 @@
 // integrity, descriptor honesty, KB-3 project/tenant consistency, relation graph integrity and
 // the licensed/secret content guards. Re-derives descriptor counts and flags drift (the
 // descriptor must never lie about the partitions next to it).
+
+
 import { canonicalStringify } from "../canonical.js";
 import type { KbDiagnostic, KbRecord, KbStoreData, KbUiComponentRecord, StoreDescriptor } from "./types.js";
 import { isProjectRecord } from "./types.js";
-import { licensedRecordViolations } from "./ingest.js";
 import { buildSemanticContext, duplicateRecordCheck, semanticChecks } from "./semantic.js";
 import { readDescriptor, readStore } from "./store.js";
-import { scanForSecrets } from "./path-gateway.js";
-import { validateRecordShape } from "./ingest.js";
+import { recordSafetyViolations } from "./safety.js";
 
 export interface ValidateResult {
   data: KbStoreData;
@@ -44,17 +44,16 @@ export function runValidate(storeDir: string): ValidateResult {
   const all: KbRecord[] = [...data.platform, ...data.ui, ...data.relations];
   for (const [, list] of data.project) all.push(...list);
   for (const record of all) {
-    const shape = validateRecordShape(record);
-    if (!shape.valid) {
-      diagnostics.push({ code: "RECORD_SCHEMA_INVALID", severity: "error", message: `Record '${record.id}' fails its record schema: ${shape.errors[0] ?? "unknown"}`, subject: { type: "record", id: record.id } });
-    }
-    if (record.recordType === "ui-component") {
-      for (const field of licensedRecordViolations(record as KbUiComponentRecord)) {
-        diagnostics.push({ code: "LICENSED_FIELD_TOO_LARGE", severity: "error", message: `Licensed UI record '${record.id}' carries an oversized free-text field '${field}'; licensed packages are metadata-only.`, subject: { type: "record", id: record.id } });
+    // One shared gate for all consumers (ingest refuses on it; query trusts only its output).
+    const violations = recordSafetyViolations(record);
+    for (const v of violations) {
+      if (v.startsWith("schema:")) {
+        diagnostics.push({ code: "RECORD_SCHEMA_INVALID", severity: "error", message: `Record '${record.id}' fails its record schema: ${v.slice("schema: ".length)}`, subject: { type: "record", id: record.id } });
+      } else if (v.startsWith("licensed-oversize:")) {
+        diagnostics.push({ code: "LICENSED_FIELD_TOO_LARGE", severity: "error", message: `Licensed UI record '${record.id}' carries an oversized free-text field '${v.slice("licensed-oversize: ".length)}'; licensed packages are metadata-only.`, subject: { type: "record", id: record.id } });
+      } else {
+        diagnostics.push({ code: "SECRET_PATTERN_DETECTED", severity: "error", message: `Record '${record.id}' field '${v.slice("secret-pattern: ".length)}' matches a secret pattern; the store carries metadata, never credentials.`, subject: { type: "record", id: record.id } });
       }
-    }
-    for (const field of scanForSecrets(record)) {
-      diagnostics.push({ code: "SECRET_PATTERN_DETECTED", severity: "error", message: `Record '${record.id}' field '${field}' matches a secret pattern; the store carries metadata, never credentials.`, subject: { type: "record", id: record.id } });
     }
     if (isProjectRecord(record)) {
       if (record.visibility === "private") {

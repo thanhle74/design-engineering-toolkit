@@ -316,7 +316,9 @@ export default async function registerKbSuite(checkAsync) {
     assert.equal(q.code, 0, "exclusion is a warning, not a failure");
     const result = JSON.parse(q.out).output;
     assert.ok(!result.hits.some((h) => h.record.id === "req:synthetic-fashion:leaked-note"), "leaked record must not surface in aurora scope");
-    assert.ok(result.diagnostics.some((d) => d.code === "CROSS_PROJECT_RECORD_EXCLUDED"), JSON.stringify(result.diagnostics.map((d) => d.code)));
+    assert.ok(result.diagnostics.some((d) => d.code === "FOREIGN_PROJECT_RECORDS_EXCLUDED" && d.severity === "warning"), JSON.stringify(result.diagnostics.map((d) => d.code)));
+    // K2: NO foreign identifiers anywhere in tenant A's whole output — hits, diagnostics, envelope.
+    assert.ok(!q.out.includes("synthetic-fashion") && !q.out.includes("leaked-note"), `foreign identifiers leaked into tenant A output: ${q.out.slice(0, 400)}`);
     const other = await runCli(["kb", "query", "--store", store, "--kb", "project", "--project", "synthetic-fashion", "--json"]);
     assert.ok(!JSON.parse(other.out).output.hits.some((h) => h.record.id === "req:synthetic-fashion:leaked-note"), "partition isolation keeps it invisible from its own project too");
     // Corruption in ANOTHER tenant's partition must neither leak into nor break this query.
@@ -374,7 +376,13 @@ export default async function registerKbSuite(checkAsync) {
     assert.equal(unscoped.code, 0);
     const unscopedResult = JSON.parse(unscoped.out).output;
     assert.equal(unscopedResult.hits.length, 0, "project-scoped edges never surface without a project scope");
-    assert.ok(unscopedResult.diagnostics.some((d) => d.code === "PROJECT_SCOPED_RELATION_EXCLUDED"), JSON.stringify(unscopedResult.diagnostics.map((d) => d.code)));
+    assert.ok(unscopedResult.diagnostics.some((d) => d.code === "FOREIGN_PROJECT_RECORDS_EXCLUDED" && d.severity === "warning"), JSON.stringify(unscopedResult.diagnostics.map((d) => d.code)));
+    assert.ok(!unscopedResult.diagnostics.some((d) => JSON.stringify(d).includes("synthetic-fashion")), "aggregate exclusion must not name foreign ids");
+    // ...while legitimate SHARED edges stay queryable unscoped.
+    const shared = await runCli(["kb", "query", "--store", KB_STORE, "--kb", "relations", "--edge-type", "adaptedFrom", "--json"]);
+    assert.equal(shared.code, 0);
+    const sharedHits = JSON.parse(shared.out).output.hits;
+    assert.deepEqual(sharedHits.map((h) => h.record.id), ["rel:shared:adapted-banner-a-from-hyva"], "shared edges remain queryable");
     const r = await runCli(["kb", "query", "--store", KB_STORE, "--kb", "relations", "--project", "synthetic-fashion", "--edge-type", "constrains", "--related-to", "uxi:synthetic-fashion:homepage-hero", "--json"]);
     assert.equal(r.code, 0, r.err);
     const result = JSON.parse(r.out).output;
@@ -568,6 +576,37 @@ export default async function registerKbSuite(checkAsync) {
     assert.equal(keep("ui/records.jsonl", "uic:hyva-ui:hero").lifecycle.reviewStatus, "unreviewed", "changed-source record resets to unreviewed");
     assert.equal(keep("platform/records.jsonl", "cap:magento-pagebuilder:banner-full-width").lifecycle.reviewStatus, "approved", "unchanged-source review untouched");
     return "4 lanes carry; changed source resets with diagnostic";
+  });
+
+  await checkAsync("KB-29", "query trust gate: unsafe records (schema-invalid, secret-bearing) and corrupt lines never surface, exit nonzero", async () => {
+    const store = stageStore();
+    // (a) strip the mandatory evidence block from a KB-1 record (schema-valid JSON, unsafe record)
+    const platformFile = path.join(store, "platform/records.jsonl");
+    const lines = fs.readFileSync(platformFile, "utf8").trim().split("\n").map((l) => JSON.parse(l));
+    const victim = lines.find((x) => x.id === "cap:magento-pagebuilder:heading");
+    delete victim.evidence;
+    fs.writeFileSync(platformFile, lines.map((l) => JSON.stringify(l)).join("\n") + "\n" + "{corrupt line\n");
+    // (b) plant a secret value into a KB-2 record's free text
+    const uiFile = path.join(store, "ui/records.jsonl");
+    const uiLines = fs.readFileSync(uiFile, "utf8").trim().split("\n").map((l) => JSON.parse(l));
+    const hero = uiLines.find((x) => x.id === "uic:hyva-ui:hero");
+    hero.notes = "deploy key api_key: \"AKIAIOSFOEXAMPLE9\"";
+    fs.writeFileSync(uiFile, uiLines.map((l) => JSON.stringify(l)).join("\n") + "\n");
+    // platform query: unsafe record + corrupt line -> exit 1, named by id/kind, content withheld
+    const qp = await runCli(["kb", "query", "--store", store, "--kb", "platform", "--json"]);
+    assert.equal(qp.code, 1, "unsafe scope must exit nonzero");
+    const qpRun = parseJsonRun(qp);
+    assert.ok(qpRun.runDiagnostics.some((d) => d.code === "QUERY_RECORD_UNSAFE" && d.subject?.id === "cap:magento-pagebuilder:heading" && d.message.includes("schema")), JSON.stringify(qpRun.runDiagnostics.map((d) => d.code)));
+    assert.ok(qpRun.runDiagnostics.some((d) => d.code === "STORE_LINE_INVALID"), "corrupt JSONL line is reported, never skipped");
+    assert.ok(!qp.out.includes("corrupt line"), "raw corrupted line content must not echo");
+    assert.ok(!JSON.parse(qp.out).output.hits.some((h) => h.record.id === "cap:magento-pagebuilder:heading"), "unsafe record excluded from hits");
+    // ui query: secret-bearing record -> exit 1, secret VALUE never echoed
+    const qu = await runCli(["kb", "query", "--store", store, "--kb", "ui", "--json"]);
+    assert.equal(qu.code, 1);
+    assert.ok(parseJsonRun(qu).runDiagnostics.some((d) => d.code === "QUERY_RECORD_UNSAFE" && d.subject?.id === "uic:hyva-ui:hero" && d.message.includes("secret-pattern")), JSON.stringify(parseJsonRun(qu).runDiagnostics.map((d) => d.code)));
+    assert.ok(!qu.out.includes("AKIAIOSFOEXAMPLE9"), "secret value must never appear in output");
+    assert.ok(!JSON.parse(qu.out).output.hits.some((h) => h.record.id === "uic:hyva-ui:hero"), "secret-bearing record excluded from hits");
+    return "gate blocks unsafe scope; ids+kinds named, values withheld";
   });
 
   await checkAsync("KB-26", "portability scan: no owner paths, no real file keys, no secret markers in schemas/kb, examples/kb or kb/", async () => {
