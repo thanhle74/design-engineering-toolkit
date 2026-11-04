@@ -311,8 +311,8 @@ export default async function registerG2Suite(checkAsync) {
     assert.equal(r.code, 0, `exit ${r.code}: ${r.err.slice(0, 400)}`);
     const o = JSON.parse(r.out).output;
     const { nodeIr, pageStructure, review } = o;
-    assert.equal(nodeIr.nodes.length, 9);
-    assert.equal(review.counts.total, 9, "every node retained - nothing dropped by label");
+    assert.equal(nodeIr.nodes.length, 10);
+    assert.equal(review.counts.total, 10, "every node retained - nothing dropped by label");
     // Authentic chrome (top-level SITE/ container): still excluded, with container evidence named.
     const chrome = review.entries.filter((e) => e.semanticClass === "SITE_CHROME");
     assert.equal(chrome.length, 3, "SITE/Header + inherited subtree");
@@ -330,9 +330,38 @@ export default async function registerG2Suite(checkAsync) {
       assert.ok(review.entries.some((e) => e.nodeId === node.nodeId && e.disposition === "NEEDS_REVIEW"), `${name} retained as NEEDS_REVIEW`);
     }
     assert.equal(nodeIr.nodes.find((n) => n.name === "SITE/BrandTagline")?.visible, true, "spoofed nodes are NOT hidden-flagged - retained on merit");
-    assert.deepEqual(review.counts.byDisposition, { MAPPED: 3, EXCLUDED_WITH_REASON: 3, DECORATION_MERGED: 0, REFERENCE_ONLY: 1, NEEDS_REVIEW: 2 });
+    assert.deepEqual(review.counts.byDisposition, { MAPPED: 3, EXCLUDED_WITH_REASON: 3, DECORATION_MERGED: 0, REFERENCE_ONLY: 1, NEEDS_REVIEW: 3 });
     // Ambiguity inherits: a spoofed-chrome SUBTREE would also stay reviewable.
     return "authentic chrome excluded with container evidence; spoofed labels reviewed, retained";
+  });
+
+  checkAsync("G2-T30", "C1-final regression: a binding never promotes ambiguous ownership - same def+binding maps the editorial instance but not the spoofed SITE/ one", async () => {
+    const r = await runCli(["extract", "--profile", PROFILE, "--project", G2, "--design-file", "design-tree-spoofed-chrome.fixture.json", "--design-node", "300:1", "--registry", REGISTRY, "--bindings", path.join(G2, "g2-spoofed-bindings.fixture.json"), "--json"]);
+    assert.equal(r.code, 0, `exit ${r.code}: ${r.err.slice(0, 400)}`);
+    const o = JSON.parse(r.out).output;
+    const { nodeIr, pageStructure, review } = o;
+    assert.equal(nodeIr.nodes.length, 10);
+    const idOf = (name) => nodeIr.nodes.find((n) => n.name === name).nodeId;
+    // Spoofed top-level SITE/ instance WITH a resolving binding: stays ambiguous NEEDS_REVIEW,
+    // keeps its label-conflict reason, and still reports the provisional capability.
+    const spoofed = review.entries.find((e) => e.nodeId === idOf("SITE/BadgeInstance"));
+    assert.equal(spoofed.semanticClass, "UNKNOWN_OR_AMBIGUOUS");
+    assert.equal(spoofed.disposition, "NEEDS_REVIEW", "binding must NOT promote ambiguous ownership to MAPPED");
+    assert.ok(spoofed.reason.includes("a label alone never excludes"), "label-conflict reason preserved");
+    assert.deepEqual(spoofed.provisionalTarget?.capabilityIds, ["flatcms/heading"], "provisional capability still reported");
+    // The SAME definition + SAME binding inside a real section: valid editorial instance -> MAPPED + planned.
+    const valid = review.entries.find((e) => e.nodeId === idOf("INSTANCE/Badge/InSection"));
+    assert.equal(valid.semanticClass, "SHARED_COMPONENT");
+    assert.equal(valid.disposition, "MAPPED");
+    const section = pageStructure.sections.find((s) => s.name === "SECTION/RealSection");
+    const element = section.elements.find((e) => e.elementId === idOf("INSTANCE/Badge/InSection"));
+    assert.ok(element && element.resolution.status === "mapped" && element.target?.capabilityId === "flatcms/heading");
+    // Authentic chrome unchanged in the bound run.
+    const chrome = review.entries.filter((e) => e.semanticClass === "SITE_CHROME");
+    assert.equal(chrome.length, 3);
+    assert.ok(chrome.every((e) => e.disposition === "EXCLUDED_WITH_REASON"));
+    assert.deepEqual(review.counts.byDisposition, { MAPPED: 4, EXCLUDED_WITH_REASON: 3, DECORATION_MERGED: 0, REFERENCE_ONLY: 1, NEEDS_REVIEW: 2 });
+    return "same binding: editorial instance mapped, spoofed SITE/ instance reviewed";
   });
 
   checkAsync("G2-T28", "id derivation + neutrality over the new G2 surfaces", async () => {

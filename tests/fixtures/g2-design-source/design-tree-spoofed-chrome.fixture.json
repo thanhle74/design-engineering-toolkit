@@ -6,17 +6,42 @@
       "locator": "300:1",
       "kind": "page",
       "name": "PAGE/SpoofCheck/Desktop",
-      "children": ["300:2", "300:3", "300:4", "300:8", "300:5"]
+      "children": [
+        "300:2",
+        "300:3",
+        "300:4",
+        "300:8",
+        "300:5"
+      ]
     },
     {
       "locator": "300:2",
       "kind": "frame",
       "name": "SITE/Header",
-      "children": ["300:6"]
+      "children": [
+        "300:6"
+      ]
     },
-    { "locator": "300:6", "kind": "frame", "name": "SITE/NavRow", "children": ["300:7"] },
-    { "locator": "300:7", "kind": "text", "name": "SLOT/NavLabel", "children": [] },
-    { "locator": "300:3", "kind": "text", "name": "SITE/BrandTagline", "children": [] },
+    {
+      "locator": "300:6",
+      "kind": "frame",
+      "name": "SITE/NavRow",
+      "children": [
+        "300:7"
+      ]
+    },
+    {
+      "locator": "300:7",
+      "kind": "text",
+      "name": "SLOT/NavLabel",
+      "children": []
+    },
+    {
+      "locator": "300:3",
+      "kind": "text",
+      "name": "SITE/BrandTagline",
+      "children": []
+    },
     {
       "locator": "300:4",
       "kind": "instance",
@@ -34,8 +59,23 @@
       "locator": "300:5",
       "kind": "frame",
       "name": "SECTION/RealSection",
-      "children": ["300:9"]
+      "children": [
+        "300:9",
+        "300:10"
+      ]
     },
-    { "locator": "300:9", "kind": "text", "name": "SLOT/Title", "children": [] }
+    {
+      "locator": "300:9",
+      "kind": "text",
+      "name": "SLOT/Title",
+      "children": []
+    },
+    {
+      "locator": "300:10",
+      "kind": "instance",
+      "name": "INSTANCE/Badge/InSection",
+      "componentRef": "300:8",
+      "children": []
+    }
   ]
 }

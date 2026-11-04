@@ -595,7 +595,9 @@ export function extractStructures(input: ExtractInput): ExtractOutcome {
     } else if (disposition === "NEEDS_REVIEW" && isUnboundInstance(inv)) {
       provisionalTarget = { category: "custom-required" };
     }
-    if (disposition === "NEEDS_REVIEW" && resolution) disposition = "MAPPED";
+    // C1-final: a capability binding NEVER promotes ambiguous ownership (hint/structure
+    // conflict) to MAPPED — the provisional capabilities are still reported for review.
+    if (disposition === "NEEDS_REVIEW" && resolution && !labelConflict) disposition = "MAPPED";
     if (resolution) {
       provisionalTarget = {
         category: resolution.category,
