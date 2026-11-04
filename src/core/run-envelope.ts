@@ -6,9 +6,12 @@ import type { Diagnostic } from "./types.js";
 
 export const TOOL_NAME = "det";
 
-export type CommandName = "validate" | "inspect" | "plan" | "extract";
+export type CommandName = "validate" | "inspect" | "plan" | "extract" | "kb";
 export type ExitCode = 0 | 1 | 2 | 3;
-export type ArtifactRole = "registry" | "resolution-report" | "node-ir" | "page-structure" | "source-review" | "profile-input" | "binding-map" | "structure-input" | "adapter-descriptor";
+// Issue #15: kb-store roles are additive minors of the tool-run family (schemas/cli/README.md).
+export type ArtifactRole =
+  | "registry" | "resolution-report" | "node-ir" | "page-structure" | "source-review" | "profile-input" | "binding-map" | "structure-input" | "adapter-descriptor"
+  | "kb-ingest-manifest" | "kb-records" | "kb-query-result" | "kb-sync-report" | "kb-store-descriptor";
 
 export interface ArtifactRecord {
   role: ArtifactRole;
@@ -47,13 +50,19 @@ export function setToolVersion(v: string): void {
 const SCHEMA_REFS: Record<string, string> = {
   registry: "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/capability-registry.schema.json",
   "resolution-report": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/resolution-report.schema.json",
-  "node-ir": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/node-ir.schema.json",
-  "page-structure": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/page-structure.schema.json",
-  "source-review": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/source-review.schema.json",
   "profile-input": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/converter-profile.schema.json",
   "binding-map": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/component-binding-map.schema.json",
   "structure-input": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/CONTRACTS-harness-shape",
   "adapter-descriptor": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/adapter-descriptor.schema.json",
+  "node-ir": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/node-ir.schema.json",
+  "page-structure": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/page-structure.schema.json",
+  "source-review": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/source-review.schema.json",
+  // Knowledge Engine family (issue #15)
+  "kb-ingest-manifest": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-ingest-manifest.schema.json",
+  "kb-records": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-engine-output.schema.json",
+  "kb-query-result": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-engine-output.schema.json",
+  "kb-sync-report": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-engine-output.schema.json",
+  "kb-store-descriptor": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-store.schema.json",
 };
 
 export function artifact(

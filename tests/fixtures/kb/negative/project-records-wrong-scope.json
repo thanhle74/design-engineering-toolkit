@@ -1,0 +1,21 @@
+[
+  {
+    "schemaVersion": 1,
+    "recordType": "requirement",
+    "id": "req:other-project:misplaced",
+    "projectId": "synthetic-fashion",
+    "tenantId": "tenant-synthetic",
+    "title": "Misplaced scope",
+    "statement": "Id scope does not equal projectId.",
+    "source": {
+      "kind": "spec",
+      "locator": "project-records-wrong-scope.json",
+      "accessedAt": "2026-11-03T00:00:00Z"
+    },
+    "status": "draft",
+    "kind": "functional",
+    "traceStatus": "UNKNOWN",
+    "visibility": "example",
+    "createdAt": "2026-11-03T00:00:00Z"
+  }
+]

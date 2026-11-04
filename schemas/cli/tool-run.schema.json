@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/tool-run.schema.json",
-  "$comment": "Design Engineering Toolkit CLI family \u2014 ToolRun envelope. Major version 1. Deterministic, evidence-carrying record of one det command run: which tool/command/inputs, which artifacts with content hashes, which converter-family diagnostics the run produced, and which process-level (open-vocabulary) diagnostics occurred. converterDiagnostics reuse the converter family's closed diagnostic registry via $id-pinned $ref (semantic reuse, documented in schemas/cli/README.md); runDiagnostics are process-level only \u2014 new process concerns must go here, never into the closed converter enum.",
-  "title": "Design Engineering Toolkit \u2014 Tool Run Envelope",
+  "$comment": "Design Engineering Toolkit CLI family — ToolRun envelope. Major version 1. Deterministic, evidence-carrying record of one det command run: which tool/command/inputs, which artifacts with content hashes, which converter-family diagnostics the run produced, and which process-level (open-vocabulary) diagnostics occurred. converterDiagnostics reuse the converter family's closed diagnostic registry via $id-pinned $ref (semantic reuse, documented in schemas/cli/README.md); runDiagnostics are process-level only — new process concerns must go here, never into the closed converter enum.",
+  "title": "Design Engineering Toolkit — Tool Run Envelope",
   "type": "object",
   "required": [
     "schemaVersion",
@@ -40,9 +40,10 @@
         "validate",
         "inspect",
         "plan",
-        "extract"
+        "extract",
+        "kb"
       ],
-      "description": "Closed for major 1; new commands are additive minors of this family (extract added at 1.1.0, issue #14 G2)."
+      "description": "Closed major-1 enum, 1.1.0 additive: extract (G2 #14) + kb (#15)."
     },
     "exitCode": {
       "type": "integer",
@@ -108,9 +109,14 @@
               "profile-input",
               "binding-map",
               "structure-input",
-              "adapter-descriptor"
+              "adapter-descriptor",
+              "kb-ingest-manifest",
+              "kb-records",
+              "kb-query-result",
+              "kb-sync-report",
+              "kb-store-descriptor"
             ],
-            "description": "Closed for major 1; additive minors only (node-ir/page-structure/source-review added at 1.1.0, issue #14 G2)."
+            "description": "Closed major-1 role enum with G2 and KB additive roles in 1.1.0."
           },
           "file": {
             "type": "string",
@@ -130,7 +136,7 @@
           "volatileContentHash": {
             "type": "string",
             "pattern": "^[0-9a-f]{64}$",
-            "description": "SHA-256 over canonical JSON with ALL observation timestamps removed \u2014 the cross-run determinism proof hash."
+            "description": "SHA-256 over canonical JSON with ALL observation timestamps removed — the cross-run determinism proof hash."
           }
         }
       },

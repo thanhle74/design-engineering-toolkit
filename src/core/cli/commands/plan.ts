@@ -14,7 +14,7 @@ import { isBlocking, loadProfile } from "./shared.js";
 import type { RunDiagnostic } from "../../adapter-runtime.js";
 import type { BindingMap, CapabilityRegistry, Diagnostic, PageStructure, PageStructureHarness } from "../../types.js";
 
-export async function commandPlan(flags: Record<string, string | boolean>, io: CommandIO): Promise<0 | 1 | 2 | 3> {
+export async function commandPlan(flags: Record<string, string | boolean | string[]>, io: CommandIO): Promise<0 | 1 | 2 | 3> {
   const outDir = requireValue(flags, "out");
   const asJson = flags.json === true;
   const dryRun = flags["dry-run"] === true;

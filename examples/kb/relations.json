@@ -1,0 +1,158 @@
+[
+  {
+    "schemaVersion": 1,
+    "recordType": "relation",
+    "id": "rel:synthetic-fashion:materialize-hero-pb",
+    "edgeType": "materializes",
+    "from": { "kb": "KB3", "id": "uxi:synthetic-fashion:homepage-hero" },
+    "to": { "kb": "KB2", "id": "uic:page-builder-native:banner" },
+    "authority": "confirmed",
+    "evidence": {
+      "proofLevel": "DETECTED",
+      "sources": [{ "kind": "document", "locator": { "path": "relations.json" } }],
+      "confidence": "high",
+      "uncertainty": ["Intent-to-component resolution is declaration-level; Admin round-trip is a later gated stage."]
+    },
+    "recordedAt": "2026-11-03T00:00:00Z",
+    "projectId": "synthetic-fashion",
+    "note": "Approved decision maps the hero intent to the merchant-editable class."
+  },
+  {
+    "schemaVersion": 1,
+    "recordType": "relation",
+    "id": "rel:synthetic-fashion:materialize-hero-hyva",
+    "edgeType": "materializes",
+    "from": { "kb": "KB3", "id": "uxi:synthetic-fashion:homepage-hero" },
+    "to": { "kb": "KB2", "id": "uic:hyva-ui:hero" },
+    "authority": "probable",
+    "evidence": {
+      "proofLevel": "ASSUMED",
+      "sources": [{ "kind": "document", "locator": { "path": "relations.json" } }],
+      "confidence": "low",
+      "uncertainty": ["Appearance-only reference: probable authority, never presented as a functional mapping."]
+    },
+    "recordedAt": "2026-11-03T00:00:00Z",
+    "projectId": "synthetic-fashion",
+    "note": "Licensed upstream hero as appearance-only alternative — probable, not confirmed."
+  },
+  {
+    "schemaVersion": 1,
+    "recordType": "relation",
+    "id": "rel:shared:neighbor-pb-banner-hyva-hero",
+    "edgeType": "neighborOf",
+    "from": { "kb": "KB2", "id": "uic:page-builder-native:banner" },
+    "to": { "kb": "KB2", "id": "uic:hyva-ui:hero" },
+    "authority": "probable",
+    "evidence": {
+      "proofLevel": "DETECTED",
+      "sources": [{ "kind": "document", "locator": { "path": "relations.json" } }],
+      "confidence": "medium",
+      "uncertainty": ["Same-appearance/different-editability pair: neighborOf never implies merchant editability of the licensed component."]
+    },
+    "recordedAt": "2026-11-03T00:00:00Z",
+    "note": "Cross-class semantic neighbor: Page Builder native (merchant-editable) vs licensed developer-owned (appearance-only)."
+  },
+  {
+    "schemaVersion": 1,
+    "recordType": "relation",
+    "id": "rel:shared:neighbor-pb-banner-secomm-banner-a",
+    "edgeType": "neighborOf",
+    "from": { "kb": "KB2", "id": "uic:page-builder-native:banner" },
+    "to": { "kb": "KB2", "id": "uic:secomm-uiwidget:banner-a" },
+    "authority": "confirmed",
+    "evidence": {
+      "proofLevel": "DETECTED",
+      "sources": [{ "kind": "document", "locator": { "path": "relations.json" } }],
+      "confidence": "high",
+      "uncertainty": ["Cross-class reference: the widget is developer-owned even when embedded in Page Builder surfaces."]
+    },
+    "recordedAt": "2026-11-03T00:00:00Z",
+    "note": "Cross-class neighbor between the native content type and the imported widget."
+  },
+  {
+    "schemaVersion": 1,
+    "recordType": "relation",
+    "id": "rel:shared:adapted-banner-a-from-hyva",
+    "edgeType": "adaptedFrom",
+    "from": { "kb": "KB2", "id": "uic:secomm-uiwidget:banner-a" },
+    "to": { "kb": "KB2", "id": "uic:hyva-ui:banner" },
+    "authority": "confirmed",
+    "evidence": {
+      "proofLevel": "DETECTED",
+      "sources": [{ "kind": "document", "locator": { "path": "relations.json" } }],
+      "confidence": "high",
+      "uncertainty": ["Provenance line is metadata; no licensed bytes moved between the sources."]
+    },
+    "recordedAt": "2026-11-03T00:00:00Z",
+    "note": "Developer-owned import lineage within the same capability class."
+  },
+  {
+    "schemaVersion": 1,
+    "recordType": "relation",
+    "id": "rel:shared:maps-banner-a-hyva-banner",
+    "edgeType": "mapsTo",
+    "from": { "kb": "KB2", "id": "uic:secomm-uiwidget:banner-a" },
+    "to": { "kb": "KB2", "id": "uic:hyva-ui:banner" },
+    "authority": "probable",
+    "evidence": {
+      "proofLevel": "DETECTED",
+      "sources": [{ "kind": "document", "locator": { "path": "relations.json" } }],
+      "confidence": "medium",
+      "uncertainty": ["Design-intent correspondence only; mapsTo never implies implements."]
+    },
+    "recordedAt": "2026-11-03T00:00:00Z",
+    "note": "Same-class mapsTo (developer-owned to developer-owned) — the allowed direction."
+  },
+  {
+    "schemaVersion": 1,
+    "recordType": "relation",
+    "id": "rel:synthetic-fashion:constrain-hero-license",
+    "edgeType": "constrains",
+    "from": { "kb": "KB3", "id": "con:synthetic-fashion:licensed-ui-no-embed" },
+    "to": { "kb": "KB3", "id": "uxi:synthetic-fashion:homepage-hero" },
+    "authority": "confirmed",
+    "evidence": {
+      "proofLevel": "DETECTED",
+      "sources": [{ "kind": "document", "locator": { "path": "relations.json" } }],
+      "confidence": "high",
+      "uncertainty": ["Constraint scope is the synthetic example; enforcement is structural in the toolkit."]
+    },
+    "recordedAt": "2026-11-03T00:00:00Z",
+    "projectId": "synthetic-fashion",
+    "note": "The licensing constraint binds the hero intent: licensed material may inform appearance, never CMS content."
+  },
+  {
+    "schemaVersion": 1,
+    "recordType": "relation",
+    "id": "rel:synthetic-fashion:decide-hero",
+    "edgeType": "decided-by",
+    "from": { "kb": "KB3", "id": "cmp:synthetic-fashion:homepage-hero-pb" },
+    "to": { "kb": "KB3", "id": "dec:synthetic-fashion:hero-source-pb-native" },
+    "authority": "confirmed",
+    "evidence": {
+      "proofLevel": "DETECTED",
+      "sources": [{ "kind": "document", "locator": { "path": "relations.json" } }],
+      "confidence": "high",
+      "uncertainty": ["none identified"]
+    },
+    "recordedAt": "2026-11-03T00:00:00Z",
+    "projectId": "synthetic-fashion"
+  },
+  {
+    "schemaVersion": 1,
+    "recordType": "relation",
+    "id": "rel:synthetic-fashion:satisfy-hero",
+    "edgeType": "satisfies",
+    "from": { "kb": "KB3", "id": "cmp:synthetic-fashion:homepage-hero-pb" },
+    "to": { "kb": "KB3", "id": "req:synthetic-fashion:hero-merchant-editable" },
+    "authority": "probable",
+    "evidence": {
+      "proofLevel": "DETECTED",
+      "sources": [{ "kind": "document", "locator": { "path": "relations.json" } }],
+      "confidence": "medium",
+      "uncertainty": ["Satisfaction is declared on the merchant-editable requirement; Admin round-trip evidence would be required to call it TESTED."]
+    },
+    "recordedAt": "2026-11-03T00:00:00Z",
+    "projectId": "synthetic-fashion"
+  }
+]

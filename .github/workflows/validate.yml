@@ -1,8 +1,8 @@
 # Contract test gate (ADR-005-015). Validates both schema families + all examples/fixtures,
 # runs the contract suite (T-01..T-22 #9 CLI/adapter/deny-list/determinism + G2-T23..T-28 #14
 # design-source extraction: accountability, chrome exclusion, stable ids, negative graphs,
-# scope escapes, plan-on-PageStructure, source neutrality) and the portability scans.
-# npm test = tsc build + 66 checks. The task/issue prefix is never hardcoded here (spec §8).
+# scope escapes, plan-on-PageStructure, source neutrality) the KB-01..KB-29 engine tests, and the portability scans.
+# npm test = tsc build + 95 checks. The task/issue prefix is never hardcoded here (spec §8).
 # The task/issue prefix is never hardcoded here (spec §8): this workflow is issue-agnostic.
 name: validate-contracts
 on:

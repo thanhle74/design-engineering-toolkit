@@ -11,7 +11,7 @@ import { emit } from "./emit.js";
 import { isBlocking, loadProfile, resolveSource } from "./shared.js";
 import type { Diagnostic } from "../../types.js";
 
-export async function commandValidate(flags: Record<string, string | boolean>, io: CommandIO): Promise<0 | 1 | 2 | 3> {
+export async function commandValidate(flags: Record<string, string | boolean | string[]>, io: CommandIO): Promise<0 | 1 | 2 | 3> {
   const adapterId = requireValue(flags, "adapter");
   const project = requireValue(flags, "project");
   const outDir = requireValue(flags, "out");

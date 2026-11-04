@@ -33,6 +33,12 @@ contracts, and nothing here implies a running store.
 | External requirement IDs are never canonical | `kb-project-record.schema.json`: LC/FC/LA/Jira only in `requirement.externalRef` with `traceStatus` |
 | Approval durability is honest | `apr:` records distinguish `recorded` (durable ref) from `attested` (real go, no durable record — never satisfies approval-demanding gates) |
 
+> **Supersession note (issue #15):** these drafts are the dated review record. The executable
+> contract family — frozen with documented adjustments (the KB-3 `oneOf` branch fix, the unified
+> lifecycle/observed envelope on KB-3 and relations, the `$id` path move) — now lives at
+> [`schemas/kb/`](../../../schemas/kb/README.md) and is ajv-validated in CI. Do not edit the
+> drafts in place; evolve the frozen family.
+
 ## Validation strategy
 
 1. **Now (this PR):** JSON syntax check on every schema; hand-review against CONTRACTS.md.

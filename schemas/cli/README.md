@@ -45,3 +45,7 @@ Integer major only (`schemaVersion: 1`); additive minors tracked here; unknown m
 |---|---|
 | 1.0.0 | Initial family (issue [#9] CLI engine): adapter descriptor, adapter input transport, tool-run envelope. Revised **pre-release** (family unreleased outside this PR): descriptor `entry` pattern tightened to reject interior traversal; trust-boundary descriptions added — no payload valid under the initial pattern is invalid under the tightened one except traversal-carrying entries, which were never legitimately shippable. |
 | 1.1.0 | Read-only design-source extraction (issue [#14], synthetic gate): new `design-source-snapshot` transport schema; `tool-run` gains the `extract` command and the `node-ir`/`page-structure`/`source-review` artifact roles. Additive minors only; the descriptor/input contracts are unchanged (a design-source adapter is discovered by the same descriptor, discriminated by its `outputContract`; the caller-selected root rides in the open `options` object). Credentials, if a provider ever needs them, come only from the caller's environment — never flags, profile files or receipts. |
+
+## 1.1.0 KB integration
+
+| 1.1.0 (additive minor) | Knowledge Engine (issue [#15]): `tool-run.command` gains `"kb"` and the artifact `role` enum gains `kb-ingest-manifest`, `kb-records`, `kb-query-result`, `kb-sync-report`, `kb-store-descriptor`. Purely additive — every payload valid under 1.0.0 stays valid. |

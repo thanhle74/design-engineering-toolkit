@@ -52,3 +52,21 @@ node bin/det.js extract --profile profiles/your-profile.json --project /path/to/
 ## magento-specs MCP (optional, local Claude Code only)
 
 The `magento-specs` MCP is a documentation/pattern reference for authoring and audits. It is **not** a runtime dependency of `det`: every portable test passes with zero MCP. If the MCP is unavailable in a session, use the CLI as above — nothing in the workflow requires it. When both exist, installed-source evidence (what `det inspect` returns) outranks generic MCP/reference docs.
+
+## Knowledge Engine commands (issue #15 — det kb)
+
+```bash
+# Deterministic ingest from a manifest (the only way records enter a KB store; report-only by default)
+node bin/det.js kb ingest --manifest examples/kb/manifest.json \
+  --root reg="$(pwd)/tests/fixtures/synthetic-magento-like" --json
+
+# Digest-driven sync (changed sources -> records marked STALE; writes only when something went stale)
+node bin/det.js kb sync --store kb --manifest examples/kb/manifest.json --root reg=... --out kb
+
+# Structured query — provenance on every hit; KB-3 is default-deny (--project required)
+node bin/det.js kb query --store kb --kb platform --where category=content --text banner --json
+node bin/det.js kb query --store kb --kb project --project synthetic-fashion --where recordType=constraint --json
+
+# Store validation (schemas, graph integrity, project isolation, descriptor honesty)
+node bin/det.js kb validate --store kb --json
+```

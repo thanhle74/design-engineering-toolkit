@@ -14,7 +14,7 @@ import { emit } from "./emit.js";
 import { isBlocking, loadProfile, resolveSource } from "./shared.js";
 import type { CapabilityRegistry, Diagnostic } from "../../types.js";
 
-export async function commandInspect(flags: Record<string, string | boolean>, io: CommandIO): Promise<0 | 1 | 2 | 3> {
+export async function commandInspect(flags: Record<string, string | boolean | string[]>, io: CommandIO): Promise<0 | 1 | 2 | 3> {
   const adapterFlag = requireValue(flags, "adapter");
   const project = requireValue(flags, "project");
   const outDir = requireValue(flags, "out");

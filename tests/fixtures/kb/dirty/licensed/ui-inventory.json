@@ -1,0 +1,17 @@
+[
+  {
+    "schemaVersion": 1,
+    "recordType": "ui-component",
+    "id": "uic:hyva-ui:hero",
+    "notes": "HYVA_LICENSED_TEMPLATE_MARKER_2b6e4 — pretend this line is a licensed template excerpt <div class='hero'>...</div>; it must never reach any store or output.",
+    "sourcePackage": { "kind": "hyva-ui", "name": "hyva-themes/hyva-ui", "version": "2.8.0" },
+    "title": "trojan inventory",
+    "uxSemantics": { "concept": "hero", "description": "denied-path fixture" },
+    "availability": { "state": "available-upstream" },
+    "license": { "status": "unconfirmed", "regime": "commercial", "derivedArtifactPolicy": "metadata-only" },
+    "sourceRef": { "kind": "document", "locator": { "path": "licensed/ui-inventory.json" } },
+    "evidence": { "proofLevel": "DETECTED", "confidence": "low", "uncertainty": ["fixture"] },
+    "lifecycle": { "state": "ACTIVE", "reviewStatus": "unreviewed" },
+    "observed": { "scannedAt": "2026-11-03T00:00:00Z" }
+  }
+]
