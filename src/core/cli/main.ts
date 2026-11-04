@@ -12,6 +12,7 @@ import type { CommandIO } from "./io.js";
 import { commandValidate } from "./commands/validate.js";
 import { commandInspect } from "./commands/inspect.js";
 import { commandPlan } from "./commands/plan.js";
+import { commandExtract } from "./commands/extract.js";
 import { commandKb } from "./commands/kb.js";
 
 // This module compiles to dist/src/core/cli/main.js — four levels up to the repository root.
@@ -31,6 +32,13 @@ Usage:
   det plan --profile <file> --registry <file> --bindings <file> --input <structure-file> [--out <dir>] [--dry-run] [--json]
       Deterministically resolve a pinned design structure against a pinned registry + binding
       map and emit a ResolutionReport. Pure computation: no source checkout, no adapter, no AI.
+
+  det extract --profile <file> --design-file <id> --design-node <locator> [--adapter <id>] [--registry <file>] [--bindings <file>] [--project <path>] [--out <dir>] [--dry-run] [--json]
+      Read-only design-source extraction (G2): spawn the design-source adapter for the profile's
+      source kind, inventory the caller-selected subtree and emit NodeIR + PageStructure +
+      SourceReview. The selected root comes ONLY from these two flags — never a default. The
+      core never talks to any design-source provider itself; adapters are out-of-process and
+      read-only by descriptor contract.
 
   det kb ingest --manifest <file> [--root <alias>=<path>]... [--out <store-dir>] [--dry-run] [--json]
       Deterministically ingest the manifest's inputs into KB records: read-only bridge from a
@@ -99,7 +107,7 @@ export async function main(argv: string[], env: NodeJS.ProcessEnv = process.env,
     return 2;
   }
   if (parsed.command === null) {
-    io.err("det: no command given (expected validate|inspect|plan|kb). Run 'det --help' for usage.");
+    io.err("det: no command given (expected validate|inspect|plan|extract|kb). Run 'det --help' for usage.");
     return 2;
   }
   const unexpectedFlags = unexpectedFlagsForCommand(parsed.command, parsed.flags);
@@ -125,6 +133,9 @@ export async function main(argv: string[], env: NodeJS.ProcessEnv = process.env,
       return commandInspect(flags, io);
     case "plan":
       return commandPlan(flags, io);
+    case "extract":
+      // Parser rejects repeatable KB-only flags for extract; this runtime cast is safe.
+      return commandExtract(flags as Record<string, string | boolean>, io);
     case "kb":
       return commandKb(flags, io);
     default:

@@ -1,0 +1,35 @@
+{
+  "$comment": "G2 synthetic design-source tree B — a deliberately different second source (different locator grammar, different structure, one invalid componentRef pointing at a non-component node). Proves the extraction core is source-agnostic: same deterministic rules, zero provider-specific paths.",
+  "revisionId": "g2-fixture-rev-0002",
+  "nodes": [
+    {
+      "locator": "landing-root",
+      "kind": "page",
+      "name": "PAGE/Landing/Desktop",
+      "children": ["landing-hero", "landing-card-def", "landing-footer"]
+    },
+    {
+      "locator": "landing-hero",
+      "kind": "frame",
+      "name": "SECTION/Hero",
+      "properties": { "layout": { "direction": "column", "positioning": "static", "constraints": [], "relativeSizes": [], "overflow": "visible" } },
+      "children": ["landing-title", "landing-badref"]
+    },
+    { "locator": "landing-title", "kind": "text", "name": "SLOT/Title", "children": [] },
+    {
+      "locator": "landing-badref",
+      "kind": "instance",
+      "name": "INSTANCE/BrokenRef",
+      "componentRef": "landing-title",
+      "children": []
+    },
+    {
+      "locator": "landing-card-def",
+      "kind": "component",
+      "name": "COMPONENT/PromoCard",
+      "children": ["landing-card-text"]
+    },
+    { "locator": "landing-card-text", "kind": "text", "name": "SLOT/Promo", "children": [] },
+    { "locator": "landing-footer", "kind": "frame", "name": "SECTION/Outro", "children": [] }
+  ]
+}

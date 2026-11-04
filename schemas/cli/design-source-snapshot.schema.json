@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/design-source-snapshot.schema.json",
+  "$comment": "Design Engineering Toolkit CLI family — DesignSourceSnapshot. Major version 1. TRANSPORT payload only: the bounded, revision-pinned subtree document a design-source adapter returns on stdout after reading the caller-selected root. This is NOT the converter family's DesignSourcePort — that stays a typed core interface by contract (ADR-005-013); the core constructs its in-memory port implementation FROM this snapshot. Adapter-defined node kinds, names and properties are open vocabulary here; the core's deterministic extraction maps them onto the closed NodeIR enums and never guesses. Locators are adapter-defined opaque identifiers; no provider grammar is baked into this schema.",
+  "title": "Design Engineering Toolkit — Design Source Snapshot (transport)",
+  "type": "object",
+  "required": ["schemaVersion", "sourceId", "revisionId", "accessedAt", "rootLocator", "nodes"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "type": "integer", "const": 1 },
+    "sourceId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "description": "Profile-declared source id (echoed from the adapter input). The core rejects a snapshot claiming a different source identity than the profile resolved (INPUT_CONTRACT_MISMATCH)."
+    },
+    "providerId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9.-]*$", "description": "Adapter-declared design-source provider id (informational)." },
+    "revisionId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Opaque adapter-defined source revision token pinned for this snapshot. Node ids are locator-keyed and revision-independent; every downstream payload pins this revision."
+    },
+    "accessedAt": { "type": "string", "format": "date-time" },
+    "rootLocator": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Locator of the caller-selected root exactly as requested. A snapshot rooted anywhere else is a scope escape and is rejected."
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/sourceNode" },
+      "description": "The complete subtree under rootLocator (root included), flat. Hidden layers, instances, decorations and unknown nodes included — the adapter must not pre-filter semantics."
+    }
+  },
+  "$defs": {
+    "sourceNode": {
+      "type": "object",
+      "required": ["locator", "kind", "name", "children"],
+      "additionalProperties": false,
+      "properties": {
+        "locator": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "description": "Adapter-defined opaque node identifier, unique within the snapshot. Never interpreted by the core."
+        },
+        "kind": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "description": "Adapter-defined source kind (open vocabulary). The core maps known families onto the closed NodeIR enum; unmappable kinds become 'unknown' with a NOT_VERIFIED warning."
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "description": "Source layer label verbatim (required — the label is evidence even when machine-generated)."
+        },
+        "visible": { "type": "boolean", "default": true, "description": "Source visibility at the pinned revision. Hidden nodes are transported, never dropped." },
+        "componentRef": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "description": "For instances: locator of the referenced shared component definition. May point outside the extracted scope (external library) — the core records that honestly as REFERENCE_ONLY."
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Adapter-defined properties (open object, byte-capped by the runtime). Conventional optional keys the core reads: 'layout' (NodeIR layout primitives, verbatim), 'variants' (string map consumed as element variantAssignment), 'dynamicSlots' (array of {slotId, kind, valueRef}). Unknown properties stay unknown — never guessed."
+        },
+        "children": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1, "maxLength": 512 },
+          "description": "Child locators in source document order. Every referenced locator must exist in the snapshot exactly once; dangling or cyclic references fail closed (EVIDENCE_MISSING)."
+        }
+      }
+    }
+  }
+}

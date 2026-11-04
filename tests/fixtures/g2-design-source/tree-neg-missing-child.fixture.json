@@ -1,0 +1,8 @@
+{
+  "$comment": "G2 negative fixture: dangling child locator — incomplete subtree; extraction must fail closed (EVIDENCE_MISSING).",
+  "revisionId": "g2-neg-rev-0002",
+  "nodes": [
+    { "locator": "neg:1", "kind": "page", "name": "PAGE/Incomplete", "children": ["neg:2", "999:9"] },
+    { "locator": "neg:2", "kind": "frame", "name": "SECTION/Only", "children": [] }
+  ]
+}

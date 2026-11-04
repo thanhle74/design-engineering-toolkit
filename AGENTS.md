@@ -45,7 +45,7 @@ This is the **one agent policy entrypoint** for this reusable, platform-neutral 
 - [Integrator receipt G1](docs/converter/RECEIPT-ISSUE5-G1.md)
 - [OSS adoption](docs/research/oss-adoption-for-pagebuilder.md)
 - [Agent skills adoption](docs/research/agent-skills-adoption.md)
-- Focused skills under `.claude/skills/` (use only when relevant) — including `det-cli` for running the executable CLI. Contract test gate: `npm test` (build + 80 checks incl. the KB engine suite; neutrality, deny-list and negative cases run in CI). Deterministic CLI: `npm run build && node bin/det.js --help` ([receipt](docs/converter/RECEIPT-ISSUE9-CLI.md)).
+- Focused skills under `.claude/skills/` (use only when relevant) — including `det-cli` for running the executable CLI. Contract test gate: `npm test` (build + 95 checks incl. G2/KB suites; neutrality, deny-list and negative cases run in CI). Deterministic CLI: `npm run build && node bin/det.js --help` ([receipt](docs/converter/RECEIPT-ISSUE9-CLI.md); G2 extraction receipt: [RECEIPT-ISSUE14-G2.md](docs/converter/RECEIPT-ISSUE14-G2.md); KB engine: [RECEIPT-ISSUE15-KB-MVP.md](docs/knowledge/RECEIPT-ISSUE15-KB-MVP.md)). 
 
 ## Naming & portability invariants (Issue #5)
 

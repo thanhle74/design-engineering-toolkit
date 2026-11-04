@@ -10,9 +10,9 @@ export interface ParsedArgs {
 }
 
 const BOOL_FLAGS = new Set(["help", "h", "version", "json", "dry-run", "quiet"]);
-const VALUE_FLAGS = new Set(["profile", "adapter", "project", "out", "input", "registry", "bindings", "manifest", "store", "root", "where", "text", "kb", "edge-type", "related-to", "include-lifecycle", "require-proof"]);
+const VALUE_FLAGS = new Set(["profile", "adapter", "project", "out", "input", "registry", "bindings", "design-file", "design-node", "manifest", "store", "root", "where", "text", "kb", "edge-type", "related-to", "include-lifecycle", "require-proof"]);
 const REPEATABLE_FLAGS = new Set(["root", "where", "include-lifecycle"]);
-const COMMANDS = new Set(["validate", "inspect", "plan", "kb"]);
+const COMMANDS = new Set(["validate", "inspect", "plan", "extract", "kb"]);
 const KB_VERBS = new Set(["ingest", "sync", "query", "validate"]);
 
 function storeFlag(out: ParsedArgs, name: string, value: string): void {
@@ -67,7 +67,7 @@ export function parseArgs(argv: string[]): ParsedArgs {
     }
     if (out.command === null) {
       if (COMMANDS.has(tok)) out.command = tok;
-      else out.errors.push(`unknown command '${tok}' (expected validate|inspect|plan|kb)`);
+      else out.errors.push(`unknown command '${tok}' (expected validate|inspect|plan|extract|kb)`);
     } else if (out.command === "kb" && out.flags["kb-verb"] === undefined) {
       if (KB_VERBS.has(tok)) out.flags["kb-verb"] = tok;
       else out.errors.push(`unknown kb verb '${tok}' (expected ingest|sync|query|validate)`);
@@ -90,6 +90,7 @@ const COMMAND_VALUE_FLAGS: Record<string, Set<string>> = {
   validate: new Set(["profile", "adapter", "project", "out"]),
   inspect: new Set(["profile", "adapter", "project", "out"]),
   plan: new Set(["profile", "registry", "bindings", "input", "out"]),
+  extract: new Set(["profile", "adapter", "project", "out", "design-file", "design-node", "registry", "bindings"]),
   kb: new Set(["manifest", "store", "out", "root", "where", "text", "kb", "edge-type", "related-to", "include-lifecycle", "require-proof", "project"]),
 };
 

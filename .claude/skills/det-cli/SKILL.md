@@ -1,6 +1,6 @@
 ---
 name: det-cli
-description: Run the toolkit's deterministic det CLI (validate/inspect/plan) from Claude Code — profile validation, read-only Magento Page Builder capability inspection and structural mapping with exit codes and JSON artifacts. Use whenever a task needs project/adapter evidence instead of reimplementing parsing, validation or mapping as a prompt.
+description: Run the toolkit's deterministic det CLI (validate/inspect/plan/extract) from Claude Code — profile validation, read-only capability inspection, structural mapping, and read-only synthetic design-source extraction to NodeIR/PageStructure/SourceReview with exit codes and JSON artifacts. Use whenever a task needs project/adapter evidence instead of reimplementing parsing, validation or mapping as a prompt.
 ---
 
 # det CLI operations
@@ -31,7 +31,27 @@ node bin/det.js plan --profile <profile.json> --registry out/capability-registry
   --bindings <component-binding-map.json> --input <design-structure.json> \
   --dry-run          # compute, write nothing
 node bin/det.js plan ... --out out/   # writes resolution-report.json + tool-run.json
+
+# 4. Read-only design-source extraction (G2, SYNTHETIC fixtures only — see gate note)
+node bin/det.js extract --profile profiles/your-profile.json --project /path/to/design-source \
+  --design-file <tree-document> --design-node <root-locator> \
+  [--registry <capability-registry.json> --bindings <binding-map.json>] [--out out/] [--dry-run]
+# Emits node-ir.json (full inventory), page-structure.json (editorial-only plan),
+# source-review.json (every-node accountability: class + disposition + reason).
 ```
+
+## Rules for agents
+
+1. **Exit codes are the contract:** `0` ok · `1` blocking diagnostics · `2` usage error · `3` adapter runtime failure. Never guess an outcome the exit code already states.
+2. Parse `--json` output (`{"run": <tool-run envelope>, "output": <registry|report>}`), not the human summary. Diagnostics carry structured codes (`PROJECT_SOURCE_NOT_CONFIGURED`, `ADAPTER_NOT_APPLICABLE`, `VARIANT_NOT_MAPPED`, `NOT_VERIFIED`, `LOCATOR_OUT_OF_SCOPE`, …) — act on codes, not message text.
+3. **Proof discipline:** registry proof levels never exceed what pinned evidence justifies (`registered` = declaration evidence + enabled; never treat installed/enabled/declared as runtime-proven or Admin-verified). `NOT_VERIFIED` diagnostics mark unaudited fields — report them, don't smooth them over.
+4. **Boundaries:** the CLI never writes to CMS/DB/storefront/design sources; adapters are read-only by schema contract. `det extract` is authorized for SYNTHETIC design-source fixtures only in this gate — a live design-tool read (e.g. the approved Figma subtree) requires a separate explicit Owner GO and a live source adapter; never point `extract` at a provider before that GO, never rename any layer, never attempt CMS import, Admin round-trips or visual QA under this skill. The selected root comes ONLY from `--design-file`/`--design-node`; never guess or hardcode one.
+5. **Paths:** supply the project root per run (`--project` > `DET_PROJECT_SOURCE` env > gitignored `profiles/*.local.json`). Never commit a real owner path; never read `env.php`/`auth.json` yourself — the adapter deny-lists them.
+6. Determinism: same inputs + same tool version ⇒ identical `contentHash`/`volatileContentHash` in `tool-run.json`. If hashes drift, stop and investigate — do not re-run until it passes.
+
+## magento-specs MCP (optional, local Claude Code only)
+
+The `magento-specs` MCP is a documentation/pattern reference for authoring and audits. It is **not** a runtime dependency of `det`: every portable test passes with zero MCP. If the MCP is unavailable in a session, use the CLI as above — nothing in the workflow requires it. When both exist, installed-source evidence (what `det inspect` returns) outranks generic MCP/reference docs.
 
 ## Knowledge Engine commands (issue #15 — det kb)
 
@@ -50,23 +70,3 @@ node bin/det.js kb query --store kb --kb project --project synthetic-fashion --w
 # Store validation (schemas, graph integrity, project isolation, descriptor honesty)
 node bin/det.js kb validate --store kb --json
 ```
-
-KB rules for agents:
-1. Same exit-code contract as above; KB diagnostics live in `run.runDiagnostics` with codes like `DENIED_PATH_SKIPPED`, `PROJECT_SCOPE_REQUIRED`, `CLASS_BOUNDARY_EDGE_FORBIDDEN`, `SOURCE_DIGEST_CHANGED`, `SECRET_PATTERN_DETECTED`.
-2. KB-1 records from the #9 registry bridge are DETECTED (declaration-only) — never treat them as runtime/Admin-verified. STALE records are excluded from queries unless `--include-lifecycle STALE` is explicit.
-3. `mapsTo` across the Page Builder native / developer-owned class boundary is forbidden by the engine (`neighborOf` only) — do not hand-write such edges into manifests.
-4. The committed `kb/` store is **public synthetic examples only**; real client material stays in gitignored local stores and requires a separate Owner GO (M4 gate).
-5. Root aliases resolve per run: `--root <alias>=<path>` > `DET_KB_ROOT_<ALIAS>` env — never commit a real path into a manifest.
-
-## Rules for agents
-
-1. **Exit codes are the contract:** `0` ok · `1` blocking diagnostics · `2` usage error · `3` adapter runtime failure. Never guess an outcome the exit code already states.
-2. Parse `--json` output (`{"run": <tool-run envelope>, "output": <registry|report>}`), not the human summary. Diagnostics carry structured codes (`PROJECT_SOURCE_NOT_CONFIGURED`, `ADAPTER_NOT_APPLICABLE`, `VARIANT_NOT_MAPPED`, `NOT_VERIFIED`, `LOCATOR_OUT_OF_SCOPE`, …) — act on codes, not message text.
-3. **Proof discipline:** registry proof levels never exceed what pinned evidence justifies (`registered` = declaration evidence + enabled; never treat installed/enabled/declared as runtime-proven or Admin-verified). `NOT_VERIFIED` diagnostics mark unaudited fields — report them, don't smooth them over.
-4. **Boundaries:** the CLI never writes to CMS/DB/storefront/design sources; adapters are read-only by schema contract. Figma reads, CMS import, Admin round-trips and visual QA are separate gated stages — do not attempt them under this skill.
-5. **Paths:** supply the project root per run (`--project` > `DET_PROJECT_SOURCE` env > gitignored `profiles/*.local.json`). Never commit a real owner path; never read `env.php`/`auth.json` yourself — the adapter deny-lists them.
-6. Determinism: same inputs + same tool version ⇒ identical `contentHash`/`volatileContentHash` in `tool-run.json`. If hashes drift, stop and investigate — do not re-run until it passes.
-
-## magento-specs MCP (optional, local Claude Code only)
-
-The `magento-specs` MCP is a documentation/pattern reference for authoring and audits. It is **not** a runtime dependency of `det`: every portable test passes with zero MCP. If the MCP is unavailable in a session, use the CLI as above — nothing in the workflow requires it. When both exist, installed-source evidence (what `det inspect` returns) outranks generic MCP/reference docs.

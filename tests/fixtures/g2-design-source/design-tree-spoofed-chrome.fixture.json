@@ -1,0 +1,81 @@
+{
+  "$comment": "G2 regression fixture (Coordinator C1, issue #14): site-chrome classification requires structural evidence, never a label alone. Contains AUTHENTIC top-level site chrome (SITE/Header container) next to SPOOFED SITE/ labels on a top-level TEXT node and a top-level INSTANCE node - both must stay NEEDS_REVIEW in the review, never silently dropped from the plan by their label.",
+  "revisionId": "g2-fixture-rev-0003",
+  "nodes": [
+    {
+      "locator": "300:1",
+      "kind": "page",
+      "name": "PAGE/SpoofCheck/Desktop",
+      "children": [
+        "300:2",
+        "300:3",
+        "300:4",
+        "300:8",
+        "300:5"
+      ]
+    },
+    {
+      "locator": "300:2",
+      "kind": "frame",
+      "name": "SITE/Header",
+      "children": [
+        "300:6"
+      ]
+    },
+    {
+      "locator": "300:6",
+      "kind": "frame",
+      "name": "SITE/NavRow",
+      "children": [
+        "300:7"
+      ]
+    },
+    {
+      "locator": "300:7",
+      "kind": "text",
+      "name": "SLOT/NavLabel",
+      "children": []
+    },
+    {
+      "locator": "300:3",
+      "kind": "text",
+      "name": "SITE/BrandTagline",
+      "children": []
+    },
+    {
+      "locator": "300:4",
+      "kind": "instance",
+      "name": "SITE/BadgeInstance",
+      "componentRef": "300:8",
+      "children": []
+    },
+    {
+      "locator": "300:8",
+      "kind": "component",
+      "name": "COMPONENT/Badge",
+      "children": []
+    },
+    {
+      "locator": "300:5",
+      "kind": "frame",
+      "name": "SECTION/RealSection",
+      "children": [
+        "300:9",
+        "300:10"
+      ]
+    },
+    {
+      "locator": "300:9",
+      "kind": "text",
+      "name": "SLOT/Title",
+      "children": []
+    },
+    {
+      "locator": "300:10",
+      "kind": "instance",
+      "name": "INSTANCE/Badge/InSection",
+      "componentRef": "300:8",
+      "children": []
+    }
+  ]
+}
