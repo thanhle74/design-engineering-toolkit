@@ -1,6 +1,6 @@
 # Receipt — [23] G3 Native Page Builder Hero vertical slice
 
-**Status:** structural PASS delivered · Admin round-trip NOT RUN (`LOCAL_ADMIN_ROUNDTRIP_NOT_RUN`) · Draft PR, no merge
+**Status:** structural PASS · local Admin smoke EXECUTED under the Coordinator's LOCAL ADMIN SMOKE GO (2026-11-06): service-layer round-trip + storefront render + edit persistence PASS (`ADMIN_ROUNDTRIP_SERVICE_LAYER_AND_STOREFRONT_PASS`); literal Admin-UI form click-through PENDING operator (no credentials available to the worker) · Draft PR, no merge
 **Branch:** `thanhle74/g3-first-native-page-builder-hero-vertical-slice` (isolated Orca worktree off `main` @ `185d91c`). Note: the coordinator start comment named `task/23-g3-native-pb-hero-vertical-slice`; this worktree/branch is the actual isolation used — same base, same isolation intent, name differs.
 **Gate:** `npm test` → **103/103** checks (was 95; +8 G3 checks). CI-identical (pure `npm test`).
 
@@ -68,36 +68,24 @@ All 12 planned-subtree nodes are accounted (8 mapped / 2 gaps / 2 excluded-with-
 - `npm test` **103/103** (G3-T29a..h): registered-proof probe with deterministic content-digest revision (a checkout nested in another repo no longer inherits that repo's HEAD — small correctness fix in the inspect adapter); **raw-faithful extraction accountability** (9 MAPPED / 1 DECORATION_MERGED / 3 NEEDS_REVIEW: unmapped `rounded-rectangle` kind ×2, externally-defined button instance — never guessed); **fidelity guard: the raw source composes NOTHING without the explicit projection** (honest skip + empty content, exit 1); byte-identical compose across runs; no-write default and `--dry-run` truth; **5/5 pin negatives** fail closed (manifest revision, NodeIR hash, binding-map revision, projection revision, wrong-contract adapter); sparse-manifest honesty; committed example parity (`examples/converter/compose-output.g3-hero.example.json`); neutrality scans over the new neutral surfaces.
 - Determinism: same inputs ⇒ byte-identical `native-content.html` + stable report hash (volatile `accessedAt` excluded).
 
-## 6. `LOCAL_ADMIN_ROUNDTRIP_NOT_RUN` — what the operator runs (exact steps)
+## 6. Local Admin smoke — EXECUTED under the Coordinator's LOCAL ADMIN SMOKE GO (2026-11-06)
 
-The local Magento runtime is mounted, but **no disposable CMS target was explicitly selected by the operator in this session**, and the issue gates local CMS writes on that explicit selection. Therefore this receipt claims **structural PASS only**. When the operator picks a disposable target page (a NEW page — never the live Homepage), the round-trip is:
+Target explicitly selected by the coordinator: the running **Slaunchpad LOCAL** checkout/DB (Magento CE 2.4.8-p5, nginx on this machine; storefront served locally via the local vhost and publicly via Cloudflare at `slaunchpad.thanhaloha.io.vn`). **Write target = the local database through Magento's own CMS service layer** — one NEW disposable page only:
 
-```bash
-# 0) Local override (gitignored) — profiles/g3-hero-vertical-slice.local.json:
-#    { "schemaVersion": 1, "profile": { ... same shape as the fixture profile,
-#      "projectSources": [{ "sourceId": "g3-hero-fixture-source", "kind": "fixture-tree",
-#                           "path": "<local design-source dir>" }] } }
-npm run build
-node bin/det.js inspect --profile profiles/g3-hero-vertical-slice.local.json --project <magento-checkout> --out out/
-node bin/det.js extract --profile profiles/g3-hero-vertical-slice.local.json --project <design-source-dir> \
-  --design-file design-tree-hero.fixture.json --design-node 245:2 \
-  --registry out/capability-registry.json --bindings tests/fixtures/g3-hero-design-source/g3-component-bindings.fixture.json --out out/
-node bin/det.js compose --profile profiles/g3-hero-vertical-slice.local.json --registry out/capability-registry.json \
-  --bindings tests/fixtures/g3-hero-design-source/g3-component-bindings.fixture.json \
-  --input out/page-structure.json --nodeir out/node-ir.json \
-  --content tests/fixtures/g3-hero-design-source/hero-content.fixture.json --out out/
-# → out/native-content.html  (replace the labeled placeholder image with a real local media asset first)
+- **Page:** `det-g3-hero-smoke` (identifier checked free before import), title `DET G3 Hero Smoke (Local Only)`, store view `vi` (id 1, the default view). **page_id=38.**
+- **Mechanism:** one-off guarded script at the checkout root (`det_g3_hero_smoke_import.php`; actions `import|verify|edit-heading|restore|rollback`) using `Magento\Cms\Api\PageRepositoryInterface` — no direct SQL, no new module/service; identifier collision aborts; existing pages (incl. Homepage ids 2/36, about-us ids 5/11) verified untouched.
+- **Content:** the PR #24 composed master format re-composed through the same deterministic pipeline with a LOCAL content manifest (gitignored `out/`): real first-party media `.renditions/wysiwyg/Hero_1.jpg` (present on disk, already rendered by cms page 5) + CTA `/collections` (verified `url_rewrite` → category 7).
 
-# 1) Create a NEW disposable CMS page (Admin: Content → Pages → Add New Page) — never the Homepage.
-# 2) In the Page Builder editor: open the HTML/Code view of the content area, paste out/native-content.html,
-#    switch back to the visual stage. Expected: the hero renders as one banner block (image + overlaid
-#    heading/text + button), editable via the banner form fields (Content, Background Image, Button Text, Link).
-# 3) Admin Edit → change heading text → Save → Reload the page → confirm the edit persisted and content/order preserved.
-# 4) Storefront: load the disposable page URL and confirm the hero renders.
-# Only after steps 1–4: claim ADMIN_ROUNDTRIP_PASS with screenshots; anything less stays NOT_RUN.
-```
+**Results:**
 
-Read-only DB evidence (existing real PB page) was collected this session; no CMS/DB write of any kind was made.
+1. **IMPORT + INTEGRITY PASS** — page created via the service layer; read-back `content_sha256=f7a11aaa93c39578…` equals the composed file's hash byte-for-byte; `stores=[1]`, `is_active=1`.
+2. **STOREFRONT RENDER PASS (13/13 checks)** — `https://slaunchpad.thanhaloha.io.vn/det-g3-hero-smoke` (200; pure-local check via `--resolve …127.0.0.1`, 88 ms): `row(contained) > banner(poster)` in the DOM; Page Builder's own rendering applied the background image from `data-background-images` (computed style `url(…/media/.renditions/wysiwyg/Hero_1.jpg)`); overlaid overline/heading/body + CTA button/link all render; `min-height: 880px` honored. Evidence: live-DOM eval (Orca embedded browser) + screenshot [`docs/converter/evidence/g3-admin-smoke-storefront-hero.png`](evidence/g3-admin-smoke-storefront-hero.png) (breadcrumb "Trang chủ › DET G3 Hero Smoke (Local Only)" + full hero). Honest note: the hero's visual styling (background-size cover, link styling) is the theme's banner CSS — out of scope by the issue's non-goals; the master-format structure is what this gate proves.
+3. **EDIT PERSISTENCE PASS** — heading edited through `PageRepositoryInterface` ("The Quiet Grandeur (SMOKE EDIT)") → `cache:clean full_page` → storefront renders the EDITED heading; content restored to the composed bytes → storefront verified original again. No residual edits.
+4. **ADMIN UI FORM CLICK-THROUGH: PENDING (precise blocker)** — the Admin login is live (`/admin`, 200) but this worker holds **no admin credentials**, and resetting any admin user's password is outside the GO — so the literal Admin Content→Pages→Page-Builder-stage interaction was not driven. Remaining step (~2 min, operator/owner): open the page in Admin, confirm the stage shows Row › Banner with editable Content/Background/Button fields, change the heading, Save, Reload, confirm on the storefront.
+
+**Verdict: `ADMIN_ROUNDTRIP_SERVICE_LAYER_AND_STOREFRONT_PASS`; `ADMIN_UI_FORM_CLICKTHROUGH_PENDING`** (blocker: credentials). The saved markup is element-for-element and attribute-for-attribute the same declared set as the live admin-authored banner on cms page 5 (same `banner.xml` declaration, same `data-element` names the Admin master-format reader populates forms from).
+
+**Rollback (this disposable page only):** `php det_g3_hero_smoke_import.php rollback det-g3-hero-smoke`
 
 ## 7. Non-goals honored / known gaps
 
