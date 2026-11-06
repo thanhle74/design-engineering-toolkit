@@ -98,8 +98,8 @@ export default async function registerM4Suite(checkAsync) {
     assert.equal(p.adapterId, "magento-kb-source");
     assert.equal(p.kind, "magento-platform");
     assert.equal(p.rootAlias, "checkout");
-    assert.equal(p.capabilities.length, 9, "one record per config.php entry");
-    assert.deepEqual(p.counts, { capabilities: 9, modules: 9, uiComponents: 0, relations: 0 });
+    assert.equal(p.capabilities.length, 10, "one record per config.php entry");
+    assert.deepEqual(p.counts, { capabilities: 10, modules: 10, uiComponents: 0, relations: 0 });
     for (const rec of p.capabilities) {
       assert.equal(rec.recordType, "module", "platform kind emits module records");
       assert.equal(idGrammarError(rec.id), null, `id grammar: ${rec.id}`);
@@ -111,7 +111,7 @@ export default async function registerM4Suite(checkAsync) {
       assert.ok(rec.evidence.uncertainty.includes("runtime DB enablement state not scanned"));
     }
     const ids = p.capabilities.map((r) => r.nativeId);
-    for (const expected of ["Acme_Core", "Acme_Widgets", "Acme_Legacy", "Acme_Headless", "Acme_Searchlite", "Acme_Emailonly", "Acme_Orphan", "Testvendor_Cmsbasic", "Magento_Pagebuilderlike"]) {
+    for (const expected of ["Acme_Core", "Acme_Widgets", "Acme_Legacy", "Acme_Headless", "Acme_Searchlite", "Acme_Emailonly", "Acme_Orphan", "Testvendor_Cmsbasic", "Testvendor_Ghostfinder", "Magento_Pagebuilderlike"]) {
       assert.ok(ids.includes(expected), `missing module record for ${expected}`);
     }
     const legacy = p.capabilities.find((r) => r.nativeId === "Acme_Legacy");
@@ -119,11 +119,29 @@ export default async function registerM4Suite(checkAsync) {
     return `${p.capabilities.length} module records, legacy disabled`;
   });
 
+  await checkAsync("M4-02b", "magento-platform: installed.json map resolves composer-shaped vendor dirs and pins locked versions", async () => {
+    const p = await scan("magento-platform");
+    const byId = (id) => p.capabilities.find((r) => r.id === id);
+    const ghostfinder = byId("mod:magento:testvendor-ghostfinder");
+    assert.equal(ghostfinder.installed, true, "resolved through vendor/composer/installed.json despite the composer-vs-PHP vendor spelling");
+    assert.equal(ghostfinder.origin, "third-party");
+    assert.deepEqual(ghostfinder.version, { locked: "3.1.0", source: "composer-lock" }, "module.xml has no version attr; the composer entry pins the locked version");
+    assert.ok(ghostfinder.observed.inputDigests["checkout:vendor/composer/installed.json"], "the map file feeding the locked version is pinned on the record");
+    const cmsbasic = byId("mod:magento:testvendor-cmsbasic");
+    assert.deepEqual(cmsbasic.version, { declared: "2.0.0", locked: "2.0.0", source: "module-xml+composer-lock" });
+    const pagebuilderlike = byId("mod:magento:magento-pagebuilderlike");
+    assert.deepEqual(pagebuilderlike.version, { declared: "1.7.0", locked: "1.7.0", source: "module-xml+composer-lock" });
+    const core = byId("mod:magento:acme-core");
+    assert.deepEqual(core.version, { declared: "1.0.0", source: "module-xml" }, "app/code module not in the map keeps declared-only");
+    assert.ok(core.evidence.uncertainty.includes("runtime DB enablement state not scanned"));
+    return "ghostfinder via map; cmsbasic/pagebuilderlike declared+locked; core declared-only";
+  });
+
   await checkAsync("M4-02", "magento-platform: version/dependencies/entrypoints honesty (module.xml found vs absent vs version-less)", async () => {
     const p = await scan("magento-platform");
     const byId = (id) => p.capabilities.find((r) => r.id === id);
     const widgets = byId("mod:magento:acme-widgets");
-    assert.deepEqual(widgets.version, { declared: "1.2.0" }, "version from module.xml declaration");
+    assert.deepEqual(widgets.version, { declared: "1.2.0", source: "module-xml" }, "version from module.xml declaration");
     assert.deepEqual(widgets.dependencies, { hard: ["Acme_Core"] }, "<sequence> parsed into hard dependencies");
     assert.deepEqual(
       widgets.entrypoints,
@@ -144,6 +162,7 @@ export default async function registerM4Suite(checkAsync) {
     assert.ok(headless.evidence.uncertainty.includes("module.xml declares no version attribute; declared version unknown"));
     const searchlite = byId("mod:magento:acme-searchlite");
     assert.equal(searchlite.installed, false, "ghost entry: module dir absent from disk");
+    assert.equal(searchlite.origin, "third-party", "a non-app/code ghost is vendor-supplied by construction (not 'custom')");
     assert.ok(searchlite.evidence.uncertainty.some((u) => u.includes("module.xml absent: version unknown")));
     const orphan = byId("mod:magento:acme-orphan");
     assert.equal(orphan.installed, false);
@@ -257,6 +276,9 @@ export default async function registerM4Suite(checkAsync) {
     for (const expected of ["group", "schemaVersion", "headline", "body_copy", "cta_label"]) {
       assert.ok(optNames.includes(expected), `bounded metadata: ${expected}`);
     }
+    assert.ok(hero.notes.includes("template pointer: Acme_Widgets::components/hero/like-a.phtml"), "template pointer rides on notes (path pointer, metadata-only)");
+    assert.ok(hero.notes.includes("sortOrder: 10"), "sortOrder rides on notes");
+    assert.ok(!hero.notes.includes("differing from the registry key"), "definition id matches the registry key: no mismatch note");
     assert.deepEqual(hero.observed.inputDigests, {
       "checkout:app/code/Acme/Widgets/etc/di.xml": p.digests["checkout:app/code/Acme/Widgets/etc/di.xml"],
       "checkout:app/code/Acme/Widgets/Model/Component/HeroLikeDefinition.php": p.digests["checkout:app/code/Acme/Widgets/Model/Component/HeroLikeDefinition.php"],
@@ -323,11 +345,15 @@ export default async function registerM4Suite(checkAsync) {
       const shape = validateContract("kb-ui-component", rec);
       assert.ok(shape.valid, `${rec.id} must satisfy kb-ui-component: ${shape.errors[0]}`);
     }
-    assert.deepEqual(Object.keys(p.digests), ["checkout:vendor/acme/hyva-ui-like/composer.json"], "composer.json is the ONLY digested (opened) file");
-    assert.equal(p.scanMetadata.fileCount, 1, "no component bytes are opened");
+    assert.deepEqual(Object.keys(p.digests).sort(), ["checkout:composer.lock", "checkout:vendor/acme/hyva-ui-like/composer.json"], "composer.json + (version-missing) composer.lock are the ONLY digested files");
+    assert.equal(p.scanMetadata.fileCount, 2, "no component bytes are opened");
     assert.ok(p.diagnostics.some((d) => d.code === "HYVA_UI_PLUGINS_DETECTED" && d.message.includes("sample-plugin")), "plugin names ride on one info diagnostic");
     assert.ok(!JSON.stringify(p).includes("sample-plugin/"), "no plugin paths beyond the diagnostic");
-    return "2 census records; composer.json-only reads";
+    assert.ok(!p.diagnostics.some((d) => d.code === "UNSUPPORTED_SHAPE"), "missing composer.json version is honest uncertainty, NOT an unsupported shape");
+    assert.equal(hero.sourcePackage.version, "1.0.0", "version pinned from composer.lock when composer.json has none");
+    assert.ok(hero.evidence.uncertainty.some((u) => u.includes("sourcePackage.version pinned from composer.lock")));
+    assert.equal(hero.license.licenseRef, "See LICENSE.md or https://hyva-ui-like.example/license", "license pointer string stays verbatim in licenseRef");
+    return "2 census records; composer.json+composer.lock reads; lock-pinned version";
   });
 
   // ---- digests + determinism + options gate --------------------------------------------------
@@ -389,7 +415,7 @@ export default async function registerM4Suite(checkAsync) {
     assert.ok(extractCheck(JSON.parse(fs.readFileSync(EXTRACT_MANIFEST, "utf8"))), "extract-manifest fixture satisfies kb-extract-manifest");
     const ingestCheck = validateContract("kb-ingest-manifest", JSON.parse(fs.readFileSync(INGEST_MANIFEST, "utf8")));
     assert.ok(ingestCheck.valid, `ingest-manifest fixture satisfies kb-ingest-manifest: ${ingestCheck.errors[0]}`);
-    return "9 module + 7 ui + 1 relation records schema-valid; both manifest fixtures valid";
+    return "10 module + 7 ui + 1 relation records schema-valid; both manifest fixtures valid";
   });
 
   await checkAsync("M4-15", "end-to-end ingest of extract outputs through the new optional lanes (platformRecords + uiInventory + relations)", async () => {
@@ -418,11 +444,11 @@ export default async function registerM4Suite(checkAsync) {
     assert.deepEqual(otherErrors, [], `unexpected ingest errors: ${JSON.stringify(otherErrors.slice(0, 3))}`);
     const ingest = parsed.output.ingest;
     assert.deepEqual({ ui: ingest.ui, project: ingest.project, relations: ingest.relations }, { ui: 7, project: 0, relations: 1 }, "ui + relations lanes ingest cleanly");
-    assert.ok(ingest.platform === 9 || errors.length === moduleGapErrors.length, "platform lane carries the 9 module records (refused only by the documented gap)");
+    assert.ok(ingest.platform === 10 || errors.length === moduleGapErrors.length, "platform lane carries the 10 module records (refused only by the documented gap)");
     const codes = diags.map((d) => d.code);
     for (const forbidden of ["DANGLING_RELATION_ENDPOINT", "CLASS_BOUNDARY_EDGE_FORBIDDEN", "EDGE_ENDPOINT_KB_INVALID", "LICENSED_FIELD_TOO_LARGE", "SECRET_PATTERN_DETECTED", "RECORD_ID_GRAMMAR_INVALID", "DUPLICATE_RECORD_ID"]) {
       assert.ok(!codes.includes(forbidden), `forbidden diagnostic present: ${forbidden}`);
     }
-    return `ui=7 relations=1 platform=9 (${moduleGapErrors.length} documented module-gap refusals, 0 other errors)`;
+    return `ui=7 relations=1 platform=10 (${moduleGapErrors.length} documented module-gap refusals, 0 other errors)`;
   });
 }
