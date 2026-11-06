@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "id": "design-source-figma-live",
+  "platformIds": ["figma"],
+  "entry": "dist/adapters/design-source-figma-live/extract.js",
+  "inputContract": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/adapter-input.schema.json",
+  "outputContract": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/design-source-snapshot.schema.json",
+  "permissions": { "readOnly": true },
+  "version": "1.0.0",
+  "description": "Bounded read-only live design-source reader for ONE caller-selected subtree over the provider's versioned HTTP API (issue #18 live pilot). Reads the caller-supplied file key (options.designFile) and caller-selected root node id (options.designNode); the profile's include selectors gate the approvable roots; the token comes only from the caller's FIGMA_TOKEN environment variable and is never echoed. Returns the complete selected subtree as a revision-pinned design-source snapshot (provider version token), never pre-filtered semantically: hidden layers, instances, decorations and unknown kinds are transported as declared. One GET, no redirects followed, 32 MiB response cap, 100000-node budget, no geometry downloads, no asset bytes, no writes. External component references pass through verbatim for honest core accounting. Proof ceiling: transport evidence for the selected subtree at one pinned revision — not Admin/CMS proof of any kind."
+}

@@ -1,0 +1,38 @@
+{
+  "run": {
+    "schemaVersion": 1,
+    "tool": {
+      "name": "det",
+      "toolVersion": "0.1.0"
+    },
+    "command": "extract",
+    "exitCode": 3,
+    "generatedAt": "2026-11-06T04:16:43.280Z",
+    "profileId": "slaunchpad-fashion",
+    "platformId": "magento-pagebuilder",
+    "adapter": {
+      "id": "design-source-figma-live",
+      "version": "1.0.0"
+    },
+    "artifacts": [],
+    "converterDiagnostics": [],
+    "runDiagnostics": [
+      {
+        "code": "ADAPTER_EXIT_NONZERO",
+        "severity": "error",
+        "message": "Adapter 'design-source-figma-live' exited with code 1 (adapter stderr omitted from receipts; see terminal output).",
+        "subject": {
+          "type": "adapter",
+          "id": "design-source-figma-live"
+        }
+      }
+    ],
+    "counts": {
+      "errors": 0,
+      "warnings": 0,
+      "infos": 0
+    },
+    "wroteFiles": false
+  }
+}
+

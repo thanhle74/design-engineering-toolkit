@@ -1,5 +1,14 @@
 # ACTIVE CHATGPT COORDINATOR HANDOFF — Design Engineering Toolkit
 
+## CURRENT CHECKPOINT — 2026-11-06 — #18 LIVE ADAPTER IMPLEMENTED; LIVE READ `BLOCKED_WITH_REASON: FIGMA_TOKEN_UNSET`
+
+- **#18 [live pilot](https://github.com/thanhle74/design-engineering-toolkit/issues/18):** the bounded read-only live design-source adapter `design-source-figma-live` is implemented on branch `task/18-figma-live-readonly-pilot` (Draft PR, one workspace). It sits behind the unchanged #14 `DesignSourcePort`/snapshot seam (no core/schema changes): provider token only from env `FIGMA_TOKEN` (fail closed when missing), profile `scopes.include` gates the approvable roots at the transport, revision pin required from the provider version token (else fail closed), 32 MiB response cap, 100 000-node budget, redirects never followed, no asset bytes or text content copied. Gate **102/102** (was 95 on merged main; +7 offline G2 checks T31a–T31g over a stubbed provider API — no network, no credentials, no committed provider identifiers).
+- **Live read of `245:2` NOT executed:** the single attempt failed closed exactly as designed — exit 3, zero artifacts, terminal-only stderr naming `FIGMA_TOKEN_UNSET`; sanitized envelope at `evidence/issue-18/live-read-blocked.tool-run.json`. Per the Owner's rule this is **`BLOCKED_WITH_REASON`, not `LIVE_FIGMA_READ_ONLY_VERIFIED`**. Receipt: `docs/converter/RECEIPT-ISSUE18-G2-LIVE.md` (ADR-018-001..006 + the exact re-run command).
+- **Single unblock action (Owner):** provision a read-only provider token as `FIGMA_TOKEN` in the execution environment, then re-run the receipt §3 command; on success the revision-pinned `NodeIR/PageStructure/SourceReview` + sanitized mapping inventory complete the proof on the same branch/PR. No token ever enters the repo.
+- **Boundaries unchanged:** no Figma writes, no `245:16`, no CMS/DB writes, stop at plan; G3 remains separately gated. #19 stays `BLOCKED_LOCAL_SOURCE_NOT_MOUNTED` (untouched here).
+
+---
+
 ## LIVE READ-ONLY GO CHECKPOINT — 2026-11-04 — #18 #19
 
 - **Owner GO received** explicitly for live read-only #18 and M4 read-only #19, recorded in their issue comments. Does **not** authorize Figma Code Connect edits, any design write, Magento/CMS/DB/prod write, commercial-source redistribution or G3.

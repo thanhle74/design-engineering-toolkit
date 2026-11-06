@@ -7,15 +7,20 @@
 // neutrality scans over the new surfaces.
 import assert from "node:assert";
 import fs from "node:fs";
+import http from "node:http";
 import os from "node:os";
 import path from "node:path";
 import { main } from "../dist/src/core/cli/main.js";
 import { stableContentHash, canonicalStringify, stripVolatile } from "../dist/src/core/canonical.js";
 import { deriveNodeId } from "../dist/src/core/design-source/extract.js";
 import { SnapshotDesignSourcePort } from "../dist/src/core/design-source/port.js";
+import { loadAdapters, runAdapter } from "../dist/src/core/adapter-runtime.js";
+import { toSnapshotNodes, kindOf, MAX_NODES } from "../dist/adapters/design-source-figma-live/figma-map.js";
 
 const FIX = path.join(path.dirname(new URL(import.meta.url).pathname), "fixtures");
 const G2 = path.join(FIX, "g2-design-source");
+const LIVE = path.join(FIX, "g2-figma-live");
+const REPO = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
 const PROFILE = path.join(FIX, "negative/profile-g2-design-fixture.fixture.json");
 const PROFILE_B = path.join(FIX, "negative/profile-g2-design-secondary.fixture.json");
 const REGISTRY = path.join(G2, "g2-capability-registry.fixture.json");
@@ -392,5 +397,306 @@ export default async function registerG2Suite(checkAsync) {
     }
     assert.deepEqual(hits, [], "neutrality violations:\n" + hits.join("\n"));
     return "0 matches across schemas/core/adapters/fixtures/examples";
+  });
+
+  // ---- Issue #18 live read-only design-source adapter (offline gate over a stubbed provider API)
+  // The provider is stubbed by a local HTTP server speaking the live wire shape; no network, no
+  // credentials, no provider identifiers are committed. The real live read is a separate,
+  // Owner-GOed local run documented in the issue-18 receipt.
+  const CANNED = JSON.parse(fs.readFileSync(path.join(LIVE, "canned-file-nodes.json"), "utf8"));
+  const LIVE_KEY = "fixturefilekey1234567";
+  const LIVE_PROFILE = path.join(LIVE, "profile-figma-live.fixture.json");
+  const LIVE_ROOT_ARGS = ["--profile", LIVE_PROFILE, "--project", LIVE, "--adapter", "design-source-figma-live", "--design-file", LIVE_KEY, "--design-node", "1000:1"];
+  // Hand-derived accountability for the canned tree at revision 9001-fixture-rev (asserted exact).
+  const LIVE_EXPECTED_DISPOSITIONS = { MAPPED: 8, EXCLUDED_WITH_REASON: 4, DECORATION_MERGED: 1, REFERENCE_ONLY: 2, NEEDS_REVIEW: 3 };
+  const LIVE_EXPECTED_CLASSES = { SITE_CHROME: 2, EDITORIAL_SECTION: 10, SHARED_COMPONENT: 4, PRESENTATIONAL: 1, UNKNOWN_OR_AMBIGUOUS: 1 };
+  const LIVE_NODE_COUNT = 18;
+
+  let liveServerPromise = null;
+  function liveServer() {
+    if (!liveServerPromise) {
+      liveServerPromise = new Promise((resolve) => {
+        const s = http.createServer((req, res) => {
+          const u = new URL(req.url ?? "/", "http://stub");
+          const ids = u.searchParams.get("ids") ?? "";
+          const json = (code, body, headers = {}) => {
+            res.writeHead(code, { "Content-Type": "application/json", ...headers });
+            res.end(typeof body === "string" || Buffer.isBuffer(body) ? body : JSON.stringify(body));
+          };
+          if (ids === "1000:1") return json(200, CANNED);
+          if (ids === "400:1") return json(401, { status: 401, err: "Invalid token" });
+          if (ids === "404:1") return json(404, { status: 404, err: "File not found" });
+          if (ids === "429:1") return json(429, { err: "rate limited" }, { "Retry-After": "7" });
+          if (ids === "500:1") {
+            res.writeHead(200, { "Content-Type": "application/json" });
+            return res.end(Buffer.alloc(32 * 1024 * 1024 + 1, 0x61));
+          }
+          if (ids === "600:1") return json(200, "{not-json");
+          if (ids === "700:1") return json(200, { error: "forbidden subtree" });
+          if (ids === "800:1") return json(302, "", { Location: "http://127.0.0.1/redirected" });
+          if (ids === "900:1") return json(200, { name: "stub", lastModified: "2026-01-01T00:00:00Z", nodes: {} });
+          if (ids === "950:1") return json(200, { name: "stub", nodes: { "950:1": { document: { id: "950:1", name: "PAGE/X", type: "FRAME", children: [] } } } });
+          return json(404, { err: "unknown stub route" });
+        });
+        s.listen(0, "127.0.0.1", () => resolve({ server: s, base: `http://127.0.0.1:${s.address().port}` }));
+      });
+    }
+    return liveServerPromise;
+  }
+
+  async function withLiveEnv(base, fn, { token = "stub-token" } = {}) {
+    const savedBase = process.env.FIGMA_API_BASE;
+    const savedToken = process.env.FIGMA_TOKEN;
+    process.env.FIGMA_API_BASE = base;
+    if (token) process.env.FIGMA_TOKEN = token;
+    else delete process.env.FIGMA_TOKEN;
+    try {
+      return await fn();
+    } finally {
+      if (savedBase === undefined) delete process.env.FIGMA_API_BASE;
+      else process.env.FIGMA_API_BASE = savedBase;
+      if (savedToken === undefined) delete process.env.FIGMA_TOKEN;
+      else process.env.FIGMA_TOKEN = savedToken;
+    }
+  }
+
+  function liveAdapterInput(designNode, overrides = {}) {
+    return {
+      schemaVersion: 1,
+      profileId: "g2-design-fixture",
+      platformId: "figma",
+      source: { sourceId: "figma-live-source", kind: "figma", path: LIVE, scopes: { include: ["1000:1"] } },
+      options: { designFile: LIVE_KEY, designNode, ...overrides },
+    };
+  }
+
+  checkAsync("G2-T31a", "live adapter registers beside the fixture adapter under the same snapshot contract, read-only, no bundled identifiers", async () => {
+    const { adapters } = loadAdapters(REPO);
+    const live = adapters.find((a) => a.id === "design-source-figma-live");
+    assert.ok(live, "design-source-figma-live must be registered (build first)");
+    assert.equal(live.permissions.readOnly, true);
+    assert.deepEqual(live.platformIds, ["figma"]);
+    assert.ok(live.outputContract.endsWith("/schemas/cli/design-source-snapshot.schema.json"), "same snapshot transport contract as the fixture adapter");
+    assert.ok(adapters.find((a) => a.id === "design-source-fixture"), "fixture adapter still registered");
+    const descText = fs.readFileSync(path.join(REPO, "adapters/design-source-figma-live/descriptor.json"), "utf8");
+    const scrubbed = descText
+      .replace(/https:\/\/[^"\s]+/g, "")
+      .replace(/githubusercontent|design-engineering-toolkit|thanhle74/g, "");
+    assert.ok(!/[A-Za-z0-9]{22}/.test(scrubbed), "descriptor must not embed a file-key-shaped literal");
+    assert.ok(!/\b\d+:\d+\b/.test(scrubbed), "descriptor must not bundle any provider node id");
+    return "registered, snapshot contract, identifier-free descriptor";
+  });
+
+  checkAsync("G2-T31b", "provider normalization: documented kind table, verbatim layout primitives, variants, image-fill media, empty-name fallback, bounded walk", async () => {
+    for (const [type, expected] of [
+      ["FRAME", "frame"], ["SECTION", "frame"], ["GROUP", "group"], ["BOOLEAN_OPERATION", "group"],
+      ["COMPONENT", "component"], ["COMPONENT_SET", "component"], ["INSTANCE", "instance"],
+      ["TEXT", "text"], ["VECTOR", "vector"], ["LINE", "line"], ["SLICE", "slice"],
+      ["RECTANGLE", "shape"], ["ROUNDED_RECTANGLE", "shape"], ["ELLIPSE", "shape"], ["REGULAR_POLYGON", "shape"], ["STAR", "shape"],
+      ["MYSTERY_TYPE", "mystery_type"],
+    ]) {
+      assert.equal(kindOf(type, false), expected, `kind table ${type}`);
+    }
+    assert.equal(kindOf("RECTANGLE", true), "media", "image-fill leaf is honest media");
+    const subtree = toSnapshotNodes(CANNED.nodes["1000:1"].document);
+    assert.equal(subtree.nodes.length, LIVE_NODE_COUNT);
+    const byLocator = new Map(subtree.nodes.map((n) => [n.locator, n]));
+    assert.deepEqual(subtree.nodes.map((n) => n.locator).slice(0, 3), ["1000:1", "1001:1", "1001:2"], "document order");
+    // 40/60 flow container: measured fill fractions carried verbatim; the hero row is the flow
+    // container, its column children are static-positioned absolute-layout containers.
+    const heroRow = byLocator.get("1002:1");
+    assert.equal(heroRow.properties.layout.direction, "row");
+    const headline = byLocator.get("1002:2");
+    assert.equal(headline.properties.layout.direction, "absolute", "a non-flow container's children are absolutely positioned");
+    assert.equal(headline.properties.layout.positioning, "static", "a child of a flow parent is static");
+    assert.deepEqual(headline.properties.layout.relativeSizes, [{ target: "parent-width", ratio: 0.4 }]);
+    const media = byLocator.get("1002:4");
+    assert.deepEqual(media.properties.layout.relativeSizes, [{ target: "parent-width", ratio: 0.6 }]);
+    // Image-fill leaf = media; a media node with children would stay its container kind.
+    assert.equal(byLocator.get("1002:5").kind, "media");
+    assert.equal(byLocator.get("1002:5").properties, undefined, "content-bearing leaves carry no properties beyond structure");
+    // Instance: definition reference verbatim (may be external), declared variant assignments carried.
+    const inst = byLocator.get("1003:1");
+    assert.equal(inst.componentRef, "999:9");
+    assert.deepEqual(inst.properties.variants, { layout: "stacked" });
+    // Hidden nodes transported, never dropped; empty names fall back to the provider type.
+    assert.equal(byLocator.get("1006:1").visible, false);
+    assert.equal(byLocator.get("1009:1").name, "TEXT");
+    // Text content and fill values are never copied (the canned doc carries none on purpose).
+    assert.ok(!JSON.stringify(subtree).includes("characters"));
+    // Budget: a chain deeper than MAX_NODES fails the walk instead of exploding the stack.
+    let deep = { id: "0:0", name: "leaf", type: "TEXT" };
+    for (let i = 0; i <= MAX_NODES; i++) deep = { id: `${i}:0`, name: "n", type: "FRAME", children: [deep] };
+    assert.throws(() => toSnapshotNodes(deep), /budget/, "over-budget subtree must fail closed");
+    return `18 nodes normalized; 40/60 fill fractions measured; budget enforced at ${MAX_NODES}`;
+  });
+
+  checkAsync("G2-T31c", "adapter end-to-end over the stubbed provider: revision-pinned, scope-bounded snapshot, credential never echoed", async () => {
+    const { base } = await liveServer();
+    await withLiveEnv(base, async () => {
+      const { adapters } = loadAdapters(REPO);
+      const live = adapters.find((a) => a.id === "design-source-figma-live");
+      const run = await runAdapter(REPO, live, liveAdapterInput("1000:1"));
+      assert.equal(run.ok, true, `adapter run failed: ${JSON.stringify(run.diagnostics)}`);
+      const snap = run.payload;
+      assert.equal(snap.sourceId, "figma-live-source");
+      assert.equal(snap.providerId, "figma-rest-v1");
+      assert.equal(snap.revisionId, "9001-fixture-rev", "provider version token pins the snapshot");
+      assert.equal(snap.rootLocator, "1000:1");
+      assert.equal(snap.nodes.length, LIVE_NODE_COUNT);
+      assert.ok(run.stderrTail === undefined || !run.stderrTail.includes("stub-token"), "no credential in surfaced stderr");
+      // The operator note is terminal-only stderr of a direct adapter run (the core run envelope
+      // deliberately surfaces stderr tails only on failure paths). The direct child is awaited
+      // (never sync) so the in-process stub server keeps serving while the adapter runs.
+      const { spawn } = await import("node:child_process");
+      const direct = await new Promise((resolve) => {
+        const p = spawn(process.execPath, [path.join(REPO, "dist/adapters/design-source-figma-live/extract.js")], { stdio: ["pipe", "pipe", "pipe"] });
+        let stdout = "";
+        let stderr = "";
+        p.stdout.on("data", (d) => (stdout += d));
+        p.stderr.on("data", (d) => (stderr += d));
+        p.on("close", (code) => resolve({ code, stdout, stderr }));
+        p.stdin.end(JSON.stringify(liveAdapterInput("1000:1")));
+      });
+      assert.equal(direct.code, 0, `direct adapter run failed: ${direct.stderr.slice(0, 300)}`);
+      assert.ok(direct.stderr.includes("pinned revision"), "operator note on terminal-only stderr");
+      assert.ok(!direct.stderr.includes("stub-token"), "the credential must never be echoed anywhere");
+    });
+    return "revision 9001-fixture-rev pinned, 18 nodes, token never echoed";
+  });
+
+  checkAsync("G2-T31d", "adapter fails closed on every blocked path: missing token, auth, 404, 429, oversize, malformed, in-band error, absent node, no revision pin, redirect, scope escape, malformed inputs", async () => {
+    const { base } = await liveServer();
+    await withLiveEnv(base, async () => {
+      const { adapters } = loadAdapters(REPO);
+      const live = adapters.find((a) => a.id === "design-source-figma-live");
+      const cases = [
+        ["401 rejected token", liveAdapterInput("400:1"), {}],
+        ["404 file/node", liveAdapterInput("404:1"), {}],
+        ["429 rate limited", liveAdapterInput("429:1"), {}],
+        ["response over cap", liveAdapterInput("500:1"), {}],
+        ["malformed body", liveAdapterInput("600:1"), {}],
+        ["in-band provider error", liveAdapterInput("700:1"), {}],
+        ["redirect refused", liveAdapterInput("800:1"), {}],
+        ["requested node absent", liveAdapterInput("900:1"), {}],
+        ["no revision pin available", liveAdapterInput("950:1"), {}],
+        ["root outside include scopes", liveAdapterInput("999:9"), {}],
+        ["file key with traversal", liveAdapterInput("1000:1", { designFile: "../escape" }), {}],
+        ["non-numeric node id", liveAdapterInput("1000:1", { designNode: "root-frame" }), {}],
+      ];
+      for (const [label, input] of cases) {
+        const run = await runAdapter(REPO, live, input);
+        assert.equal(run.ok, false, `${label} must fail closed`);
+        assert.ok(run.diagnostics.some((d) => d.code === "ADAPTER_EXIT_NONZERO"), `${label}: ${JSON.stringify(run.diagnostics)}`);
+        assert.ok(!JSON.stringify(run.diagnostics).includes("stub-token"), `${label}: credential leaked into diagnostics`);
+        assert.ok(!(run.stderrTail ?? "").includes("stub-token"), `${label}: credential leaked into stderr tail`);
+      }
+      await withLiveEnv(base, async () => {
+        const run = await runAdapter(REPO, live, liveAdapterInput("1000:1"));
+        assert.equal(run.ok, false, "missing token must fail closed");
+        assert.ok(run.diagnostics.some((d) => d.code === "ADAPTER_EXIT_NONZERO"));
+        assert.ok((run.stderrTail ?? "").includes("FIGMA_TOKEN"), "exact blocker named: FIGMA_TOKEN missing");
+      }, { token: null });
+    });
+    return "13 blocked paths fail closed with exact reasons; no credential leakage";
+  });
+
+  checkAsync("G2-T31e", "live extract through the CLI: full inventory, chrome excluded, media slot, honest custom-required instances, determinism", async () => {
+    const { base } = await liveServer();
+    await withLiveEnv(base, async () => {
+      const r = await runCli([...["extract", ...LIVE_ROOT_ARGS, "--json"]]);
+      assert.equal(r.code, 0, `exit ${r.code}: ${r.err.slice(0, 400)}`);
+      const o = JSON.parse(r.out).output;
+      const { nodeIr, pageStructure, review } = o;
+      assert.equal(nodeIr.source.revisionId, "9001-fixture-rev");
+      assert.equal(nodeIr.source.sourceId, "figma-live-source");
+      assert.equal(nodeIr.nodes.length, LIVE_NODE_COUNT);
+      assert.equal(review.counts.total, LIVE_NODE_COUNT);
+      assert.deepEqual(review.counts.byDisposition, LIVE_EXPECTED_DISPOSITIONS);
+      assert.deepEqual(review.counts.byClass, LIVE_EXPECTED_CLASSES);
+      // Chrome: inventoried + excluded with reason, never planned.
+      const chrome = review.entries.filter((e) => e.semanticClass === "SITE_CHROME");
+      assert.equal(chrome.length, 2);
+      assert.ok(chrome.every((e) => e.disposition === "EXCLUDED_WITH_REASON" && e.reason.includes("theme-owned")));
+      assert.deepEqual(pageStructure.sections.map((s) => s.name), ["SECTION/Hero/Primary", "SECTION/EditorialMosaic"]);
+      // Layout facts preserved: measured 40/60 fill fractions on the hero columns.
+      const byName = new Map(nodeIr.nodes.map((n) => [n.name, n]));
+      assert.deepEqual(byName.get("SLOT/Headline").layout.relativeSizes, [{ target: "parent-width", ratio: 0.4 }]);
+      assert.deepEqual(byName.get("SLOT/Media").layout.relativeSizes, [{ target: "parent-width", ratio: 0.6 }]);
+      // Media slot derived from the image-fill leaf; valueRef points at the design locator.
+      const mediaNode = byName.get("SLOT/Media");
+      assert.deepEqual(mediaNode.contentSlots.map((s) => ({ kind: s.kind, valueRef: s.valueRef })), [{ kind: "media", valueRef: "design://figma-live-source/1002:5" }]);
+      // Instances at top level: the external one stays NEEDS_REVIEW custom-required (never
+      // approximated), the resolving-but-unbound one is custom-required pending — the in-section
+      // unresolvable-ref phrasing is covered by G2-T24a/T27b on the fixture trees.
+      const external = review.entries.find((e) => e.reason.includes("Shared component instance outside any planned section"));
+      assert.ok(external && external.disposition === "NEEDS_REVIEW" && external.provisionalTarget?.category === "custom-required");
+      const pending = review.entries.filter((e) => e.provisionalTarget?.category === "custom-required");
+      assert.equal(pending.length, 2, "external + resolving-unbound instance pending custom-required");
+      assert.ok(review.entries.some((e) => e.disposition === "REFERENCE_ONLY"));
+      // Hidden subtree retained and excluded with reason.
+      const hidden = review.entries.find((e) => e.reason.includes("Hidden in the source"));
+      assert.ok(hidden && hidden.disposition === "EXCLUDED_WITH_REASON");
+      // Every node carries design:// evidence at the pinned revision.
+      for (const n of nodeIr.nodes) {
+        for (const ev of n.sourceEvidence) {
+          assert.ok(ev.locator.startsWith("design://figma-live-source/") && ev.sourceRevisionId === "9001-fixture-rev");
+        }
+      }
+      // Determinism: a second run is byte-stable modulo volatile timestamps.
+      const b = await runCli([...["extract", ...LIVE_ROOT_ARGS, "--json"]]);
+      assert.equal(b.code, 0, b.err);
+      const roles = (x) => Object.fromEntries(JSON.parse(x.out).run.artifacts.map((art) => [art.role, art.volatileContentHash]));
+      assert.deepEqual(roles(r), roles(b), "live extraction deterministic across runs");
+      assert.deepEqual(JSON.parse(r.out).output.nodeIr.nodes.map((n) => n.nodeId), JSON.parse(b.out).output.nodeIr.nodes.map((n) => n.nodeId));
+    });
+    return `18 nodes inventoried, 2 sections planned, ${LIVE_EXPECTED_DISPOSITIONS.NEEDS_REVIEW} needs-review, byte-stable`;
+  });
+
+  checkAsync("G2-T31f", "live extract->plan chain: registry+binding pins accepted, unmapped sections honestly reported", async () => {
+    const { base } = await liveServer();
+    const outDir = fs.mkdtempSync(path.join(os.tmpdir(), "det-g2-live-chain-"));
+    await withLiveEnv(base, async () => {
+      const x = await runCli([...["extract", ...LIVE_ROOT_ARGS, "--registry", REGISTRY, "--bindings", BINDINGS, "--out", outDir], "--json"]);
+      assert.equal(x.code, 0, `extract exit ${x.code}: ${x.err.slice(0, 400)}`);
+      const o = JSON.parse(x.out).output;
+      assert.equal(o.pageStructure.inputs.registryRevisionId, "fixture-rev-0001", "registry pin on the live-derived structure");
+      assert.ok(o.pageStructure.inputs.bindingMapContentHash, "binding pin present");
+      const p = await runCli(["plan", "--profile", LIVE_PROFILE, "--registry", REGISTRY, "--bindings", BINDINGS, "--input", path.join(outDir, "page-structure.json"), "--json"]);
+      assert.equal(p.code, 0, `plan exit ${p.code}: ${p.err.slice(0, 400)}`);
+      const report = JSON.parse(p.out).output;
+      assert.equal(report.sections.length, 2, "both live sections enter the report");
+      assert.equal(report.coverage.total, 0, "zero proven capability bindings exist yet - honestly reported");
+    });
+    return "extract->plan chain green on live-derived structure; 0 bindings honestly reported";
+  });
+
+  checkAsync("G2-T31g", "new live surfaces stay free of secrets and owner identifiers (provider pins allowed only in evidence/receipt)", async () => {
+    const adapterBanned = /vNPtfBRpYM3PsExirVqhmt|figd_[A-Za-z0-9_-]{10,}|\/home\/thanhle|slaunch|secomm|\b245:2\b|\b245:16\b/i;
+    const hits = [];
+    const scan = (rel, text, banned) => {
+      const m = text.match(new RegExp(banned.source, "gi"));
+      if (m) hits.push(`${rel}: ${[...new Set(m)].join(",")}`);
+    };
+    const walkDir = (dir, rel, banned) => {
+      for (const f of fs.readdirSync(dir)) {
+        const p = path.join(dir, f);
+        if (fs.statSync(p).isDirectory()) walkDir(p, `${rel}/${f}`, banned);
+        else scan(`${rel}/${f}`, fs.readFileSync(p, "utf8"), banned);
+      }
+    };
+    walkDir(path.join(REPO, "adapters/design-source-figma-live"), "adapters/design-source-figma-live", adapterBanned);
+    walkDir(path.join(LIVE, ""), "tests/fixtures/g2-figma-live", adapterBanned);
+    // Derived live evidence + receipt (when present): token-shaped secrets and absolute paths are
+    // never committed; the source/revision provenance pins required by the issue are allowed.
+    const evidenceBanned = /figd_[A-Za-z0-9_-]{10,}|-----BEGIN|\/home\/[a-z]+\//i;
+    const evidenceDir = path.join(REPO, "evidence/issue-18");
+    if (fs.existsSync(evidenceDir)) walkDir(evidenceDir, "evidence/issue-18", evidenceBanned);
+    const receipt = path.join(REPO, "docs/converter/RECEIPT-ISSUE18-G2-LIVE.md");
+    if (fs.existsSync(receipt)) scan("docs/converter/RECEIPT-ISSUE18-G2-LIVE.md", fs.readFileSync(receipt, "utf8"), evidenceBanned);
+    assert.deepEqual(hits, [], "secret/owner-identifier violations:\n" + hits.join("\n"));
+    const { server } = await liveServer();
+    server.close();
+    return "adapter + fixtures clean; evidence/receipt secrets policy enforced";
   });
 }
