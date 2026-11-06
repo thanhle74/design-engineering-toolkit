@@ -343,7 +343,7 @@ export default async function registerM4ExtractSuite(checkAsync) {
       const report = JSON.parse(fs.readFileSync(path.join(goodOut, "report.json"), "utf8"));
       const platScan = report.scans.find((s) => s.kind === "magento-platform");
       assert.ok(platScan, "magento-platform scan present in report");
-      assert.equal(platScan.counts.modules, 9, "fixture checkout yields 9 module records end-to-end");
+      assert.equal(platScan.counts.modules, 10, "fixture checkout yields 10 module records end-to-end");
     } finally {
       process.chdir(origCwd);
     }
