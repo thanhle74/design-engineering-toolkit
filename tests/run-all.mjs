@@ -300,6 +300,10 @@ await registerG2Suite(checkAsync);
 // ---- Issue #15 Knowledge Engine MVP suite (async) ------------------------------------------
 const { default: registerKbSuite } = await import("./kb-suite.mjs");
 await registerKbSuite(checkAsync);
+
+// ---- Issue #23 G3 native content composition suite (async) ---------------------------------
+const { default: registerG3Suite } = await import("./g3-suite.mjs");
+await registerG3Suite(checkAsync);
 for (const { id, name, fn } of asyncChecks) {
   try {
     const detail = await fn();

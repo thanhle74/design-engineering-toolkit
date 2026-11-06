@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/compose-output.schema.json",
+  "$comment": "Design Engineering Toolkit CLI family — ComposeOutput. Major version 1. Deterministic output of one native-content compose adapter run (issue #23 G3): the emitted native content document, the per-source-node accountability map (every planned source node lands in exactly one of mapped / gap / decoration-merged / excluded / skipped), and diagnostics from the closed converter registry. The adapter must echo the core's input pins; the core re-verifies them and hard-rejects any mismatch (ADAPTER_CONTRACT_MISMATCH). Proof discipline: a compose output is structural composition evidence ONLY — it never claims Admin round-trip or visual verification.",
+  "title": "Design Engineering Toolkit — Compose Output",
+  "type": "object",
+  "required": ["schemaVersion", "platformId", "source", "inputs", "content", "contentHash", "mapping", "diagnostics"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "type": "integer", "const": 1 },
+    "platformId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9.-]*$", "description": "Must equal the profile platformId the core dispatched with." },
+    "source": {
+      "$ref": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/common.defs.json#/$defs/sourceRevision",
+      "description": "The design-source revision the content was composed from — must equal the PageStructure's pinned source."
+    },
+    "inputs": {
+      "type": "object",
+      "required": ["nodeIrContentHash", "pageStructureContentHash", "contentManifestContentHash", "registryRevisionId", "bindingMapContentHash"],
+      "additionalProperties": false,
+      "properties": {
+        "nodeIrContentHash": { "type": "string", "minLength": 1 },
+        "pageStructureContentHash": { "type": "string", "minLength": 1 },
+        "contentManifestContentHash": { "type": "string", "minLength": 1 },
+        "registryRevisionId": { "type": "string", "minLength": 1 },
+        "bindingMapContentHash": { "type": "string", "minLength": 1 }
+      },
+      "description": "Echo of the exact input identities the adapter composed from; the core recomputes and compares all five."
+    },
+    "content": {
+      "type": "string",
+      "description": "The emitted native content document in the platform's persisted (master) format. Empty only when nothing could be composed — the core treats an empty document as a blocking failure, never as success."
+    },
+    "contentHash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "description": "SHA-256 of the exact content string; the core recomputes and compares."
+    },
+    "mapping": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/mappingEntry" },
+      "description": "Source node -> native content accountability. Sorted by sourceNodeId."
+    },
+    "diagnostics": {
+      "type": "array",
+      "items": { "$ref": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/common.defs.json#/$defs/diagnostic" },
+      "description": "Compose findings in canonical diagnostic order. Gaps (missing content inputs, non-representable decorations) are NOT_VERIFIED warnings with the affected node as subject — never silently dropped, never invented around."
+    }
+  },
+  "$defs": {
+    "mappingEntry": {
+      "type": "object",
+      "required": ["sourceNodeId", "disposition"],
+      "additionalProperties": false,
+      "properties": {
+        "sourceNodeId": { "type": "string", "pattern": "^n-[0-9a-f]{12}$", "description": "The NodeIR node id this entry accounts for." },
+        "sourceName": { "type": "string", "description": "Observed source name, for human-readable reports only." },
+        "sourceLocator": { "type": "string", "pattern": "^(design|source)://\\S+$", "description": "The design:// locator from the node's pinned evidence." },
+        "disposition": {
+          "enum": ["mapped", "gap", "decoration-merged", "excluded", "skipped"],
+          "description": "mapped = realized in the emitted content; gap = no native equivalent or missing content input (diagnostic attached); decoration-merged = pure decoration folded/excluded by policy; excluded = hidden or out of plan; skipped = planned but not composable by this slice's composer."
+        },
+        "target": {
+          "type": "object",
+          "required": ["capabilityId", "appearanceId"],
+          "additionalProperties": false,
+          "properties": {
+            "capabilityId": { "$ref": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/common.defs.json#/$defs/capabilityId" },
+            "appearanceId": { "$ref": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/common.defs.json#/$defs/appearanceId" },
+            "nativeElement": { "type": "string", "minLength": 1, "description": "Platform-native element/role the node realized (adapter-documented vocabulary)." },
+            "nativeField": { "type": "string", "minLength": 1, "description": "Platform-native editable field the node's content landed in." }
+          },
+          "description": "Required for disposition=mapped."
+        },
+        "note": { "type": "string", "maxLength": 500, "description": "One human-readable sentence on how/why; never a substitute for the disposition or diagnostics." }
+      },
+      "allOf": [
+        { "if": { "properties": { "disposition": { "const": "mapped" } } }, "then": { "properties": { "target": {} }, "required": ["target"] } }
+      ]
+    }
+  }
+}

@@ -58,6 +58,10 @@ const ids = new Map<string, string>([
   ["page-structure", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/page-structure.schema.json"],
   ["source-review", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/source-review.schema.json"],
   ["design-source-snapshot", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/design-source-snapshot.schema.json"],
+  // Native content composition family (issue #23)
+  ["content-manifest", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/content-manifest.schema.json"],
+  ["compose-input", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/compose-input.schema.json"],
+  ["compose-output", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/compose-output.schema.json"],
   // Knowledge Engine family (issue #15)
   ["kb-capability", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-capability.schema.json"],
   ["kb-ui-component", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-ui-component.schema.json"],

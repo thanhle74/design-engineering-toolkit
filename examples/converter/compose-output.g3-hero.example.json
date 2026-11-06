@@ -1,0 +1,158 @@
+{
+  "schemaVersion": 1,
+  "platformId": "magento-pagebuilder",
+  "source": {
+    "sourceId": "g3-hero-fixture-source",
+    "revisionId": "mcp-observed-unpinned-2026-11-06",
+    "accessedAt": "2026-11-06T07:41:59.086Z"
+  },
+  "inputs": {
+    "nodeIrContentHash": "9cf5085cc0c3f95c7b4a79a5e6412e6e169f04f35741d7b013035748e502f844",
+    "pageStructureContentHash": "24aa139cd870280e5662682b7765d3701b4937135d74a1bf36d9cd8fe2258a75",
+    "contentManifestContentHash": "a690d9dab58df0fa70345117960ce82a1f451e9d003e26d04a478ec29e9bc430",
+    "registryRevisionId": "content:9ee428e468bbaf7e",
+    "bindingMapContentHash": "adfa88369beacbf91d7604d5fc863957c805bfc8f4a079362189c716938d8117"
+  },
+  "content": "<div data-content-type=\"row\" data-appearance=\"contained\" data-element=\"main\"><div data-enable-parallax=\"0\" data-parallax-speed=\"0.5\" data-background-images=\"{}\" data-background-type=\"image\" data-video-loop=\"true\" data-video-play-only-visible=\"true\" data-video-lazy-load=\"true\" data-video-fallback-src=\"\" data-element=\"inner\"><div data-content-type=\"banner\" data-appearance=\"poster\" data-show-button=\"always\" data-show-overlay=\"never\" data-element=\"main\"><a href=\"/collections\" data-element=\"link\"><div class=\"pagebuilder-banner-wrapper\" data-background-images=\"{&quot;desktop_image&quot;:&quot;{{media url=wysiwyg/g3-hero/hero-1440x880-placeholder.jpg}}&quot;}\" data-background-type=\"image\" data-video-loop=\"true\" data-video-play-only-visible=\"true\" data-video-lazy-load=\"true\" data-video-fallback-src=\"\" data-element=\"wrapper\"><div class=\"pagebuilder-overlay pagebuilder-poster-overlay\" data-overlay-color=\"\" aria-label=\"\" title=\"\" style=\"min-height: 880px;\" data-element=\"overlay\"><div class=\"pagebuilder-poster-content\"><div data-element=\"content\"><p>CHAPTER 01 / AW 2026</p><h2>The Quiet Grandeur</h2><p>Refined tailoring, knitwear and leather for the season.</p></div><button type=\"button\" class=\"pagebuilder-banner-button\" data-element=\"button\" style=\"opacity: 1; visibility: visible;\">Explore the Collection</button></div></div></div></a></div></div></div>",
+  "contentHash": "sha256:e83672eeb568cb5920154d3a5391b068330658b465a98fb84d177385765035bc",
+  "mapping": [
+    {
+      "sourceNodeId": "n-09cb7cd19b5b",
+      "sourceName": "SLOT/Heading",
+      "sourceLocator": "design://g3-hero-fixture-source/254:44",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/banner",
+        "appearanceId": "poster",
+        "nativeElement": "content",
+        "nativeField": "message"
+      },
+      "note": "Text folded into the banner content WYSIWYG field as <h2>; standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-10ad9a6e3d9e",
+      "sourceName": "SLOT/HeroContent",
+      "sourceLocator": "design://g3-hero-fixture-source/254:42",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/banner",
+        "appearanceId": "poster",
+        "nativeElement": "content",
+        "nativeField": "message"
+      },
+      "note": "Structural container folded into the banner content WYSIWYG; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-25c4375e4bd7",
+      "sourceName": "DECOR/OverlayGradient",
+      "sourceLocator": "design://g3-hero-fixture-source/254:41",
+      "disposition": "gap",
+      "note": "Decoration without a native equivalent; explicitly excluded (not silently dropped)."
+    },
+    {
+      "sourceNodeId": "n-28a895e0e2ab",
+      "sourceName": "SLOT/Overline",
+      "sourceLocator": "design://g3-hero-fixture-source/254:43",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/banner",
+        "appearanceId": "poster",
+        "nativeElement": "content",
+        "nativeField": "message"
+      },
+      "note": "Text folded into the banner content WYSIWYG field as <p>; standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-52d0e4438506",
+      "sourceName": "DECOR/ScrollIndicator",
+      "sourceLocator": "design://g3-hero-fixture-source/254:57",
+      "disposition": "gap",
+      "note": "Decoration without a native equivalent; explicitly excluded (not silently dropped)."
+    },
+    {
+      "sourceNodeId": "n-53bd7af6795b",
+      "sourceName": "SLOT/HeroActions",
+      "sourceLocator": "design://g3-hero-fixture-source/254:46",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/banner",
+        "appearanceId": "poster",
+        "nativeElement": "button",
+        "nativeField": "button_text"
+      },
+      "note": "Structural container folded into the banner button area; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-c23f1dca31d2",
+      "sourceName": "SLOT/CTA",
+      "sourceLocator": "design://g3-hero-fixture-source/254:47",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/banner",
+        "appearanceId": "poster",
+        "nativeElement": "button",
+        "nativeField": "button_text"
+      },
+      "note": "CTA text + link target from the manifest."
+    },
+    {
+      "sourceNodeId": "n-dd6f4cbf5f91",
+      "sourceName": "SLOT/HeroMedia",
+      "sourceLocator": "design://g3-hero-fixture-source/254:40",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/banner",
+        "appearanceId": "poster",
+        "nativeElement": "wrapper",
+        "nativeField": "background_image"
+      },
+      "note": "Desktop background image (labeled offline placeholder (operator-supplied local asset required before any CMS write)); mobile breakpoint not composed."
+    },
+    {
+      "sourceNodeId": "n-f26ba3d1e8c2",
+      "sourceName": "SECTION/Hero/Primary",
+      "sourceLocator": "design://g3-hero-fixture-source/245:5",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/banner",
+        "appearanceId": "poster",
+        "nativeElement": "main",
+        "nativeField": "banner (row > banner container)"
+      },
+      "note": "Section composed as native row(contained) > banner(poster) per the pinned declarations; the row provides the platform's standard top-level container."
+    },
+    {
+      "sourceNodeId": "n-f465fcdb5e6e",
+      "sourceName": "SLOT/BodyCopy",
+      "sourceLocator": "design://g3-hero-fixture-source/254:45",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/banner",
+        "appearanceId": "poster",
+        "nativeElement": "content",
+        "nativeField": "message"
+      },
+      "note": "Text folded into the banner content WYSIWYG field as <p>; standalone per-field styling is not preserved (single WYSIWYG field)."
+    }
+  ],
+  "diagnostics": [
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Decoration 'DECOR/OverlayGradient' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record \u2014 never silently dropped, never approximated.",
+      "subject": {
+        "type": "node",
+        "id": "n-25c4375e4bd7"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Decoration 'DECOR/ScrollIndicator' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record \u2014 never silently dropped, never approximated.",
+      "subject": {
+        "type": "node",
+        "id": "n-52d0e4438506"
+      }
+    }
+  ]
+}
