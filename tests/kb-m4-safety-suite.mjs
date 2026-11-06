@@ -235,20 +235,18 @@ export default async function registerKbM4SafetySuite(checkAsync) {
     return "ingest ACTIVE -> digest change STALE -> stays stale -> default-deny queries -> re-ingest resets";
   });
 
-  await checkAsync("KB-M4-S6", "ENGINE GAP PIN (report-only, flip to positive once src/core/kb/safety.ts maps recordType 'module' -> kb-capability): the schema-legal module recordType is refused by the ingest safety gate", async () => {
-    // The M4 contract layer (schemas/kb/kb-capability.schema.json enum + ingest platformRecords
-    // lane + ids.ts mod: prefix) admits recordType "module", but safety.ts schemaNameForRecord
-    // was not extended, so EVERY module record fails with "unknown recordType 'module'" before
-    // any content gate can even judge it. This check pins the CURRENT honest behavior so the
-    // gap stays visible in the gate: when the one-line engine mapping lands, flip this check to
-    // a positive module-ingest assertion (ingest exit 0, recordType 'module' ACTIVE in store).
+  await checkAsync("KB-M4-S6", "module recordType ingests through the platformRecords lane: safety gate maps it to kb-capability (recordType 'module' ACTIVE in store)", async () => {
+    // Integrator fix (issue #19 M4): safety.ts schemaNameForRecord now maps "module" ->
+    // "kb-capability", so the schema-legal module record ingests like any other KB-1 record.
     const { manifestPath } = stageExtractFixture([moduleRecord({ recordType: "module" })]);
-    const r = await runCli(["kb", "ingest", "--manifest", manifestPath, "--json"]);
-    assert.equal(r.code, 1, "module records must be refused until the safety-gate mapping lands");
+    const store = mkTemp("store-mod");
+    const r = await runCli(["kb", "ingest", "--manifest", manifestPath, "--out", store, "--json"]);
+    assert.equal(r.code, 0, "module records must ingest once the safety-gate mapping lands");
     const run = parseJsonRun(r);
-    const diag = run.runDiagnostics.find((d) => d.code === "RECORD_SCHEMA_INVALID");
-    assert.ok(diag, `expected RECORD_SCHEMA_INVALID, got ${JSON.stringify(run.runDiagnostics.map((d) => d.code))}`);
-    assert.ok(diag.message.includes("unknown recordType 'module'"), `gap shape changed — re-evaluate this pin: ${diag.message}`);
-    return "pinned: module recordType refused by safety.ts mapping gap (engine fix owner: integrator)";
+    const errors = run.runDiagnostics.filter((d) => d.severity === "error");
+    assert.equal(errors.length, 0, `unexpected error diagnostics: ${JSON.stringify(errors.map((d) => d.code))}`);
+    const validate = await runCli(["kb", "validate", "--store", store, "--json"]);
+    assert.equal(validate.code, 0, "staged store with a module record must validate");
+    return "fixed: recordType 'module' passes the safety gate and lands ACTIVE (platform lane)";
   });
 }
