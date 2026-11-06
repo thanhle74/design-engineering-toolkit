@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "platformId": "magento-pagebuilder",
+  "source": {
+    "sourceId": "g4-craftsmanship-fixture-source",
+    "revisionId": "mcp-observed-unpinned-2026-11-06",
+    "accessedAt": "2026-11-06T10:00:37.904Z"
+  },
+  "inputs": {
+    "nodeIrContentHash": "39556792177bc60e0f982e275b1bf2be54e8b2e219bf1ca4ee8095952df171b5",
+    "pageStructureContentHash": "a104f86836e771da08feae8e11bc50ed90d416a772d7e6cb5c00b76d55628706",
+    "contentManifestContentHash": "73f9a87af44486761ebd8ee4c643cfa4e8ee4a7674fd2231f6e2d66d576f02b6",
+    "projectionContentHash": "1c54dfda29e4a55d1ef55e06c13d7166bb04e973bc51f5ad3c6d2a67fe407529",
+    "registryRevisionId": "content:9ee428e468bbaf7e",
+    "bindingMapContentHash": "c20aec079fff2a0dab2af10c29ad983d3392f3288c5626356e8c41b5d251174a"
+  },
+  "content": "<div data-content-type=\"row\" data-appearance=\"contained\" data-element=\"main\"><div data-enable-parallax=\"0\" data-parallax-speed=\"0.5\" data-background-images=\"{}\" data-background-type=\"image\" data-video-loop=\"true\" data-video-play-only-visible=\"true\" data-video-lazy-load=\"true\" data-video-fallback-src=\"\" style=\"min-height: 780px;\" data-element=\"inner\"><div class=\"pagebuilder-column-group\" data-content-type=\"column-group\" data-appearance=\"default\" data-grid-size=\"12\" data-background-images=\"{}\" data-element=\"main\"><div class=\"pagebuilder-column-line\" data-content-type=\"column-line\" data-element=\"main\"><div class=\"pagebuilder-column\" data-content-type=\"column\" data-appearance=\"full-height\" data-background-images=\"{}\" data-element=\"main\" style=\"width:50%\"><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/g4-craftsmanship/craft-media-620x620-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure></div><div class=\"pagebuilder-column\" data-content-type=\"column\" data-appearance=\"full-height\" data-background-images=\"{}\" data-element=\"main\" style=\"width:50%\"><div data-content-type=\"text\" data-appearance=\"default\" data-element=\"main\"><p>CRAFTSMANSHIP</p><h2>Materials, considered</h2><p>Fabric, stitch and finish — considered at every step of the making.</p></div><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/g4-craftsmanship/detail-stitch-292x254-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/g4-craftsmanship/detail-fabric-292x253-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure></div></div></div></div></div>",
+  "contentHash": "sha256:66bd849d133f8d98a2c2589a45df98f3ac1fe9a4283ba95321ef405d648bc15e",
+  "mapping": [
+    {
+      "sourceNodeId": "n-0286b7835575",
+      "sourceName": "SECTION/Craftsmanship",
+      "sourceLocator": "design://g4-craftsmanship-fixture-source/299:343",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/row",
+        "appearanceId": "contained",
+        "nativeElement": "main",
+        "nativeField": "row(contained) > column-group(default) > column-line > column(full-height) x2"
+      },
+      "note": "Section composed as the declaration-backed two-column chain; column-line is the mandated bridge; observed slot proportions (620:612) simplified to 50/50 inline widths (attested stored shape); mobile breakpoint not composed."
+    },
+    {
+      "sourceNodeId": "n-033d65ac6ac8",
+      "sourceName": "Overline",
+      "sourceLocator": "design://g4-craftsmanship-fixture-source/299:346",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the column text WYSIWYG field as <p> (consecutive texts merged into one field, document order); standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-3746e5d2394b",
+      "sourceName": "Body",
+      "sourceLocator": "design://g4-craftsmanship-fixture-source/299:348",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the column text WYSIWYG field as <p> (consecutive texts merged into one field, document order); standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-abbb354697b2",
+      "sourceName": "Title",
+      "sourceLocator": "design://g4-craftsmanship-fixture-source/299:347",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the column text WYSIWYG field as <h2> (consecutive texts merged into one field, document order); standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-b1ffd20f17ae",
+      "sourceName": "SLOT/DetailStitch",
+      "sourceLocator": "design://g4-craftsmanship-fixture-source/299:349",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/image",
+        "appearanceId": "full-width",
+        "nativeElement": "image",
+        "nativeField": "desktop_image (src)"
+      },
+      "note": "Explicitly projected media slot composed as a native image element (labeled offline placeholder (operator-supplied local asset required before any CMS write)); the observed side-by-side pairing of detail media is not declaration-backed and composes stacked — see the section's fidelity warnings."
+    },
+    {
+      "sourceNodeId": "n-dca1690ba99e",
+      "sourceName": "SLOT/CraftContent",
+      "sourceLocator": "design://g4-craftsmanship-fixture-source/299:345",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (secondary)",
+        "nativeField": "column children"
+      },
+      "note": "Secondary slot composed as the right native column (full-height); no manifest media entry on the slot frame itself."
+    },
+    {
+      "sourceNodeId": "n-fc3cf87d5efd",
+      "sourceName": "SLOT/CraftMedia",
+      "sourceLocator": "design://g4-craftsmanship-fixture-source/299:344",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (primary)",
+        "nativeField": "column children (own media slot -> image desktop_image src)"
+      },
+      "note": "Primary slot composed as the left native column (full-height); the slot's own media fill composes as the column's image element."
+    },
+    {
+      "sourceNodeId": "n-fd1a0b6fd94b",
+      "sourceName": "SLOT/DetailFabric",
+      "sourceLocator": "design://g4-craftsmanship-fixture-source/299:350",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/image",
+        "appearanceId": "full-width",
+        "nativeElement": "image",
+        "nativeField": "desktop_image (src)"
+      },
+      "note": "Explicitly projected media slot composed as a native image element (labeled offline placeholder (operator-supplied local asset required before any CMS write)); the observed side-by-side pairing of detail media is not declaration-backed and composes stacked — see the section's fidelity warnings."
+    }
+  ],
+  "diagnostics": [
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Observed media aspect ratios in 'SECTION/Craftsmanship' are not enforced by the native image element (natural aspect at column width; no native aspect/crop field); the section's fixed height persists only as the row min-height.",
+      "subject": {
+        "type": "node",
+        "id": "n-0286b7835575"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "secondary column of 'SECTION/Craftsmanship' carries 2 observed media slots; they compose as stacked native image elements — the observed side-by-side arrangement is not declaration-backed (a column-group nested inside a column violates the pinned parents/children policies), and the observed vertical staggering of the pair is not a native field. Recorded as a fidelity gap, never custom CSS.",
+      "subject": {
+        "type": "node",
+        "id": "n-0286b7835575"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "The observed 48px gutter between the two columns of 'SECTION/Craftsmanship' is not composed — native columns carry no gutter field (the attested inline widths approximate the observed proportions at 50/50).",
+      "subject": {
+        "type": "node",
+        "id": "n-0286b7835575"
+      }
+    }
+  ]
+}

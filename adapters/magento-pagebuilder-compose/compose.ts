@@ -7,13 +7,32 @@
 // defensively and fails closed on anything unexpected.
 //
 // What this slice composes (and what it deliberately does not):
-// - The hero shape only: a section whose subtree carries full-width background media + overlaid
-//   text + an optional CTA. Native target (evidence: Magento_PageBuilder declarations, verified
-//   at the pinned checkout revision before this adapter was written):
-//     row (appearance "contained", children policy allow) > banner (appearance "poster", default).
-//   The banner is the platform's own background-image-with-text-overlay unit: background media
-//   lands in the wrapper's data-background-images, overlaid text in the content WYSIWYG field,
-//   the CTA in the button element — each an Admin-editable form field.
+// - TWO bounded section shapes, each detected per section and composed only through explicit
+//   role evidence (projection or SLOT naming hints), never guessed:
+//   (1) the G3 hero shape: a section whose subtree carries full-width background media + overlaid
+//       text + an optional CTA. Native target (evidence: Magento_PageBuilder declarations, verified
+//       at the pinned checkout revision before this adapter was written):
+//         row (appearance "contained", children policy allow) > banner (appearance "poster", default).
+//       The banner is the platform's own background-image-with-text-overlay unit: background media
+//       lands in the wrapper's data-background-images, overlaid text in the content WYSIWYG field,
+//       the CTA in the button element — each an Admin-editable form field.
+//   (2) the G4 two-column shape (issue #25): a section with exactly one column-primary and one
+//       column-secondary projected slot container. Native target (declarations verified on the
+//       pinned checkout before this shape was written):
+//         row (contained) > column-group (default) > column-line (default) > column (full-height) x2.
+//       column-line is the DECLARATION-MANDATED bridge (a column's parents allow only column-line/
+//       column; a column-group's parents exclude column). Each column composes role-resolved text
+//       (content-lead/heading/body) folded into ONE text (default) WYSIWYG element and projected
+//       inline-media nodes as native image (full-width) elements — each an Admin-editable form
+//       field. A column-group nested inside a column is NOT declaration-backed (column-group
+//       parents policy denies column; column children deny row/column/column-line), so observed
+//       side-by-side media pairs inside a column compose as stacked native images with an explicit
+//       fidelity gap — never custom CSS, never a generic renderer. Column widths derive from the
+//       observed fixed-width constraints (rounded to integer percents, equal -> the platform's own
+//       50/50) and persist inline in the attested stored shape of this checkout (real cms_page 37:
+//       style="width:25%"); the section's fixed height persists as the row inner min_height
+//       (declaration-backed). Gaps (gutter, pair staggering, aspect ratios, mobile breakpoint)
+//       are NOT_VERIFIED warnings + accountable mapping entries.
 // - The emitted markup mirrors the platform's own persisted master format (its master templates
 //   stamp data-element="<declared element name>" on every element; the master-format reader
 //   populates forms by those names). Attributes not present in the pinned declarations are not
@@ -57,7 +76,7 @@ interface ComposeInput {
   platformId: string;
   registry: { source: { revisionId: string }; capabilities: Capability[] };
   bindings: { bindings: { sourceComponentId: string; variantConditions: { prop: string; op?: string; value: string }[] }[] };
-  projection?: { assignments: { sourceLocator: string; role: "background-media" | "content-lead" | "heading" | "body" | "cta" | "decoration"; reason: string }[] };
+  projection?: { assignments: { sourceLocator: string; role: "background-media" | "content-lead" | "heading" | "body" | "cta" | "decoration" | "column-primary" | "column-secondary" | "inline-media"; reason: string }[] };
   nodeIr: { nodes: NodeIRNode[]; rootNodeId: string };
   pageStructure: { sections: PageStructureSection[]; source: { sourceId: string; revisionId: string; accessedAt: string } };
   content: { entries: ManifestEntry[] };
@@ -141,6 +160,17 @@ const ROW_ID = "magento_pagebuilder/row";
 const ROW_APPEARANCE = "contained";
 const BANNER_ID = "magento_pagebuilder/banner";
 const BANNER_APPEARANCE = "poster";
+// G4 two-column shape targets (declarations verified on the pinned checkout before use).
+const COLUMN_GROUP_ID = "magento_pagebuilder/column-group";
+const COLUMN_GROUP_APPEARANCE = "default";
+const COLUMN_LINE_ID = "magento_pagebuilder/column-line";
+const COLUMN_LINE_APPEARANCE = "default";
+const COLUMN_ID = "magento_pagebuilder/column";
+const COLUMN_APPEARANCE = "full-height";
+const IMAGE_ID = "magento_pagebuilder/image";
+const IMAGE_APPEARANCE = "full-width";
+const TEXT_ID = "magento_pagebuilder/text";
+const TEXT_APPEARANCE = "default";
 
 const diagnostics: Diagnostic[] = [];
 const mapping: MappingEntry[] = [];
@@ -178,7 +208,8 @@ for (const e of input.content.entries) {
 }
 
 // ---- Explicit semantic projection (optional; the recorded human decision) --------------------
-const roleByLocator = new Map<string, "background-media" | "content-lead" | "heading" | "body" | "cta" | "decoration">();
+type ComposerRole = "background-media" | "content-lead" | "heading" | "body" | "cta" | "decoration" | "column-primary" | "column-secondary" | "inline-media";
+const roleByLocator = new Map<string, ComposerRole>();
 for (const a of input.projection?.assignments ?? []) roleByLocator.set(a.sourceLocator, a.role);
 
 // ---- NodeIR helpers -------------------------------------------------------------------------
@@ -250,6 +281,273 @@ const TEXT_ROLE_TABLE: Record<string, "contentLead" | "heading" | "body" | "cta"
   ctalabel: "cta",
 };
 
+// Deterministic role resolution shared by both section shapes: explicit projection assignment >
+// SLOT naming-contract table (text layers only). Subtrees of projected decoration nodes are
+// excluded by the caller; text layers named by their raw content compose only through the
+// explicit projection.
+function resolveComposerRole(node: NodeIRNode): ComposerRole | undefined {
+  const loc = locatorOf(node);
+  const projected = loc ? roleByLocator.get(loc) : undefined;
+  if (projected && projected !== "decoration") return projected;
+  if (node.kind !== "text") return undefined;
+  const r = slotRole(node);
+  return r ? (TEXT_ROLE_TABLE[r] as ComposerRole | undefined) : undefined;
+}
+
+// ---- HTML escaping (fixed; attribute values vs text content) --------------------------------
+const esc = (s: string): string => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+const escText = (s: string): string => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+// ---- G4 two-column composition (issue #25) ---------------------------------------------------
+// Emits row(contained) > column-group(default) > column-line(default) > column(full-height) x2
+// — the only declaration-backed two-column chain (a column-group's parents policy excludes
+// column; a column's children policy denies row/column/column-line, so column-line is the
+// mandated bridge under the group). Per column: the container's own media entry (the observed
+// media slot frame carries the media fill directly) and projected inline-media descendants
+// become native image (full-width) elements; role-resolved text (content-lead/heading/body)
+// folds into ONE text (default) WYSIWYG in document order. Fidelity limits (inter-column
+// gutter, side-by-side pair arrangement, stagger, aspect ratios, mobile breakpoint) come back
+// as explicit NOT_VERIFIED warnings + accountable mapping entries — never custom CSS.
+type EmitItem =
+  | { kind: "image"; nodeId: string; name: string; locator: string | null; media: { mediaUrl: string; assetLabel?: string }; viaProjection: boolean; accountedByContainer: boolean }
+  | { kind: "text"; runs: { role: "content-lead" | "heading" | "body"; nodeId: string; name: string; locator: string | null; text: string; viaProjection: boolean }[] };
+
+function composeTwoColumnSection(section: PageStructureSection, sectionNodeId: string, primaryNode: NodeIRNode, secondaryNode: NodeIRNode): string | null {
+  const sectionNode = nodesById.get(sectionNodeId) as NodeIRNode;
+  const sectionLocator = locatorOf(sectionNode) ?? undefined;
+
+  // Shape registry gate: every native target this shape emits must be present, declared-native
+  // and enabled — no appearance guessing (the row gate is shared with the hero shape above).
+  const shapeReady =
+    requireCap(COLUMN_GROUP_ID, COLUMN_GROUP_APPEARANCE) &&
+    requireCap(COLUMN_LINE_ID, COLUMN_LINE_APPEARANCE) &&
+    requireCap(COLUMN_ID, COLUMN_APPEARANCE) &&
+    requireCap(IMAGE_ID, IMAGE_APPEARANCE) &&
+    requireCap(TEXT_ID, TEXT_APPEARANCE);
+  if (!shapeReady) return null;
+
+  // Column widths derive from the observed fixed-width constraints (rounded to integer
+  // percents, clamped to 1..99); without constraints the platform's own equal-column default
+  // applies — recorded, never inferred from source geometry the inventory does not carry.
+  const fixedWidthOf = (n: NodeIRNode): number | null => {
+    const c = n.layout.constraints.find((x) => x.axis === "width" && x.type === "fixed");
+    const px = c ? Number(c.value) : NaN;
+    return Number.isFinite(px) && px > 0 ? px : null;
+  };
+  const w1 = fixedWidthOf(primaryNode);
+  const w2 = fixedWidthOf(secondaryNode);
+  let primaryPct = 50;
+  let secondaryPct = 50;
+  if (w1 !== null && w2 !== null) {
+    primaryPct = Math.min(99, Math.max(1, Math.round((w1 / (w1 + w2)) * 100)));
+    secondaryPct = 100 - primaryPct;
+  } else {
+    diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Section '${section.name}' column slots carry no fixed-width constraints; widths fall back to the platform's own equal-column default (50/50) — recorded, not inferred.`, sectionNodeId));
+  }
+
+  // Per-column content. Document-order walk; consecutive role-resolved texts merge into one
+  // text WYSIWYG element at their position; each projected inline-media node becomes one image
+  // element. Everything else is accounted explicitly (gap / excluded / decoration).
+  const composeColumn = (columnNode: NodeIRNode, isPrimary: boolean): string => {
+    const items: EmitItem[] = [];
+    let pendingText: EmitItem | null = null;
+    const flushText = (): void => {
+      if (pendingText && pendingText.kind === "text" && pendingText.runs.length > 0) items.push(pendingText);
+      pendingText = null;
+    };
+    const pushTextRun = (run: Extract<EmitItem, { kind: "text" }>["runs"][number]): void => {
+      if (pendingText && pendingText.kind === "text") pendingText.runs.push(run);
+      else pendingText = { kind: "text", runs: [run] };
+    };
+
+    // The column container's own media entry first (the observed media slot frame IS the media;
+    // its image composes as the column's first element, accounted by the container's mapping).
+    const colLocator = locatorOf(columnNode);
+    const ownMedia = colLocator ? mediaByRef.get(colLocator) : undefined;
+    if (ownMedia) {
+      flushText();
+      items.push({ kind: "image", nodeId: columnNode.nodeId, name: columnNode.name, locator: colLocator, media: ownMedia, viaProjection: false, accountedByContainer: true });
+    }
+
+    walkSubtree(columnNode.nodeId, (node) => {
+      if (node.visible === false) return;
+      const loc = locatorOf(node);
+      const entryBase = { sourceNodeId: node.nodeId, sourceName: node.name, ...(loc ? { sourceLocator: loc } : {}) };
+      if (loc && roleByLocator.get(loc) === "decoration") {
+        diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Decoration '${node.name}' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.`, node.nodeId));
+        mapping.push({ ...entryBase, disposition: "gap", note: "Explicitly projected decoration without a native equivalent; excluded (not silently dropped)." });
+        return;
+      }
+      if (loc && excludedLocators.has(loc)) {
+        flushText();
+        mapping.push({ ...entryBase, disposition: "excluded", note: "Inside a subtree explicitly projected as decoration; recorded, never silently dropped." });
+        return;
+      }
+      const role = resolveComposerRole(node);
+      if (loc !== null && roleByLocator.get(loc) === "inline-media") {
+        flushText();
+        const media = loc ? mediaByRef.get(loc) : undefined;
+        if (!media) {
+          diagnostics.push(nodeDiag("EVIDENCE_MISSING", "warning", `No content-manifest media entry for projected inline-media node '${node.name}' (${loc ?? "no locator"}); no image element is composed — no asset URL is ever invented.`, node.nodeId));
+          mapping.push({ ...entryBase, disposition: "gap", note: "Projected inline-media without a manifest media entry; no image element composed." });
+          return;
+        }
+        items.push({ kind: "image", nodeId: node.nodeId, name: node.name, locator: loc, media, viaProjection: true, accountedByContainer: false });
+        return;
+      }
+      if (role === "content-lead" || role === "heading" || role === "body") {
+        const text = loc ? textByRef.get(loc) : undefined;
+        if (text === undefined) {
+          diagnostics.push(nodeDiag("EVIDENCE_MISSING", "warning", `No content-manifest text entry for '${node.name}' (${loc ?? "no locator"}); the ${role} field is left empty — no text is invented.`, node.nodeId));
+          mapping.push({ ...entryBase, disposition: "gap", note: `No manifest text entry for the ${role} field.` });
+          return;
+        }
+        pushTextRun({ role, nodeId: node.nodeId, name: node.name, locator: loc, text, viaProjection: loc !== null && roleByLocator.get(loc) !== undefined });
+        return;
+      }
+      if (role === "cta") {
+        flushText();
+        diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `CTA '${node.name}' has no native target inside a two-column column in this slice (the banner button belongs to the hero shape); not composed.`, node.nodeId));
+        mapping.push({ ...entryBase, disposition: "gap", note: "Projected CTA outside the two-column composition table; not composed." });
+        return;
+      }
+      flushText();
+      diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Node '${node.name}' (kind '${node.kind}', role '${node.role ?? "none"}') is outside the two-column composition table; not composed.`, node.nodeId));
+      mapping.push({ ...entryBase, disposition: "gap", note: "Node outside the two-column composition table; not composed." });
+    });
+    flushText();
+
+    const html = items
+      .map((item) => {
+        if (item.kind === "image") {
+          if (!item.accountedByContainer) {
+            mapping.push({
+              sourceNodeId: item.nodeId,
+              sourceName: item.name,
+              ...(item.locator ? { sourceLocator: item.locator } : {}),
+              disposition: "mapped",
+              target: { capabilityId: IMAGE_ID, appearanceId: IMAGE_APPEARANCE, nativeElement: "image", nativeField: "desktop_image (src)" },
+              note: `Explicitly projected media slot composed as a native image element${item.media.assetLabel ? ` (${item.media.assetLabel})` : ""}; the observed side-by-side pairing of detail media is not declaration-backed and composes stacked — see the section's fidelity warnings.`,
+            });
+          }
+          return `<figure data-content-type="image" data-appearance="full-width" data-element="main"><img class="pagebuilder-mobile-hidden" src="${esc(item.media.mediaUrl)}" alt="" title="" data-element="desktop_image"></figure>`;
+        }
+        for (const run of item.runs) {
+          mapping.push({
+            sourceNodeId: run.nodeId,
+            sourceName: run.name,
+            ...(run.locator ? { sourceLocator: run.locator } : {}),
+            disposition: "mapped",
+            target: { capabilityId: TEXT_ID, appearanceId: TEXT_APPEARANCE, nativeElement: "text", nativeField: "content (WYSIWYG HTML)" },
+            note: `${run.viaProjection ? "Explicitly projected " : ""}text folded into the column text WYSIWYG field as ${run.role === "heading" ? "<h2>" : "<p>"}${item.runs.length > 1 ? " (consecutive texts merged into one field, document order)" : ""}; standalone per-field styling is not preserved (single WYSIWYG field).`,
+          });
+        }
+        return `<div data-content-type="text" data-appearance="default" data-element="main">${item.runs.map((run) => (run.role === "heading" ? `<h2>${escText(run.text)}</h2>` : `<p>${escText(run.text)}</p>`)).join("")}</div>`;
+      })
+      .join("");
+
+    // Column container mapping (one entry per node; covers the container's own media when
+    // present). When the slot carries neither its own media nor any composable descendant,
+    // nothing of the slot landed except the structural shell — an honest gap entry (G3
+    // precedent: a content-carrying node with a missing manifest entry is a gap, never a
+    // mapped claim) plus the explicit empty-column diagnostic.
+    const columnLanded = ownMedia !== undefined || html.length > 0;
+    mapping.push({
+      sourceNodeId: columnNode.nodeId,
+      sourceName: columnNode.name,
+      ...(colLocator ? { sourceLocator: colLocator } : {}),
+      disposition: columnLanded ? "mapped" : "gap",
+      ...(columnLanded ? { target: { capabilityId: COLUMN_ID, appearanceId: COLUMN_APPEARANCE, nativeElement: isPrimary ? "column (primary)" : "column (secondary)", nativeField: ownMedia ? "column children (own media slot -> image desktop_image src)" : "column children" } } : {}),
+      note: columnLanded
+        ? `${isPrimary ? "Primary" : "Secondary"} slot composed as the ${isPrimary ? "left" : "right"} native column (full-height)${ownMedia ? "; the slot's own media fill composes as the column's image element" : "; no manifest media entry on the slot frame itself"}.`
+        : `${isPrimary ? "Primary" : "Secondary"} slot carries no manifest media entry and no composable descendants; only the empty native column shell is emitted structurally — the slot's media is NOT composed.`,
+    });
+    if (!columnLanded) {
+      diagnostics.push(nodeDiag("EVIDENCE_MISSING", "warning", `Projected ${isPrimary ? "column-primary" : "column-secondary"} slot '${columnNode.name}' resolved to zero content elements (no own media entry, no composable descendants); an empty native column shell is emitted — nothing invented.`, columnNode.nodeId));
+    }
+    return html;
+  };
+
+  const primaryHtml = composeColumn(primaryNode, true);
+  const secondaryHtml = composeColumn(secondaryNode, false);
+
+  // Fidelity warnings (aggregated, once per section; derived from the observed inventory):
+  // (1) multiple images in one column compose stacked — the side-by-side arrangement (and its
+  //     staggering) is not declaration-backed natively;
+  // (2) the observed inter-column gutter is not composed (no native gutter field);
+  // (3) media aspect ratios are not enforced by the native image element.
+  const imagesIn = (columnNode: NodeIRNode): NodeIRNode[] => {
+    const out: NodeIRNode[] = [];
+    const colLocator = locatorOf(columnNode);
+    if (colLocator && mediaByRef.has(colLocator)) out.push(columnNode);
+    walkSubtree(columnNode.nodeId, (n) => {
+      if (n.visible === false) return;
+      const loc = locatorOf(n);
+      if (loc && (roleByLocator.get(loc) === "inline-media" || mediaByRef.has(loc))) out.push(n);
+    });
+    return out;
+  };
+  for (const [label, columnNode] of [["primary", primaryNode], ["secondary", secondaryNode]] as const) {
+    const imgs = imagesIn(columnNode);
+    if (imgs.length > 1) {
+      const ys = [...new Set(imgs.map((n) => n.layout.constraints.find((c) => c.axis === "y" && c.type === "fixed")).map((c) => (c ? Number(c.value) : NaN)).filter((v) => Number.isFinite(v)))];
+      diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `${label} column of '${section.name}' carries ${imgs.length} observed media slots; they compose as stacked native image elements — the observed side-by-side arrangement is not declaration-backed (a column-group nested inside a column violates the pinned parents/children policies)${ys.length > 1 ? ", and the observed vertical staggering of the pair is not a native field" : ""}. Recorded as a fidelity gap, never custom CSS.`, sectionNodeId));
+    }
+  }
+  const xOf = (n: NodeIRNode): number | null => {
+    const c = n.layout.constraints.find((x) => x.axis === "x" && x.type === "fixed");
+    const px = c ? Number(c.value) : NaN;
+    return Number.isFinite(px) && px > 0 ? px : null;
+  };
+  const x1 = xOf(primaryNode);
+  const x2 = xOf(secondaryNode);
+  if (x1 !== null && x2 !== null && w1 !== null && x2 > x1 + w1) {
+    diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `The observed ${x2 - (x1 + w1)}px gutter between the two columns of '${section.name}' is not composed — native columns carry no gutter field (the attested inline widths approximate the observed proportions at ${primaryPct}/${secondaryPct}).`, sectionNodeId));
+  }
+  if (imagesIn(primaryNode).length + imagesIn(secondaryNode).length > 0) {
+    diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Observed media aspect ratios in '${section.name}' are not enforced by the native image element (natural aspect at column width; no native aspect/crop field); the section's fixed height persists only as the row min-height.`, sectionNodeId));
+  }
+
+  // Section-level height: the row inner min_height (declaration-backed; same policy as the hero
+  // shape's overlay min-height).
+  const heightConstraint = section.layout.constraints.find((c) => c.axis === "height" && c.type === "fixed");
+  let rowMinHeight: number | undefined;
+  if (heightConstraint) {
+    const px = Number(heightConstraint.value);
+    if (Number.isFinite(px) && px > 0) rowMinHeight = px;
+    else diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Section height constraint '${heightConstraint.value}' is not a positive number; row min-height not composed.`, sectionNodeId));
+  } else {
+    diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Section '${section.name}' carries no fixed height constraint; row min-height not composed (Admin default applies).`, sectionNodeId));
+  }
+
+  // ---- Emit (fixed attribute order; mirrors the platform's attested persisted master format) --
+  const innerStyle = rowMinHeight !== undefined ? ` style="min-height: ${rowMinHeight}px;"` : "";
+  mapping.push({
+    sourceNodeId: sectionNodeId,
+    ...(sectionNode.name ? { sourceName: sectionNode.name } : {}),
+    ...(sectionLocator ? { sourceLocator: sectionLocator } : {}),
+    disposition: "mapped",
+    target: { capabilityId: ROW_ID, appearanceId: ROW_APPEARANCE, nativeElement: "main", nativeField: "row(contained) > column-group(default) > column-line > column(full-height) x2" },
+    note: `Section composed as the declaration-backed two-column chain; column-line is the mandated bridge; observed slot proportions${w1 !== null && w2 !== null ? ` (${w1}:${w2})` : ""} simplified to ${primaryPct}/${secondaryPct} inline widths (attested stored shape); mobile breakpoint not composed.`,
+  });
+  return (
+    `<div data-content-type="row" data-appearance="contained" data-element="main">` +
+    `<div data-enable-parallax="0" data-parallax-speed="0.5" data-background-images="{}" data-background-type="image" data-video-loop="true" data-video-play-only-visible="true" data-video-lazy-load="true" data-video-fallback-src=""${innerStyle} data-element="inner">` +
+    `<div class="pagebuilder-column-group" data-content-type="column-group" data-appearance="default" data-grid-size="12" data-background-images="{}" data-element="main">` +
+    `<div class="pagebuilder-column-line" data-content-type="column-line" data-element="main">` +
+    `<div class="pagebuilder-column" data-content-type="column" data-appearance="full-height" data-background-images="{}" data-element="main" style="width:${primaryPct}%">` +
+    primaryHtml +
+    `</div>` +
+    `<div class="pagebuilder-column" data-content-type="column" data-appearance="full-height" data-background-images="{}" data-element="main" style="width:${secondaryPct}%">` +
+    secondaryHtml +
+    `</div>` +
+    `</div>` +
+    `</div>` +
+    `</div>` +
+    `</div>`
+  );
+}
+
 function composeSection(section: PageStructureSection, sectionNodeId: string): string | null {
   const sectionNode = nodesById.get(sectionNodeId);
   if (!sectionNode) {
@@ -258,17 +556,32 @@ function composeSection(section: PageStructureSection, sectionNodeId: string): s
   }
   const sectionLocator = locatorOf(sectionNode) ?? undefined;
 
+  // Shape dispatch (deterministic): a section whose visible direct children carry exactly one
+  // column-primary and one column-secondary projected slot container composes as the G4
+  // two-column shape; everything else falls through to the G3 hero composer (unchanged). A
+  // non-matching section is honestly skipped exactly once, by the hero path's own scan.
+  const directVisibleChildren = (sectionNode.childrenNodeIds ?? [])
+    .map((id) => nodesById.get(id))
+    .filter((n): n is NodeIRNode => n !== undefined && n.visible !== false);
+  const primaries = directVisibleChildren.filter((n) => {
+    const loc = locatorOf(n);
+    return loc !== null && roleByLocator.get(loc) === "column-primary";
+  });
+  const secondaries = directVisibleChildren.filter((n) => {
+    const loc = locatorOf(n);
+    return loc !== null && roleByLocator.get(loc) === "column-secondary";
+  });
+  if (primaries.length === 1 && secondaries.length === 1) {
+    return composeTwoColumnSection(section, sectionNodeId, primaries[0] as NodeIRNode, secondaries[0] as NodeIRNode);
+  }
+
   // Deterministic role resolution: explicit projection assignment > SLOT naming-contract table.
-  // Subtrees of projected decoration nodes are excluded (with accountable entries), and text
-  // layers named by their raw content only compose through the explicit projection.
+  // Only the hero's own text roles fold here; other projected roles (columns, inline-media,
+  // decoration) fall to the accountable "other" treatment below — never mis-claimed.
+  const HERO_TEXT_ROLES: ComposerRole[] = ["content-lead", "heading", "body", "cta"];
   const resolveRole = (node: NodeIRNode): "background-media" | "content-lead" | "heading" | "body" | "cta" | undefined => {
-    // Explicit projection applies to ANY observed kind (text layers, frames, component
-    // instances); the naming-contract table applies only to text layers.
-    const projected = locatorOf(node) ? roleByLocator.get(locatorOf(node) as string) : undefined;
-    if (projected && projected !== "decoration") return projected;
-    if (node.kind !== "text") return undefined;
-    const r = slotRole(node);
-    return r ? (TEXT_ROLE_TABLE[r] as "content-lead" | "heading" | "body" | "cta" | undefined) : undefined;
+    const role = resolveComposerRole(node);
+    return role !== undefined && HERO_TEXT_ROLES.includes(role) ? (role as "background-media" | "content-lead" | "heading" | "body" | "cta") : undefined;
   };
 
   // Eligibility scan (document order; invisible nodes are never composed — the review ledger
@@ -400,8 +713,7 @@ function composeSection(section: PageStructureSection, sectionNodeId: string): s
   }
 
   // ---- Emit (fixed attribute order; mirrors the platform's own persisted master format) -------
-  const esc = (s: string): string => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
-  const escText = (s: string): string => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  // esc/escText are the shared module-level escapers (one definition for both section shapes).
   const backgroundImagesJson = JSON.stringify(pieces.background ? { desktop_image: pieces.background.mediaUrl } : {}).replace(/"/g, "&quot;");
 
   const contentFragments: string[] = [];
@@ -417,6 +729,14 @@ function composeSection(section: PageStructureSection, sectionNodeId: string): s
     ? ` href="${esc(pieces.cta.link.linkUrl)}"${pieces.cta.link.linkTarget ? ` target="${esc(pieces.cta.link.linkTarget)}"` : ""}`
     : "";
 
+  mapping.push({
+    sourceNodeId: sectionNodeId,
+    ...(sectionNode.name ? { sourceName: sectionNode.name } : {}),
+    ...(sectionLocator ? { sourceLocator: sectionLocator } : {}),
+    disposition: "mapped",
+    target: { capabilityId: BANNER_ID, appearanceId: BANNER_APPEARANCE, nativeElement: "main", nativeField: "banner (row > banner container)" },
+    note: "Section composed as native row(contained) > banner(poster) per the pinned declarations; the row provides the platform's standard top-level container.",
+  });
   return (
     `<div data-content-type="row" data-appearance="contained" data-element="main">` +
     `<div data-enable-parallax="0" data-parallax-speed="0.5" data-background-images="{}" data-background-type="image" data-video-loop="true" data-video-play-only-visible="true" data-video-lazy-load="true" data-video-fallback-src="" data-element="inner">` +
@@ -452,17 +772,10 @@ for (const section of [...input.pageStructure.sections].sort((a, b) => a.order -
     continue;
   }
   const html = registryReady ? composeSection(section, sectionNodeId) : null;
+  // The section-level mapping entry is pushed inside each shape composer (hero/two-column);
+  // the loop only collects the emitted fragments.
   if (html) {
     sectionHtmlParts.push(html);
-    const sectionNode = nodesById.get(sectionNodeId) as NodeIRNode;
-    mapping.push({
-      sourceNodeId: sectionNodeId,
-      ...(sectionNode.name ? { sourceName: sectionNode.name } : {}),
-      ...(sectionEvidence ? { sourceLocator: sectionEvidence } : {}),
-      disposition: "mapped",
-      target: { capabilityId: BANNER_ID, appearanceId: BANNER_APPEARANCE, nativeElement: "main", nativeField: "banner (row > banner container)" },
-      note: "Section composed as native row(contained) > banner(poster) per the pinned declarations; the row provides the platform's standard top-level container.",
-    });
   }
 }
 

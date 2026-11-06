@@ -47,7 +47,7 @@ export interface ContentManifestEntry {
 }
 export interface SemanticProjectionAssignment {
   sourceLocator: string;
-  role: "background-media" | "content-lead" | "heading" | "body" | "cta" | "decoration";
+  role: "background-media" | "content-lead" | "heading" | "body" | "cta" | "decoration" | "column-primary" | "column-secondary" | "inline-media";
   reason: string;
   note?: string;
 }
