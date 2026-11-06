@@ -29,17 +29,15 @@ Preferred human-readable format: `KIND/Role[/VariantOrContext]`, with consistent
 **Figma component caution:** Existing published component/library names, instance links, variant axes/property names, and naming conventions may be consumed by other designs or code tooling. **Do not bulk rename those without a dependency/consumer audit and separate approval.** Standardize ordinary frame/section labels first; defer riskier shared-component renames. For new components, prefer variant properties and Figma component sets for state/size rather than an explosion of manually duplicated frames.
 
 
-### Naming readiness gate — Owner decision 2026-11-06
+### Lightweight naming readiness — Owner decision 2026-11-06
 
-Before claiming native Page Builder mapping, run a **read-only Figma naming and structure preflight**. The goal is traceable semantics, **not** renaming every layer:
+This is a **small internal tool to save build time**, not a layer-naming bureaucracy. Before mapping a selected CMS section:
 
-1. Pin the selected source fileKey, root nodeId, sourceVersion, node IDs, ancestry, order, labels and available layout information. Names are never primary keys.
-2. Audit PAGE / SITE / SECTION / COMPONENT / SLOT / DECOR conventions where meaningful; report inconsistencies, duplicate/ambiguous labels and untouched nodes. Text, nested instances and shared libraries can intentionally remain named as-is.
-3. Resolve ownership with combined node type, hierarchy, Auto Layout/geometry, instance/capability evidence and page context. Never infer Page Builder behavior or exclusion solely from a name prefix.
-4. Record each node's source identity and mapping/exclusion/decoration/unknown disposition. Unknowns remain NEEDS_REVIEW; no fabricated proof or silent omissions.
-5. If additional renaming is necessary, first produce a node-ID-scoped old-to-new manifest, review scope/impacts and obtain a **new exact Figma-write GO**; then validate unchanged hierarchy/geometry. **Never repeat the historical 61-label pass.**
+1. Confirm the root and meaningful PAGE / SITE / SECTION / SLOT / DECOR labels, plus the actual parent/child and column layout. Preserve source node IDs. **Do not require every text, vector, instance or decoration to be renamed.**
+2. Use the existing normalized Desktop naming as-is. Treat a label as a hint; if a section is unclear, flag it succinctly and continue with supported sections, rather than launching a broad renaming exercise.
+3. Rename only if the concrete mapping is blocked and the Owner separately approves the Figma-write scope. Do not repeat the 61-label Desktop pass.
 
-**PASS for naming readiness** means inventory, naming and uncertainty are accounted for, **not** that all labels changed or that CMS can already be edited. Continue independently through structure → NodeIR/PageStructure → native capability → native mapping → separately approved CMS round-trip; CSS/Tailwind/Hyvä styling stays later. See [Product scope §4](PRODUCT-ARCHITECTURE-AND-SCOPE.md).
+**Enough to proceed:** the selected section's role, order, nesting and basic width ratios are understandable and traceable. Defer detailed styling, complete semantic cleanup of unrelated nodes and Hyvä/Tailwind matching. Follow the lean native Page Builder MVP in [Product scope §4](PRODUCT-ARCHITECTURE-AND-SCOPE.md). Existing #18 source proof and source-write boundaries remain in force.
 
 ## 3. Every selected node is inventoried; target output is filtered
 
