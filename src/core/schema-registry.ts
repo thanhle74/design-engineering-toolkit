@@ -64,11 +64,22 @@ const ids = new Map<string, string>([
   ["kb-project-record", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-project-record.schema.json"],
   ["kb-relations", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-relations.schema.json"],
   ["kb-ingest-manifest", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-ingest-manifest.schema.json"],
+  ["kb-extract-manifest", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-extract-manifest.schema.json"],
+  ["kb-source-scan", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-source-scan.schema.json"],
   ["kb-store", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-store.schema.json"],
   ["kb-engine-output", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-engine-output.schema.json"],
 ]);
 
 export type SchemaName = keyof typeof ids extends string ? string : never;
+
+// The canonical $id for a registered contract name — lets the core reference a contract (e.g.
+// discovering the KB source scanner by its declared outputContract) without embedding any
+// platform-specific literal in compiled core surfaces (T-18b neutrality rule).
+export function contractId(name: string): string {
+  const id = ids.get(name);
+  if (!id) throw new Error(`Unknown contract name '${name}'`);
+  return id;
+}
 
 export function validateContract(name: string, payload: unknown): { valid: boolean; errors: string[] } {
   const ajv = getAjv();

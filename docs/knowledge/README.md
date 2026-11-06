@@ -40,10 +40,38 @@ node bin/det.js kb query --store kb --kb project --project synthetic-fashion \
 
 # 4. Store validation: schemas, graph integrity, project isolation, descriptor honesty
 node bin/det.js kb validate --store kb --json
+
+# 5. Read-only source extract (M4): plan-driven out-of-process scans → KB-record files for ingest
+#    The plan (kb-extract-manifest) declares alias NAMES + scans; root VALUES resolve per run:
+#    --root <alias>=<path> > DET_KB_ROOT_<ALIAS> > gitignored .toolkit/local.json
+#    ({"roots": {"<alias>": "<absolute path>"}} relative to the working directory).
+node bin/det.js kb extract --manifest local-kb/extract-plan.json \
+  --root src="$(pwd)/your-magento-checkout" \
+  --out local-kb/extract-out --json   # without --out (or with --dry-run): report only
+node bin/det.js kb ingest --manifest local-kb/ingest-manifest.json \
+  --root ex="local-kb/extract-out" --out kb   # extract outputs are the ingest inputs
 ```
 
-Exit codes are the contract: `0` ok · `1` blocking diagnostics · `2` usage error · `3` unused by
-`kb` (no adapters). Parse `--json` output (`{"run": <tool-run envelope>, "output": …}`), not the
+### `det kb extract` — read-only source extraction (M4)
+
+Plan-driven and fail-closed: the manifest declares which scans may run (`magento-platform`,
+`pagebuilder-native`, `secomm-uiwidget`, `hyva-ui` kinds, one declared root alias each); every
+scan is spawned out-of-process through the KB source-scanner adapter (discovered by its
+`kb-source-scan` output contract — stdin JSON in, one payload out). The orchestrator re-validates
+every emitted record against the KB record contracts and the shared record-safety gate, checks
+digest pins and payload counts, merges lanes deterministically (records kept exactly as emitted,
+id-sorted), and writes only into `--out` — never inside any source root
+(`OUT_PATH_WITHIN_SOURCE_ROOT`), never the KB store. Any error-severity diagnostic — gateway,
+adapter runtime (exit 3), payload contract, record gate, counts/digests, conflicting record ids —
+writes nothing; diagnostics name record ids and violation kinds, never content. Exit codes as
+usual: `0` ok · `1` blocking diagnostics · `2` usage error · `3` adapter runtime failure.
+Root aliases resolve through the same three-lane gateway as ingest/sync; a missing
+`.toolkit/local.json` is just an absent lane, an invalid one is a blocking `LOCAL_CONFIG_INVALID`
+(content never echoed). Extract never writes sources, the store, or anything outside `--out`.
+
+Exit codes are the contract: `0` ok · `1` blocking diagnostics · `2` usage error · `3` adapter
+runtime failure (`det kb extract` only). Parse `--json` output (`{"run": <tool-run envelope>,
+"output": …}`), not the
 human summary; act on diagnostic codes (`DENIED_PATH_SKIPPED`, `INGEST_PARTIAL_DENIAL`,
 `DANGLING_RELATION_ENDPOINT`, `CLASS_BOUNDARY_EDGE_FORBIDDEN`, `PROJECT_SCOPE_REQUIRED`,
 `SOURCE_DIGEST_CHANGED`, `SECRET_PATTERN_DETECTED`, `LICENSED_FIELD_TOO_LARGE`, …).
@@ -99,7 +127,7 @@ human summary; act on diagnostic codes (`DENIED_PATH_SKIPPED`, `INGEST_PARTIAL_D
 
 No SQLite FTS5 index yet (deferred until structured-filter misses are measured — TECH-ADR
 `OPEN_DECISION` #4/#1), no vector/semantic retrieval, no LLM ingestion, no MCP dependency, no
-live commercial-source audit (`SYNTHETIC_KB_MVP_PASS` only — live Hyvä/Magento/client-doc
-ingestion is a separately gated M4 with exact Owner GO), no Figma reads, no CMS/DB writes.
-Local protected corpora: point `--store` at a gitignored user-configured directory; they never
-enter this repository.
+Figma reads, no CMS/DB writes. Live-source extraction now EXISTS (`det kb extract`, M4) but
+running it against real private sources is a separately gated step: it needs explicit Owner GO
+and explicitly resolved roots — private stores and extract outputs stay in gitignored
+user-configured directories (`.toolkit/`, `local-kb/`) and never enter this repository.
