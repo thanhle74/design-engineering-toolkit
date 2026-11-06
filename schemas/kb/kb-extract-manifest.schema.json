@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-extract-manifest.schema.json",
+  "$comment": "Knowledge Engine — read-only source extract plan (issue #19, M4). A manifest is DATA declaring which out-of-process scans may run: each scan names a kind, a declared root alias (values resolve per run via --root alias=path > DET_KB_ROOT_<ALIAS> > .toolkit/local.json) and an alias-relative subPath. The extract step opens only paths that pass the structural deny-list plus additive globs and the realpath-containment gateway, never writes inside any source root, and never writes the KB store — outputs are record-shaped JSON files consumed later by det kb ingest. Root alias VALUES never appear in any committed artifact.",
+  "title": "Knowledge Engine — KB source extract manifest",
+  "type": "object",
+  "required": ["schemaVersion", "extractId", "platform", "rootAliases", "scans", "output"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "extractId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$", "$comment": "Stable extract identity, e.g. 'pilot-m4-synthetic'." },
+    "platform": {
+      "type": "object",
+      "required": ["id"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9.-]*$", "$comment": "Platform family the scans describe, e.g. 'magento'." },
+        "version": { "type": "string", "$comment": "Pinned platform version expected, e.g. '2.4.8-p5'. A scan observing a different declared platform version emits a diagnostic." }
+      }
+    },
+    "rootAliases": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["description"],
+        "additionalProperties": false,
+        "properties": {
+          "description": { "type": "string", "minLength": 1, "$comment": "What this alias is expected to point at — descriptions only, never paths." }
+        }
+      },
+      "$comment": "Declared alias NAMES only — never values. Every scan rootAlias must be declared here (ROOT_ALIAS_UNDECLARED otherwise); values resolve per run through the same gateway as ingest."
+    },
+    "scans": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["scanId", "kind", "rootAlias"],
+        "additionalProperties": false,
+        "properties": {
+          "scanId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+          "kind": { "enum": ["magento-platform", "pagebuilder-native", "secomm-uiwidget", "hyva-ui"], "$comment": "magento-platform: module/config/platform declarations (KB-1, includes recordType 'module'). pagebuilder-native / secomm-uiwidget / hyva-ui: KB-2 metadata-only inventories." },
+          "rootAlias": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+          "subPath": { "type": "string", "pattern": "^(?!/)(?!.*(^|/)\\.\\.(/|$))[A-Za-z0-9._/-]*$", "$comment": "Alias-relative directory bounding this scan; empty/absent = the root itself. Never absolute, never traversal." },
+          "options": { "type": "object", "maxProperties": 12, "additionalProperties": { "type": ["string", "number", "boolean"] }, "$comment": "Bounded scalar options, documented per kind by the adapter. Unknown options are a scan error — never ignored." },
+          "denyGlobs": { "type": "array", "items": { "type": "string", "minLength": 1 }, "$comment": "ADDED to the structural baseline for this scan (never replaces it). Glob syntax: ** crosses directories, * stays in one segment, ? matches one character." }
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "required": ["platformRecords", "uiRecords", "relations", "report"],
+      "additionalProperties": false,
+      "properties": {
+        "platformRecords": { "$ref": "#/$defs/outputFile", "$comment": "kb-capability-array output path (platform scan records)." },
+        "uiRecords": { "$ref": "#/$defs/outputFile", "$comment": "kb-ui-component-array output path (pagebuilder-native + secomm-uiwidget + hyva-ui records)." },
+        "relations": { "$ref": "#/$defs/outputFile", "$comment": "kb-relations-array output path (adaptedFrom / neighborOf edges)." },
+        "report": { "$ref": "#/$defs/outputFile", "$comment": "JSON extract report (kb-engine-output extract view)." }
+      },
+      "$comment": "Output-dir-relative targets. null disables writing that artifact even under --out; absent --out means report-only regardless."
+    },
+    "denyGlobs": { "type": "array", "items": { "type": "string", "minLength": 1 }, "$comment": "Manifest-wide additive deny globs applied to every scan, in addition to per-scan denyGlobs and the structural baseline." },
+    "notes": { "type": "string" }
+  },
+  "$defs": {
+    "outputFile": {
+      "type": ["string", "null"],
+      "pattern": "^(?!/)(?!.*(^|/)\\.\\.(/|$))[A-Za-z0-9._/-]+$",
+      "$comment": "Relative to the --out directory; never absolute, never traversal. null disables this artifact."
+    }
+  }
+}

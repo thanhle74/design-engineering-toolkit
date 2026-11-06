@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-source-scan.schema.json",
+  "$comment": "Knowledge Engine — one out-of-process source scan payload (issue #19, M4). A scanner adapter reads only under its resolved, containment-checked root, honors the structural deny-list plus additive globs, and emits KB-record-shaped metadata plus per-file sha256 digests. Unsupported scan shapes become explicit diagnostics (UNKNOWN evidence), never guesses; licensed packages are metadata-only (identifiers, versions, counts, path pointers, license facts — never source, templates, assets or keys). The extract orchestrator re-validates every emitted record against the KB record schemas and the shared record-safety gate before anything is written.",
+  "title": "Knowledge Engine — KB source scan payload",
+  "type": "object",
+  "required": ["schemaVersion", "adapterId", "scanId", "kind", "rootAlias", "platform", "capabilities", "uiComponents", "relations", "digests", "scanMetadata", "diagnostics", "counts"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "adapterId": { "type": "string", "const": "magento-kb-source", "$comment": "The single M4 scanner adapter (adapters/magento-kb-source). One scan kind per payload." },
+    "scanId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "kind": { "enum": ["magento-platform", "pagebuilder-native", "secomm-uiwidget", "hyva-ui"] },
+    "rootAlias": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+    "platform": {
+      "type": "object",
+      "required": ["id"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "version": { "type": "string", "$comment": "Platform version observed from declarations (e.g. composer.json), if determinable." }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "items": { "type": "object" },
+      "$comment": "KB-1 records (kb-capability shape; the magento-platform kind emits recordType 'module' inventory records). Shapes are re-validated by the orchestrator — the adapter never bypasses the store's write-time gates."
+    },
+    "uiComponents": {
+      "type": "array",
+      "items": { "type": "object" },
+      "$comment": "KB-2 records (kb-ui-component shape; pagebuilder-native / secomm-uiwidget / hyva-ui kinds). Re-validated by the orchestrator."
+    },
+    "relations": {
+      "type": "array",
+      "items": { "type": "object" },
+      "$comment": "kb-relations-shaped edges (e.g. adaptedFrom UiWidget→Hyvä UI; neighborOf across the Page Builder editability-class boundary). Endpoint ids may reference records emitted by other scans of the same extract run — resolution happens at store ingest."
+    },
+    "digests": {
+      "type": "object",
+      "additionalProperties": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+      "$comment": "sha256 per read file, keyed '<rootAlias>:<aliasRelativePath>' — the re-audit pinning vocabulary (digestKey convention). Records' observed.inputDigests reference these keys."
+    },
+    "scanMetadata": {
+      "type": "object",
+      "required": ["scannedAt", "fileCount", "deniedCount", "unknownShapes"],
+      "additionalProperties": false,
+      "properties": {
+        "scannedAt": { "type": "string" },
+        "fileCount": { "type": "integer", "minimum": 0, "$comment": "Files actually opened (deny-listed and skipped files excluded)." },
+        "deniedCount": { "type": "integer", "minimum": 0, "$comment": "Paths denied by the deny-list before read — DENIED_PATH_SKIPPED diagnostics carry the paths." },
+        "unknownShapes": { "type": "integer", "minimum": 0, "$comment": "Encountered declaration shapes the scanner could not parse deterministically — each carries an UNSUPPORTED_SHAPE diagnostic and UNKNOWN evidence." }
+      }
+    },
+    "diagnostics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "severity", "message"],
+        "additionalProperties": false,
+        "properties": {
+          "code": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" },
+          "severity": { "enum": ["info", "warning", "error"] },
+          "message": { "type": "string" },
+          "sourceRef": { "type": "object", "$comment": "Optional {kind, locator} source pointer; locator values must stay alias-relative." }
+        }
+      }
+    },
+    "counts": {
+      "type": "object",
+      "required": ["capabilities", "modules", "uiComponents", "relations"],
+      "additionalProperties": false,
+      "properties": {
+        "capabilities": { "type": "integer", "minimum": 0 },
+        "modules": { "type": "integer", "minimum": 0 },
+        "uiComponents": { "type": "integer", "minimum": 0 },
+        "relations": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

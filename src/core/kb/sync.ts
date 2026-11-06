@@ -63,12 +63,13 @@ export function runSync(options: SyncOptions): SyncResult {
 
   const manifestDir = options.manifestPath.slice(0, Math.max(options.manifestPath.lastIndexOf("/"), 0)) || ".";
   const aliases = new Set<string>();
-  const collect = (i: ManifestInput) => {
-    if (i.rootAlias) aliases.add(i.rootAlias);
+  const collect = (i: ManifestInput | undefined) => {
+    if (i?.rootAlias) aliases.add(i.rootAlias);
   };
   collect(manifest.inputs.capabilityRegistry);
+  collect(manifest.inputs.platformRecords);
   collect(manifest.inputs.uiInventory);
-  manifest.inputs.projectRecords.forEach(collect);
+  (manifest.inputs.projectRecords ?? []).forEach(collect);
   collect(manifest.inputs.relations);
   const { roots: resolvedRoots, diagnostics: rootDiags } = resolveRootAliases([...aliases], options.roots, options.env);
   diagnostics.push(...rootDiags);
@@ -89,10 +90,11 @@ export function runSync(options: SyncOptions): SyncResult {
     }
   };
   const extra = manifest.denyGlobs ?? [];
-  consider(manifest.inputs.capabilityRegistry, extra);
-  consider(manifest.inputs.uiInventory, extra);
-  manifest.inputs.projectRecords.forEach((i) => consider(i, extra));
-  consider(manifest.inputs.relations, extra);
+  if (manifest.inputs.capabilityRegistry) consider(manifest.inputs.capabilityRegistry, extra);
+  if (manifest.inputs.platformRecords) consider(manifest.inputs.platformRecords, extra);
+  if (manifest.inputs.uiInventory) consider(manifest.inputs.uiInventory, extra);
+  (manifest.inputs.projectRecords ?? []).forEach((i) => consider(i, extra));
+  if (manifest.inputs.relations) consider(manifest.inputs.relations, extra);
 
   const report: SyncReport = { checked: 0, stale: 0, unchanged: 0, noDigests: 0, staleIds: [] };
   const staleCopy = <T extends KbRecord>(record: T): T => {

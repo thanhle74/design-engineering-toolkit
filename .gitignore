@@ -22,3 +22,9 @@ projects/*/*.local.*
 
 # KB store run receipts (timestamped; store content is the committed truth)
 kb/tool-run.json
+
+# M4 (issue #19): per-run local configuration and private real-source corpora.
+# Everything under these paths is machine-local (explicit root alias values, extract outputs,
+# private KB stores) and must NEVER be committed — portability tests assert they stay untracked.
+.toolkit/
+local-kb/

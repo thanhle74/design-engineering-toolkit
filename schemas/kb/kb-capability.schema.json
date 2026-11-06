@@ -8,10 +8,10 @@
   "additionalProperties": false,
   "properties": {
     "schemaVersion": { "const": 1 },
-    "recordType": { "enum": ["capability", "data-provider"] },
+    "recordType": { "enum": ["capability", "data-provider", "module"], "$comment": "module (M4 additive, issue #19): an installed platform module declaration record (e.g. a Magento module from config.php + module.xml). A module is platform knowledge, not a capability claim — semantics must say so, and category is platform-glue by convention for module inventory records." },
     "id": {
       "type": "string",
-      "pattern": "^(cap|dat):[a-z0-9][a-z0-9-]*:[a-z0-9][a-z0-9-]*$",
+      "pattern": "^(cap|dat|mod):[a-z0-9][a-z0-9-]*:[a-z0-9][a-z0-9-]*$",
       "$comment": "Version-free: '<prefix>:<source-namespace>:<kebab-slug>'. The upstream identifier is preserved verbatim in nativeId — never re-slugified."
     },
     "nativeId": { "type": "string", "$comment": "Identifier exactly as the source declares it, e.g. 'magento_pagebuilder/banner@full-width', 'example_customwidgets/component/banner_a@default'." },
