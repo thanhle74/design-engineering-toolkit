@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "id": "magento-kb-source",
+  "platformIds": ["magento"],
+  "entry": "dist/adapters/magento-kb-source/scan.js",
+  "outputContract": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-source-scan.schema.json",
+  "permissions": { "readOnly": true },
+  "version": "1.0.0",
+  "description": "M4 (issue #19) read-only KB source scanner for an authorized Magento checkout, one scan kind per payload: magento-platform (KB-1 module inventory from app/etc/config.php 'modules' block ONLY + per-module etc/module.xml declarations and declaration-file presence), pagebuilder-native (KB-2 per-file content-type declarations: appearance names, license/version metadata), secomm-uiwidget (KB-2 DI component registry records + bounded metadata-only definition parses; widget.xml counted, never emitted as records) and hyva-ui (KB-2 directory-name census of the licensed package; composer.json is the only file opened; template/style/script bytes never read). Every open passes the structural baseline deny-list plus caller globs (case-insensitive, full path and basename, evaluated before read) and realpath containment (symlink escapes skipped with LOCATOR_OUT_OF_SCOPE); every opened file is sha256-digested under '<rootAlias>:<relPath>'; denied paths are counted and diagnosed without content; unsupported shapes become UNSUPPORTED_SHAPE + UNKNOWN evidence. The scan request carries {scanId, kind, rootAlias, root (caller-resolved absolute), subPath?, denyGlobs[]}; the declared options set is empty for 1.x — any option key is a scan error payload (UNKNOWN_SCAN_OPTION). Read-only: the process never writes."
+}

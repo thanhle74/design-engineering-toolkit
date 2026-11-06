@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Acme_Headless:etc/webapi.xsd">
+    <route url="/V1/fixture" method="GET"><service class="Acme\Headless\Api\Fixture"/></route>
+</routes>

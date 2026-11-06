@@ -1,0 +1,6 @@
+{
+    "name": "magento/module-page-builder-like",
+    "description": "Synthetic fixture stand-in for a Page Builder native module (issue #19).",
+    "version": "1.7.0",
+    "license": ["OSL-3.0", "AFL-3.0"]
+}

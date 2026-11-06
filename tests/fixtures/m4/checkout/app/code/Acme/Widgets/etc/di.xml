@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Acme\Widgets\Model\ComponentRegistry">
+        <arguments>
+            <item name="hero_like_a" xsi:type="object">Acme\Widgets\Model\Component\HeroLikeDefinition</item>
+            <item name="odd_shape" xsi:type="object">Acme\Widgets\Model\Component\OddShapeDefinition</item>
+            <item name="absent_shape" xsi:type="object">Acme\Widgets\Model\Component\AbsentDefinition</item>
+        </arguments>
+    </type>
+    <type name="Acme\Widgets\Model\ComponentPool">
+        <arguments>
+            <item name="ignored_item" xsi:type="object">Acme\Widgets\Model\Component\IgnoredDefinition</item>
+        </arguments>
+    </type>
+</config>
