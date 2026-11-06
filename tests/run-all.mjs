@@ -300,6 +300,12 @@ await registerG2Suite(checkAsync);
 // ---- Issue #15 Knowledge Engine MVP suite (async) ------------------------------------------
 const { default: registerKbSuite } = await import("./kb-suite.mjs");
 await registerKbSuite(checkAsync);
+
+// ---- Issue #19 M4 real-source KB gate suites (async) -----------------------------------------
+const { default: registerKbM4LicenseSuite } = await import("./kb-m4-license-suite.mjs");
+await registerKbM4LicenseSuite(checkAsync);
+const { default: registerKbM4SafetySuite } = await import("./kb-m4-safety-suite.mjs");
+await registerKbM4SafetySuite(checkAsync);
 for (const { id, name, fn } of asyncChecks) {
   try {
     const detail = await fn();
