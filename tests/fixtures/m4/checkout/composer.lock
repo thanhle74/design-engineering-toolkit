@@ -1,0 +1,6 @@
+{
+    "packages": [
+        { "name": "testvendor/framework-like", "version": "1.0.0" },
+        { "name": "magento/module-page-builder-like", "version": "1.7.0" }
+    ]
+}
