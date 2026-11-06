@@ -1,7 +1,7 @@
 # Figma Node Naming & Semantic Ownership — Two-way Design/Code Contract
 
-**Status:** OWNER-DIRECTED SPEC · 2026-11-03 · **No current Figma write authority**  
-**Scope now:** record the rule only. **After Issue #5 completes and its architecture is reviewed**, a separately approved **naming-only pass** may be performed on the selected approved Figma frame `node-id=245-2`. Do not alter running #5/#7 or modify any Figma file until that checkpoint and explicit owner GO.  
+**Status:** OWNER-DIRECTED SPEC · updated 2026-11-06 · **No Figma-write authority from this document**  
+**Current checkpoint:** 61 approved Desktop name-only changes under Figma root 245:2 were already completed on 2026-11-03 (Coordinator handoff). **Do not rerun that pass.** New Figma writes require a separately scoped Owner GO; issue #18 is read-only.  
 **Related:** [Product scope](PRODUCT-ARCHITECTURE-AND-SCOPE.md), [Issue #5](https://github.com/thanhle74/design-engineering-toolkit/issues/5), [Issue #7](https://github.com/thanhle74/design-engineering-toolkit/issues/7).
 
 ## 1. Identity: never rename an ID
@@ -27,6 +27,19 @@ Preferred human-readable format: `KIND/Role[/VariantOrContext]`, with consistent
 **Avoid baking `Magento`, `PageBuilder`, specific module names, file-system paths or a target's implementation technology into Figma layer names.** Design should remain portable. A section called `SECTION/ProductGrid` is not proof that a functioning product query/data provider exists. Use a separate Capability Registry to resolve target support.
 
 **Figma component caution:** Existing published component/library names, instance links, variant axes/property names, and naming conventions may be consumed by other designs or code tooling. **Do not bulk rename those without a dependency/consumer audit and separate approval.** Standardize ordinary frame/section labels first; defer riskier shared-component renames. For new components, prefer variant properties and Figma component sets for state/size rather than an explosion of manually duplicated frames.
+
+
+### Naming readiness gate — Owner decision 2026-11-06
+
+Before claiming native Page Builder mapping, run a **read-only Figma naming and structure preflight**. The goal is traceable semantics, **not** renaming every layer:
+
+1. Pin the selected source fileKey, root nodeId, sourceVersion, node IDs, ancestry, order, labels and available layout information. Names are never primary keys.
+2. Audit PAGE / SITE / SECTION / COMPONENT / SLOT / DECOR conventions where meaningful; report inconsistencies, duplicate/ambiguous labels and untouched nodes. Text, nested instances and shared libraries can intentionally remain named as-is.
+3. Resolve ownership with combined node type, hierarchy, Auto Layout/geometry, instance/capability evidence and page context. Never infer Page Builder behavior or exclusion solely from a name prefix.
+4. Record each node's source identity and mapping/exclusion/decoration/unknown disposition. Unknowns remain NEEDS_REVIEW; no fabricated proof or silent omissions.
+5. If additional renaming is necessary, first produce a node-ID-scoped old-to-new manifest, review scope/impacts and obtain a **new exact Figma-write GO**; then validate unchanged hierarchy/geometry. **Never repeat the historical 61-label pass.**
+
+**PASS for naming readiness** means inventory, naming and uncertainty are accounted for, **not** that all labels changed or that CMS can already be edited. Continue independently through structure → NodeIR/PageStructure → native capability → native mapping → separately approved CMS round-trip; CSS/Tailwind/Hyvä styling stays later. See [Product scope §4](PRODUCT-ARCHITECTURE-AND-SCOPE.md).
 
 ## 3. Every selected node is inventoried; target output is filtered
 
@@ -72,9 +85,11 @@ Figma URL + selected frame ID (e.g. node-id=245-2)
 - A node ID cannot imply whether a section is CMS, Theme, product data or decoration. **Explicit machine-readable IR with source IDs, semantic roles, classification, proof and diagnostics is mandatory.**
 - Layout hierarchy (e.g. 40/60, nested rows, responsive order) is proven before CSS/visual parity. A static HTML screenshot cannot establish Page Builder editability.
 
-## 6. Future controlled naming pass for approved Figma frame `245:2`
+## 6. Controlled naming policy — historical Desktop execution and future changes
 
-**Trigger:** #5 completed + architecture accepted + Owner issues a **specific GO to rename Figma labels**. This is a future scoped **metadata-only** intervention; do not run from a background task and do not assume prior design-freeze permission extends to edits.
+**Completed:** a separately approved 61-label Desktop naming pass on root 245:2 took place on 2026-11-03; IDs, hierarchy and geometry were preserved in the recorded verification. Shared component names and untouched descendants were not mass-renamed.
+
+**For future additions only:** each new renaming action requires its own specific Owner GO and read-only preflight. The following manifest/apply/verify procedure is **not** an instruction to rerun the completed pass. #18 read-only approval is not a Figma-write permission.
 
 1. **Read-only preflight:** confirm target fileKey, access, frame ID, original file version, desktop/mobile linkage, component library dependencies, and whether naming changes are permitted. Get snapshot/reference screenshot.
 2. **Create proposed rename manifest:** one row per proposed change with `fileKey`, `nodeId`, `parentId`, `nodeType`, `oldName`, `newName`, `semanticRole`, `reason`, `risk`, `sharedComponent`; also list nodes intentionally unchanged and ambiguous nodes.
@@ -83,4 +98,4 @@ Figma URL + selected frame ID (e.g. node-id=245-2)
 5. **Verify with before/after evidence:** node ID and hierarchy stable; changed names match approved manifest; no missing nodes; visual screenshots and component resolution remain consistent; report any errors/drift. A Figma rename creates a new file revision even if rendering is unchanged.
 6. **Record mapping conventions** as a reusable tool skill/spec and retain a safe receipt. Keep proprietary design dump and licensed media out of public GitHub.
 
-**Explicit current decision:** **SPEC NOW, FIGMA RENAME LATER**. #5 and #7 continue independently. No Page Builder import, theme generation, or Figma mutation is authorized by this document.
+**Explicit current decision (2026-11-06):** use completed Desktop naming as a baseline; **do not rename again without new GO**. Verify each stage in order: naming/source identity → complete structural extraction → canonical NodeIR/semantic ownership → supported native Page Builder mapping → separately approved editable CMS round-trip → visual QA later. This document authorizes no new Figma write, Magento CMS/DB import, G3/G4 implementation or Theme output.
