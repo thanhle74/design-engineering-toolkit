@@ -45,11 +45,13 @@ node bin/det.js kb validate --store kb --json
 #    The plan (kb-extract-manifest) declares alias NAMES + scans; root VALUES resolve per run:
 #    --root <alias>=<path> > DET_KB_ROOT_<ALIAS> > gitignored .toolkit/local.json
 #    ({"roots": {"<alias>": "<absolute path>"}} relative to the working directory).
-node bin/det.js kb extract --manifest local-kb/extract-plan.json \
-  --root src="$(pwd)/your-magento-checkout" \
-  --out local-kb/extract-out --json   # without --out (or with --dry-run): report only
-node bin/det.js kb ingest --manifest local-kb/ingest-manifest.json \
-  --root ex="local-kb/extract-out" --out kb   # extract outputs are the ingest inputs
+#    Real extract plans, outputs and stores live under the gitignored local-kb/<private-dir>/
+#    tree and never enter this repository — placeholders below.
+node bin/det.js kb extract --manifest local-kb/<private-dir>/extract-plan.json \
+  --root src="<absolute path to your checkout>" \
+  --out local-kb/<private-dir>/extract-out --json   # without --out (or with --dry-run): report only
+node bin/det.js kb ingest --manifest local-kb/<private-dir>/ingest-manifest.json \
+  --root ex="local-kb/<private-dir>/extract-out" --out kb   # extract outputs are the ingest inputs
 ```
 
 ### `det kb extract` — read-only source extraction (M4)
