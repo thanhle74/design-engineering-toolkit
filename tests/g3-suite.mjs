@@ -18,11 +18,13 @@ const G3 = path.join(FIX, "g3-hero-design-source");
 const G3_CHECKOUT = path.join(FIX, "g3-magento-like");
 const PROFILE = path.join(FIX, "negative/profile-g3-hero-fixture.fixture.json");
 
-// Expected accountability for the hero tree at the observed-not-pinned fixture revision
-// (hand-derived, asserted exact): 11 nodes inventoried, the hero section planned with its
-// structural descendants, both decorations merged by policy.
-const NODE_COUNT = 11;
-const EXPECTED_DISPOSITIONS = { MAPPED: 9, EXCLUDED_WITH_REASON: 0, DECORATION_MERGED: 2, REFERENCE_ONLY: 0, NEEDS_REVIEW: 0 };
+// Expected accountability for the RAW-observed hero tree at the observed-not-pinned fixture
+// revision (hand-derived from the observed kinds/names, asserted exact): 13 nodes inventoried;
+// the two rounded-rectangle layers and the externally-defined button instance are honestly
+// NEEDS_REVIEW; the DECOR-named scroll indicator group is merged by policy.
+const NODE_COUNT = 13;
+const EXPECTED_DISPOSITIONS = { MAPPED: 9, EXCLUDED_WITH_REASON: 0, DECORATION_MERGED: 1, REFERENCE_ONLY: 0, NEEDS_REVIEW: 3 };
+const EXPECTED_CLASSES = { SITE_CHROME: 0, EDITORIAL_SECTION: 9, SHARED_COMPONENT: 1, PRESENTATIONAL: 1, UNKNOWN_OR_AMBIGUOUS: 2 };
 const SECTION_NAME = "SECTION/Hero/Primary";
 
 async function runCli(args, env = {}) {
@@ -86,19 +88,29 @@ export default async function registerG3Suite(checkAsync) {
       assert.equal(ir.nodes.length, NODE_COUNT);
       assert.equal(review.counts.total, NODE_COUNT);
       assert.deepEqual(review.counts.byDisposition, EXPECTED_DISPOSITIONS);
+      assert.deepEqual(review.counts.byClass, EXPECTED_CLASSES);
       assert.equal(ir.nodes.filter((n) => n.name === SECTION_NAME).length, 1);
-      // One planned section: the hero (structural descendants under it, decorations merged).
+      // Faithful source kinds: text layers named by content, button CTA as a component instance.
+      assert.equal(ir.nodes.find((n) => n.name === "SLOT/HeroMedia").kind, "container", "observed media frame stays a frame (container), never rewritten to media");
+      const cta = ir.nodes.find((n) => n.name === "Proto / Button/Primary");
+      assert.equal(cta.kind, "component", "observed button instance stays a component instance");
+      assert.equal(cta.componentRefNodeId, undefined, "external definition is not fabricated");
+      // One planned section: the hero with its structural descendants; decor merged by policy.
       assert.deepEqual(ps.sections.map((s) => s.name), [SECTION_NAME]);
-      const sectionNode = ir.nodes.find((n) => n.name === SECTION_NAME);
       assert.equal(ps.sections[0].sourceEvidence[0].locator, `design://g3-hero-fixture-source/245:5`);
-      assert.ok(sectionNode.contentSlots?.some((s) => s.slotId === "slot-heromedia" && s.kind === "media"), "background media is the section's slot");
-      // Decorations are accountable (merged), never dropped.
+      // Honest extraction: the two rounded-rectangle layers (unmapped kind) and the externally
+      // defined button instance stay NEEDS_REVIEW — custom-required pending, never guessed.
+      const needs = review.entries.filter((e) => e.disposition === "NEEDS_REVIEW");
+      assert.equal(needs.length, 3);
+      assert.ok(needs.every((e) => e.reason.includes("outside the mapped kind table") || e.reason.includes("does not resolve to an inventoried component definition")));
+      assert.ok(needs.some((e) => e.provisionalTarget?.category === "custom-required"), "unresolved instance is custom-required pending");
+      // Decorations are accountable (merged), never dropped; observed children inventoried.
       const merged = review.entries.filter((e) => e.disposition === "DECORATION_MERGED");
-      assert.equal(merged.length, 2);
-      assert.ok(merged.every((e) => e.semanticClass === "PRESENTATIONAL"));
+      assert.equal(merged.length, 1);
+      assert.ok(ir.nodes.some((n) => n.name === "SCROLL"), "scroll-indicator children inventoried");
       // The plan pins the exact NodeIR hash the composer will later verify.
       assert.equal(ps.inputs.nodeIrContentHash, stableContentHash(ir));
-      return `11 nodes, 9 mapped, 2 decoration-merged, section '${SECTION_NAME}' planned`;
+      return `13 raw-observed nodes: 9 mapped / 1 merged / 3 honest NEEDS_REVIEW, section '${SECTION_NAME}' planned`;
     } finally {
       fs.rmSync(dir, { recursive: true, force: true });
     }
@@ -111,7 +123,8 @@ export default async function registerG3Suite(checkAsync) {
       "--bindings", path.join(G3, "g3-component-bindings.fixture.json"),
       "--content", path.join(G3, "hero-content.fixture.json"),
     ];
-    // Produce the pinned inputs through the real extract first.
+    // Produce the pinned inputs through the real extract first; the raw-observed source needs
+    // the explicit reason-carrying projection (recorded human decision) to compose.
     const extractDir = fs.mkdtempSync(path.join(os.tmpdir(), "g3-suite-"));
     const extractRun = await runCli([
       "extract", "--profile", PROFILE, "--project", G3, "--design-file", "design-tree-hero.fixture.json", "--design-node", "245:2",
@@ -119,7 +132,11 @@ export default async function registerG3Suite(checkAsync) {
       "--out", extractDir, "--json",
     ]);
     assert.equal(extractRun.code, 0, `extract exit ${extractRun.code}: ${extractRun.err.slice(0, 300)}`);
-    const composeArgs = [...args, "--input", path.join(extractDir, "page-structure.json"), "--nodeir", path.join(extractDir, "node-ir.json")];
+    const composeArgs = [
+      ...args,
+      "--input", path.join(extractDir, "page-structure.json"), "--nodeir", path.join(extractDir, "node-ir.json"),
+      "--projection", path.join(G3, "hero-projection.fixture.json"),
+    ];
     try {
       const { dir, code, err } = await inTempRun(composeArgs);
       try {
@@ -142,13 +159,21 @@ export default async function registerG3Suite(checkAsync) {
         // No arbitrary embeddable-markup content type; no invented URLs.
         assert.ok(!html.includes('data-content-type="html"'), "no arbitrary embeddable-markup content type");
         assert.ok(!/https?:\/\//.test(html), "no invented absolute URLs in the composed content");
-        // Accountability: every planned node lands exactly once; gaps are explicit.
+        // Accountability: every planned node lands exactly once (observed names, raw kinds).
         const dispositions = Object.fromEntries(["mapped", "gap", "decoration-merged", "excluded", "skipped"].map((k) => [k, report.mapping.filter((m) => m.disposition === k).length]));
-        assert.equal(report.mapping.length, 10, "section + 9 descendants accounted");
+        assert.equal(report.mapping.length, 12, "section + 11 descendants accounted");
         assert.equal(dispositions.mapped, 8);
         assert.equal(dispositions.gap, 2);
+        assert.equal(dispositions.excluded, 2);
         const gapNodes = report.mapping.filter((m) => m.disposition === "gap").map((m) => m.sourceName).sort();
-        assert.deepEqual(gapNodes, ["DECOR/OverlayGradient", "DECOR/ScrollIndicator"], "decorations reported as gaps, never dropped");
+        assert.deepEqual(gapNodes, ["DECOR/ScrollIndicator", "Overlay"], "projected decorations reported as gaps, never dropped");
+        const excludedNodes = report.mapping.filter((m) => m.disposition === "excluded").map((m) => m.sourceName).sort();
+        assert.deepEqual(excludedNodes, ["Rectangle", "SCROLL"], "decoration subtree members recorded as excluded");
+        // The CTA is the observed button INSTANCE (external definition), projected explicitly.
+        const ctaEntry = report.mapping.find((m) => m.sourceName === "Proto / Button/Primary");
+        assert.equal(ctaEntry.disposition, "mapped");
+        assert.equal(ctaEntry.target.nativeElement, "button");
+        assert.ok(ctaEntry.note.includes("Explicitly projected"), "CTA mapping cites the explicit projection");
         const gapDiags = report.diagnostics.filter((d) => d.code === "NOT_VERIFIED");
         assert.ok(gapDiags.length >= 2, "gap diagnostics present");
         // Determinism: a second run is byte-identical (content + stable report hash).
@@ -164,7 +189,7 @@ export default async function registerG3Suite(checkAsync) {
         } finally {
           fs.rmSync(second.dir, { recursive: true, force: true });
         }
-        return "native row>banner master format, 8 mapped / 2 gaps, byte-deterministic";
+        return "native row>banner master format: 8 mapped / 2 gaps / 2 excluded, byte-deterministic";
       } finally {
         fs.rmSync(dir, { recursive: true, force: true });
       }
@@ -186,8 +211,21 @@ export default async function registerG3Suite(checkAsync) {
       "--bindings", path.join(G3, "g3-component-bindings.fixture.json"),
       "--input", path.join(extractDir, "page-structure.json"), "--nodeir", path.join(extractDir, "node-ir.json"),
       "--content", path.join(G3, "hero-content.fixture.json"),
+      "--projection", path.join(G3, "hero-projection.fixture.json"),
     ];
     try {
+      // Fidelity guard: the RAW-observed source (no SLOT-role names, button instance) composes
+      // NOTHING without the explicit projection — honest skip, empty content, exit 1.
+      const noProjection = await runCli([
+        "compose", "--profile", PROFILE, "--registry", registryPath,
+        "--bindings", path.join(G3, "g3-component-bindings.fixture.json"),
+        "--input", path.join(extractDir, "page-structure.json"), "--nodeir", path.join(extractDir, "node-ir.json"),
+        "--content", path.join(G3, "hero-content.fixture.json"), "--json",
+      ]);
+      assert.equal(noProjection.code, 1, "raw source without projection must not compose");
+      const npPayload = JSON.parse(noProjection.out);
+      assert.equal(npPayload.output.report.content, "", "no content invented from unnamed raw layers");
+      assert.ok(npPayload.output.report.mapping.some((m) => m.disposition === "skipped" && m.sourceName === SECTION_NAME));
       const noOut = await runCli([...composeArgs, "--json"]);
       assert.equal(noOut.code, 0);
       const noOutPayload = JSON.parse(noOut.out);
@@ -199,7 +237,7 @@ export default async function registerG3Suite(checkAsync) {
       assert.ok(!dryPayload.run.wroteFiles, "--dry-run: nothing written");
       assert.ok(!fs.existsSync(path.join(extractDir, "native-content.html")), "no native-content.html materialized");
       assert.ok(!fs.existsSync(path.join(extractDir, "compose-report.json")), "no compose-report.json materialized");
-      return "stdout-only and dry-run truth enforced";
+      return "no-projection refusal + stdout-only and dry-run truth enforced";
     } finally {
       fs.rmSync(extractDir, { recursive: true, force: true });
     }
@@ -218,6 +256,7 @@ export default async function registerG3Suite(checkAsync) {
       "--bindings", path.join(G3, "g3-component-bindings.fixture.json"),
       "--input", path.join(extractDir, "page-structure.json"), "--nodeir", path.join(extractDir, "node-ir.json"),
       "--content", path.join(G3, "hero-content.fixture.json"),
+      "--projection", path.join(G3, "hero-projection.fixture.json"),
     ];
     try {
       // Content manifest pinned to a different source revision -> EVIDENCE_MISSING, exit 1.
@@ -225,7 +264,13 @@ export default async function registerG3Suite(checkAsync) {
       const drifted = { ...manifest, sourceRevisionId: "mcp-observed-unpinned-2026-11-05" };
       const driftedPath = path.join(extractDir, "manifest-drifted.json");
       fs.writeFileSync(driftedPath, JSON.stringify(drifted));
-      const r1 = await runCli([...composeBase.slice(0, -1), driftedPath, "--json"]);
+      const r1 = await runCli([
+        "compose", "--profile", PROFILE, "--registry", registryPath,
+        "--bindings", path.join(G3, "g3-component-bindings.fixture.json"),
+        "--input", path.join(extractDir, "page-structure.json"), "--nodeir", path.join(extractDir, "node-ir.json"),
+        "--content", driftedPath,
+        "--projection", path.join(G3, "hero-projection.fixture.json"), "--json",
+      ]);
       assert.equal(r1.code, 1);
       const d1 = JSON.parse(r1.out).run;
       assert.ok(d1.converterDiagnostics.some((x) => x.code === "EVIDENCE_MISSING"), "revision pin mismatch is blocking");
@@ -257,12 +302,27 @@ export default async function registerG3Suite(checkAsync) {
       assert.equal(r3.code, 1);
       const d3 = JSON.parse(r3.out).run;
       assert.ok(d3.converterDiagnostics.some((x) => x.code === "EVIDENCE_MISSING"), "binding map revision pin mismatch is blocking");
+      // Projection pinned to another source revision -> EVIDENCE_MISSING, exit 1.
+      const projection = JSON.parse(fs.readFileSync(path.join(G3, "hero-projection.fixture.json"), "utf8"));
+      projection.sourceRevisionId = "mcp-observed-unpinned-2026-11-05";
+      const projPath = path.join(extractDir, "projection-drifted.json");
+      fs.writeFileSync(projPath, JSON.stringify(projection));
+      const r5 = await runCli([
+        "compose", "--profile", PROFILE, "--registry", registryPath,
+        "--bindings", path.join(G3, "g3-component-bindings.fixture.json"),
+        "--input", path.join(extractDir, "page-structure.json"), "--nodeir", path.join(extractDir, "node-ir.json"),
+        "--content", path.join(G3, "hero-content.fixture.json"),
+        "--projection", projPath, "--json",
+      ]);
+      assert.equal(r5.code, 1);
+      const d5 = JSON.parse(r5.out).run;
+      assert.ok(d5.converterDiagnostics.some((x) => x.code === "EVIDENCE_MISSING"), "projection revision pin mismatch is blocking");
       // Wrong-platform adapter override -> ADAPTER_NOT_APPLICABLE, exit 1.
       const r4 = await runCli([...composeBase, "--adapter", "magento-pagebuilder", "--json"]);
       assert.equal(r4.code, 1);
       const d4 = JSON.parse(r4.out).run;
       assert.ok(d4.converterDiagnostics.some((x) => x.code === "ADAPTER_NOT_APPLICABLE"), "a capability probe is never a composer");
-      return "4/4 pin violations blocked";
+      return "5/5 pin violations blocked";
     } finally {
       fs.rmSync(extractDir, { recursive: true, force: true });
     }
@@ -286,6 +346,7 @@ export default async function registerG3Suite(checkAsync) {
         "--bindings", path.join(G3, "g3-component-bindings.fixture.json"),
         "--input", path.join(extractDir, "page-structure.json"), "--nodeir", path.join(extractDir, "node-ir.json"),
         "--content", sparsePath,
+        "--projection", path.join(G3, "hero-projection.fixture.json"),
       ]);
       try {
         assert.equal(code, 0, `exit ${code}: ${err.slice(0, 300)}`);
@@ -319,7 +380,8 @@ export default async function registerG3Suite(checkAsync) {
         "compose", "--profile", PROFILE, "--registry", registryPath,
         "--bindings", path.join(G3, "g3-component-bindings.fixture.json"),
         "--input", path.join(extractDir, "page-structure.json"), "--nodeir", path.join(extractDir, "node-ir.json"),
-        "--content", path.join(G3, "hero-content.fixture.json"), "--json",
+        "--content", path.join(G3, "hero-content.fixture.json"),
+        "--projection", path.join(G3, "hero-projection.fixture.json"), "--json",
       ]);
       assert.equal(code, 0, `exit ${code}: ${err.slice(0, 300)}`);
       const fresh = JSON.parse(out).output.report;
@@ -331,6 +393,8 @@ export default async function registerG3Suite(checkAsync) {
       assert.ok(check.valid, `committed example must validate: ${check.errors.slice(0, 3).join("; ")}`);
       const manifestCheck = validateContract("content-manifest", JSON.parse(fs.readFileSync(path.join(G3, "hero-content.fixture.json"), "utf8")));
       assert.ok(manifestCheck.valid, `content manifest fixture must validate: ${manifestCheck.errors.slice(0, 3).join("; ")}`);
+      const projCheck = validateContract("semantic-projection", JSON.parse(fs.readFileSync(path.join(G3, "hero-projection.fixture.json"), "utf8")));
+      assert.ok(projCheck.valid, `semantic projection fixture must validate: ${projCheck.errors.slice(0, 3).join("; ")}`);
       return "example reproducible + contract-valid";
     } finally {
       fs.rmSync(extractDir, { recursive: true, force: true });
@@ -352,7 +416,7 @@ export default async function registerG3Suite(checkAsync) {
       const m = text.match(new RegExp(neutralTerms.source, "gi"));
       if (m) hits.push(`${rel}: ${[...new Set(m)].join(",")}`);
     };
-    for (const f of ["content-manifest.schema.json", "compose-input.schema.json", "compose-output.schema.json", "tool-run.schema.json"]) {
+    for (const f of ["content-manifest.schema.json", "compose-input.schema.json", "compose-output.schema.json", "semantic-projection.schema.json", "tool-run.schema.json"]) {
       scan(`schemas/cli/${f}`, fs.readFileSync(path.join(FIX, "..", "..", "schemas/cli", f), "utf8"));
     }
     scan("dist/src/core/cli/commands/compose.js", fs.readFileSync(path.join(FIX, "..", "..", "dist/src/core/cli/commands/compose.js"), "utf8"));

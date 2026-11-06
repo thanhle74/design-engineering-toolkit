@@ -18,12 +18,15 @@
 //   stamp data-element="<declared element name>" on every element; the master-format reader
 //   populates forms by those names). Attributes not present in the pinned declarations are not
 //   emitted. NO arbitrary embeddable-markup content type is produced.
-// - Text role mapping (documented table, from the design-source naming contract SLOT/<role>):
-//     overline -> content lead <p> (styling semantics not preserved — noted)
-//     heading  -> content <h2>
-//     body|bodycopy -> content <p>
-//     cta|ctalabel  -> button element text
-//   Unrecognized roles are reported as gaps, never guessed.
+// - Text role resolution, in deterministic precedence:
+//     (1) an explicit, reason-carrying semantic projection assignment (the recorded human
+//         decision, for sources whose layer names do not carry the SLOT-role convention);
+//     (2) the documented naming-contract table for SLOT/<role> names:
+//           overline -> content lead <p>; heading -> content <h2>;
+//           body|bodycopy -> content <p>; cta|ctalabel -> button element text.
+//   Text layers named by their raw content and button component instances compose ONLY through
+//   the explicit projection — without it (and without naming hints) the section is honestly
+//   skipped, never guessed. Unrecognized roles are reported as gaps.
 // - Honest gaps: gradient overlay decoration (banner overlay is a single color; no gradient
 //   field exists), decorative nodes with no native equivalent, missing manifest entries, a
 //   mobile breakpoint that was not composed — each a NOT_VERIFIED warning + a "gap" mapping
@@ -54,6 +57,7 @@ interface ComposeInput {
   platformId: string;
   registry: { source: { revisionId: string }; capabilities: Capability[] };
   bindings: { bindings: { sourceComponentId: string; variantConditions: { prop: string; op?: string; value: string }[] }[] };
+  projection?: { assignments: { sourceLocator: string; role: "background-media" | "content-lead" | "heading" | "body" | "cta" | "decoration"; reason: string }[] };
   nodeIr: { nodes: NodeIRNode[]; rootNodeId: string };
   pageStructure: { sections: PageStructureSection[]; source: { sourceId: string; revisionId: string; accessedAt: string } };
   content: { entries: ManifestEntry[] };
@@ -173,10 +177,32 @@ for (const e of input.content.entries) {
   if (e.kind === "link" && typeof e.linkUrl === "string") linkByRef.set(e.valueRef, { linkUrl: e.linkUrl, ...(e.linkTarget ? { linkTarget: e.linkTarget } : {}) });
 }
 
+// ---- Explicit semantic projection (optional; the recorded human decision) --------------------
+const roleByLocator = new Map<string, "background-media" | "content-lead" | "heading" | "body" | "cta" | "decoration">();
+for (const a of input.projection?.assignments ?? []) roleByLocator.set(a.sourceLocator, a.role);
+
 // ---- NodeIR helpers -------------------------------------------------------------------------
 const nodesById = new Map<string, NodeIRNode>();
 for (const n of input.nodeIr.nodes) nodesById.set(n.nodeId, n);
 const locatorOf = (n: NodeIRNode): string | null => n.sourceEvidence?.[0]?.locator ?? null;
+const nodeIdOfLocator = new Map<string, string>();
+for (const n of input.nodeIr.nodes) {
+  const loc = locatorOf(n);
+  if (loc) nodeIdOfLocator.set(loc, n.nodeId);
+}
+// Subtrees of explicitly projected decoration nodes are excluded from content, with their own
+// accountable entries (recorded, never silently dropped).
+const excludedLocators = new Set<string>();
+for (const [loc, role] of roleByLocator) {
+  if (role !== "decoration") continue;
+  excludedLocators.add(loc); // the decorated root itself
+  const rootId = nodeIdOfLocator.get(loc);
+  if (!rootId) continue; // projected locator not in this inventory; nothing further to exclude
+  walkSubtree(rootId, (n) => {
+    const l = locatorOf(n);
+    if (l) excludedLocators.add(l);
+  });
+}
 
 // Document-order DESCENDANT walk from a NodeIR node id (the starting node itself is the
 // section and is accounted for separately — never double-accounted).
@@ -232,92 +258,126 @@ function composeSection(section: PageStructureSection, sectionNodeId: string): s
   }
   const sectionLocator = locatorOf(sectionNode) ?? undefined;
 
-  // Hero-eligibility: background media candidate + at least one text node in the subtree.
-  const mediaNodes: NodeIRNode[] = [];
-  const textNodes: NodeIRNode[] = [];
-  const others: NodeIRNode[] = [];
+  // Deterministic role resolution: explicit projection assignment > SLOT naming-contract table.
+  // Subtrees of projected decoration nodes are excluded (with accountable entries), and text
+  // layers named by their raw content only compose through the explicit projection.
+  const resolveRole = (node: NodeIRNode): "background-media" | "content-lead" | "heading" | "body" | "cta" | undefined => {
+    // Explicit projection applies to ANY observed kind (text layers, frames, component
+    // instances); the naming-contract table applies only to text layers.
+    const projected = locatorOf(node) ? roleByLocator.get(locatorOf(node) as string) : undefined;
+    if (projected && projected !== "decoration") return projected;
+    if (node.kind !== "text") return undefined;
+    const r = slotRole(node);
+    return r ? (TEXT_ROLE_TABLE[r] as "content-lead" | "heading" | "body" | "cta" | undefined) : undefined;
+  };
+
+  // Eligibility scan (document order; invisible nodes are never composed — the review ledger
+  // covers them; excluded-decorated subtrees STAY in scope so every node gets its own entry).
+  const inScope: NodeIRNode[] = [];
   walkSubtree(sectionNodeId, (node) => {
-    if (node.visible === false) return; // hidden nodes are never composed; the review ledger covers them
-    if (node.kind === "media") mediaNodes.push(node);
-    else if (node.kind === "text") textNodes.push(node);
-    else others.push(node);
+    if (node.visible === false) return;
+    inScope.push(node);
   });
-  if (mediaNodes.length === 0 || textNodes.length === 0) {
-    diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Section '${section.name}' does not carry the hero shape this slice composes (needs background media + overlaid text); skipped — nothing invented.`, sectionNodeId));
-    mapping.push({ sourceNodeId: sectionNodeId, ...(sectionNode.name ? { sourceName: sectionNode.name } : {}), ...(sectionLocator ? { sourceLocator: sectionLocator } : {}), disposition: "skipped", note: "Section shape is outside this slice's hero composer (background media + overlaid text)." });
+  const notExcluded = (n: NodeIRNode): boolean => {
+    const loc = locatorOf(n);
+    return loc === null || !excludedLocators.has(loc);
+  };
+  const bgCandidates = inScope.filter((n) => notExcluded(n) && (n.kind === "media" || (locatorOf(n) !== null && roleByLocator.get(locatorOf(n) as string) === "background-media")));
+  const textCandidates = inScope.filter((n) => {
+    if (!notExcluded(n)) return false;
+    const role = resolveRole(n);
+    return role !== undefined && role !== "background-media";
+  });
+  if (bgCandidates.length === 0 || textCandidates.length === 0) {
+    diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Section '${section.name}' does not carry the hero shape this slice composes (needs a background-media node and role-resolved overlaid text — via explicit projection or SLOT naming hints); skipped — nothing invented.`, sectionNodeId));
+    mapping.push({ sourceNodeId: sectionNodeId, ...(sectionNode.name ? { sourceName: sectionNode.name } : {}), ...(sectionLocator ? { sourceLocator: sectionLocator } : {}), disposition: "skipped", note: "Section shape is outside this slice's hero composer (background media + role-resolved overlaid text)." });
     return null;
   }
 
   const pieces: HeroPieces = {};
 
-  // Background media: the FIRST media node in document order; extra media nodes are gaps.
-  const bgNode = mediaNodes[0];
-  const bgLocator = locatorOf(bgNode);
-  const bgManifest = bgLocator ? mediaByRef.get(bgLocator) : undefined;
-  if (!bgManifest) {
-    diagnostics.push(nodeDiag("EVIDENCE_MISSING", "warning", `No content-manifest media entry for background node '${bgNode.name}' (${bgLocator ?? "no locator"}); the banner background is left empty — no asset URL is ever invented.`, bgNode.nodeId));
-    mapping.push({ sourceNodeId: bgNode.nodeId, sourceName: bgNode.name, ...(bgLocator ? { sourceLocator: bgLocator } : {}), disposition: "gap", note: "Background media has no manifest entry; banner background left empty." });
-  } else {
-    pieces.background = { nodeId: bgNode.nodeId, mediaUrl: bgManifest.mediaUrl, ...(bgManifest.assetLabel ? { assetLabel: bgManifest.assetLabel } : {}) };
-    mapping.push({ sourceNodeId: bgNode.nodeId, sourceName: bgNode.name, ...(bgLocator ? { sourceLocator: bgLocator } : {}), disposition: "mapped", target: { capabilityId: BANNER_ID, appearanceId: BANNER_APPEARANCE, nativeElement: "wrapper", nativeField: "background_image" }, note: `Desktop background image${pieces.background.assetLabel ? ` (${pieces.background.assetLabel})` : ""}; mobile breakpoint not composed.` });
+  // Background media: the explicit projection assignment if present, else the FIRST media node
+  // in document order. Extra media nodes are gaps.
+  const bgNode =
+    inScope.find((n) => locatorOf(n) !== null && roleByLocator.get(locatorOf(n) as string) === "background-media") ?? bgCandidates.find((n) => n.kind === "media") ?? null;
+  if (bgNode) {
+    const bgLocator = locatorOf(bgNode);
+    const bgManifest = bgLocator ? mediaByRef.get(bgLocator) : undefined;
+    if (!bgManifest) {
+      diagnostics.push(nodeDiag("EVIDENCE_MISSING", "warning", `No content-manifest media entry for background node '${bgNode.name}' (${bgLocator ?? "no locator"}); the banner background is left empty — no asset URL is ever invented.`, bgNode.nodeId));
+      mapping.push({ sourceNodeId: bgNode.nodeId, sourceName: bgNode.name, ...(bgLocator ? { sourceLocator: bgLocator } : {}), disposition: "gap", note: "Background media has no manifest entry; banner background left empty." });
+    } else {
+      pieces.background = { nodeId: bgNode.nodeId, mediaUrl: bgManifest.mediaUrl, ...(bgManifest.assetLabel ? { assetLabel: bgManifest.assetLabel } : {}) };
+      mapping.push({ sourceNodeId: bgNode.nodeId, sourceName: bgNode.name, ...(bgLocator ? { sourceLocator: bgLocator } : {}), disposition: "mapped", target: { capabilityId: BANNER_ID, appearanceId: BANNER_APPEARANCE, nativeElement: "wrapper", nativeField: "background_image" }, note: `Desktop background image${pieces.background.assetLabel ? ` (${pieces.background.assetLabel})` : ""}; mobile breakpoint not composed.` });
+    }
   }
-  for (const extra of mediaNodes.slice(1)) {
+  for (const extra of bgCandidates.filter((n) => n !== bgNode && n.kind === "media")) {
     const extraLocator = locatorOf(extra);
     diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Extra media node '${extra.name}' has no native slot in the banner background (one background per banner); not composed.`, extra.nodeId));
     mapping.push({ sourceNodeId: extra.nodeId, sourceName: extra.name, ...(extraLocator ? { sourceLocator: extraLocator } : {}), disposition: "gap", note: "Extra media beyond the banner background; no native slot." });
   }
 
-  // Text nodes: documented SLOT-role table; the CTA link comes from the manifest, keyed by the
-  // CTA node's design locator.
-  for (const textNode of textNodes) {
-    const role = slotRole(textNode);
-    const mappedRole = role ? TEXT_ROLE_TABLE[role] : undefined;
+  // Role-resolved text nodes: content lead / heading / body fold into the content WYSIWYG;
+  // cta becomes the button element (label text; link from the manifest, keyed by the node).
+  for (const textNode of textCandidates) {
+    const role = resolveRole(textNode);
     const textLocator = locatorOf(textNode);
     const entryBase = { sourceNodeId: textNode.nodeId, sourceName: textNode.name, ...(textLocator ? { sourceLocator: textLocator } : {}) };
-    if (!role || !mappedRole) {
-      diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Text node '${textNode.name}' carries a role outside this slice's documented SLOT-role table; not composed — never guessed.`, textNode.nodeId));
-      mapping.push({ ...entryBase, disposition: "gap", note: "Text role outside the documented table; not composed." });
-      continue;
-    }
+    const viaProjection = textLocator !== null && roleByLocator.get(textLocator) !== undefined;
     const text = textLocator ? textByRef.get(textLocator) : undefined;
     if (text === undefined) {
-      diagnostics.push(nodeDiag("EVIDENCE_MISSING", "warning", `No content-manifest text entry for '${textNode.name}' (${textLocator ?? "no locator"}); the ${mappedRole} field is left empty — no text is invented.`, textNode.nodeId));
-      mapping.push({ ...entryBase, disposition: "gap", note: `No manifest text entry for the ${mappedRole} field.` });
+      diagnostics.push(nodeDiag("EVIDENCE_MISSING", "warning", `No content-manifest text entry for '${textNode.name}' (${textLocator ?? "no locator"}); the ${role} field is left empty — no text is invented.`, textNode.nodeId));
+      mapping.push({ ...entryBase, disposition: "gap", note: `No manifest text entry for the ${role} field.` });
       continue;
     }
-    if (mappedRole === "cta") {
+    if (role === "cta") {
       const link = textLocator ? linkByRef.get(textLocator) : undefined;
       pieces.cta = { nodeId: textNode.nodeId, text, ...(link ? { link } : {}) };
-      mapping.push({ ...entryBase, disposition: "mapped", target: { capabilityId: BANNER_ID, appearanceId: BANNER_APPEARANCE, nativeElement: "button", nativeField: "button_text" }, note: link ? "CTA text + link target from the manifest." : "CTA text from the manifest; no link entry — banner renders the button without a link wrapper." });
+      mapping.push({ ...entryBase, disposition: "mapped", target: { capabilityId: BANNER_ID, appearanceId: BANNER_APPEARANCE, nativeElement: "button", nativeField: "button_text" }, note: `${viaProjection ? "Explicitly projected " : ""}CTA (${textNode.name}) — label text${link ? " + link target" : ""} from the manifest.` });
       if (!link) {
         diagnostics.push(nodeDiag("EVIDENCE_MISSING", "warning", `No content-manifest link entry for CTA node '${textNode.name}'; the CTA composes without a link target (banner shows the button unlinked).`, textNode.nodeId));
       }
     } else {
-      pieces[mappedRole] = { nodeId: textNode.nodeId, text };
-      const as = mappedRole === "heading" ? "<h2>" : "<p>";
-      mapping.push({ ...entryBase, disposition: "mapped", target: { capabilityId: BANNER_ID, appearanceId: BANNER_APPEARANCE, nativeElement: "content", nativeField: "message" }, note: `Text folded into the banner content WYSIWYG field as ${as}; standalone per-field styling is not preserved (single WYSIWYG field).` });
+      const pieceKey = role === "content-lead" ? "contentLead" : (role as "heading" | "body");
+      pieces[pieceKey] = { nodeId: textNode.nodeId, text };
+      const as = role === "heading" ? "<h2>" : "<p>";
+      mapping.push({ ...entryBase, disposition: "mapped", target: { capabilityId: BANNER_ID, appearanceId: BANNER_APPEARANCE, nativeElement: "content", nativeField: "message" }, note: `${viaProjection ? "Explicitly projected " : ""}text folded into the banner content WYSIWYG field as ${as}; standalone per-field styling is not preserved (single WYSIWYG field).` });
     }
   }
 
-  // Non-text, non-media nodes: decorations recorded as gaps (never silently dropped), structural
-  // SLOT containers recorded as folded (their children realized natively above).
-  for (const other of others) {
+  // Every other in-scope node: decorated subtrees already excluded above; here decorations,
+  // containers and unrecognized kinds get their explicit, accountable treatment.
+  const accounted = new Set<string>([...(pieces.background ? [pieces.background.nodeId] : []), ...textCandidates.map((t) => t.nodeId)]);
+  for (const other of inScope) {
+    if (accounted.has(other.nodeId)) continue;
     const otherLocator = locatorOf(other);
     const entryBase = { sourceNodeId: other.nodeId, sourceName: other.name, ...(otherLocator ? { sourceLocator: otherLocator } : {}) };
+    if (otherLocator && roleByLocator.get(otherLocator) === "decoration") {
+      diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Decoration '${other.name}' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.`, other.nodeId));
+      mapping.push({ ...entryBase, disposition: "gap", note: "Explicitly projected decoration without a native equivalent; excluded (not silently dropped)." });
+      continue;
+    }
+    if (otherLocator && excludedLocators.has(otherLocator)) {
+      mapping.push({ ...entryBase, disposition: "excluded", note: "Inside a subtree explicitly projected as decoration; recorded, never silently dropped." });
+      continue;
+    }
     if (other.role === "DECOR" || other.kind === "icon") {
       diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Decoration '${other.name}' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.`, other.nodeId));
       mapping.push({ ...entryBase, disposition: "gap", note: "Decoration without a native equivalent; explicitly excluded (not silently dropped)." });
-    } else if (other.role === "SLOT" && other.kind === "container") {
+      continue;
+    }
+    if (other.role === "SLOT" && other.kind === "container") {
       const containsCta = (nodesById.get(other.nodeId)?.childrenNodeIds ?? []).some((childId) => {
         const child = nodesById.get(childId);
-        const r = child ? slotRole(child) : null;
-        return child?.kind === "text" && r !== null && TEXT_ROLE_TABLE[r] === "cta";
+        if (!child) return false;
+        const childLocator = locatorOf(child);
+        return (childLocator !== null && roleByLocator.get(childLocator) === "cta") || (child.kind === "text" && (() => { const r = slotRole(child); return r !== null && TEXT_ROLE_TABLE[r] === "cta"; })());
       });
       mapping.push({ ...entryBase, disposition: "mapped", target: { capabilityId: BANNER_ID, appearanceId: BANNER_APPEARANCE, nativeElement: containsCta ? "button" : "content", nativeField: containsCta ? "button_text" : "message" }, note: containsCta ? "Structural container folded into the banner button area; no separate native container." : "Structural container folded into the banner content WYSIWYG; no separate native container." });
-    } else {
-      diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Node '${other.name}' (kind '${other.kind}', role '${other.role ?? "none"}') is outside this slice's composition table; not composed.`, other.nodeId));
-      mapping.push({ ...entryBase, disposition: "gap", note: "Node outside the composition table; not composed." });
+      continue;
     }
+    diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Node '${other.name}' (kind '${other.kind}', role '${other.role ?? "none"}') is outside this slice's composition table; not composed.`, other.nodeId));
+    mapping.push({ ...entryBase, disposition: "gap", note: "Node outside the composition table; not composed." });
   }
 
   // Sanity: at least one field must resolve, else the banner is not composable.
@@ -419,6 +479,7 @@ const payload = {
     nodeIrContentHash: stableHash(input.nodeIr),
     pageStructureContentHash: stableHash(input.pageStructure),
     contentManifestContentHash: stableHash(input.content),
+    ...(input.projection ? { projectionContentHash: stableHash(input.projection) } : {}),
     registryRevisionId: input.registry.source.revisionId,
     bindingMapContentHash: bindingMapPinHash(input.bindings),
   },

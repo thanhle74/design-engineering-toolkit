@@ -21,10 +21,11 @@
         "nodeIrContentHash": { "type": "string", "minLength": 1 },
         "pageStructureContentHash": { "type": "string", "minLength": 1 },
         "contentManifestContentHash": { "type": "string", "minLength": 1 },
+        "projectionContentHash": { "type": "string", "minLength": 1, "description": "Present iff a semantic projection was supplied with the compose input." },
         "registryRevisionId": { "type": "string", "minLength": 1 },
         "bindingMapContentHash": { "type": "string", "minLength": 1 }
       },
-      "description": "Echo of the exact input identities the adapter composed from; the core recomputes and compares all five."
+      "description": "Echo of the exact input identities the adapter composed from; the core recomputes and compares all of them."
     },
     "content": {
       "type": "string",

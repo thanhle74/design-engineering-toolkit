@@ -45,6 +45,19 @@ export interface ContentManifestEntry {
   linkTarget?: string;
   note?: string;
 }
+export interface SemanticProjectionAssignment {
+  sourceLocator: string;
+  role: "background-media" | "content-lead" | "heading" | "body" | "cta" | "decoration";
+  reason: string;
+  note?: string;
+}
+export interface SemanticProjection {
+  schemaVersion: 1;
+  profileId: string;
+  sourceRevisionId: string;
+  notes?: string;
+  assignments: SemanticProjectionAssignment[];
+}
 export interface ContentManifest {
   schemaVersion: 1;
   profileId: string;
@@ -67,6 +80,7 @@ export interface ComposeOutput {
     nodeIrContentHash: string;
     pageStructureContentHash: string;
     contentManifestContentHash: string;
+    projectionContentHash?: string;
     registryRevisionId: string;
     bindingMapContentHash: string;
   };
@@ -148,6 +162,38 @@ export async function commandCompose(flags: Record<string, string | boolean>, io
   const content = contentLoaded.data as ContentManifest;
   const contentCheck = validateContract("content-manifest", content);
   if (!contentCheck.valid) return emitSchemaInvalid("content-manifest", contentCheck.errors, io, dryRun, asJson);
+
+  // Optional explicit semantic projection (coordinator fidelity correction): when the source's
+  // layer names do not carry the SLOT-role convention, this reason-carrying document is the
+  // recorded human decision that assigns composer roles to observed locators. Pinned like the
+  // content manifest; never invents nodes or content.
+  let projection: SemanticProjection | undefined;
+  const projectionPath = requireValue(flags, "projection");
+  if (projectionPath) {
+    const projLoaded = readJsonFile(projectionPath);
+    if (!projLoaded.ok) return emitUsage(projLoaded.diagnostic, io, dryRun, asJson);
+    projection = projLoaded.data as SemanticProjection;
+    const projCheck = validateContract("semantic-projection", projection);
+    if (!projCheck.valid) return emitSchemaInvalid("semantic-projection", projCheck.errors, io, dryRun, asJson);
+    if (projection.profileId !== profile.profile.id) {
+      runDiagnostics.push({ code: "INPUT_CONTRACT_MISMATCH", severity: "error", message: `Semantic projection belongs to project '${projection.profileId}' but the profile declares '${profile.profile.id}'.`, subject: { type: "input", id: "projection" } });
+    }
+    if (projection.sourceRevisionId !== pageStructure.source.revisionId) {
+      converterDiagnostics.push({
+        code: "EVIDENCE_MISSING",
+        severity: "error",
+        message: `Semantic projection is pinned to source revision '${projection.sourceRevisionId}' but the PageStructure is pinned to '${pageStructure.source.revisionId}'; a projection is only valid for the observation it reviewed.`,
+        subject: { type: "source", id: projection.sourceRevisionId },
+      });
+    }
+    const seenAssignments = new Set<string>();
+    for (const a of projection.assignments) {
+      if (seenAssignments.has(a.sourceLocator)) {
+        runDiagnostics.push({ code: "INPUT_CONTRACT_VIOLATION", severity: "error", message: `Duplicate semantic projection assignment for '${a.sourceLocator}'; the composer refuses to choose.`, subject: { type: "input", id: "projection" } });
+      }
+      seenAssignments.add(a.sourceLocator);
+    }
+  }
 
   // 3. Cross-pins (fail closed) — the same consistency rules plan/extract enforce, extended with
   //    the content-manifest pins. A compose run may only ever consume mutually pinned artifacts.
@@ -276,6 +322,7 @@ export async function commandCompose(flags: Record<string, string | boolean>, io
     nodeIr,
     pageStructure,
     content,
+    ...(projection ? { projection } : {}),
   };
   const inputCheck = validateContract("compose-input", composeInput);
   if (!inputCheck.valid) {
@@ -315,6 +362,8 @@ export async function commandCompose(flags: Record<string, string | boolean>, io
   if (output.inputs.nodeIrContentHash !== expectedNodeIrHash) echo.push({ ok: false, message: "echoed nodeIrContentHash mismatch" });
   if (output.inputs.pageStructureContentHash !== expectedPageStructureHash) echo.push({ ok: false, message: "echoed pageStructureContentHash mismatch" });
   if (output.inputs.contentManifestContentHash !== expectedContentHash) echo.push({ ok: false, message: "echoed contentManifestContentHash mismatch" });
+  if (projection && output.inputs.projectionContentHash !== stableContentHash(projection)) echo.push({ ok: false, message: "echoed projectionContentHash mismatch" });
+  if (!projection && output.inputs.projectionContentHash !== undefined) echo.push({ ok: false, message: "echoed projectionContentHash present without a supplied projection" });
   if (output.inputs.registryRevisionId !== registry.source.revisionId) echo.push({ ok: false, message: "echoed registryRevisionId mismatch" });
   if (output.inputs.bindingMapContentHash !== bindingMapPinHash(bindings)) echo.push({ ok: false, message: "echoed bindingMapContentHash mismatch" });
   if (output.contentHash !== expectedContentSha) echo.push({ ok: false, message: "echoed contentHash does not match the emitted content bytes" });

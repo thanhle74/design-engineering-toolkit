@@ -67,7 +67,7 @@ Usage:
       isolation and the secret/licensed-content guards.
 
   det compose --profile <file> --registry <file> --bindings <file> --input <page-structure.json>
-              --nodeir <node-ir.json> --content <content-manifest.json> [--adapter <id>] [--out <dir>] [--dry-run] [--json]
+              --nodeir <node-ir.json> --content <content-manifest.json> [--projection <file>] [--adapter <id>] [--out <dir>] [--dry-run] [--json]
       Gated native content composition (G3): deterministically compose persisted native platform
       content (e.g. a master-format document) from a pinned PageStructure + NodeIR + content
       manifest against a pinned capability registry + binding map, via the platform's out-of-process
@@ -75,8 +75,10 @@ Usage:
       gated platform-serializer stage the G2 contract names — never by the binding resolver, never
       as arbitrary embeddable markup. The core validates all pins, spawns the adapter and re-verifies
       the echoed input identities; gaps (missing content inputs, non-representable decorations) come
-      back as explicit diagnostics, never invented around. Composition is structural evidence only:
-      it never claims Admin round-trip or visual verification.
+      back as explicit diagnostics, never invented around. When source names do not carry the
+      SLOT-role convention, --projection supplies the reason-carrying human role assignment
+      (schema'd, revision-pinned). Composition is structural evidence only: it never claims Admin
+      round-trip or visual verification.
 
 Global flags:
   --json        Machine-readable JSON on stdout (the human summary is a presentation of it).
