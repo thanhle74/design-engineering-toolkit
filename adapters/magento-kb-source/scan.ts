@@ -34,10 +34,10 @@
 //   with LOCATOR_OUT_OF_SCOPE (never followed).
 // - Every file actually opened is hashed (sha256) into digests keyed "<rootAlias>:<relPath>".
 // - Bounded metadata exception (documented, deny+containment still enforced): the enablement
-//   fact app/etc/config.php may be read although it sits outside a module subPath, and the
-//   pagebuilder-native kind may consult the declaring module's etc/module.xml + composer.json
-//   and the checkout-root composer.json/composer.lock for version/license truth. No other
-//   out-of-subPath read exists.
+//   fact app/etc/config.php, the vendor/composer/installed.json package map and the declaring
+//   module's etc/module.xml + composer.json may be read although they sit outside a module
+//   subPath; the pagebuilder-native and hyva-ui kinds may consult the checkout-root
+//   composer.json/composer.lock for version/license truth. No other out-of-subPath read exists.
 // - Unsupported/malformed declaration shapes are skipped with an UNSUPPORTED_SHAPE diagnostic
 //   and UNKNOWN evidence — never guessed.
 // - Declared options set is EMPTY for adapter version 1.x: any option key is a scan error
@@ -418,14 +418,84 @@ function pascalToKebab(s: string): string {
   return slugify(s.replace(/([a-z0-9])([A-Z])/g, "$1-$2"));
 }
 
-// Resolve a module's on-disk directory. Returns the alias-relative dir, or null.
-function resolveModuleDir(ctx: ScanContext, nativeName: string): { dir: string | null; origin: "custom" | "native" | "third-party"; onDisk: boolean } {
+// vendor/composer/installed.json map (fix round, issue #19): declaredModuleName -> composer
+// package facts. Accepts both composer shapes — v1 root array and v2 {packages, packages-dev}.
+// One installed.json read + one module.xml read per package entry (b); module.xml facts are
+// reused so record assembly never re-opens a mapped file. Deny-gated like every read.
+interface InstalledEntry {
+  composerName: string;
+  composerVersion: string | null;
+  installPath: string;
+  moduleXmlRel: string;
+  parsed: { name: string | null; version: string | null; sequence: string[] };
+}
+
+function buildInstalledJsonMap(ctx: ScanContext): Map<string, InstalledEntry> {
+  const map = new Map<string, InstalledEntry>();
+  const opened = ctx.openFile("vendor/composer/installed.json", { scope: false });
+  if (!opened) return map; // absent or denied: resolution falls back to path candidates
+  let raw: unknown;
+  try {
+    raw = JSON.parse(opened.text);
+  } catch {
+    ctx.diagnostics.push({ code: "UNSUPPORTED_SHAPE", severity: "warning", message: "vendor/composer/installed.json is not parseable JSON; composer-package resolution is skipped." });
+    ctx.unknownShapes += 1;
+    return map;
+  }
+  let list: unknown[] = [];
+  if (Array.isArray(raw)) list = raw;
+  else if (raw && typeof raw === "object" && Array.isArray((raw as { packages?: unknown[] }).packages)) {
+    const obj = raw as { packages?: unknown[]; "packages-dev"?: unknown[] };
+    list = [...(obj.packages ?? []), ...(Array.isArray(obj["packages-dev"]) ? (obj["packages-dev"] as unknown[]) : [])];
+  }
+  for (const entry of list) {
+    if (!entry || typeof entry !== "object") continue;
+    const pkg = entry as { name?: unknown; version?: unknown; "install-path"?: unknown };
+    if (typeof pkg.name !== "string" || typeof pkg["install-path"] !== "string") continue;
+    const installPath = normalizeRel(pkg["install-path"]);
+    const moduleXmlRel = `${installPath}/etc/module.xml`;
+    const modOpened = ctx.openFile(moduleXmlRel, { scope: false });
+    const parsed = modOpened ? parseModuleXml(modOpened.text) : { name: null, version: null, sequence: [] };
+    if (!parsed.name) continue;
+    if (!map.has(parsed.name)) {
+      map.set(parsed.name, {
+        composerName: pkg.name,
+        composerVersion: typeof pkg.version === "string" ? pkg.version : null,
+        installPath,
+        moduleXmlRel,
+        parsed,
+      });
+    }
+  }
+  return map;
+}
+
+// Resolve a module's on-disk directory + origin. Order (fix round): app/code direct (custom) ->
+// installed.json map (native when composerName starts "magento/", else third-party) -> direct
+// vendor candidates -> bounded declared-name fallback. A config.php entry that is NOT under
+// app/code is vendor-supplied by construction, so a genuinely-absent module is native only for
+// Magento core naming and third-party otherwise (composer vendor dirs need not follow the PHP
+// vendor prefix — e.g. Hyva_* packages under vendor/hyva-themes/magento2-*).
+interface ResolvedModule {
+  dir: string | null;
+  origin: "custom" | "native" | "third-party";
+  onDisk: boolean;
+  viaMap?: InstalledEntry;
+}
+
+function resolveModuleDir(ctx: ScanContext, nativeName: string, installed: Map<string, InstalledEntry>): ResolvedModule {
   const parts = nativeName.split("_");
-  if (parts.length < 2) return { dir: null, origin: "custom", onDisk: false };
+  const mapEntry = installed.get(nativeName);
+  if (parts.length < 2) {
+    // Single-segment declaration: never app/code shaped; vendor-supplied by construction.
+    if (mapEntry) return { dir: mapEntry.installPath, origin: mapEntry.composerName.startsWith("magento/") ? "native" : "third-party", onDisk: true, viaMap: mapEntry };
+    return { dir: null, origin: /^Magento_/i.test(nativeName) ? "native" : "third-party", onDisk: false };
+  }
   const vendor = parts[0];
   const pkg = parts.slice(1).join("_");
   const appCodeDir = `app/code/${vendor}/${pkg}`;
   if (ctx.exists(appCodeDir)) return { dir: appCodeDir, origin: "custom", onDisk: true };
+  if (mapEntry) return { dir: mapEntry.installPath, origin: mapEntry.composerName.startsWith("magento/") ? "native" : "third-party", onDisk: true, viaMap: mapEntry };
   const vendorKebab = pascalToKebab(vendor);
   const pkgKebab = pascalToKebab(pkg);
   const vendorDir = `vendor/${vendorKebab}`;
@@ -447,9 +517,9 @@ function resolveModuleDir(ctx: ScanContext, nativeName: string): { dir: string |
       return { dir: pkgDir.rel, origin: vendorKebab === "magento" ? "native" : "third-party", onDisk: true };
     }
   }
-  // Not found on disk: origin inferred from the declaration itself (name shape), flagged.
-  const origin: "custom" | "native" | "third-party" = /^Magento_/i.test(nativeName) ? "native" : "custom";
-  return { dir: null, origin, onDisk: false };
+  // Genuinely absent on disk: origin inferred from the declaration name (Magento core naming
+  // -> native, else third-party — a non-app/code entry is vendor-supplied by construction).
+  return { dir: null, origin: /^Magento_/i.test(nativeName) ? "native" : "third-party", onDisk: false };
 }
 
 // Declaration-file presence inventory (existence checks ONLY — no content reads). Kinds use the
@@ -501,40 +571,56 @@ function scanMagentoPlatform(ctx: ScanContext, platform: { id: string; version?:
     return { capabilities };
   }
 
+  // One vendor/composer/installed.json read up front (declared module name -> composer facts);
+  // record assembly reuses the mapped module.xml facts instead of re-opening those files.
+  const installed = buildInstalledJsonMap(ctx);
+
   for (const nativeName of Object.keys(modules)) {
     const enabled = modules[nativeName] === 1;
-    const resolved = resolveModuleDir(ctx, nativeName);
+    const resolved = resolveModuleDir(ctx, nativeName, installed);
+    const mapEntry = installed.get(nativeName);
     const uncertainty: string[] = ["runtime DB enablement state not scanned"];
     if (!resolved.onDisk) {
-      uncertainty.push("module directory not found under app/code or vendor candidates; declaration present in config.php only");
+      uncertainty.push("module directory not found under app/code, vendor/composer/installed.json or vendor candidates; declaration present in config.php only");
       uncertainty.push(`origin inferred from the declaration name (${resolved.origin}); no on-disk module dir confirms it`);
     }
-    let version: { declared: string } | undefined;
     let sequence: string[] = [];
     let entrypoints: { kind: string; ref: string }[] = [];
     const notes: string[] = [];
     const digestRels = ["app/etc/config.php"];
-    if (resolved.dir) {
-      const modXmlRel = `${resolved.dir}/etc/module.xml`;
+    let declared: string | undefined;
+    let modXmlRel: string | null = null;
+    let parsedMod: { name: string | null; version: string | null; sequence: string[] } | null = null;
+    if (resolved.viaMap) {
+      // The map build already opened + digested this module.xml; reuse its facts (one read per
+      // package, per the scan budget).
+      modXmlRel = resolved.viaMap.moduleXmlRel;
+      parsedMod = resolved.viaMap.parsed;
+    } else if (resolved.dir) {
+      modXmlRel = `${resolved.dir}/etc/module.xml`;
       const opened = ctx.openFile(modXmlRel, { scope: false });
-      if (opened) {
-        const parsed = parseModuleXml(opened.text);
-        if (parsed.name === nativeName) {
-          digestRels.push(modXmlRel);
-          if (parsed.version) version = { declared: parsed.version };
-          else uncertainty.push("module.xml declares no version attribute; declared version unknown");
-          sequence = parsed.sequence;
-        } else {
-          uncertainty.push("module.xml declares a different module name than config.php; version and dependencies not taken from it");
-        }
-      } else {
-        uncertainty.push("module.xml absent: version unknown");
-      }
+      parsedMod = opened ? parseModuleXml(opened.text) : null;
+    }
+    if (parsedMod && parsedMod.name === nativeName) {
+      digestRels.push(modXmlRel as string);
+      if (parsedMod.version) declared = parsedMod.version;
+      else uncertainty.push("module.xml declares no version attribute; declared version unknown");
+      sequence = parsedMod.sequence;
+    } else if (parsedMod) {
+      uncertainty.push("module.xml declares a different module name than config.php; version and dependencies not taken from it");
+      modXmlRel = null;
+      parsedMod = null;
+    } else {
+      uncertainty.push("module.xml absent: version unknown");
+    }
+    if (mapEntry) digestRels.push("vendor/composer/installed.json");
+    const locked = mapEntry?.composerVersion ?? undefined;
+    const versionSource = declared && locked ? "module-xml+composer-lock" : declared ? "module-xml" : locked ? "composer-lock" : undefined;
+    const version = declared || locked ? { ...(declared ? { declared } : {}), ...(locked ? { locked } : {}), ...(versionSource ? { source: versionSource } : {}) } : undefined;
+    if (resolved.dir) {
       const ep = entrypointsFor(ctx, resolved.dir);
       entrypoints = ep.entrypoints;
       notes.push(...ep.notes);
-    } else {
-      uncertainty.push("module.xml absent: version unknown");
     }
     if (sequence.length > 0) notes.push(`module.xml <sequence>: ${sequence.join(", ")}`);
 
@@ -559,7 +645,7 @@ function scanMagentoPlatform(ctx: ScanContext, platform: { id: string; version?:
       sourceRef: sourceRefFor(ctx, "app/etc/config.php"),
       evidence: {
         proofLevel: "DETECTED",
-        sources: [sourceRefFor(ctx, "app/etc/config.php"), ...(digestRels.includes(`${resolved.dir ?? ""}/etc/module.xml`) ? [sourceRefFor(ctx, `${resolved.dir}/etc/module.xml`)] : [])],
+        sources: [sourceRefFor(ctx, "app/etc/config.php"), ...(modXmlRel && digestRels.includes(modXmlRel) ? [sourceRefFor(ctx, modXmlRel)] : [])],
         method: "declaration-scan",
         confidence: "high",
         uncertainty,
@@ -722,14 +808,23 @@ function scanPagebuilderNative(ctx: ScanContext, platform: { id: string; version
 }
 
 // ---- kind=secomm-uiwidget ----------------------------------------------------------------------
-// Bounded metadata-only definition parse. Supported shape (documented): named constructor
-// parameter defaults — `$label = '...'`, `$group = '...'`, `$schemaVersion = N`,
-// `$sourceComponent`/`$source_component` = '...', `$sourceVersion`/`$source_version` = '...',
-// `$enabled = true|false`, and a `fields` array of `'name' => 'type'` pairs. Anything else is
+// Bounded metadata-only definition parse. Supported shapes (documented, style-blind):
+// (a) constructor parameter defaults — `$label = '...'`, `$schemaVersion = N`, ...
+// (b) named arguments — `parent::__construct( id: 'banner_a', label: '...', template:
+//     'Vendor_Module::path', group: '...', schemaVersion: 1, fields: $this->method(),
+//     sourceComponent: '...', sourceVersion: '...', sortOrder: N )` — scalar keys are read by
+//     distinctive whole-file patterns; `template` (a theme path POINTER, never a template's
+//     content) / `sortOrder` / `id` are captured as bounded facts and ride on the notes.
+// `fields` is either an inline `'name' => 'type'` array OR a `$this->method()` reference whose
+// first array literal in the SAME file supplies the pairs. Caps unchanged: 32 names, 80 chars
+// per name, 4000-char extraction slice, 512 KiB file cap. Anything unparseable stays
 // UNSUPPORTED_SHAPE + UNKNOWN evidence (never guessed).
 interface DefinitionMeta {
+  id?: string;
   label?: string;
   group?: string;
+  template?: string;
+  sortOrder?: number;
   schemaVersion?: number;
   sourceComponent?: string;
   sourceVersion?: string;
@@ -742,34 +837,82 @@ interface DefinitionMeta {
 function parseDefinitionMeta(text: string): DefinitionMeta {
   const meta: DefinitionMeta = { fields: [], fieldCount: 0, parseable: false };
   const quoted = (name: string): string | undefined => {
-    const m = new RegExp(`\\$(?:${name})\\s*=\\s*'([^']*)'`).exec(text);
-    return m ? m[1] : undefined;
+    // Style (a) `$param = '...'` first, then style (b) `param: '...'` (named arguments).
+    const a = new RegExp(`\\$(?:${name})\\s*=\\s*'([^']*)'`).exec(text);
+    if (a) return a[1];
+    const b = new RegExp(`\\b(?:${name})\\s*:\\s*'([^']*)'`).exec(text);
+    return b ? b[1] : undefined;
+  };
+  const numbered = (name: string): number | undefined => {
+    const a = new RegExp(`\\$(?:${name})\\s*=\\s*(\\d+)`).exec(text);
+    if (a) return Number(a[1]);
+    const b = new RegExp(`\\b(?:${name})\\s*:\\s*(\\d+)`).exec(text);
+    return b ? Number(b[1]) : undefined;
+  };
+  const booleaned = (name: string): boolean | undefined => {
+    const a = new RegExp(`\\$(?:${name})\\s*=\\s*(true|false)`).exec(text);
+    if (a) return a[1] === "true";
+    const b = new RegExp(`\\b(?:${name})\\s*:\\s*(true|false)`).exec(text);
+    return b ? b[1] === "true" : undefined;
   };
   const label = quoted("label");
   const group = quoted("group");
+  const template = quoted("template");
+  const id = quoted("id");
   const sourceComponent = quoted("sourceComponent|source_component");
   const sourceVersion = quoted("sourceVersion|source_version");
-  const schemaVersionM = /\$schemaVersion\s*=\s*(\d+)/.exec(text);
-  const enabledM = /\$enabled\s*=\s*(true|false)/.exec(text);
+  const schemaVersion = numbered("schemaVersion");
+  const sortOrder = numbered("sortOrder");
+  const enabled = booleaned("enabled");
   if (label !== undefined) meta.label = label;
   if (group !== undefined) meta.group = group;
+  if (template !== undefined) meta.template = template;
+  if (id !== undefined) meta.id = id;
   if (sourceComponent !== undefined) meta.sourceComponent = sourceComponent;
   if (sourceVersion !== undefined) meta.sourceVersion = sourceVersion;
-  if (schemaVersionM) meta.schemaVersion = Number(schemaVersionM[1]);
-  if (enabledM) meta.enabled = enabledM[1] === "true";
+  if (schemaVersion !== undefined) meta.schemaVersion = schemaVersion;
+  if (sortOrder !== undefined) meta.sortOrder = sortOrder;
+  if (enabled !== undefined) meta.enabled = enabled;
 
-  // fields array: bounded slice from the `fields` marker, then 'name' => 'type' pairs.
-  const fieldsIdx = text.search(/\$\s*fields\s*=|\bfields\s*:\s*\[/);
-  if (fieldsIdx !== -1) {
-    const slice = text.slice(fieldsIdx, fieldsIdx + 4000);
+  // fields: inline `'name' => 'type'` array, or a `$this->method()` reference whose first array
+  // literal in the same file supplies the pairs (bounded slice, same caps).
+  const extractPairs = (slice: string): void => {
     const pairRe = /'([A-Za-z0-9_.-]{1,80})'\s*=>\s*'([A-Za-z0-9_.-]{1,40})'/g;
     let pm: RegExpExecArray | null;
     while ((pm = pairRe.exec(slice)) !== null) {
       meta.fieldCount += 1;
       if (meta.fields.length < MAX_FIELDS_LISTED) meta.fields.push({ name: pm[1].slice(0, MAX_FIELD_NAME_CHARS), type: pm[2] });
     }
+  };
+  const fieldsRef = /\bfields\s*:\s*\$this->(\w+)\s*\(/.exec(text);
+  if (fieldsRef) {
+    const fnRe = new RegExp(`function\\s+${fieldsRef[1]}\\s*\\([^)]*\\)`);
+    const fm = fnRe.exec(text);
+    if (fm) {
+      const open = text.indexOf("[", fm.index);
+      if (open !== -1) {
+        let depth = 0;
+        let end = -1;
+        for (let i = open; i < Math.min(text.length, open + 4000); i++) {
+          const c = text[i];
+          if (c === "[") depth++;
+          else if (c === "]") {
+            depth--;
+            if (depth === 0) {
+              end = i;
+              break;
+            }
+          }
+        }
+        if (end !== -1) extractPairs(text.slice(open, end + 1));
+      }
+    }
+  } else {
+    const fieldsIdx = text.search(/\$\s*fields\s*=|\bfields\s*:\s*\[/);
+    if (fieldsIdx !== -1) extractPairs(text.slice(fieldsIdx, fieldsIdx + 4000));
   }
-  const anyFact = meta.label !== undefined || meta.group !== undefined || meta.sourceComponent !== undefined || meta.schemaVersion !== undefined || meta.fieldCount > 0;
+  const anyFact =
+    meta.label !== undefined || meta.group !== undefined || meta.sourceComponent !== undefined || meta.schemaVersion !== undefined || meta.template !== undefined || meta.id !== undefined || meta.fieldCount > 0;
   meta.parseable = anyFact;
   return meta;
 }
@@ -884,6 +1027,11 @@ function scanSecommUiwidget(ctx: ScanContext, platform: { id: string; version?: 
     ];
     if (!enablementKnown) uncertainty.push("module enablement not detectable from config.php in this scan; availability is capped at 'eligible-for-widget'");
     if (meta?.sourceVersion) uncertainty.push(`version pinned by the definition's sourceVersion '${meta.sourceVersion}'; upstream drift is not tracked by this scan`);
+    const notes: string[] = [];
+    if (shapeSupported && meta?.id && meta.id !== item.componentId) notes.push(`definition declares id '${truncate(meta.id, MAX_FIELD_NAME_CHARS)}' differing from the registry key '${item.componentId}'`);
+    if (shapeSupported && meta?.template) notes.push(`template pointer: ${truncate(meta.template, MAX_FIELD_NAME_CHARS)}`);
+    if (shapeSupported && meta?.sortOrder !== undefined) notes.push(`sortOrder: ${meta.sortOrder}`);
+    if (shapeSupported && meta?.sourceVersion) notes.push(`Adapted from licensed upstream component '${meta.sourceComponent ?? "unknown"}' (sourceVersion ${meta.sourceVersion}).`);
 
     const record: Record<string, unknown> = {
       schemaVersion: 1,
@@ -921,7 +1069,7 @@ function scanSecommUiwidget(ctx: ScanContext, platform: { id: string; version?: 
             ],
           }
         : {}),
-      ...(shapeSupported && meta?.sourceVersion ? { notes: `Adapted from licensed upstream component '${meta.sourceComponent ?? "unknown"}' (sourceVersion ${meta.sourceVersion}).` } : {}),
+      ...(notes.length > 0 ? { notes: notes.join("; ") } : {}),
     };
     uiComponents.push(record);
 
@@ -966,16 +1114,47 @@ function scanHyvaUi(ctx: ScanContext, platform: { id: string; version?: string }
   const composerRel = `${ctx.baseRel}/composer.json`;
   const compOpened = ctx.openFile(composerRel, { scope: true, required: true });
   let pkgName = "unknown";
-  let pkgVersion = "unknown";
+  let pkgVersion: string | null = null;
+  let licenseRef = "HYVÄ SOFTWARE USER LICENSE (LICENSE.md pointer)";
+  const composerUncertainty: string[] = [];
   if (compOpened) {
     const comp = readComposerJson(compOpened.text);
-    if (comp?.name) pkgName = comp.name;
-    if (comp?.version) pkgVersion = comp.version;
-    if (!comp?.name || !comp?.version) {
-      ctx.diagnostics.push({ code: "UNSUPPORTED_SHAPE", severity: "warning", message: `composer.json under '${ctx.rootAlias}:${ctx.baseRel}' lacks name/version; sourcePackage facts are 'unknown'.`, sourceRef: { kind: "repo-file", locator: { rootAlias: ctx.rootAlias, path: composerRel } } });
+    if (!comp) {
+      // UNSUPPORTED_SHAPE means unparseable — never "a field is missing".
+      ctx.diagnostics.push({ code: "UNSUPPORTED_SHAPE", severity: "warning", message: `composer.json under '${ctx.rootAlias}:${ctx.baseRel}' is not parseable JSON; sourcePackage facts are 'unknown'.`, sourceRef: { kind: "repo-file", locator: { rootAlias: ctx.rootAlias, path: composerRel } } });
       ctx.unknownShapes += 1;
+    } else {
+      if (comp.name) pkgName = comp.name;
+      else composerUncertainty.push("composer.json declares no name; sourcePackage.name is the literal string 'unknown'");
+      // Version often lives only in composer.lock (real Hyvä packages ship no version field).
+      if (comp.version) pkgVersion = comp.version;
+      else composerUncertainty.push("composer.json declares no version field");
+      // License pointer strings (e.g. "See LICENSE.md or https://…") are fine metadata: keep
+      // them verbatim in licenseRef only.
+      if (comp.license) licenseRef = truncate(comp.license, 200);
     }
   }
+  let lockPinned = false;
+  if (!pkgVersion && pkgName !== "unknown") {
+    // One bounded read at the checkout root (documented metadata exception, deny-gated).
+    const lockOpened = ctx.openFile("composer.lock", { scope: false });
+    if (lockOpened) {
+      try {
+        const lock = JSON.parse(lockOpened.text) as { packages?: { name: string; version: string }[]; "packages-dev"?: { name: string; version: string }[] };
+        const hit = [...(lock.packages ?? []), ...(lock["packages-dev"] ?? [])].find((p) => p.name === pkgName);
+        if (hit?.version) {
+          pkgVersion = hit.version;
+          lockPinned = true;
+        }
+      } catch {
+        ctx.diagnostics.push({ code: "UNSUPPORTED_SHAPE", severity: "warning", message: "composer.lock is not parseable JSON; lockfile version lookups are skipped." });
+        ctx.unknownShapes += 1;
+      }
+    }
+  }
+  const pkgVersionStr = pkgVersion ?? "unknown";
+  if (!pkgVersion) composerUncertainty.push(pkgName !== "unknown" ? "no composer.lock entry pins a version; sourcePackage.version is the literal string 'unknown'" : "sourcePackage.version is the literal string 'unknown'");
+  else if (lockPinned) composerUncertainty.push("sourcePackage.version pinned from composer.lock; composer.json declares no version field");
 
   // Census by directory NAMES only. plugins/ subdirs are not components — their names are
   // emitted as ONE aggregate info diagnostic (names are metadata; the receipt may cite them).
@@ -985,6 +1164,7 @@ function scanHyvaUi(ctx: ScanContext, platform: { id: string; version?: string }
   }
 
   const uncertainty = [
+    ...composerUncertainty,
     "licensed package: metadata-only; consumption state in themes not scanned by this scan",
     "census is directory-name evidence only; no upstream file content was opened",
   ];
@@ -996,7 +1176,7 @@ function scanHyvaUi(ctx: ScanContext, platform: { id: string; version?: string }
       recordType: "ui-component",
       id: `uic:hyva-ui:${slugify(compDir.name)}`,
       nativeId: compDir.name,
-      sourcePackage: { kind: "hyva-ui", name: pkgName, version: pkgVersion },
+      sourcePackage: { kind: "hyva-ui", name: pkgName, version: pkgVersionStr },
       title: compDir.name,
       uxSemantics: {
         concept,
@@ -1006,7 +1186,7 @@ function scanHyvaUi(ctx: ScanContext, platform: { id: string; version?: string }
       availability: { state: "available-upstream" },
       variants,
       behavior: { cmsEditable: false },
-      license: { status: "confirmed", regime: "commercial", licenseRef: "HYVÄ SOFTWARE USER LICENSE (LICENSE.md pointer)", derivedArtifactPolicy: "metadata-only" },
+      license: { status: "confirmed", regime: "commercial", licenseRef, derivedArtifactPolicy: "metadata-only" },
       sourceRef: { kind: "repo-file", locator: { rootAlias: ctx.rootAlias, path: compDir.rel } },
       evidence: {
         proofLevel: "DETECTED",

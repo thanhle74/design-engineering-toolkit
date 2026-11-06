@@ -12,6 +12,7 @@ return [
         'Acme_Emailonly' => 1,
         'Acme_Orphan' => 0,
         'Testvendor_Cmsbasic' => 1,
+        'Testvendor_Ghostfinder' => 1,
         'Magento_Pagebuilderlike' => 1,
     ],
     'system' => [
