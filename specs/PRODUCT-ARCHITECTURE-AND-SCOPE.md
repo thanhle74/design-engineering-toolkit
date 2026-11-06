@@ -88,6 +88,25 @@ Approved Figma [read-only, later gate]
 
 **Component selection:** reuse the closest *supported semantic component* first, then custom appearance/component only for an evidenced gap. `HTML Code` is not an acceptable silent shortcut to claim merchant editability. No new `content_type.xml` per page. Header/footer/nav/search/cart are `THEME_CHROME` and excluded from Page Builder page content. Reuse existing Slaunchpad research #32 and #42; unresolved Admin round-trip remains a verification gate until a real receipt exists.
 
+
+### Owner decision — 2026-11-06: native Page Builder first, prove each stage
+
+**First deliverable:** correct, editable native Magento Page Builder structure. Map Figma editorial structure into installed/verified native Row, Columns, Banner, Text, Image, Slider, Products content types as supported. **Do not require FigmaToCode, HTML/Tailwind generation, Hyvä UI, custom CSS, animation, or pixel-perfect styling for this milestone.** Future visual preview tooling is optional reference evidence, **not** a substitute for source-backed NodeIR/PageStructure.
+
+Run sequential, evidence-based acceptance gates. A partial plan with unresolved cases is allowed but **must not be labeled fully PASS**.
+
+| Gate | Required work | Required evidence / PASS |
+|---|---|---|
+| **S1: Figma identity and naming** | Pin fileKey, root nodeId, sourceVersion; audit semantic convention PAGE / SITE / SECTION / COMPONENT / SLOT / DECOR; check hierarchy and ambiguity. | Naming inventory and unresolved ledger. IDs/parentage stable. A label alone is not proof. Do not repeat the already completed 61 Desktop label changes; any further renaming requires a reviewed old-to-new manifest and **separate Figma-write GO**. |
+| **S2: Structural extraction** | Account for every descendant, order, hidden nodes, nesting, Auto Layout/constraints, geometry, responsive hints and referenced media wherever the provider exposes them. | Revision-pinned complete inventory with explicit unknown/missing properties. Metadata-only partial source reads cannot claim full PASS. |
+| **S3: Canonical IR and semantics** | Produce versioned NodeIR, SourceReview and PageStructure; classify true site chrome, editorial content and decoration by structure and evidence. | Exactly one traceable disposition per inventoried node; stable identity/order; no silent omissions. Ambiguous items remain NEEDS_REVIEW; SITE label alone never excludes. |
+| **S4: Native Page Builder capability** | Confirm actual installed content types/appearances, allowed nesting, editability and constraints from the project/version. Use #19 KB as input, not an automatic runtime certification. | Per-target capability evidence; unverified or unsupported targets remain GAP/UNKNOWN. |
+| **S5: Native Page Builder mapping** | Preserve section and child order, full-bleed/container ownership, nested Rows/Columns, column proportions (40/60 must not silently become 50/50), responsive order, and native content type choice. | Deterministic plan + source-to-target diff; every **claimed supported** structure matches. Unsupported areas are marked, not scored PASS; do not use arbitrary HTML Code or custom widgets to hide gaps. |
+| **S6: Editable CMS round-trip (future G3, separate GO)** | Serialize real Page Builder master-format content on a disposable, explicitly authorized local CMS page/block; Admin Edit → Save → Reload → Storefront. | Real persistence/editability receipt, plus dry-run/diff, conflict control, idempotence and rollback. HTML preview/synthetic tests do not count as Admin PASS. |
+| **S7: Visual fidelity (future G4)** | Only after S1–S6 proof, address CSS, Tailwind, responsive appearance, assets, Hyvä-related reuse and possible FigmaToCode-based preview research. | Distinct visual QA evidence; CSS cannot mask a structural mistake. |
+
+**Authority and execution:** Existing #18 Figma read-only extraction and #19 local Magento/Hyvä metadata work keep their original scopes and Owner GO. This note **does not authorize** additional Figma renames/writes, CMS/DB changes, G3/G4 implementation, a new parallel worker, or any merge/release. Verify current #18/#19 receipts before scoping the next task.
+
 ## 5. Installation, import and runtime safety
 
 - **Do not default to a Data Patch** that overwrites CMS content on deploy. Prefer an explicit, scoped importer command/API using `dry-run → diff → preview → approved import → verify → rollback`. Idempotence, store/page scoping, conflict detection and merchant-edited-content preservation are mandatory.
