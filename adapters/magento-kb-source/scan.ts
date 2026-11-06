@@ -452,7 +452,11 @@ function buildInstalledJsonMap(ctx: ScanContext): Map<string, InstalledEntry> {
     if (!entry || typeof entry !== "object") continue;
     const pkg = entry as { name?: unknown; version?: unknown; "install-path"?: unknown };
     if (typeof pkg.name !== "string" || typeof pkg["install-path"] !== "string") continue;
-    const installPath = normalizeRel(pkg["install-path"]);
+    // Composer v2 writes install paths relative to vendor/composer/ (e.g. "../magento/module-store");
+    // bare "vendor/..." spellings (fixtures, some v1 writers) are kept as-is. Either way the path
+    // must be root-relative — the gateway's containment check rejects anything else.
+    const rawPath = pkg["install-path"];
+    const installPath = normalizeRel(rawPath.startsWith("../") ? path.posix.join("vendor/composer", rawPath) : rawPath);
     const moduleXmlRel = `${installPath}/etc/module.xml`;
     const modOpened = ctx.openFile(moduleXmlRel, { scope: false });
     const parsed = modOpened ? parseModuleXml(modOpened.text) : { name: null, version: null, sequence: [] };
@@ -875,13 +879,53 @@ function parseDefinitionMeta(text: string): DefinitionMeta {
   if (enabled !== undefined) meta.enabled = enabled;
 
   // fields: inline `'name' => 'type'` array, or a `$this->method()` reference whose first array
-  // literal in the same file supplies the pairs (bounded slice, same caps).
+  // literal in the same file supplies the field schema (bounded slice, same caps). The schema is
+  // either a FLAT name=>type map or a LIST OF PER-FIELD ROWS (`[ 'name' => ..., 'type' => ..., ... ]`
+  // each nested one bracket level deeper). Rows group into ONE logical field each — emitting raw
+  // key/value pairs would overcount logical fields by the per-row metadata keys.
   const extractPairs = (slice: string): void => {
     const pairRe = /'([A-Za-z0-9_.-]{1,80})'\s*=>\s*'([A-Za-z0-9_.-]{1,40})'/g;
-    let pm: RegExpExecArray | null;
-    while ((pm = pairRe.exec(slice)) !== null) {
+    const emit = (name: string, type: string, extras: string[]) => {
       meta.fieldCount += 1;
-      if (meta.fields.length < MAX_FIELDS_LISTED) meta.fields.push({ name: pm[1].slice(0, MAX_FIELD_NAME_CHARS), type: pm[2] });
+      if (meta.fields.length < MAX_FIELDS_LISTED) {
+        const note = extras.length > 0 ? `other declared keys: ${extras.slice(0, 4).join(", ")}` : "";
+        meta.fields.push({ name: name.slice(0, MAX_FIELD_NAME_CHARS), type: type.slice(0, 40), ...(note ? { note } : {}) });
+      }
+    };
+    // Split the slice into depth-1 bracket groups (rows). No groups ⇒ flat map shape.
+    const rows: string[] = [];
+    let depth = 0;
+    let start = -1;
+    for (let i = 0; i < Math.min(slice.length, 4000); i++) {
+      const c = slice[i];
+      if (c === "[") {
+        depth++;
+        if (depth === 2 && start === -1) start = i;
+      } else if (c === "]") {
+        if (depth === 2 && start !== -1) {
+          rows.push(slice.slice(start, i + 1));
+          start = -1;
+        }
+        depth--;
+      }
+    }
+    if (rows.length === 0) {
+      // flat map: every top-level pair is one logical field (name => type)
+      let pm: RegExpExecArray | null;
+      while ((pm = pairRe.exec(slice)) !== null) emit(pm[1], pm[2], []);
+      return;
+    }
+    for (const row of rows) {
+      const pairs: { key: string; val: string }[] = [];
+      let pm: RegExpExecArray | null;
+      pairRe.lastIndex = 0;
+      while ((pm = pairRe.exec(row)) !== null) pairs.push({ key: pm[1], val: pm[2] });
+      if (pairs.length === 0) continue;
+      const name = pairs.find((p) => p.key === "name")?.val;
+      const type = pairs.find((p) => p.key === "type")?.val;
+      if (name === undefined) continue; // row without a declared name is not a named field
+      const extras = pairs.filter((p) => p.key !== "name" && p.key !== "type").map((p) => `${p.key}=${p.val}`);
+      emit(name, type ?? "unknown", extras);
     }
   };
   const fieldsRef = /\bfields\s*:\s*\$this->(\w+)\s*\(/.exec(text);
@@ -1074,14 +1118,19 @@ function scanSecommUiwidget(ctx: ScanContext, platform: { id: string; version?: 
     uiComponents.push(record);
 
     // adaptedFrom edge: ONLY when the definition's sourceComponent resolves to a name.
+    // Target = the hyva-ui CENSUS record id, which is per-component (uic:hyva-ui:<component>):
+    // variants are fields of that record, never top-level ids (CONTRACTS §1.1), so the edge
+    // resolves to the first sourceComponent path segment and the full variant path stays in
+    // the edge note for traceability.
     if (shapeSupported && meta?.sourceComponent) {
+      const targetComponent = slugify(meta.sourceComponent.split("/")[0] ?? meta.sourceComponent);
       const relRecord: Record<string, unknown> = {
         schemaVersion: 1,
         recordType: "relation",
         id: `rel:secomm-uiwidget:adaptedfrom-${kebab}`,
         edgeType: "adaptedFrom",
         from: { kb: "KB2", id: `uic:secomm-uiwidget:${kebab}` },
-        to: { kb: "KB2", id: `uic:hyva-ui:${slugify(meta.sourceComponent)}` },
+        to: { kb: "KB2", id: `uic:hyva-ui:${targetComponent}` },
         authority: "confirmed",
         evidence: {
           proofLevel: "DETECTED",
@@ -1095,7 +1144,7 @@ function scanSecommUiwidget(ctx: ScanContext, platform: { id: string; version?: 
         },
         recordedAt: NOW(),
         observed: { scannedAt: NOW(), inputDigests: inputDigestsFor(ctx, [diXmlRel, defOpened?.rel ?? diXmlRel]) },
-        note: `Both endpoints are developer-owned (KB-2): the imported widget and the licensed upstream composition it was adapted from. Cross-class edges to Page Builder native are neighborOf, never adaptedFrom — none are emitted by this scan.`,
+        note: `Adapted from upstream source component '${meta.sourceComponent}'${meta.sourceVersion ? ` at '${meta.sourceVersion}'` : ""} (variant path pinned here; the endpoint record is the component-level census id). Both endpoints are developer-owned (KB-2): the imported widget and the licensed upstream composition it was adapted from. Cross-class edges to Page Builder native are neighborOf, never adaptedFrom — none are emitted by this scan.`,
       };
       relations.push(relRecord);
     }

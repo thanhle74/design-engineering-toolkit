@@ -1,5 +1,9 @@
 # Knowledge Engine (`det kb`) — usage, store layout and safety
 
+> M4 (issue #19) added the read-only source-extract lane: `det kb extract` + the
+> `magento-kb-source` scanner adapter. Integrator receipt with real-run evidence:
+> [RECEIPT-ISSUE19-M4.md](RECEIPT-ISSUE19-M4.md).
+
 The Knowledge Engine (issue [#15](https://github.com/thanhle74/design-engineering-toolkit/issues/15))
 turns source-backed audits into **reusable, evidence-carrying knowledge** across three logical
 domains — one physical format:
