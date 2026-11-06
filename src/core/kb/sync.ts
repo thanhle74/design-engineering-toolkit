@@ -17,6 +17,7 @@ export interface SyncOptions {
   manifestPath: string;
   roots: Record<string, string>;
   env: NodeJS.ProcessEnv;
+  cwd?: string; // working directory for the gitignored .toolkit/local.json root-alias lane (default process.cwd())
 }
 
 export interface SyncReport {
@@ -71,7 +72,7 @@ export function runSync(options: SyncOptions): SyncResult {
   collect(manifest.inputs.uiInventory);
   (manifest.inputs.projectRecords ?? []).forEach(collect);
   collect(manifest.inputs.relations);
-  const { roots: resolvedRoots, diagnostics: rootDiags } = resolveRootAliases([...aliases], options.roots, options.env);
+  const { roots: resolvedRoots, diagnostics: rootDiags } = resolveRootAliases([...aliases], options.roots, options.env, options.cwd);
   diagnostics.push(...rootDiags);
 
   // Digest map keyed exactly as ingest pinned it (digestKey convention).

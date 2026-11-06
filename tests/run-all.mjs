@@ -306,6 +306,9 @@ const { default: registerKbM4LicenseSuite } = await import("./kb-m4-license-suit
 await registerKbM4LicenseSuite(checkAsync);
 const { default: registerKbM4SafetySuite } = await import("./kb-m4-safety-suite.mjs");
 await registerKbM4SafetySuite(checkAsync);
+// ---- Issue #19 M4 read-only source-extract orchestrator suite (async) ------------------------
+const { default: registerM4ExtractSuite } = await import("./kb-m4-extract-suite.mjs");
+await registerM4ExtractSuite(checkAsync);
 for (const { id, name, fn } of asyncChecks) {
   try {
     const detail = await fn();

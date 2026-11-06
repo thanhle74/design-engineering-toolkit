@@ -65,6 +65,15 @@ Usage:
       relation graph rules (dangling endpoints, class-boundary edges, cycles), KB-3 project
       isolation and the secret/licensed-content guards.
 
+  det kb extract --manifest <file> [--root <alias>=<path>]... [--out <dir>] [--dry-run] [--json]
+      Plan-driven read-only source extraction (M4): run the manifest's declared scans through the
+      out-of-process KB source-scanner adapter (discovered by its kb-source-scan output contract)
+      and emit KB-record JSON arrays + an extract report for a later det kb ingest. Reads only
+      under declared root aliases behind the structural deny-list; writes only into --out (never
+      inside a source root, never the KB store); any error-severity diagnostic writes nothing.
+      Without --out: report only. Running against real private sources is a separately gated
+      step (explicit Owner GO, explicit roots).
+
 Global flags:
   --json        Machine-readable JSON on stdout (the human summary is a presentation of it).
   --out <dir>   Write artifacts (capability-registry.json / resolution-report.json / store
@@ -73,7 +82,10 @@ Global flags:
   --help        This help.  --version  Print the tool version.
 
 Source resolution precedence (never a default path): --project flag > DET_PROJECT_SOURCE env >
-the profile's own projectSources[0].path; KB root aliases: --root <alias>=<path> > DET_KB_ROOT_<ALIAS>.
+the profile's own projectSources[0].path; KB root aliases (all kb verbs): --root <alias>=<path> >
+DET_KB_ROOT_<ALIAS> > the gitignored .toolkit/local.json ({"roots": {"<alias>": "<absolute path>"}})
+resolved against the working directory; a missing file is just an absent lane, an invalid one is
+a blocking LOCAL_CONFIG_INVALID.
 Placeholder paths ('/path/to/...') are reported as PROJECT_SOURCE_NOT_CONFIGURED — nothing is
 audited from a placeholder.
 

@@ -24,6 +24,7 @@ export interface IngestOptions {
   manifestPath: string;
   roots: Record<string, string>; // explicit --root alias=path resolutions
   env: NodeJS.ProcessEnv;
+  cwd?: string; // working directory for the gitignored .toolkit/local.json root-alias lane (default process.cwd())
   scannedAt: string;
   toolVersion: string;
   existingStore?: KbStoreData; // review carry-forward + endpoint resolution context
@@ -84,7 +85,7 @@ interface ResolvedInputs {
   deniedKeys: string[];
 }
 
-function resolveManifestInputs(manifest: KbIngestManifest, manifestDir: string, roots: Record<string, string>, env: NodeJS.ProcessEnv): ResolvedInputs {
+function resolveManifestInputs(manifest: KbIngestManifest, manifestDir: string, roots: Record<string, string>, env: NodeJS.ProcessEnv, cwd?: string): ResolvedInputs {
   const diagnostics: KbDiagnostic[] = [];
   const deniedKeys: string[] = [];
   const aliases = new Set<string>();
@@ -96,7 +97,7 @@ function resolveManifestInputs(manifest: KbIngestManifest, manifestDir: string, 
   collect(manifest.inputs.uiInventory);
   (manifest.inputs.projectRecords ?? []).forEach(collect);
   collect(manifest.inputs.relations);
-  const { roots: resolvedRoots, diagnostics: rootDiags } = resolveRootAliases([...aliases], roots, env);
+  const { roots: resolvedRoots, diagnostics: rootDiags } = resolveRootAliases([...aliases], roots, env, cwd);
   diagnostics.push(...rootDiags);
   const extra = manifest.denyGlobs ?? [];
 
@@ -220,7 +221,7 @@ export function runIngest(options: IngestOptions): IngestResult {
     return idx === -1 ? "." : p.slice(0, idx);
   })();
 
-  const resolved = resolveManifestInputs(manifest, manifestDir, options.roots, options.env);
+  const resolved = resolveManifestInputs(manifest, manifestDir, options.roots, options.env, options.cwd);
   diagnostics.push(...resolved.diagnostics);
 
   const presentLanes =
