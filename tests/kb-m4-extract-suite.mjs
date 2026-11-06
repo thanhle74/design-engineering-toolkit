@@ -320,18 +320,34 @@ export default async function registerM4ExtractSuite(checkAsync) {
 
       const good = mkTemp("cli-good");
       fs.mkdirSync(path.join(good, ".toolkit"));
-      writeJson(path.join(good, ".toolkit", "local.json"), { roots: { src } });
+      // End-to-end through the REAL adapter (W-B fixture checkout) — the config lane resolves
+      // the alias, the orchestrator spawns magento-kb-source out-of-process, and the scan
+      // succeeds (integrator rework: the real scanner adapter now exists in the repo).
+      const fixtureCheckout = path.join(ROOT, "tests", "fixtures", "m4", "checkout");
+      writeJson(path.join(good, ".toolkit", "local.json"), { roots: { src: fixtureCheckout } });
+      const fixturePlan = stagePlan({
+        schemaVersion: 1,
+        extractId: "m4e03-fixture-e2e",
+        platform: { id: "magento" },
+        rootAliases: { src: { description: "W-B synthetic checkout fixture via config lane" } },
+        scans: [{ scanId: "platform-modules", kind: "magento-platform", rootAlias: "src" }],
+        output: { platformRecords: "p.json", uiRecords: "u.json", relations: "r.json", report: "report.json" },
+      });
       process.chdir(good);
-      const rGood = await runCli(["kb", "extract", "--manifest", plan, "--json"]);
-      assert.equal(rGood.code, 3, "valid config resolves the alias; the run then fails at the (absent) real adapter");
+      const goodOut = path.join(mkTemp("m4e03-out"), "out");
+      const rGood = await runCli(["kb", "extract", "--manifest", fixturePlan, "--out", goodOut, "--json"]);
+      assert.equal(rGood.code, 0, "config lane resolves the alias; real adapter scans the fixture end-to-end");
       const goodCodes = runEnvelope(rGood).runDiagnostics.map((d) => d.code);
-      assert.ok(goodCodes.includes("ADAPTER_NOT_FOUND"), `expected ADAPTER_NOT_FOUND, got ${goodCodes.join(",")}`);
       assert.ok(!goodCodes.includes("ROOT_ALIAS_NOT_RESOLVED"), "alias resolved by the config lane");
       assert.ok(!goodCodes.includes("LOCAL_CONFIG_INVALID"));
+      const report = JSON.parse(fs.readFileSync(path.join(goodOut, "report.json"), "utf8"));
+      const platScan = report.scans.find((s) => s.kind === "magento-platform");
+      assert.ok(platScan, "magento-platform scan present in report");
+      assert.equal(platScan.counts.modules, 9, "fixture checkout yields 9 module records end-to-end");
     } finally {
       process.chdir(origCwd);
     }
-    return "cwd-scoped local.json honored through the real CLI dispatch";
+    return "cwd-scoped local.json honored through the real CLI dispatch + real adapter scan";
   });
 
   await checkAsync("M4E-04", "--out inside (or equal to, or symlinked into) a source root → OUT_PATH_WITHIN_SOURCE_ROOT; nothing written", async () => {
@@ -358,19 +374,25 @@ export default async function registerM4ExtractSuite(checkAsync) {
     return "3/3 out-inside-root variants refused, zero writes";
   });
 
-  await checkAsync("M4E-05", "CLI with no registered scanner adapter → exit 3 (adapter runtime failure), ADAPTER_NOT_FOUND, nothing written; --dry-run accepted by the kb flag whitelist", async () => {
-    const src = stageSourceRoot();
-    const plan = stagePlan(extractManifest());
+  await checkAsync("M4E-05", "unresolvable scan subPath → exit 1 INPUT_PATH_NOT_RESOLVED before any spawn, only the run receipt persists; --dry-run accepted by the kb flag whitelist (integrator rework: the real scanner adapter is registered now, so the exit-3 adapter-failure mapping is proven at the injected-runner seam in M4E-06)", async () => {
+    const src = path.join(ROOT, "tests", "fixtures", "m4", "checkout");
+    const plan = stagePlan({
+      schemaVersion: 1,
+      extractId: "m4e05-bad-subpath",
+      platform: { id: "magento" },
+      rootAliases: { src: { description: "W-B synthetic checkout fixture" } },
+      scans: [{ scanId: "platform-modules", kind: "magento-platform", rootAlias: "src", subPath: "does/not/exist" }],
+      output: { platformRecords: "p.json", uiRecords: "u.json", relations: "r.json", report: "report.json" },
+    });
     const out = path.join(mkTemp("m4e05-out"), "out");
     const r = await runCli(["kb", "extract", "--manifest", plan, "--root", `src=${src}`, "--out", out, "--json"]);
-    assert.equal(r.code, 3, `adapter-missing must map to exit 3, got ${r.code}`);
+    assert.equal(r.code, 1, `unresolvable subPath must block pre-spawn with exit 1, got ${r.code}`);
     const codes = runEnvelope(r).runDiagnostics.map((d) => d.code);
-    assert.ok(codes.includes("ADAPTER_NOT_FOUND"), `expected ADAPTER_NOT_FOUND, got ${codes.join(",")}`);
+    assert.ok(codes.includes("INPUT_PATH_NOT_RESOLVED"), `expected INPUT_PATH_NOT_RESOLVED, got ${codes.join(",")}`);
     assert.deepEqual(fs.readdirSync(out), ["tool-run.json"], "failed extract persists only the run receipt — no record outputs");
     const dry = await runCli(["kb", "extract", "--manifest", plan, "--root", `src=${src}`, "--dry-run", "--json"]);
-    assert.equal(dry.code, 3, "--dry-run accepted (adapter failure, not a usage error)");
-    assert.equal(runEnvelope(dry).wroteFiles, false);
-    return "exit-3 mapping + no-write verified on the real runner seam";
+    assert.equal(dry.code, 1, "--dry-run accepted (blocking diagnostic, not a usage error)");
+    return "pre-spawn containment gate + no-write + dry-run flag whitelist verified on the real runner";
   });
 
   await checkAsync("M4E-06", "injected runner: non-payload stdout → EXTRACT_SCAN_PAYLOAD_CONTRACT_VIOLATION; adapter-failure diagnostics → adapterFailure; payload answering for the wrong scan → EXTRACT_SCAN_MISMATCH; all blocked, nothing written", async () => {
