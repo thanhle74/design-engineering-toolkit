@@ -14,6 +14,7 @@ import {
 } from "@/src/modules/mapping-review";
 import { PreviewPanel } from "@/src/modules/preview";
 import { ClientArtifactManifest } from "./client-artifact-manifest";
+import { BuildBundleSection } from "./build-bundle-section";
 
 interface RunPageProps {
   params: Promise<{ runId: string }>;
@@ -101,6 +102,8 @@ export default async function RunPage({ params }: RunPageProps) {
         </div>
         <p className="font-mono text-xs text-muted-foreground">{run.runId}</p>
       </div>
+
+      <BuildBundleSection run={run} />
 
       <DesignTree run={run} />
 

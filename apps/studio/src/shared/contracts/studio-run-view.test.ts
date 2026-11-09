@@ -59,6 +59,70 @@ describe("StudioRunView contract", () => {
   });
 });
 
+describe("[40] additive optional build block", () => {
+  it("keeps legacy runs parseable unchanged (no build block required)", () => {
+    const parsed = StudioRunViewSchema.parse(DEMO_RUN_FIXTURE);
+    expect(parsed.build).toBeUndefined();
+  });
+
+  it("accepts a valid build block on an otherwise legacy run", () => {
+    const withBuild = {
+      ...DEMO_RUN_FIXTURE,
+      build: {
+        manifestVerified: true,
+        configContentHash: "sha256:" + "a".repeat(64),
+        stages: [
+          { stage: "capability-probe", status: "completed", exitCode: 0, outDir: "01-capability-probe" },
+          { stage: "extraction", status: "completed", exitCode: 0, outDir: "02-extraction" },
+          { stage: "composition", status: "completed", exitCode: 0, outDir: "03-composition" },
+        ],
+        gaps: [{ code: "PREVIEW_INSTALL_OPERATOR_GATED", message: "operator gated" }],
+      },
+    };
+    expect(() => StudioRunViewSchema.parse(withBuild)).not.toThrow();
+  });
+
+  it("rejects unknown build stages, statuses and out-of-range exit codes", () => {
+    const base = {
+      manifestVerified: true,
+      configContentHash: "sha256:" + "a".repeat(64),
+      stages: [],
+      gaps: [],
+    };
+    expect(() =>
+      StudioRunViewSchema.parse({
+        ...DEMO_RUN_FIXTURE,
+        build: { ...base, stages: [{ stage: "deploy", status: "completed", exitCode: 0 }] },
+      })
+    ).toThrow();
+    expect(() =>
+      StudioRunViewSchema.parse({
+        ...DEMO_RUN_FIXTURE,
+        build: { ...base, stages: [{ stage: "extraction", status: "maybe", exitCode: 0 }] },
+      })
+    ).toThrow();
+    expect(() =>
+      StudioRunViewSchema.parse({
+        ...DEMO_RUN_FIXTURE,
+        build: { ...base, stages: [{ stage: "extraction", status: "failed", exitCode: 9 }] },
+      })
+    ).toThrow();
+  });
+
+  it("accepts an artifact row carrying the [40] per-FILE-BYTE sha256 field", () => {
+    const artifact = {
+      artifactId: "03-composition/native-content.html",
+      role: "native-content",
+      file: "03-composition/native-content.html",
+      schemaRef: "schemas/cli/compose-output.schema.json#native-content",
+      sha256: "b".repeat(64),
+      downloadable: true,
+    };
+    const parsed = StudioRunViewSchema.parse({ ...DEMO_RUN_FIXTURE, artifacts: [artifact] });
+    expect(parsed.artifacts[0].sha256).toBe("b".repeat(64));
+  });
+});
+
 describe("DEMO fixture honesty", () => {
   it("is visibly a fixture with no downloadable artifacts and no invented preview", () => {
     expect(DEMO_RUN_FIXTURE.mode).toBe("fixture");

@@ -73,7 +73,12 @@ export type StudioSemanticClass = (typeof STUDIO_SEMANTIC_CLASSES)[number];
 export const STUDIO_DIAGNOSTIC_ORIGINS = ["run", "compose", "review"] as const;
 export type StudioDiagnosticOrigin = (typeof STUDIO_DIAGNOSTIC_ORIGINS)[number];
 
-/** Closed major-1 role enum from schemas/cli/tool-run.schema.json artifacts[].role. */
+/**
+ * Closed major-1 role enum from schemas/cli/tool-run.schema.json artifacts[].role.
+ * `compose-report`, `native-content` and `build-manifest` are the additive
+ * roles tool-run schema 1.4.0 already carries (documented by the [36]/[40]
+ * receipts); the reader still treats roles as open strings.
+ */
 export const STUDIO_ARTIFACT_ROLES = [
   "registry",
   "resolution-report",
@@ -89,6 +94,9 @@ export const STUDIO_ARTIFACT_ROLES = [
   "kb-query-result",
   "kb-sync-report",
   "kb-store-descriptor",
+  "compose-report",
+  "native-content",
+  "build-manifest",
 ] as const;
 export type StudioArtifactRole = (typeof STUDIO_ARTIFACT_ROLES)[number];
 
@@ -165,10 +173,60 @@ export const StudioArtifactViewSchema = z.object({
   schemaRef: z.string().min(1),
   contentHash: z.string().regex(/^[0-9a-f]{64}$/).optional(),
   volatileContentHash: z.string().regex(/^[0-9a-f]{64}$/).optional(),
+  /**
+   * [40] build bundles: the build-manifest's per-FILE-BYTE sha256 — the
+   * verification hash Studio re-checks before any download. Deliberately
+   * distinct from the canonical-payload `contentHash` (documented engine
+   * distinction); legacy runs leave it unset.
+   */
+  sha256: z.string().regex(/^[0-9a-f]{64}$/).optional(),
   /** True only when the reader can serve a real, validated file for this artifact. */
   downloadable: z.boolean(),
 });
 export type StudioArtifactView = z.infer<typeof StudioArtifactViewSchema>;
+
+/** Exact stage enum from schemas/cli/build-manifest.schema.json stages[].stage. */
+export const STUDIO_BUILD_STAGES = ["capability-probe", "extraction", "composition"] as const;
+export type StudioBuildStageName = (typeof STUDIO_BUILD_STAGES)[number];
+
+/** Exact status enum from schemas/cli/build-manifest.schema.json stages[].status. */
+export const STUDIO_BUILD_STAGE_STATUSES = ["completed", "reused", "failed", "planned"] as const;
+export type StudioBuildStageStatus = (typeof STUDIO_BUILD_STAGE_STATUSES)[number];
+
+/** One row of a build bundle's stage table (build-manifest stages[]). */
+export const StudioBuildStageViewSchema = z.object({
+  stage: z.enum(STUDIO_BUILD_STAGES),
+  status: z.enum(STUDIO_BUILD_STAGE_STATUSES),
+  exitCode: z.number().int().min(0).max(3),
+  /** Stage output directory relative to the bundle root, as the manifest recorded it. */
+  outDir: z.string().optional(),
+});
+export type StudioBuildStageView = z.infer<typeof StudioBuildStageViewSchema>;
+
+/** One honest build gap (build-manifest gaps[]): a precise boundary, never a claim. */
+export const StudioBuildGapViewSchema = z.object({
+  code: z.string().min(1),
+  message: z.string().min(1),
+  count: z.number().int().min(1).optional(),
+});
+export type StudioBuildGapView = z.infer<typeof StudioBuildGapViewSchema>;
+
+/**
+ * [40] additive optional `build` block (Coordinator decision, issue #36):
+ * present only when the run view was assembled from a `det build` bundle.
+ * Existing runs parse unchanged without it. `manifestVerified` is Studio-side
+ * truth — whether EVERY manifest-declared output's on-disk bytes and size
+ * match the recorded sha256/bytes; when false, downloads of manifest outputs
+ * are hard-refused.
+ */
+export const StudioBuildViewSchema = z.object({
+  manifestVerified: z.boolean(),
+  /** The manifest's declared config content hash (identity of what was asked). */
+  configContentHash: z.string().min(1),
+  stages: z.array(StudioBuildStageViewSchema),
+  gaps: z.array(StudioBuildGapViewSchema),
+});
+export type StudioBuildView = z.infer<typeof StudioBuildViewSchema>;
 
 /**
  * Preview honesty contract: an unavailable preview is a normal, rendered state —
@@ -220,6 +278,11 @@ export const StudioRunViewSchema = z.object({
   diagnostics: z.array(StudioDiagnosticViewSchema),
   artifacts: z.array(StudioArtifactViewSchema),
   preview: StudioPreviewStateSchema,
+  /**
+   * [40] additive optional build-bundle block — present ONLY for runs
+   * assembled from a `det build` bundle; legacy runs parse unchanged.
+   */
+  build: StudioBuildViewSchema.optional(),
 });
 export type StudioRunView = z.infer<typeof StudioRunViewSchema>;
 

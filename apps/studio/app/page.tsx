@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { connection } from "next/server";
-import { FolderOpen, Unplug, CircleAlert } from "lucide-react";
+import { FolderOpen, Hammer, Unplug, CircleAlert } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -75,6 +76,28 @@ export default async function OverviewPage() {
       </section>
 
       <ConversionForm profiles={DEMO_PROFILES} />
+
+      <Card size="sm">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Hammer className="size-4 text-muted-foreground" aria-hidden="true" />
+            <h2 className="text-base font-semibold">Build Control</h2>
+          </CardTitle>
+          <CardDescription>
+            Trigger a real offline <span className="font-mono">det build</span> through the local
+            runner and download verified bundle artifacts. Requires configured env vars; without
+            them the Build page shows an explicit not-connected state — never demo data.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button asChild size="sm" variant="outline">
+            <Link href="/build">
+              <Hammer className="size-4" aria-hidden="true" />
+              Open Build Control
+            </Link>
+          </Button>
+        </CardContent>
+      </Card>
 
       <Card size="sm">
         <CardHeader>
