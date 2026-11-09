@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "extractId": "m4-synthetic-checkout",
+  "platform": { "id": "magento", "version": "2.4.8-like" },
+  "rootAliases": {
+    "checkout": { "description": "An authorized Magento checkout root (values resolve per run via --root/DET_KB_ROOT_CHECKOUT/local config; never committed)." }
+  },
+  "scans": [
+    {
+      "scanId": "platform-scan",
+      "kind": "magento-platform",
+      "rootAlias": "checkout"
+    },
+    {
+      "scanId": "pb-native-scan",
+      "kind": "pagebuilder-native",
+      "rootAlias": "checkout",
+      "subPath": "vendor/magento/module-page-builder-like/view/adminhtml/pagebuilder/content_type",
+      "denyGlobs": ["divider*"]
+    },
+    {
+      "scanId": "uiwidget-scan",
+      "kind": "secomm-uiwidget",
+      "rootAlias": "checkout",
+      "subPath": "app/code/Acme/Widgets"
+    },
+    {
+      "scanId": "hyva-ui-scan",
+      "kind": "hyva-ui",
+      "rootAlias": "checkout",
+      "subPath": "vendor/acme/hyva-ui-like",
+      "denyGlobs": ["**/*.phtml", "**/*.css", "**/*.js"]
+    }
+  ],
+  "denyGlobs": [],
+  "output": {
+    "platformRecords": "platform-records.json",
+    "uiRecords": "ui-records.json",
+    "relations": "relations.json",
+    "report": "extract-report.json"
+  },
+  "notes": "Synthetic M4 fixture extract plan (issue #19): the checkout tree is entirely invented (Acme/Testvendor fixtures). divider-like.xml is denied by the additive per-scan denyGlob to prove deny-before-read on an enumerated surface; escape-out.xml is a committed symlink pointing outside the scan root to prove realpath containment."
+}

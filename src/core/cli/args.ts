@@ -1,7 +1,8 @@
 // Tiny deterministic argument parser for det (no third-party CLI dependency — decision recorded
 // in docs/converter/DECISIONS.md). Unknown flags and duplicate value flags are usage errors.
-// Issue #15 (additive): the `kb` command takes a verb position (det kb ingest|sync|query|validate)
-// and a small set of repeatable value flags (--root, --where, --include-lifecycle) which collect
+// Issue #15 (additive): the `kb` command takes a verb position (det kb ingest|sync|query|validate,
+// plus the #19 M4 extract verb), and a small set of repeatable value flags
+// (--root, --where, --include-lifecycle) which collect
 // into arrays; every other value flag still rejects duplicates.
 export interface ParsedArgs {
   command: string | null;
@@ -13,7 +14,7 @@ const BOOL_FLAGS = new Set(["help", "h", "version", "json", "dry-run", "quiet"])
 const VALUE_FLAGS = new Set(["profile", "adapter", "project", "out", "input", "registry", "bindings", "design-file", "design-node", "manifest", "store", "root", "where", "text", "kb", "edge-type", "related-to", "include-lifecycle", "require-proof", "nodeir", "content", "projection", "config"]);
 const REPEATABLE_FLAGS = new Set(["root", "where", "include-lifecycle"]);
 const COMMANDS = new Set(["validate", "inspect", "plan", "extract", "kb", "compose", "build"]);
-const KB_VERBS = new Set(["ingest", "sync", "query", "validate"]);
+const KB_VERBS = new Set(["ingest", "sync", "query", "validate", "extract"]);
 
 function storeFlag(out: ParsedArgs, name: string, value: string): void {
   if (REPEATABLE_FLAGS.has(name)) {

@@ -1,0 +1,23 @@
+{
+    "packages": [
+        {
+            "name": "testvendor/framework-like",
+            "version": "1.0.0"
+        },
+        {
+            "name": "testvendor/magento2-ghost-finder",
+            "version": "3.1.0",
+            "install-path": "vendor/testvendor/magento2-ghost-finder"
+        },
+        {
+            "name": "testvendor/module-cms-basic",
+            "version": "2.0.0",
+            "install-path": "vendor/testvendor/module-cms-basic"
+        },
+        {
+            "name": "magento/module-page-builder-like",
+            "version": "1.7.0",
+            "install-path": "vendor/magento/module-page-builder-like"
+        }
+    ]
+}

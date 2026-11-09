@@ -1,0 +1,7 @@
+{
+    "name": "testvendor/magento-project-fixture",
+    "description": "Synthetic M4 fixture checkout root (issue #19); no real distribution.",
+    "version": "2.4.8-like",
+    "license": ["OSL-3.0", "AFL-3.0"],
+    "require": {}
+}

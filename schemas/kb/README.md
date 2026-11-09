@@ -16,6 +16,9 @@ families.
 | [`kb-ingest-manifest.schema.json`](kb-ingest-manifest.schema.json) | engine | Plan-shaped ingest manifest: the only way `det kb ingest` reads anything |
 | [`kb-store.schema.json`](kb-store.schema.json) | engine | Store descriptor (`kb/store.json`): identity, partitions, counts — hashed, re-derived by the validator |
 | [`kb-engine-output.schema.json`](kb-engine-output.schema.json) | engine | Output envelopes for `det kb ingest`/`query`/`sync` artifacts (records view, query result with provenance-on-every-hit, sync report) |
+| [`kb-extract-manifest.schema.json`](kb-extract-manifest.schema.json) | engine | Read-only source extract plans (M4, issue #19): the only way `det kb extract` reads anything |
+| [`kb-source-scan.schema.json`](kb-source-scan.schema.json) | engine | Out-of-process KB source-scanner stdout payload contract (M4): adapter discovery + re-validation |
+| [`kb-source-scan-request.schema.json`](kb-source-scan-request.schema.json) | engine | Out-of-process KB source-scanner stdin transport (M4; declared on issue #44 main-integration so the descriptor names its input like every shipped adapter) |
 
 ## Store layout (one physical format, three logical domains)
 
@@ -83,3 +86,4 @@ platform values.
 | Version | Change |
 |---|---|
 | 1.0.0 | Initial freeze from the reviewed issue #7 drafts (issue #15). Adjustments listed above; older drafts remain in `specs/knowledge-foundation/schemas/` as the review record. |
+| 1.1.0 | M4 additive evolution (issue #19), `schemaVersion` stays major 1: **`kb-capability`** gains `recordType: "module"` (installed-module inventory records; `mod:` id prefix — a module is platform knowledge, not a capability claim) and the `mod:` prefix in the id grammar; **`kb-ingest-manifest`** lanes become optional (`minProperties: 1`) and gain the optional `inputs.platformRecords` lane for extract-emitted KB-1 records (existing all-four-lane manifests remain valid); **`kb-ui-component`** license regime enum gains `osl`/`afl` (Magento OSL-3.0/AFL-3.0 platform-native components); **new** `kb-extract-manifest.schema.json` (read-only source extract plans) and `kb-source-scan.schema.json` (out-of-process scanner payload contract); `kb-engine-output` gains an extract-report branch (`$defs.writtenOutput`). Old strict readers of 1.0 must treat unknown `recordType`s and lanes as unsupported (never best-effort parse). |

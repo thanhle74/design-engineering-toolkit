@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="banner-like">
+    <label translate="true">Banner Like (fixture)</label>
+    <appearances>
+        <appearance default="true" name="full-width-like">
+            <elements><element name="fixture_wrapper"/></elements>
+        </appearance>
+        <appearance name="half-width-like">
+            <elements><element name="fixture_wrapper"/></elements>
+        </appearance>
+    </appearances>
+</type>

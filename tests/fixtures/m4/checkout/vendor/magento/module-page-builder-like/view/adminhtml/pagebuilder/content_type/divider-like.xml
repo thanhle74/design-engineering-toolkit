@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="divider-like">
+    <label translate="true">Divider Like (fixture — denied by the extract manifest, never read)</label>
+    <appearances><appearance default="true" name="solid-like"/></appearances>
+    <fixture>DIVIDER_LIKE_DENIED_MARKER_never_read_7b1f</fixture>
+</type>

@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "manifestId": "m4-synthetic-ingest",
+  "platform": { "id": "magento", "version": "2.4.8-like" },
+  "inputs": {
+    "platformRecords": { "path": "platform-records.json", "rootAlias": "extractout", "label": "KB-1 module records from the magento-platform scan (det kb extract output)" },
+    "uiInventory": { "path": "ui-records.json", "rootAlias": "extractout", "label": "KB-2 records merged from the pagebuilder-native + secomm-uiwidget + hyva-ui scans" },
+    "relations": { "path": "relations.json", "rootAlias": "extractout", "label": "adaptedFrom edges from the secomm-uiwidget scan" }
+  },
+  "denyGlobs": [],
+  "notes": "Synthetic M4 fixture ingest plan (issue #19): demonstrates the new optional lanes (platformRecords + uiInventory + relations) fed ONLY by det kb extract outputs. The extractout alias resolves per run to the extract output directory; no default path exists."
+}
