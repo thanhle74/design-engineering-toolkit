@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+  G3 fixture (issue #23): TRIMMED from the real Magento_PageBuilder row declaration
+  (view/adminhtml/pagebuilder/content_type/row.xml) to the minimum the read-only probe reads.
+  The real declaration allows children with a default allow policy (rows are the platform's
+  standard top-level container); appearance names mirror it exactly.
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_PageBuilder:etc/content_type.xsd">
+    <type name="row" label="Row" form="pagebuilder_row_form" menu_section="layout">
+        <parents default_policy="deny">
+            <parent name="root-container" policy="allow"/>
+        </parents>
+        <children default_policy="allow">
+            <child name="row" policy="deny"/>
+        </children>
+        <appearances>
+            <appearance default="true" name="contained"/>
+            <appearance name="full-bleed"/>
+            <appearance name="full-width"/>
+        </appearances>
+    </type>
+</config>

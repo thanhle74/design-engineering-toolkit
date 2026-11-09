@@ -14,6 +14,7 @@ import { commandInspect } from "./commands/inspect.js";
 import { commandPlan } from "./commands/plan.js";
 import { commandExtract } from "./commands/extract.js";
 import { commandKb } from "./commands/kb.js";
+import { commandCompose } from "./commands/compose.js";
 
 // This module compiles to dist/src/core/cli/main.js — four levels up to the repository root.
 export const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..", "..", "..");
@@ -65,6 +66,20 @@ Usage:
       relation graph rules (dangling endpoints, class-boundary edges, cycles), KB-3 project
       isolation and the secret/licensed-content guards.
 
+  det compose --profile <file> --registry <file> --bindings <file> --input <page-structure.json>
+              --nodeir <node-ir.json> --content <content-manifest.json> [--projection <file>] [--adapter <id>] [--out <dir>] [--dry-run] [--json]
+      Gated native content composition (G3): deterministically compose persisted native platform
+      content (e.g. a master-format document) from a pinned PageStructure + NodeIR + content
+      manifest against a pinned capability registry + binding map, via the platform's out-of-process
+      compose adapter. Structural containers without component identity are resolved HERE — the
+      gated platform-serializer stage the G2 contract names — never by the binding resolver, never
+      as arbitrary embeddable markup. The core validates all pins, spawns the adapter and re-verifies
+      the echoed input identities; gaps (missing content inputs, non-representable decorations) come
+      back as explicit diagnostics, never invented around. When source names do not carry the
+      SLOT-role convention, --projection supplies the reason-carrying human role assignment
+      (schema'd, revision-pinned). Composition is structural evidence only: it never claims Admin
+      round-trip or visual verification.
+
 Global flags:
   --json        Machine-readable JSON on stdout (the human summary is a presentation of it).
   --out <dir>   Write artifacts (capability-registry.json / resolution-report.json / store
@@ -107,7 +122,7 @@ export async function main(argv: string[], env: NodeJS.ProcessEnv = process.env,
     return 2;
   }
   if (parsed.command === null) {
-    io.err("det: no command given (expected validate|inspect|plan|extract|kb). Run 'det --help' for usage.");
+    io.err("det: no command given (expected validate|inspect|plan|extract|kb|compose). Run 'det --help' for usage.");
     return 2;
   }
   const unexpectedFlags = unexpectedFlagsForCommand(parsed.command, parsed.flags);
@@ -138,6 +153,8 @@ export async function main(argv: string[], env: NodeJS.ProcessEnv = process.env,
       return commandExtract(flags as Record<string, string | boolean>, io);
     case "kb":
       return commandKb(flags, io);
+    case "compose":
+      return commandCompose(flags as Record<string, string | boolean>, io);
     default:
       io.err(`det: unknown command '${parsed.command}'`);
       return 2;

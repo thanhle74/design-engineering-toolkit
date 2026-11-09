@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/content-manifest.schema.json",
+  "$comment": "Design Engineering Toolkit CLI family — ContentManifest. Major version 1. Caller-supplied literal content for composition (issue #23 G3): maps the design-source valueRefs already pinned in NodeIR content slots (design://<sourceId>/<locator>) to the text/media/link values a later gated compose stage may place into native platform content. The manifest carries LITERAL content only — it never introduces nodes, never invents asset URLs (an absent entry is reported as a gap by the composing adapter, never defaulted), and it is pinned to the same source revision as the PageStructure it feeds. Platform-neutral: mediaUrl/linkUrl are open strings; each platform adapter defines and documents its own accepted forms.",
+  "title": "Design Engineering Toolkit — Content Manifest",
+  "type": "object",
+  "required": ["schemaVersion", "profileId", "sourceRevisionId", "entries"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "$ref": "#/$defs/schemaVersion" },
+    "profileId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$", "description": "Must equal the profile id of the run that produced the pinned PageStructure." },
+    "sourceRevisionId": { "type": "string", "minLength": 1, "description": "Must equal PageStructure.source.revisionId — content is only valid for the revision it was observed against." },
+    "entries": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/entry" },
+      "description": "One entry per (valueRef, kind). Duplicate pairs are a caller error (INPUT_CONTRACT_VIOLATION); the composing adapter never silently picks one."
+    }
+  },
+  "$defs": {
+    "schemaVersion": { "type": "integer", "const": 1 },
+    "entry": {
+      "type": "object",
+      "required": ["valueRef", "kind"],
+      "additionalProperties": false,
+      "properties": {
+        "valueRef": {
+          "type": "string",
+          "pattern": "^(design|source)://[A-Za-z0-9][A-Za-z0-9.-]*/\\S+$",
+          "description": "The design:// locator of the observed source node this content belongs to — exactly the valueRef already carried by the corresponding NodeIR content slot."
+        },
+        "kind": { "enum": ["text", "media", "link"] },
+        "text": { "type": "string", "description": "Required for kind=text: the literal display text observed/supplied for this node." },
+        "mediaUrl": { "type": "string", "minLength": 1, "description": "Required for kind=media: an explicitly supplied asset reference in the TARGET platform's accepted form. Never a temporary design-tool URL; label placeholders via assetLabel." },
+        "assetLabel": { "type": "string", "description": "Provenance label for a media entry (e.g. 'operator-supplied local asset' or 'labeled offline placeholder'). Free text; never parsed." },
+        "linkUrl": { "type": "string", "minLength": 1, "description": "Required for kind=link: the explicit link target for the node (open form; the platform adapter validates what it can accept)." },
+        "linkTarget": { "type": "string", "enum": ["_self", "_blank"], "description": "Optional link window target; default is the platform's own default." },
+        "note": { "type": "string", "description": "Free-text provenance note; never parsed." }
+      },
+      "allOf": [
+        { "if": { "properties": { "kind": { "const": "text" } } }, "then": { "properties": { "text": {} }, "required": ["text"] } },
+        { "if": { "properties": { "kind": { "const": "media" } } }, "then": { "properties": { "mediaUrl": {} }, "required": ["mediaUrl"] } },
+        { "if": { "properties": { "kind": { "const": "link" } } }, "then": { "properties": { "linkUrl": {} }, "required": ["linkUrl"] } }
+      ]
+    }
+  }
+}

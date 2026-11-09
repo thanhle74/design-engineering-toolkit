@@ -32,6 +32,19 @@ node bin/det.js plan --profile <profile.json> --registry out/capability-registry
   --dry-run          # compute, write nothing
 node bin/det.js plan ... --out out/   # writes resolution-report.json + tool-run.json
 
+# 5. Gated native content composition (G3 #23 + G4 #25) — the platform-serializer stage
+node bin/det.js compose --profile <profile.json> --registry out/capability-registry.json \
+  --bindings <binding-map.json> --input <page-structure.json> --nodeir <node-ir.json> \
+  --content <content-manifest.json> [--projection <semantic-projection.json>] [--out out/] [--dry-run]
+# Emits compose-report.json (per-source-node mapping + diagnostics) and native-content.html
+# (the platform's persisted native format) via the platform's out-of-process compose adapter.
+# Two bounded section shapes today: hero (row > banner) and two-column (row > column-group >
+# column-line > column x2 with text WYSIWYG + native image elements); the explicit
+# reason-carrying semantic projection assigns composer roles when source layer names do not
+# carry the SLOT-role convention — without it the raw source composes nothing (test-asserted).
+# Structural composition evidence ONLY — never an Admin-round-trip or visual claim; a local
+# isolated CMS write requires a separate explicit operator-selected target.
+
 # 4. Read-only design-source extraction (G2, SYNTHETIC fixtures only — see gate note)
 node bin/det.js extract --profile profiles/your-profile.json --project /path/to/design-source \
   --design-file <tree-document> --design-node <root-locator> \
