@@ -125,9 +125,20 @@ export default async function registerG4Suite(checkAsync) {
         // Structural invariants: the declaration-backed chain, in order, with the mandated bridge.
         assert.ok(html.includes('<div data-content-type="row" data-appearance="contained" data-element="main">'), "row(contained) top-level");
         assert.ok(html.includes('<div class="pagebuilder-column-group" data-content-type="column-group" data-appearance="default" data-grid-size="12" data-background-images="{}" data-element="main">'), "column-group(default) with grid size");
-        assert.ok(html.includes('<div class="pagebuilder-column-line" data-content-type="column-line" data-element="main">'), "column-line bridge present");
-        assert.equal((html.match(/<div class="pagebuilder-column" data-content-type="column" data-appearance="full-height" data-background-images="{}" data-element="main" style="width:50%">/g) ?? []).length, 2, "two full-height columns at the attested inline 50% width");
-        assert.ok(html.includes('style="min-height: 780px;"'), "declaration-backed row inner min-height carries the observed section height");
+        assert.ok(html.includes('<div class="pagebuilder-column-line" data-content-type="column-line" data-element="main" data-pb-style='), "column-line bridge present with style key");
+        assert.equal((html.match(/<div class="pagebuilder-column" data-content-type="column" data-appearance="full-height" data-background-images="{}" data-element="main" data-pb-style="[^"]+">/g) ?? []).length, 2, "two full-height columns keyed for rehydration");
+        assert.ok(html.includes("<style>"), "leading style block present");
+        // Styles persist via the platform's rehydratable style-block mechanism (issue #25 NaN
+        // correction): widths/min-height live in keyed rules, never inline — the Admin reader
+        // clobbers inline style attributes and reads only data-pb-style-keyed block rules.
+        assert.ok(html.includes("{min-height:780px}"), "row inner min-height rule in the style block");
+        assert.ok(html.includes("{display:flex;width:100%}"), "column-line flex rule (side-by-side) in the style block");
+        assert.equal((html.match(/\{justify-content:flex-start;display:flex;flex-direction:column;width:50%;align-self:stretch\}/g) ?? []).length, 2, "two 50% column rules in the style block");
+        assert.ok(!/data-element="main" style="/.test(html), "no inline style attributes on composed structural elements");
+        assert.ok(html.includes('data-element="inner" data-pb-style='), "row inner keyed for rehydration");
+        const styleKeys = [...html.matchAll(/data-pb-style="([^"]+)"/g)].map((m) => m[1]);
+        assert.equal(new Set(styleKeys).size, styleKeys.length, "style keys unique per element");
+        assert.ok(styleKeys.every((k) => /^P[A-F0-9]{6}$/.test(k)), "keys are deterministic 7-char ident-safe tokens");
         // Content: one text WYSIWYG folding overline/heading/body in document order; three
         // native image elements carrying the manifest directives.
         assert.equal((html.match(/<div data-content-type="text" data-appearance="default" data-element="main">/g) ?? []).length, 1, "exactly one text WYSIWYG in the right column");

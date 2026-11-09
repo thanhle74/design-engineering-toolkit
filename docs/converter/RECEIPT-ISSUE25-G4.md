@@ -91,3 +91,42 @@ Not done (per issue non-goals): pixel-perfect CSS, Hyvä theme work, full recurs
 - schemas/cli family 1.3.0 (additive): `semantic-projection` role vocabulary extension only; no new schema file; the closed 21-code converter diagnostic registry unchanged (gaps are `NOT_VERIFIED` warnings). Compose adapter descriptor 1.1.0 (two shapes documented).
 - Decisions recorded: `ADR-025-001..004` in [DECISIONS.md](DECISIONS.md).
 - The fixture checkout gains the five verbatim content-type declaration copies (column_group, column-line, column, image, text) so the probe registers the full two-column chain; the committed G3 example remains byte-par because the probe's revision digest keys on composer.lock, not on declaration files.
+
+---
+
+## 8. ADDENDUM (2026-11-09) — Coordinator follow-up: the Admin `NAN/12` column label — root cause + minimal fix on PR #26
+
+**Directive:** Owner's Admin screenshot of `det-g4-craftsmanship-smoke` (page 39) showed `COLUMN 1 (NAN/12), COLUMN 2 (NAN/12)`; coordinator instructed one bounded follow-up on PR #26 — investigate read-only against the Admin column sizing logic + canonical editor-saved content, determine output defect vs Admin normalization, and fix minimal composer markup/metadata on the same PR if clearly an output defect. No new adapter/system/styling layer.
+
+### 8.1 Root cause — CONFIRMED OUTPUT DEFECT (source-traced, not guessed)
+
+The Admin master-format reader (`view/adminhtml/web/js/master-format/read/configurable.js`, read loop over viewports) executes, for every configured element:
+
+```js
+currentElement.setAttribute("style", currentElement.getAttribute("data-" + viewport + "-style"));
+```
+
+— it **overwrites each element's inline `style` attribute** with the `data-<viewport>-style` attribute. Those attributes exist only after `stage-builder.js convertToInlineStyles` maps the leading `<style>` block's `#html-body [data-pb-style=KEY]` rules onto the keyed elements (and then strips the block + `data-pb-style` in the stage DOM). The column display label (`view/adminhtml/web/js/content-type/column/preview.js updateDisplayLabel`) computes `parseFloat(dataStore.get("width")) / (100 / gridSize)`; for the PR-as-submitted columns the composer emitted **only** inline `style="width:50%"` — the reader clobbered it to null, `width` stayed empty, `parseFloat("")` = `NaN` → `COLUMN 1 (NAN/12)`. Canonical editor-saved content (cms_page 36 `home`) carries widths in exactly that style-block mechanism; the inline-width variant the PR had copied (cms_page 37 `careers`, hand-authored) is not rehydrated by the stage either — it would show the same symptom. So: a normal Admin save would NOT normalize it (the width never reaches the form); the composer was missing the required style-block metadata.
+
+**Same-defect implication for G3 (flagged, NOT fixed here — PR #24 scope):** the hero emission carries the banner overlay `min-height` inline (`style="min-height: 880px;"`). The same read loop clobbers it on Admin open, so an Admin re-save of `det-g3-hero-smoke` would drop the overlay min-height (no NaN symptom, silent loss). Coordinator decision needed on whether G3 gets the same style-block treatment before the #24→#26 integration merge.
+
+### 8.2 The minimal fix (adapter 1.1.1, one mechanism, no new layer)
+
+The two-column composer now persists styles the way the platform itself does — the exact mechanism its own reader consumes (deterministic, byte-stable):
+
+- A leading `<style>` block with `#html-body [data-pb-style=KEY]{…}` rules; rule bodies mirror the canonical editor-saved bodies for these element types in the target checkout's stored content: column-line `{display:flex;width:100%}`; columns `{justify-content:flex-start;display:flex;flex-direction:column;width:<pct>%;align-self:stretch}`; row-inner `{min-height:<section-height>px}`.
+- Each styled element carries a deterministic `data-pb-style` key (`"P" + 6 uppercase hex of the source node id` — unique per node, CSS-ident-safe, the shape of the platform's own `uniqueid()` keys in stored content; `data-pb-style` is on the master-format attribute whitelist in `etc/di.xml`).
+- **No inline style attributes** on the composed structural elements (row main/column-group carry no styles → no keys, matching canonical content where unset styles emit nothing).
+- Storefront anchor verified: `<body id="html-body">` present in the theme's rendered pages, so the selectors apply on the storefront as well as in the Admin stage.
+
+Determinism holds (keys derive from stable node ids; rules fixed-order): compose remains byte-identical across runs, and the hero emission is untouched (G3 suite + committed-example parity still pass byte-identically).
+
+### 8.3 Re-verification (same gate + isolated local re-smoke)
+
+- `npm test` **110/110** — T30c now asserts the style block (min-height/flex/two-50% rules), keyed columns, absence of inline styles on composed structural elements, and key uniqueness/shape; the committed example was regenerated (`contentHash sha256:85b0b24a…`) and passes the parity check.
+- **Isolated local page (within the prior local smoke GO; existing pages untouched):** NEW disposable page `det-g4-craftsmanship-smoke2` (**page_id=40**, store view `vi`, `cms_page` count 40 = 38 baseline + 39 + 40), content sha256 `d4286bc5…` = composed bytes; page 39 verified unchanged (original sha).
+- **STOREFRONT RENDER PASS (now with layout):** the served page carries the style block byte-exact before the row; live-DOM eval: column-line `display:flex` (was `block` before the fix), both columns side-by-side at the same y (x=8/x=584, 576px each = 50%), `align-self:stretch`, row min-height 780px computed, all three local images loaded; visual evidence [`evidence/g4-craftsmanship-storefront-smoke2.png`](evidence/g4-craftsmanship-storefront-smoke2.png) (left media column | right text column with the two stacked detail images — the recorded stacking fidelity gap unchanged).
+- **EDIT PERSISTENCE PASS** on page 40 — service-layer heading edit → storefront re-render → restore to composed bytes (sha verified).
+- **Admin label verification remains OWNER_ACTION_REQUIRED** (no worker credentials): open `DET Craftsmanship Smoke — det-g4-craftsmanship-smoke2 (Local Only)` (CMS ID 40) in Admin — the stage should label the columns `6/12` (not `NAN/12`), with editable width fields at 50%; heading edit → Save → Reload → storefront check closes the last UI gate on this page.
+
+**Rollback:** `php det_g4_craftsmanship_smoke_import.php rollback det-g4-craftsmanship-smoke2` (and `… rollback` for page 39 if the owner prefers removing the old-shape page after verification).

@@ -29,10 +29,14 @@
 //       side-by-side media pairs inside a column compose as stacked native images with an explicit
 //       fidelity gap — never custom CSS, never a generic renderer. Column widths derive from the
 //       observed fixed-width constraints (rounded to integer percents, equal -> the platform's own
-//       50/50) and persist inline in the attested stored shape of this checkout (real cms_page 37:
-//       style="width:25%"); the section's fixed height persists as the row inner min_height
-//       (declaration-backed). Gaps (gutter, pair staggering, aspect ratios, mobile breakpoint)
-//       are NOT_VERIFIED warnings + accountable mapping entries.
+//       50/50) and persist via the platform's own rehydratable style-block mechanism: each styled
+//       element carries a deterministic data-pb-style key and a leading <style> block holds the
+//       exact rules the Admin stage parses back into form fields (the Admin reader overwrites
+//       inline style attributes with the absent data-<viewport>-style attribute — inline-only
+//       widths produced the owner's NAN/12 column label, issue #25 correction). The section's
+//       fixed height persists as the row inner min_height in the same block (declaration-backed).
+//       Gaps (gutter, pair staggering, aspect ratios, mobile breakpoint) are NOT_VERIFIED
+//       warnings + accountable mapping entries.
 // - The emitted markup mirrors the platform's own persisted master format (its master templates
 //   stamp data-element="<declared element name>" on every element; the master-format reader
 //   populates forms by those names). Attributes not present in the pinned declarations are not
@@ -298,6 +302,17 @@ function resolveComposerRole(node: NodeIRNode): ComposerRole | undefined {
 const esc = (s: string): string => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 const escText = (s: string): string => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
+// Deterministic master-format style key (issue #25 NaN correction): the Admin stage rehydrates
+// element styles EXCLUSIVELY from the `<style>` block keyed by data-pb-style (stage-builder
+// convertToInlineStyles -> data-<viewport>-style -> configurable reader), never from inline
+// style attributes (which the reader clobbers: `setAttribute("style", getAttribute("data-…-style"))`
+// with a null fallback). Keys are 7-char CSS-ident-safe uppercase tokens ("P" + 6 hex of the
+// source node id) — deterministic across runs, unique per node, the same shape the platform's
+// own uniqueid keys take in stored content (real cms_page rows).
+function pbStyleKey(nodeKeySource: string): string {
+  return "P" + sha256Hex(nodeKeySource).slice(0, 6).toUpperCase();
+}
+
 // ---- G4 two-column composition (issue #25) ---------------------------------------------------
 // Emits row(contained) > column-group(default) > column-line(default) > column(full-height) x2
 // — the only declaration-backed two-column chain (a column-group's parents policy excludes
@@ -520,25 +535,44 @@ function composeTwoColumnSection(section: PageStructureSection, sectionNodeId: s
     diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Section '${section.name}' carries no fixed height constraint; row min-height not composed (Admin default applies).`, sectionNodeId));
   }
 
-  // ---- Emit (fixed attribute order; mirrors the platform's attested persisted master format) --
-  const innerStyle = rowMinHeight !== undefined ? ` style="min-height: ${rowMinHeight}px;"` : "";
+  // ---- Emit (fixed attribute order; mirrors the platform's own persisted master format) -------
+  // Styles persist via the platform's own master-format style-block mechanism (issue #25 NaN
+  // correction): every element whose style the composition sets carries a deterministic
+  // data-pb-style key, and a leading <style> block holds the exact rehydratable rules the
+  // Admin stage parses back into form fields (and the storefront applies). Inline style
+  // attributes are NOT emitted — the Admin reader overwrites them with the (absent)
+  // data-<viewport>-style attribute, which is what produced the owner's NAN/12 column label.
+  // Rule bodies mirror the canonical editor-saved bodies for these element types in the
+  // target checkout's stored content (column-line {display:flex;width:100%}; column
+  // {justify-content:flex-start;display:flex;flex-direction:column;width:<pct>%;align-self:stretch}).
+  const innerKey = pbStyleKey(`${sectionNodeId}:inner`);
+  const lineKey = pbStyleKey(`${sectionNodeId}:line`);
+  const primaryKey = pbStyleKey(primaryNode.nodeId);
+  const secondaryKey = pbStyleKey(secondaryNode.nodeId);
+  const styleRules: string[] = [];
+  if (rowMinHeight !== undefined) styleRules.push(`#html-body [data-pb-style=${innerKey}]{min-height:${rowMinHeight}px}`);
+  styleRules.push(`#html-body [data-pb-style=${lineKey}]{display:flex;width:100%}`);
+  styleRules.push(`#html-body [data-pb-style=${primaryKey}]{justify-content:flex-start;display:flex;flex-direction:column;width:${primaryPct}%;align-self:stretch}`);
+  styleRules.push(`#html-body [data-pb-style=${secondaryKey}]{justify-content:flex-start;display:flex;flex-direction:column;width:${secondaryPct}%;align-self:stretch}`);
+  const styleBlock = `<style>${styleRules.join("")}</style>`;
   mapping.push({
     sourceNodeId: sectionNodeId,
     ...(sectionNode.name ? { sourceName: sectionNode.name } : {}),
     ...(sectionLocator ? { sourceLocator: sectionLocator } : {}),
     disposition: "mapped",
     target: { capabilityId: ROW_ID, appearanceId: ROW_APPEARANCE, nativeElement: "main", nativeField: "row(contained) > column-group(default) > column-line > column(full-height) x2" },
-    note: `Section composed as the declaration-backed two-column chain; column-line is the mandated bridge; observed slot proportions${w1 !== null && w2 !== null ? ` (${w1}:${w2})` : ""} simplified to ${primaryPct}/${secondaryPct} inline widths (attested stored shape); mobile breakpoint not composed.`,
+    note: `Section composed as the declaration-backed two-column chain; column-line is the mandated bridge; observed slot proportions${w1 !== null && w2 !== null ? ` (${w1}:${w2})` : ""} simplified to ${primaryPct}/${secondaryPct} persisted via the platform's rehydratable style-block mechanism (deterministic data-pb-style keys); mobile breakpoint not composed.`,
   });
   return (
+    styleBlock +
     `<div data-content-type="row" data-appearance="contained" data-element="main">` +
-    `<div data-enable-parallax="0" data-parallax-speed="0.5" data-background-images="{}" data-background-type="image" data-video-loop="true" data-video-play-only-visible="true" data-video-lazy-load="true" data-video-fallback-src=""${innerStyle} data-element="inner">` +
+    `<div data-enable-parallax="0" data-parallax-speed="0.5" data-background-images="{}" data-background-type="image" data-video-loop="true" data-video-play-only-visible="true" data-video-lazy-load="true" data-video-fallback-src="" data-element="inner" data-pb-style="${innerKey}">` +
     `<div class="pagebuilder-column-group" data-content-type="column-group" data-appearance="default" data-grid-size="12" data-background-images="{}" data-element="main">` +
-    `<div class="pagebuilder-column-line" data-content-type="column-line" data-element="main">` +
-    `<div class="pagebuilder-column" data-content-type="column" data-appearance="full-height" data-background-images="{}" data-element="main" style="width:${primaryPct}%">` +
+    `<div class="pagebuilder-column-line" data-content-type="column-line" data-element="main" data-pb-style="${lineKey}">` +
+    `<div class="pagebuilder-column" data-content-type="column" data-appearance="full-height" data-background-images="{}" data-element="main" data-pb-style="${primaryKey}">` +
     primaryHtml +
     `</div>` +
-    `<div class="pagebuilder-column" data-content-type="column" data-appearance="full-height" data-background-images="{}" data-element="main" style="width:${secondaryPct}%">` +
+    `<div class="pagebuilder-column" data-content-type="column" data-appearance="full-height" data-background-images="{}" data-element="main" data-pb-style="${secondaryKey}">` +
     secondaryHtml +
     `</div>` +
     `</div>` +
