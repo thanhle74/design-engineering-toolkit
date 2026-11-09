@@ -9,7 +9,7 @@
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { EventEmitter } from "node:events";
-import { spawn, type ChildProcess } from "node:child_process";
+import { spawn, type ChildProcess, type SpawnOptions } from "node:child_process";
 import { existsSync } from "node:fs";
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
@@ -84,9 +84,9 @@ function makeFakeChild(): FakeChild {
   child.stdout = null;
   child.stderr = null;
   child.kill = () => true;
-  // No-op error listener: tests may emit "error" before the runner attaches
-  // its own handler; EventEmitter would otherwise throw on the emit.
-  (child as unknown as EventEmitter).on("error", () => {});
+  // Deliberately NO pre-attached no-op `error` listener: masking early error
+  // events would hide exactly the C2 ordering bug the early-error regression
+  // test exists to catch. Fake-child tests only emit AFTER start() resolves.
   return child;
 }
 
@@ -287,4 +287,131 @@ describe("single-slot concurrency, timeout and spawn truth", () => {
     expect(snap).not.toBeNull();
     expect(snap!.state).toBe("interrupted");
   });
+});
+
+describe("slot reservation and early spawn-error ordering (Coordinator C1/C2)", () => {
+  it(
+    "C1: reserves the slot before the first await — concurrent starts yield exactly one spawn + one BuildBusyError",
+    async () => {
+      let spawnCount = 0;
+      let childRef: FakeChild | null = null;
+      const spawnImpl: typeof spawn = (() => {
+        spawnCount += 1;
+        const child = makeFakeChild();
+        childRef = child;
+        return child as unknown as ChildProcess;
+      }) as unknown as typeof spawn;
+
+      const { runner, configPath } = await setupRunner({ spawnImpl });
+      const results = await Promise.allSettled([
+        runner.start("g28-example", configPath),
+        runner.start("g28-example", configPath),
+      ]);
+      const fulfilled = results.filter((r): r is PromiseFulfilledResult<BuildJobSnapshot> => r.status === "fulfilled");
+      const rejected = results.filter((r): r is PromiseRejectedResult => r.status === "rejected");
+      expect(fulfilled).toHaveLength(1);
+      expect(rejected).toHaveLength(1);
+      expect(rejected[0]!.reason).toBeInstanceOf(BuildBusyError);
+      expect(((rejected[0]!.reason as BuildBusyError).active as { runId: string }).runId).toBe(
+        fulfilled[0]!.value.runId
+      );
+      expect(spawnCount).toBe(1);
+
+      // release the held slot: the fulfilled job is still running
+      childRef!.emit("close", 0, null);
+      const final = await awaitTerminal(runner, fulfilled[0]!.value.runId);
+      expect(final.state).toBe("exited");
+      const slotDeadline = Date.now() + 5_000;
+      while (runner.activeSnapshot() !== null && Date.now() < slotDeadline) await sleep(50);
+      expect(runner.activeSnapshot()).toBeNull();
+    }
+  );
+
+  it("C1: releases the reservation when initialization fails before spawn", async () => {
+    const spawnImpl: typeof spawn = (() => {
+      throw Object.assign(new Error("spawn node ENOENT"), { code: "ENOENT" });
+    }) as unknown as typeof spawn;
+
+    const { runner, configPath } = await setupRunner({ spawnImpl });
+    await expect(runner.start("g28-example", configPath)).rejects.toMatchObject({ code: "not-configured" });
+    // pending queued journal writes flush, then the slot must be free again
+    await sleep(100);
+    expect(runner.activeSnapshot()).toBeNull();
+
+    // the freed slot accepts a new build (fake child, resolves cleanly)
+    const { runner: runner2, configPath: configPath2 } = await setupRunner({
+      spawnImpl: (() => {
+        const child = makeFakeChild();
+        queueMicrotask(() => child.emit("close", 0, null));
+        return child as unknown as ChildProcess;
+      }) as unknown as typeof spawn,
+    });
+    // a fast fake may already be terminal when start() returns — the point
+    // is that the freed slot accepts the start and reaches a terminal state
+    const retry = await runner2.start("g28-example", configPath2);
+    expect(retry.runId).toMatch(/^build-[0-9]+$/);
+    const retryFinal = await awaitTerminal(runner2, retry.runId);
+    expect(retryFinal.state).toBe("exited");
+  });
+
+  it(
+    "C2: a genuine spawn ENOENT emitted on a following tick is captured — truthful spawn-failed, no unhandled event",
+    { timeout: 30_000 },
+    async () => {
+      // REAL child_process.spawn of a missing executable: Node returns a
+      // ChildProcess synchronously and emits `error` (ENOENT) on a following
+      // tick — exactly the ordering that used to race the awaited journal
+      // write. No fake child, no pre-attached no-op listener.
+      const realSpawn: typeof spawn = ((command: string, args: readonly string[], options: SpawnOptions) =>
+        spawn("/definitely/missing/det-exec-9f3a", args, options)) as unknown as typeof spawn;
+
+      const { runner, configPath } = await setupRunner({ spawnImpl: realSpawn });
+      const uncaught: unknown[] = [];
+      const onUncaught = (error: unknown): void => {
+        uncaught.push(error);
+      };
+      process.on("uncaughtException", onUncaught);
+      try {
+        const started = await runner.start("g28-example", configPath);
+        const final = await awaitTerminal(runner, started.runId);
+        expect(final.state).toBe("spawn-failed");
+        expect(final.spawnError).toMatch(/could not be spawned/);
+        expect(final.exitCode).toBeNull();
+        expect(final.manifestSummary).toBeNull();
+        // the slot frees only after the terminal journal write lands
+        const slotDeadline = Date.now() + 5_000;
+        while (runner.activeSnapshot() !== null && Date.now() < slotDeadline) await sleep(50);
+        expect(runner.activeSnapshot()).toBeNull();
+      } finally {
+        process.off("uncaughtException", onUncaught);
+      }
+      // the early `error` event never reached the process as unhandled
+      expect(uncaught).toHaveLength(0);
+    }
+  );
+
+  it(
+    "C2 ordering: a terminal state is never overwritten by the still-pending running-state journal write",
+    { timeout: 30_000 },
+    async () => {
+      const spawnImpl: typeof spawn = (() => {
+        const child = makeFakeChild();
+        // fail within the same tick window the runner is still initializing
+        setTimeout(() => child.emit("error", Object.assign(new Error("spawn node ENOENT"), { code: "ENOENT" })), 0);
+        return child as unknown as ChildProcess;
+      }) as unknown as typeof spawn;
+
+      const { runner, configPath } = await setupRunner({ spawnImpl });
+      const started = await runner.start("g28-example", configPath);
+      const final = await awaitTerminal(runner, started.runId);
+      expect(final.state).toBe("spawn-failed");
+
+      // give every queued journal write time to land, then read from DISK:
+      // the persisted state must be the terminal one, never "running"
+      await sleep(300);
+      const reread = await runner.snapshot(started.runId);
+      expect(reread!.state).toBe("spawn-failed");
+      expect(reread!.spawnError).toMatch(/could not be spawned/);
+    }
+  );
 });

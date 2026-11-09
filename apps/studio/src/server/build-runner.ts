@@ -101,8 +101,11 @@ interface JournalRecord extends BuildJobSnapshot {
 
 interface ActiveJob {
   snapshot: BuildJobSnapshot;
-  child: ReturnType<typeof spawn>;
+  /** Null until spawn() returned; reservation happens before the first await. */
+  child: ReturnType<typeof spawn> | null;
   timer: NodeJS.Timeout | null;
+  /** Double-terminal guard: `error` and `close` may both fire for one child. */
+  terminalHandled: boolean;
 }
 
 function pidAlive(pid: number): boolean {
@@ -130,6 +133,13 @@ export class BuildRunner {
   private readonly runsRoot: string;
   private readonly spawnImpl: typeof spawn;
   private active: ActiveJob | null = null;
+  /**
+   * Strict journal-write ordering (C2): the async `error` event can fire
+   * while the running-state write is still pending; without a queue the
+   * older write could land last and overwrite a terminal state. Every
+   * journal write chains on this promise.
+   */
+  private journalQueue: Promise<unknown> = Promise.resolve();
 
   private constructor(runsRoot: string, spawnImpl: typeof spawn) {
     this.runsRoot = runsRoot;
@@ -182,6 +192,13 @@ export class BuildRunner {
     const tmp = path.join(journalDir, `.${snapshot.runId}.${randomBytes(4).toString("hex")}.tmp`);
     await writeFile(tmp, JSON.stringify(record, null, 2), "utf8");
     await rename(tmp, this.journalPath(snapshot.runId));
+  }
+
+  /** Serialized journal write — never reordered, never run concurrently. */
+  private queueJournal(snapshot: BuildJobSnapshot): Promise<void> {
+    const next = this.journalQueue.then(() => this.writeJournal(snapshot));
+    this.journalQueue = next.catch(() => undefined);
+    return next;
   }
 
   private async readJournal(runId: string): Promise<BuildJobSnapshot | null> {
@@ -248,18 +265,28 @@ export class BuildRunner {
    * Start one build. Throws BuildBusyError when the single slot is taken and
    * DetRunReaderError("not-configured") when the det CLI env is unusable —
    * never a fabricated success.
+   *
+   * Event-ordering guarantees (Coordinator review C1/C2, issue #40):
+   *  - C1: the slot is reserved SYNCHRONOUSLY, before the first await — two
+   *    concurrent start() calls can never both observe an idle slot, and a
+   *    failed initialization path always releases the reservation.
+   *  - C2: child `error`/`close`/data listeners attach IMMEDIATELY after
+   *    spawn(), before any await — a spawn failure (e.g. ENOENT) is emitted
+   *    on a following tick and must never be an unhandled event.
+   *  - Journal writes are serialized through one queue so a late state can
+   *    never overwrite a terminal one, and the slot frees only after the
+   *    terminal journal write completes.
    */
   async start(configId: string, configPath: string): Promise<BuildJobSnapshot> {
+    // C1: synchronous busy check + synchronous reservation.
     const busy = this.activeSnapshot();
     if (busy !== null) throw new BuildBusyError(busy);
 
     const detEntry = this.resolveDetEntry();
-    const runId = await this.generateRunId();
-    const absOut = path.join(this.runsRoot, runId);
-    const command = [process.execPath, detEntry, "build", "--config", configPath, "--out", absOut, "--json"];
-
     const snapshot: BuildJobSnapshot = {
-      runId,
+      // Provisional id, finalized below while the slot is held (before the
+      // first journal write), so concurrent starts cannot collide.
+      runId: `build-${Date.now()}`,
       configId,
       state: "queued",
       exitCode: null,
@@ -267,97 +294,131 @@ export class BuildRunner {
       timedOut: false,
       startedAt: new Date().toISOString(),
       finishedAt: null,
-      command,
+      command: [],
       stdoutTail: "",
       stderrTail: "",
       manifestSummary: null,
       spawnError: null,
       pid: null,
     };
-    await this.writeJournal(snapshot);
+    const activeJob: ActiveJob = { snapshot, child: null, timer: null, terminalHandled: false };
+    this.active = activeJob; // slot reserved — every failed init path releases it
 
-    let child: ReturnType<typeof spawn>;
     try {
-      child = this.spawnImpl(command[0], command.slice(1), {
-        shell: false,
-        stdio: ["ignore", "pipe", "pipe"],
-      });
-    } catch (error) {
-      const failed: BuildJobSnapshot = {
-        ...snapshot,
-        state: "spawn-failed",
-        finishedAt: new Date().toISOString(),
-        spawnError: sanitizeSpawnError(error as NodeJS.ErrnoException),
-      };
-      await this.writeJournal(failed);
-      throw new DetRunReaderError("not-configured", failed.spawnError ?? "det CLI could not be spawned.");
-    }
+      await this.finalizeRunId(snapshot);
+      const absOut = path.join(this.runsRoot, snapshot.runId);
+      snapshot.command = [
+        process.execPath,
+        detEntry,
+        "build",
+        "--config",
+        configPath,
+        "--out",
+        absOut,
+        "--json",
+      ];
+      // Pre-spawn journal write: if the journal is unwritable, refuse to
+      // start (truthful) instead of running an unjournaled build.
+      await this.queueJournal(snapshot);
 
-    const activeJob: ActiveJob = { snapshot, child, timer: null };
-    this.active = activeJob;
-    snapshot.pid = child.pid ?? null;
-    snapshot.state = "running";
-    await this.writeJournal(snapshot);
-
-    const stdoutChunks: Buffer[] = [];
-    const stderrChunks: Buffer[] = [];
-    child.stdout?.on("data", (chunk: Buffer) => {
-      stdoutChunks.push(chunk);
-      trimTail(stdoutChunks, STDOUT_TAIL_BYTES);
-    });
-    child.stderr?.on("data", (chunk: Buffer) => {
-      stderrChunks.push(chunk);
-      trimTail(stderrChunks, STDERR_TAIL_BYTES);
-    });
-
-    const timeoutMs = parseTimeoutMs();
-    activeJob.timer = setTimeout(() => {
-      snapshot.timedOut = true;
-      child.kill("SIGTERM");
-    }, timeoutMs);
-
-    child.on("error", (error: NodeJS.ErrnoException) => {
-      if (activeJob.timer !== null) clearTimeout(activeJob.timer);
-      snapshot.state = "spawn-failed";
-      snapshot.spawnError = sanitizeSpawnError(error);
-      snapshot.finishedAt = new Date().toISOString();
-      snapshot.stdoutTail = buffersToText(stdoutChunks);
-      snapshot.stderrTail = buffersToText(stderrChunks);
-      // Free the slot only AFTER the journal reflects the terminal state, so
-      // a concurrent status read can never fall through to the stale
-      // "running" journal and misread the job as interrupted.
-      void this.writeJournal(snapshot)
-        .catch(() => {})
-        .finally(() => {
-          if (this.active === activeJob) this.active = null;
+      let child: ReturnType<typeof spawn>;
+      try {
+        child = this.spawnImpl(snapshot.command[0], snapshot.command.slice(1), {
+          shell: false,
+          stdio: ["ignore", "pipe", "pipe"],
         });
-    });
+      } catch (error) {
+        snapshot.state = "spawn-failed";
+        snapshot.spawnError = sanitizeSpawnError(error as NodeJS.ErrnoException);
+        snapshot.finishedAt = new Date().toISOString();
+        await this.queueJournal(snapshot).catch(() => {});
+        throw new DetRunReaderError("not-configured", snapshot.spawnError ?? "det CLI could not be spawned.");
+      }
+      activeJob.child = child;
 
-    child.on("close", (code, signal) => {
-      if (activeJob.timer !== null) clearTimeout(activeJob.timer);
-      snapshot.state = snapshot.timedOut ? "timeout" : code === null ? "spawn-failed" : "exited";
-      snapshot.exitCode = typeof code === "number" ? code : null;
-      snapshot.signal = typeof signal === "string" ? signal : null;
-      snapshot.finishedAt = new Date().toISOString();
-      snapshot.stdoutTail = buffersToText(stdoutChunks);
-      snapshot.stderrTail = buffersToText(stderrChunks);
-      void (async () => {
+      // C2: attach ALL listeners now — before any await below. A real spawn
+      // failure emits `error` on a following tick; an unhandled `error`
+      // event would terminate the Studio process.
+      const stdoutChunks: Buffer[] = [];
+      const stderrChunks: Buffer[] = [];
+      child.stdout?.on("data", (chunk: Buffer) => {
+        stdoutChunks.push(chunk);
+        trimTail(stdoutChunks, STDOUT_TAIL_BYTES);
+      });
+      child.stderr?.on("data", (chunk: Buffer) => {
+        stderrChunks.push(chunk);
+        trimTail(stderrChunks, STDERR_TAIL_BYTES);
+      });
+
+      const timeoutMs = parseTimeoutMs();
+      activeJob.timer = setTimeout(() => {
+        snapshot.timedOut = true;
+        child.kill("SIGTERM");
+      }, timeoutMs);
+
+      const finishTerminal = (): void => {
+        // Double-terminal guard: `error` and `close` may both fire; the
+        // first terminal event wins, the second is ignored.
+        if (activeJob.terminalHandled) return;
+        activeJob.terminalHandled = true;
+        if (activeJob.timer !== null) clearTimeout(activeJob.timer);
+        snapshot.finishedAt = new Date().toISOString();
+        snapshot.stdoutTail = buffersToText(stdoutChunks);
+        snapshot.stderrTail = buffersToText(stderrChunks);
         // Truth from disk: the bundle is the durable contract surface; the
         // child's stdout is diagnostics only (kept as a bounded tail).
-        snapshot.manifestSummary = await readManifestSummary(this.runsRoot, runId).catch(() => null);
-        await this.writeJournal(snapshot).catch(() => {});
-      })()
-        .catch(() => {})
-        .finally(() => {
-          if (this.active === activeJob) this.active = null;
-        });
-    });
+        void (async () => {
+          snapshot.manifestSummary = await readManifestSummary(this.runsRoot, snapshot.runId).catch(() => null);
+          // Serialized journal write; free the slot only AFTER the journal
+          // reflects the terminal state, so a concurrent status read can
+          // never fall through to a stale state and misread the job.
+          await this.queueJournal(snapshot).catch(() => {});
+        })()
+          .catch(() => {})
+          .finally(() => {
+            if (this.active === activeJob) this.active = null;
+          });
+      };
 
-    return { ...snapshot };
+      child.on("error", (error: NodeJS.ErrnoException) => {
+        if (activeJob.terminalHandled) return;
+        snapshot.state = "spawn-failed";
+        snapshot.spawnError = sanitizeSpawnError(error);
+        finishTerminal();
+      });
+
+      child.on("close", (code, signal) => {
+        if (activeJob.terminalHandled) return;
+        snapshot.state = snapshot.timedOut ? "timeout" : code === null ? "spawn-failed" : "exited";
+        snapshot.exitCode = typeof code === "number" ? code : null;
+        snapshot.signal = typeof signal === "string" ? signal : null;
+        finishTerminal();
+      });
+
+      // Running-state write AFTER the listeners are attached; queued so it
+      // can never reorder ahead of (and overwrite) a terminal state.
+      snapshot.pid = child.pid ?? null;
+      snapshot.state = "running";
+      await this.queueJournal(snapshot).catch(() => {});
+
+      return { ...snapshot };
+    } catch (error) {
+      // C1: release the reservation on every failed initialization path —
+      // but never out from under a live child (its terminal event owns the
+      // release once spawn() returned).
+      if (activeJob.child === null && this.active === activeJob) {
+        this.active = null;
+      }
+      throw error;
+    }
   }
 
-  /** Studio-generated run id (`build-<epoch ms>`), collision-bumped, pattern-safe. */
-  private async generateRunId(): Promise<string> {
+  /**
+   * Finalize the provisional run id while the slot is held (nothing written
+   * yet, so updating snapshot.runId here is safe): collision-bumped against
+   * existing journals/bundles, pattern-safe.
+   */
+  private async finalizeRunId(snapshot: BuildJobSnapshot): Promise<void> {
     let ms = Date.now();
     for (;;) {
       const runId = `build-${ms}`;
@@ -367,7 +428,10 @@ export class BuildRunner {
       }
       const existing = await stat(this.journalPath(runId)).catch(() => null);
       const bundleDir = await stat(path.join(this.runsRoot, runId)).catch(() => null);
-      if (existing === null && bundleDir === null) return runId;
+      if (existing === null && bundleDir === null) {
+        snapshot.runId = runId;
+        return;
+      }
       ms += 1;
     }
   }
