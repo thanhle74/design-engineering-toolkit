@@ -1,6 +1,6 @@
 # [30] Independent Review + Annex — DET Studio SQLite & Artifact Architecture
 
-**Status:** INDEPENDENT-REVIEW RECEIPT + AMENDMENT ANNEX — docs only, no DB implementation, no code changes to [28] or [29] · 2026-11-09
+**Status:** INDEPENDENT-REVIEW RECEIPT + AMENDMENT ANNEX — docs only, no DB implementation, no code changes to [28] or [29] · 2026-11-09 · **R2:** coordinator corrections **C1–C3** applied (see [PR #32 review](https://github.com/thanhle74/design-engineering-toolkit/pull/32#issuecomment-6732338324), all evidence re-verified against `main` source before editing)
 **Reviewed target:** Draft [PR #31](https://github.com/thanhle74/design-engineering-toolkit/pull/31) — `specs/DET-PERSISTENCE-AND-KNOWLEDGE-ARCHITECTURE.md` @ `d8f80e9` on `docs/30-studio-sqlite-artifact-architecture` (one commit on `main` `9495f43`).
 **Scope:** [Issue #30](https://github.com/thanhle74/design-engineering-toolkit/issues/30) — architecture decision only.
 **Authority refs (read and verified in this session):** `specs/knowledge-foundation/TECH-ADR.md` (ADR-1..5, OPEN_DECISIONS #1/#6), `schemas/cli/tool-run.schema.json`, `schemas/project-profile.schema.json`, `schemas/kb/kb-ingest-manifest.schema.json`, `schemas/kb/kb-store.schema.json`, `schemas/cli/content-manifest.schema.json`, `schemas/README.md` (Draft 2020-12, integer-major versioning, `additionalProperties: false`), `specs/DET-STUDIO-MVP.md` (on `origin/task/29-det-studio-nextjs-mvp`), `.github/workflows/validate.yml` (Node 22), `package.json` (`engines.node: ">=20"`).
@@ -9,7 +9,7 @@
 
 ## 1. Independent review verdict
 
-**Verdict: ACCEPT-WITH-AMENDMENTS (architecture level).** PR #31's three-concern split (SQLite operational catalogue / versioned JSON-JSONL KB SSOT / immutable file artifacts) is sound, correctly preserves ADR-3's "index is a cache, never truth" rule, and correctly leaves [28]/[29] untouched. Six gaps must be closed before the architecture can be accepted as complete against issue #30's deliverables. They are filled by Annexes A–E below; none require changing PR #31's core design — they make it inspectable and implementable.
+**Verdict: ACCEPT-WITH-AMENDMENTS (architecture level).** PR #31's three-concern split (SQLite operational catalogue / versioned JSON-JSONL KB SSOT / immutable file artifacts) is sound, correctly preserves ADR-3's "index is a cache, never truth" rule, and correctly leaves [28]/[29] untouched. Six gaps must be closed before the architecture can be accepted as complete against issue #30's deliverables. They are filled by Annexes A–E below; none require changing PR #31's core design — they make it inspectable and implementable. **R2:** the coordinator's review confirmed the direction and required three precision corrections (C1–C3), applied in this revision — the current `tool-run` envelope is *not* yet a complete build-bundle manifest (C1, Annex A), the run retry/idempotence wording was self-contradictory (C2, Annex C), and the profile *envelope*, not just the nested profile, must be stored and hashed (C3, Annex B).
 
 | #30 question | PR #31 coverage | Verdict | Filled by |
 | --- | --- | --- | --- |
@@ -22,38 +22,60 @@
 
 **Two factual corrections for the record:**
 
-1. **`schemas/cli/content-manifest.schema.json` is NOT the run artifact manifest.** It is the caller-supplied *literal content* manifest from [23]/G3 (`valueRef`→text/media/link entries pinned to a `sourceRevisionId`). Any persistence implementation that treats "content manifest" as the artifact index will conflate two different contracts. The run artifact index already exists as `tool-run.json` → `artifacts[]` (see Annex A).
+1. **`schemas/cli/content-manifest.schema.json` is NOT the run artifact manifest.** It is the caller-supplied *literal content* manifest from [23]/G3 (`valueRef`→text/media/link entries pinned to a `sourceRevisionId`). Any persistence implementation that treats "content manifest" as the artifact index will conflate two different contracts. The *per-command* artifact index is `tool-run.json` → `artifacts[]` — which itself is not yet the complete build-bundle manifest (Annex A.1).
 2. **Live branch state (measured 2026-11-09):** `origin/task/28-det-preview-theme-figma-homepage` is **0 commits ahead of `main`** (tip = `9495f43`); `origin/task/29-det-studio-nextjs-mvp` is **2 commits ahead, specs only** (`specs/DET-STUDIO-MVP.md`, `specs/DET-STUDIO-PARALLEL-WORKERS.md`), no app code. `DetRunReader` and [28]'s one-shot `det build` + artifact bundle are therefore **contracted, not built**. The phased sequence in §7 must not assume either surface exists yet; "DetRunReader" seam statements below map to the *spec'd contract*, not shipped code.
 
 ---
 
-## 2. Annex A — JSON artifact contract (run bundle)
+## 2. Annex A — JSON artifact contract (run bundle) — corrected per C1
 
-**Existing contract (do not change):** every `det` invocation already emits a versioned run envelope `tool-run.json` (`schemas/cli/tool-run.schema.json`, major 1): required `schemaVersion, tool, command, exitCode, generatedAt, runDiagnostics`; optional `profileId, platformId, adapter, artifacts[], converterDiagnostics, counts, wroteFiles`. Its `artifacts[]` entries are `{role (closed additive enum), file (relative path under --out, never absolute), schemaRef ($id), contentHash}` — a content-addressed artifact index with **provenance-on-every-entry**.
+**Two different artifacts must not be conflated** (this is correction C1; evidence re-verified against `main` source in this session):
 
-**Run bundle = the unit of persistence.** A Studio run's bytes are one directory:
+### A.1 What exists today: the per-command `ToolRun` envelope (current facts, verified)
+
+Every `det` invocation emits `tool-run.json` (`schemas/cli/tool-run.schema.json`, major 1): required `schemaVersion, tool, command, exitCode, generatedAt, runDiagnostics`; optional `profileId, platformId, adapter, artifacts[], converterDiagnostics, counts, wroteFiles`. Its `artifacts[]` entries are `{role (closed additive enum), file (relative path under --out, optional), schemaRef ($id), contentHash}`.
+
+**This envelope is a per-command execution record — it is NOT yet a complete, schema-valid build-bundle manifest.** Verified gaps (as of `main` `9495f43`):
+
+1. **Schema/implementation drift:** `src/core/cli/commands/compose.ts:409` emits `artifact("compose-report", …)`, and the TypeScript union in `src/core/run-envelope.ts:16` includes `"compose-report"`, but the closed `role` enum in `tool-run.schema.json` **omits it** — a compose envelope is not schema-valid as written.
+2. **Unindexed output files:** `compose.ts:414` writes `native-content.html` with **no corresponding `artifacts[]` entry** — the envelope's file index is incomplete for raw/native output.
+3. **File-less entries:** some entries (e.g. `adapter-descriptor`, `compose.ts:410`) carry no `file`; a per-file byte hash cannot be asserted for them at all.
+4. **Hash semantics:** `run-envelope.ts:80` computes `contentHash` over the **canonical JSON payload** (`contentHash(payload)` / `sha256Hex(canonicalStringify(payload))`) — not a SHA-256 of the literal on-disk bytes. An R1-draft rule that hash-verifies files by comparing `contentHash` to file bytes was wrong and is withdrawn.
+
+### A.2 What [28] must own: the final immutable build bundle manifest (requirement, not design)
+
+[28] (unchanged by [30]) must deliver the **schema-conformant final output inventory** for raw/native artifacts (native PB HTML, PHTML, CSS, assets). Requirements the contract must meet, whatever shape [28] chooses:
+
+- **Complete:** every file written by the run appears in the manifest — including `native-content.html` and any preview-theme output; an unindexed written file is a contract violation.
+- **Byte-verifiable:** every indexed file carries a hash of its **literal on-disk bytes** (SHA-256), distinct from the payload `contentHash` semantics above; file-less informational entries stay expressible.
+- **Schema-conformant, no silent major-1 change:** closing the `compose-report` enum drift and adding byte-hash/byte-size fields must go through the family's own additive-versioning rules (`schemas/cli/README.md`), never by hand-editing a closed major.
+- **Deterministic:** same inputs ⇒ same manifest (ADR-2 canonical rules).
+
+[30] does not design this schema here — designing or implementing it is [28]'s task.
+
+### A.3 What the SQLite persistence slice may rely on
 
 ```text
 artifacts/<projectId>/<runId>/
-  tool-run.json            # the envelope above = the bundle manifest (SSOT for what is in the bundle)
-  <file per artifacts[].file entry>
+  <final bundle manifest per the A.2 contract>   # SSOT for what is in the bundle
+  <every file the manifest indexes>
 ```
 
-Rules:
-
-1. **SQLite `artifacts` rows are derived from — and validated against — `tool-run.json`, never authored independently.** On run registration the persistence slice re-validates the envelope with ajv, verifies each `contentHash` against the file bytes (SHA-256, the hash `det` already writes), and rejects a bundle whose index and bytes disagree. A row that cannot be verified is `MISSING`/`CORRUPT`, never silently dropped (mirrors [29]'s "absence is rendered, never defaulted").
-2. **No envelope schema change.** `byteSize`/`mediaType` are *not* added to `artifacts[]` (closed `additionalProperties: false` major 1); they become derived SQLite columns computed at registration time. JSON contracts stay frozen — the issue's "preserves JSON contracts" invariant.
-3. **Idempotence:** canonical JSON rules (ADR-2: sorted keys, stable order by stable ID) + content hashes mean identical inputs produce hash-identical bundles. Re-running an unchanged conversion may reuse a prior bundle; the persistence slice may key artifact content by SHA-256 and hard-link/dedupe, but V1 may simply store per-run copies — dedupe is an optimization, never a correctness requirement.
-4. **Write path (refines PR #31 §4):** staging dir → ajv-validate envelope → hash-verify files → atomic rename to final run path → single short SQLite transaction writes the run row + artifact rows + terminal status. Crash between rename and commit yields an `INTERRUPTED` run or an orphan staging dir reconciled by a maintenance sweep — never a half-catalogued run.
-5. **Diagnostics:** full `runDiagnostics`/`converterDiagnostics` arrays stay in `tool-run.json` inside the bundle. SQLite stores only terminal status, diagnostic *count* and top-level codes for listing; the bundle remains the diagnostic SSOT. This keeps PR #31's "SQLite indexes, files hold bytes" boundary exact.
+1. **SQLite `artifacts` rows are derived from — and validated against — the final A.2 bundle manifest, never authored independently, and never derived from the per-command envelope alone.** On registration the slice re-validates the manifest with ajv and verifies each per-file-byte hash against the stored bytes; any disagreement is `MISSING`/`CORRUPT`, never silently dropped.
+2. **Until the A.2 contract lands ([28] / phase P2), bundle registration is BLOCKED.** The interim per-command `ToolRun` envelope may be stored and displayed as-is (it is what `DetRunReader` consumes), but it must not be treated as the verified persistence unit. **No schema fix for the A.1 drift is implemented under [30]** — it belongs to [28]'s additive-versioning pass.
+3. **Derived DB-only columns** (`byteSize`, `mediaType`, per-file-byte hash) are computed at registration time from verified bytes; the JSON contracts stay frozen at their own versioning rules.
+4. **Dedup is an optimization, never correctness:** identical inputs produce hash-identical bundles (canonical JSON + byte hashes); V1 may store per-run copies.
+5. **Write path (refines PR #31 §4):** staging dir → ajv-validate final manifest → byte-hash-verify files → atomic rename to final run path → one short SQLite transaction writes the run row + artifact rows + terminal status. A crash between rename and commit yields an `INTERRUPTED` run or an orphan staging dir reconciled by a maintenance sweep — never a half-catalogued run.
+6. **Diagnostics:** full `runDiagnostics`/`converterDiagnostics` arrays stay in the run's JSON inside the bundle. SQLite stores only terminal status, diagnostic *count* and top-level codes for listing; the bundle remains the diagnostic SSOT.
 
 ---
 
-## 3. Annex B — canonical config schema and stable IDs
+## 3. Annex B — canonical config schema and stable IDs — corrected per C3
 
-1. **Canonical project config = `schemas/project-profile.schema.json`** (already the toolkit's per-project contract: required `id, name, businessContext, sources, aesthetic, targets, content, platform, safety`; optional `description, gates`). The `projects` table stores the **validated** profile instance (compact JSON) plus:
-   - `profileId` = `profile.id` (schema pattern `^[a-z0-9][a-z0-9-]*$`) — the human-stable identifier used in every CLI call, artifact path segment and export;
-   - `configHash` = SHA-256 over the profile JSON serialized by the existing canonical rules (ADR-2) — the pin a run freezes.
+1. **Canonical project config document = the whole validated `schemas/project-profile.schema.json` envelope.** The schema's top level requires `schemaVersion` and `profile` (`profile` carrying required `id, name, businessContext, sources, aesthetic, targets, content, platform, safety`; optional `description, gates`). The `projects` table stores and hashes the **whole validated envelope document** — not only the nested `profile` — so schema version and validation context stay authoritative with the data:
+   - `profileId` = `document.profile.id` (schema pattern `^[a-z0-9][a-z0-9-]*$`) — the human-stable identifier used in every CLI call, artifact path segment and export;
+   - `configHash` = SHA-256 over the **entire envelope document** (`{schemaVersion, profile}`) serialized by the existing canonical rules (ADR-2, sorted keys) — the pin a run freezes;
+   - `configSchemaVersion` = `document.schemaVersion`, stored as its own column so a future envelope-major bump is visible in listings without re-parsing JSON.
 2. **Run identity pin** (frozen at run creation): `(profileId, configHash, source revision id, pinned KB snapshot identities, det tool version)`. Old runs stay explainable because every component of the pin is immutable after creation.
 3. **Secrets:** `profile.sources` carries *paths/roots, never tokens*. Any credential lives in env/secret store referenced by name only; validation rejects token-shaped values in config (extends the existing deny-list/planted-secret test culture).
 4. **Authorization never uses row IDs or slugs as capability.** Project scoping is enforced server-side per session/user once team auth lands ([29] §5 and PR #31 §4 agree; both defer to the team gate in §7).
@@ -71,7 +93,7 @@ Concrete minimum for the five-table catalogue of PR #31 §3 (plus one amendment)
 - `projects`: UNIQUE(`slug`); the profile `id` *is* the slug (one name, not two).
 - `design_sources`: UNIQUE(`project_id`, `provider`, `fileKey`, `nodeId`).
 - `kb_snapshots`: UNIQUE(`content_hash`, `source_fingerprint`); INDEX(`scope`, `lifecycle`).
-- `runs`: UNIQUE `idempotence_key` = hash of `(project_id, source_revision, config_hash, kb_pins_hash, tool_version)`; INDEX(`project_id`, `created_at`).
+- `runs`: `id` UNIQUE (the sole unique run identity); **non-unique** `input_fingerprint` INDEX = hash of `(project_id, source_revision, config_hash, kb_pins_hash, tool_version)`; INDEX(`project_id`, `created_at`); optional indexed `supersedes_run_id`.
 - `artifacts`: UNIQUE(`run_id`, `file`) — matches `tool-run.artifacts[]` uniqueness; INDEX(`content_hash`) for future dedupe.
 - FKs ON, `ON DELETE RESTRICT` everywhere (lifecycle is `ARCHIVED`/`STALE`, per ADR-3 "deletes are not an operation" — no cascade deletes in V1).
 
@@ -82,7 +104,13 @@ CREATED → RUNNING → {SUCCEEDED | PARTIAL | FAILED | INTERRUPTED}
 RUNNING → INTERRUPTED (crash recovery / watchdog)
 ```
 
-No transitions out of a terminal state; a retry creates a **new** run (same idempotence key may link it as `supersedes_run_id` for operator convenience, not truth rewrite).
+No transitions out of a terminal state.
+
+**Retry/duplicate behavior (corrected per C2 — the R1 draft's UNIQUE-on-retried-key wording was self-contradictory and is withdrawn):**
+
+- The **run `id` is the only unique run identity**; `input_fingerprint` is a **non-unique** index. Two runs with identical inputs are legitimately distinct rows.
+- **A retry always creates a NEW run row** carrying the same `input_fingerprint`; V1 has **no same-run replay**: a run row is written once at `CREATED` and once at its terminal transition, never rewritten or reused (`supersedes_run_id` is an optional operator-facing link between a retry and the run it replaces — provenance convenience, not truth rewrite).
+- Listings/UX may **group** runs by `input_fingerprint` ("5 runs with identical inputs — latest SUCCEEDED") but the DB keeps every row; counting, cost and audit stay per-run.
 
 **Transactions:** WAL, `busy_timeout`, every write inside one bounded transaction; the run lifecycle uses at most two: (1) INSERT run `CREATED` (+pins), (2) on completion UPDATE status + INSERT artifacts. All file writes happen *outside* transactions (Annex A rule 4).
 
@@ -139,8 +167,8 @@ This formalizes TECH-ADR **OPEN_DECISION #1** (`better-sqlite3` vs `node:sqlite`
 | Phase | Entry | Deliverable | GO/NO-GO acceptance |
 | --- | --- | --- | --- |
 | **P1 — [29] fixture UI** | specs merged (done, 2 commits) | Studio UI on schema-shaped fixtures, truthful states, `DetRunReader` boundary | NO-GO if any invented ID/status/preview appears, or fixtures drift from real schemas |
-| **P2 — [28] standalone artifacts/manifest** | issue #28 scope | one-shot run producing a `tool-run` bundle (hash-verified files), preview-theme isolation | NO-GO if bundle is not envelope-conformant, or SQLite becomes a dependency of `det` |
-| **P3 — SQLite persistence slice** | P1+P2 accepted; Annex D spike executed | five tables + `run_kb_snapshots` (R1), migrations, backup/restore incl. artifacts, Annex A registration+verification, Annex C retention sweep | NO-GO without restore test proving DB+files together, or without idempotence-key uniqueness test |
+| **P2 — [28] standalone artifacts/manifest** | issue #28 scope | one-shot run producing a bundle with the **final complete build-manifest contract (Annex A.2)**: full file inventory incl. native HTML/PHTML/CSS/assets, per-file-byte hashes, schema-conformant via additive versioning (also closes the A.1 `compose-report` enum drift there, not under [30]); preview-theme isolation | NO-GO if any written file is unindexed, hashes are payload-only, or the closed major-1 schema is silently edited, or SQLite becomes a dependency of `det` |
+| **P3 — SQLite persistence slice** | P1+P2 accepted (bundle registration is **BLOCKED until P2's A.2 contract lands**); Annex D spike executed | five tables + `run_kb_snapshots` (R1), migrations, backup/restore incl. artifacts, Annex A.3 registration+verification, Annex C retention sweep | NO-GO without restore test proving DB+files together, or without the retry test proving **new run per retry with equal `input_fingerprint`** and no truth rewrite |
 | **P4 — Studio real read integration** | P3 GO | reader backed by catalogue; download/preview through verified artifact rows; seam table above | NO-GO if any route bypasses realpath/hash verification |
 | **P5 — team deployment security gate** | P4 GO | real auth, per-project authorization, secret policy, concurrency/backup ops runbook | NO-GO for any multiuser hosting before this gate passes; single-operator mode remains valid without it |
 
@@ -159,6 +187,7 @@ This formalizes TECH-ADR **OPEN_DECISION #1** (`better-sqlite3` vs `node:sqlite`
 ## 9. Receipt
 
 - **Base:** `main` `9495f43`; this branch adds **this one doc** — no code, no schema files, no DB, no driver installs.
+- **R2 (2026-11-09):** coordinator corrections **C1–C3** ([PR #32 review](https://github.com/thanhle74/design-engineering-toolkit/pull/32#issuecomment-6732338324)) applied; every C1 claim independently re-verified in `main` source before editing (`compose.ts:409-414`, `run-envelope.ts:16/80`, `tool-run.schema.json` role enum). No runtime changes; the A.1 enum drift is explicitly left to [28]'s additive-versioning pass, not fixed under [30].
 - **Independent evidence gathered this session (all read, not assumed):** PR #31 content and commit; `origin/task/28...` = `9495f43` (0 ahead); `origin/task/29...` = 2 spec commits; `DetRunReader` appears in [29] specs only; `tool-run.artifacts[]` shape; `project-profile` required fields; `kb-store`/`kb-ingest-manifest` shapes; `content-manifest` purpose; CI Node 22; `engines >=20`; local Node v24.22.2 `node:sqlite` + FTS5 probe; `better-sqlite3` absent.
 - **Not done, by scope:** no DB migration, no live data, no [28]/[29] edits, no Figma/Magento writes, no merge (Draft PR for Owner review).
 - **Relationship to PR #31:** this doc is the issue's required *independent-review handoff* plus the annex closing its deliverable gaps (JSON artifact contract, migration/backup/retention detail, documented driver spike, seam map, phased GO/NO-GO). Integrator may fold Annexes A–E into PR #31 or keep this as the companion receipt — either satisfies issue #30's deliverables without a second ADR.
