@@ -4,7 +4,7 @@ A **multi-project, platform-neutral** foundation for design-system contracts, se
 
 ## Current work — Modular Monolith CLI engine (`det`)
 
-The reviewed [Issue #5](https://github.com/thanhle74/design-engineering-toolkit/issues/5) architecture is **integrated and executable**: **Capability Registry → Structural Mapping → Functional Round-trip → Visual Fidelity** ship as gated CLI stages with per-gate receipts (G1 #5 · G2 #14 · KB #15 · G3 #23 · G4 #25). Active work runs as issue-numbered tasks (`[N]`); live status lives on GitHub ([issues](https://github.com/thanhle74/design-engineering-toolkit/issues), [pull requests](https://github.com/thanhle74/design-engineering-toolkit/pulls)) and the [Coordinator handoff](specs/CHATGPT-COORDINATOR-HANDOFF.md) — not in this README.
+The reviewed [Issue #5](https://github.com/thanhle74/design-engineering-toolkit/issues/5) architecture is **integrated and executable**: **Capability Registry → Structural Mapping → Functional Round-trip → Visual Fidelity** ship as gated CLI stages with per-gate receipts (G1 #5 · G2 #14 · KB #15 · G3 #23 · G4 #25). These are structural/contract gates — Magento Admin UI round-trip persistence and visual pixel fidelity carry separate operator gates and are proved only inside the per-gate receipts, never by this ladder. Active work runs as issue-numbered tasks (`[N]`); live status lives on GitHub ([issues](https://github.com/thanhle74/design-engineering-toolkit/issues), [pull requests](https://github.com/thanhle74/design-engineering-toolkit/pulls)) and the [Coordinator handoff](specs/CHATGPT-COORDINATOR-HANDOFF.md) — not in this README.
 
 ## Executable CLI — `det` (Issue #9, first implementation gate)
 
