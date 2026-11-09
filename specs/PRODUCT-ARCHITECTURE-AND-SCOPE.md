@@ -7,6 +7,25 @@
 
 > **Current delivery priority:** implement the **Figma → editable Magento Page Builder** path for CMS pages **FIRST**. Everything else below is explicitly longer-term architecture, not a requirement to implement now. #5 and #7 are running independently; do not interrupt or silently expand their current work.
 
+## Owner decision — 2026-11-09: two DISTINCT deliverables (Page Builder vs Hyvä PHTML UI-only)
+
+> **Approved PRODUCT/ACCEPTANCE CONTRACT; not automatic authorization to implement a new pipeline, merge code, write to production or change Figma.** This newer decision governs the PHTML output scope; earlier descriptions of a full generated Magento theme/backend are long-term context, **not** acceptance requirements for PHTML. Finish existing Page Builder proof/integration first.
+
+| Deliverable | Scope / ownership | Definition of success |
+|---|---|---|
+| **Native Magento Page Builder** (CMS/landing/editorial) | Compile design into supported **native, merchant-editable Page Builder** structure; preserve/diagnose unsupported layouts. Use local disposable CMS pages for Admin Edit → Save → Reload and storefront checks. | Native content survives Magento Admin round-trip without losing mapped structure or content; no arbitrary HTML posing as editable widgets. |
+| **Hyvä PHTML frontend-only** (PLP/category listing, PDP/product detail, other theme-owned UI such as headers) | Generate **presentation templates and only necessary tiny supporting files**, using the target project's **actual installed Hyvä UI components, Tailwind CSS, and CSP-compatible Alpine.js**. A minimal single `.phtml` or a few focused files is preferable to splitting every element into components. Do not implement backend/domain logic. | Page/section **renders in an actual Hyvä storefront/theme preview**, visually resembles approved desktop/mobile designs, is responsive, has working *presentation-level* Alpine interactions, semantic/accessibility basics, and reuses available Hyvä UI patterns. |
+
+**PHTML output is a developer-handoff frontend scaffold, NOT a fully functional Magento commerce page.** Specifically:
+
+- Use sample/mock product/category data and images only in a clearly labeled **preview/test fixture**. Keep a simple explicit **data contract** (required keys and types for title, media, price display, variant/options, product list, pagination/filter state, links etc., as applicable) and identify integration placeholders. Do not present mocked prices, availability, discounts, cart or checkout actions as live business functionality.
+- **Developer owns backend integration:** actual Magento blocks/view models/data providers, product queries, pricing/tax, inventory, configurable options, add-to-cart/wishlist, search/filter/pagination backend, authorization, GraphQL/API and business rules. AI-generated frontend may expose minimal data/interaction hooks for the developer to wire up later but must **not** build those backend layers, PHP repositories, new Magento modules, DB changes or domain services.
+- **Smallest useful file set**: generate only the `.phtml` templates (plus an asset/component/mock-data artifact only when needed to render/test); no invented theme/module scaffolding, layout XML, ViewModels or many micro-components by default. Existing working Hyvä UI components are preferred; respect licensing and never copy proprietary upstream library sources into shared toolkit artifacts.
+- **Acceptance must be honest**: UI render/visual/responsive/Alpine checks may PASS independently; **commerce/data behavior remains `INTEGRATION_PENDING` / `MOCK_ONLY`**, not FUNCTIONAL_PASS. A beautiful static PDP/PLP is not a claim that Magento product data or checkout works.
+- **Execution priority**: finish and integrate the two Page Builder POCs (#23 Hero / #25 Craftsmanship) first; **PLP is the proposed first PHTML frontend-only POC, PDP second**, each only under a separately scoped implementation task/Owner GO. Do **not** mix PHTML acceptance gates with Page Builder Admin editability gates.
+
+**Naming reminder:** GitHub issue titles and Orca workspace/task names start with the real issue number in brackets: `[25] ...`, never a phase-only prefix.
+
 ## 1. Product purpose and end-to-end roadmap
 
 Create a portable, reusable design-engineering tool that **does not invent missing UI/business capability**. It should know what a customer's platform and licensed UI packages actually provide, help plan/reuse those capabilities for UX/design, and eventually compile approved designs to maintainable, editable implementations.
