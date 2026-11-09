@@ -4,12 +4,16 @@
  *
  * One immediate subdirectory = one run, named by its run id. The reader
  * assembles the frozen StudioRunView read model from the raw engine artifacts
- * present in that directory (`tool-run.json` required; `compose-output.json`,
- * `source-review.json`, `page-structure.json`, `node-ir.json` optional). It
- * never invokes the det CLI, child processes, the Figma API or the network,
- * and never writes. Preview is ALWAYS unavailable: no verified DET Preview
- * Theme output is bound to Studio yet ([28] owns the preview theme), so there
- * is nothing to serve and Studio must not invent a URL.
+ * present in that directory (`tool-run.json` required; the compose payload
+ * `compose-report.json`, `source-review.json`, `page-structure.json`,
+ * `node-ir.json` optional). Each `det` command writes its OWN run directory
+ * (an extract run carries the tree artifacts, a compose run carries
+ * `compose-report.json` + `native-content.html`) — partial runs assemble
+ * truthfully with what is present. It never invokes the det CLI, child
+ * processes, the Figma API or the network, and never writes. Preview is
+ * ALWAYS unavailable: no verified DET Preview Theme output is bound to Studio
+ * yet ([28] owns the preview theme), so there is nothing to serve and Studio
+ * must not invent a URL.
  *
  * Security (see `artifact-access.ts`): run ids are pattern-validated before any
  * path is built, every candidate file is realpath'd and must stay inside the
@@ -52,10 +56,24 @@ import {
 } from "./artifact-access";
 
 const TOOL_RUN_FILE = "tool-run.json";
-const COMPOSE_FILE = "compose-output.json";
 const SOURCE_REVIEW_FILE = "source-review.json";
 const PAGE_STRUCTURE_FILE = "page-structure.json";
 const NODE_IR_FILE = "node-ir.json";
+
+/**
+ * The real `det compose` writes the compose payload as `compose-report.json`,
+ * declared in the tool-run manifest under role `compose-report`
+ * (src/core/cli/commands/compose.ts: `artifact("compose-report", output, { file: "compose-report.json" })`).
+ * Recorded drift, NOT silently hidden: that role is present in the engine's
+ * type union (`src/core/run-envelope.ts`) but not yet in the closed role enum
+ * of `schemas/cli/tool-run.schema.json` — closing it belongs to [28]'s
+ * schema/versioning gate, not to Studio. Studio therefore treats roles as
+ * open strings and resolves the compose payload manifest-first, falling back
+ * to the CLI's fixed conventional filename. It NEVER reads the never-on-disk
+ * name `compose-output.json`.
+ */
+const COMPOSE_REPORT_ROLE = "compose-report";
+const COMPOSE_REPORT_FALLBACK_FILE = "compose-report.json";
 
 const PREVIEW_UNAVAILABLE_REASON =
   "No verified DET Preview Theme render is bound to this run. A preview becomes available only when [28]'s isolated Preview Theme output is connected and verified — Studio never renders a mock screenshot as Magento proof.";
@@ -192,15 +210,71 @@ function computedCounts(diagnostics: StudioDiagnosticView[]): CountsView {
 }
 
 /** First artifact-pinned source revision wins (compose → structure → review → IR). */
-function sourceFrom(...candidates: unknown[]): { sourceId: string | null; revisionId: string | null; accessedAt: string | null } {
+/**
+ * Cross-artifact source identity: every joined artifact must pin the SAME
+ * design source revision, or the run directory mixes files from different
+ * revisions and any assembled view would present a run that never existed.
+ * Refusal is invalid-payload with a safe, non-secret message; a missing
+ * artifact simply does not participate (truthful partial states stay valid).
+ */
+function requireConsistentSource(...candidates: unknown[]): {
+  sourceId: string | null;
+  revisionId: string | null;
+  accessedAt: string | null;
+} {
+  const present: Array<{ sourceId: string; revisionId: string; accessedAt: string | null }> = [];
   for (const candidate of candidates) {
     if (!isRecord(candidate)) continue;
-    const sourceId = optionalString(candidate.sourceId) ?? null;
-    const revisionId = optionalString(candidate.revisionId) ?? null;
-    const accessedAt = optionalString(candidate.accessedAt) ?? null;
-    if (sourceId !== null || revisionId !== null) return { sourceId, revisionId, accessedAt };
+    const sourceId = optionalString(candidate.sourceId);
+    const revisionId = optionalString(candidate.revisionId);
+    if (sourceId === undefined && revisionId === undefined) continue;
+    if (sourceId === undefined || revisionId === undefined) {
+      throw new DetRunReaderError(
+        "invalid-payload",
+        "source identity incomplete: an artifact declares sourceId/revisionId partially; refusing to join records across an ambiguous design source."
+      );
+    }
+    present.push({ sourceId, revisionId, accessedAt: optionalString(candidate.accessedAt) ?? null });
   }
-  return { sourceId: null, revisionId: null, accessedAt: null };
+  if (present.length === 0) {
+    return { sourceId: null, revisionId: null, accessedAt: null };
+  }
+  const [first] = present;
+  for (const other of present.slice(1)) {
+    if (other.sourceId !== first.sourceId || other.revisionId !== first.revisionId) {
+      throw new DetRunReaderError(
+        "invalid-payload",
+        `mixed design source revisions: run artifacts do not share one pinned source identity; refusing to join them into a single run view (conflicting identities, truncated): ${truncateDetail(
+          present.map((s) => `${s.sourceId}@${s.revisionId}`).join(" | ")
+        )}`
+      );
+    }
+  }
+  return { sourceId: first.sourceId, revisionId: first.revisionId, accessedAt: first.accessedAt };
+}
+
+/**
+ * Resolve which file holds the compose payload: manifest-first — the
+ * `compose-report` role entry's declared relative file (safe-path checked) —
+ * falling back to the CLI's fixed conventional filename when the manifest
+ * carries no such entry. See the constant block above for the recorded
+ * role-enum drift.
+ */
+function resolveComposeReportFile(toolRun: JsonRecord): string {
+  if (Array.isArray(toolRun.artifacts)) {
+    for (const raw of toolRun.artifacts) {
+      if (!isRecord(raw) || raw.role !== COMPOSE_REPORT_ROLE) continue;
+      const file = optionalString(raw.file);
+      if (file === undefined) return COMPOSE_REPORT_FALLBACK_FILE;
+      if (!isSafeRelativeArtifactPath(file)) {
+        throw payloadError(
+          "tool-run.json artifacts: the compose-report entry declares an unsafe relative path."
+        );
+      }
+      return file;
+    }
+  }
+  return COMPOSE_REPORT_FALLBACK_FILE;
 }
 
 function toSectionView(raw: unknown, where: string): StudioSectionView {
@@ -428,7 +502,8 @@ export class DirectoryDetRunReader implements DetRunReader {
       throw new DetRunReaderError("run-not-found", `Run "${echoId(runId)}" has no tool-run.json manifest.`);
     }
 
-    const compose = await this.readJsonRecordIfPresent(runDir, COMPOSE_FILE, "invalid-payload");
+    const composeFile = resolveComposeReportFile(toolRun);
+    const compose = await this.readJsonRecordIfPresent(runDir, composeFile, "invalid-payload");
     const review = await this.readJsonRecordIfPresent(runDir, SOURCE_REVIEW_FILE, "invalid-payload");
     const pageStructure = await this.readJsonRecordIfPresent(runDir, PAGE_STRUCTURE_FILE, "invalid-payload");
     const nodeIr = await this.readJsonRecordIfPresent(runDir, NODE_IR_FILE, "invalid-payload");
@@ -436,6 +511,7 @@ export class DirectoryDetRunReader implements DetRunReader {
     const assembled = await this.assembleRunView(runId, runDir, {
       toolRun,
       compose,
+      composeFile,
       review,
       pageStructure,
       nodeIr,
@@ -495,12 +571,13 @@ export class DirectoryDetRunReader implements DetRunReader {
     artifacts: {
       toolRun: JsonRecord;
       compose: JsonRecord | null;
+      composeFile: string;
       review: JsonRecord | null;
       pageStructure: JsonRecord | null;
       nodeIr: JsonRecord | null;
     }
   ): Promise<StudioRunView> {
-    const { toolRun, compose, review, pageStructure, nodeIr } = artifacts;
+    const { toolRun, compose, composeFile, review, pageStructure, nodeIr } = artifacts;
 
     const command = optionalString(toolRun.command);
     const profileId = optionalString(toolRun.profileId);
@@ -548,7 +625,7 @@ export class DirectoryDetRunReader implements DetRunReader {
     }
     if (compose !== null && Array.isArray(compose.diagnostics)) {
       compose.diagnostics.forEach((raw, index) => {
-        const view = toDiagnosticView(raw, "compose", `compose-output.json diagnostics[${index}]`);
+        const view = toDiagnosticView(raw, "compose", `${composeFile} diagnostics[${index}]`);
         composeDiagnostics.push(view);
         diagnostics.push(view);
       });
@@ -563,7 +640,7 @@ export class DirectoryDetRunReader implements DetRunReader {
     const mappings: StudioMappingView[] = [];
     if (compose !== null && Array.isArray(compose.mapping)) {
       compose.mapping.forEach((raw, index) => {
-        mappings.push(toMappingView(raw, `compose-output.json mapping[${index}]`, nodeIndex, reviewIndex, composeDiagnostics));
+        mappings.push(toMappingView(raw, `${composeFile} mapping[${index}]`, nodeIndex, reviewIndex, composeDiagnostics));
       });
     }
 
@@ -599,7 +676,7 @@ export class DirectoryDetRunReader implements DetRunReader {
       toolCommand: command === undefined ? null : `det ${command}`,
       profileId: profileId ?? null,
       platformId,
-      source: sourceFrom(compose?.source, pageStructure?.source, review?.source, nodeIr?.source),
+      source: requireConsistentSource(compose?.source, pageStructure?.source, review?.source, nodeIr?.source),
       counts: countsFromToolRun(toolRun.counts) ?? computedCounts(diagnostics),
       sections,
       mappings,

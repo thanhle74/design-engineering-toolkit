@@ -1,0 +1,597 @@
+{
+  "schemaVersion": 1,
+  "profileId": "g3-hero-vertical-slice",
+  "generatedAt": "2026-11-09T04:55:42.676Z",
+  "source": {
+    "sourceId": "g3-hero-fixture-source",
+    "revisionId": "mcp-observed-unpinned-2026-11-06",
+    "accessedAt": "2026-11-09T04:55:42.665Z"
+  },
+  "rootNodeId": "n-0c7b175166e5",
+  "nodes": [
+    {
+      "nodeId": "n-0216280216bf",
+      "kind": "unknown",
+      "name": "Overlay",
+      "visible": true,
+      "childrenNodeIds": [],
+      "parentNodeId": "n-f26ba3d1e8c2",
+      "layout": {
+        "direction": "unknown",
+        "positioning": "absolute",
+        "constraints": [
+          {
+            "axis": "height",
+            "type": "fixed",
+            "value": "880"
+          },
+          {
+            "axis": "width",
+            "type": "fixed",
+            "value": "1440"
+          },
+          {
+            "axis": "x",
+            "type": "fixed",
+            "value": "0"
+          },
+          {
+            "axis": "y",
+            "type": "fixed",
+            "value": "0"
+          }
+        ],
+        "relativeSizes": [],
+        "overflow": "unknown"
+      },
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-224d364c18e6",
+          "kind": "document",
+          "locator": "design://g3-hero-fixture-source/254:41",
+          "retrievedAt": "2026-11-09T04:55:42.665Z",
+          "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-09cb7cd19b5b",
+      "kind": "text",
+      "name": "The Quiet Grandeur",
+      "visible": true,
+      "childrenNodeIds": [],
+      "parentNodeId": "n-10ad9a6e3d9e",
+      "layout": {
+        "direction": "unknown",
+        "positioning": "unknown",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "unknown"
+      },
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-abbc36eee649",
+          "kind": "document",
+          "locator": "design://g3-hero-fixture-source/254:44",
+          "retrievedAt": "2026-11-09T04:55:42.665Z",
+          "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-0c7b175166e5",
+      "kind": "container",
+      "name": "PAGE/Home/Desktop",
+      "role": "PAGE",
+      "visible": true,
+      "childrenNodeIds": [
+        "n-f26ba3d1e8c2"
+      ],
+      "parentNodeId": null,
+      "layout": {
+        "direction": "unknown",
+        "positioning": "static",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "unknown"
+      },
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-d3bd0e917527",
+          "kind": "document",
+          "locator": "design://g3-hero-fixture-source/245:2",
+          "retrievedAt": "2026-11-09T04:55:42.665Z",
+          "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-0fe39f75af97",
+      "kind": "text",
+      "name": "SCROLL",
+      "visible": true,
+      "childrenNodeIds": [],
+      "parentNodeId": "n-ba03acaef964",
+      "layout": {
+        "direction": "unknown",
+        "positioning": "unknown",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "unknown"
+      },
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-cfcb8143f662",
+          "kind": "document",
+          "locator": "design://g3-hero-fixture-source/254:59",
+          "retrievedAt": "2026-11-09T04:55:42.665Z",
+          "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-10ad9a6e3d9e",
+      "kind": "container",
+      "name": "SLOT/HeroContent",
+      "role": "SLOT",
+      "visible": true,
+      "childrenNodeIds": [
+        "n-28a895e0e2ab",
+        "n-09cb7cd19b5b",
+        "n-f465fcdb5e6e",
+        "n-53bd7af6795b"
+      ],
+      "parentNodeId": "n-f26ba3d1e8c2",
+      "layout": {
+        "direction": "unknown",
+        "positioning": "absolute",
+        "constraints": [
+          {
+            "axis": "height",
+            "type": "fixed",
+            "value": "376"
+          },
+          {
+            "axis": "width",
+            "type": "fixed",
+            "value": "520"
+          },
+          {
+            "axis": "x",
+            "type": "fixed",
+            "value": "120"
+          },
+          {
+            "axis": "y",
+            "type": "fixed",
+            "value": "356"
+          }
+        ],
+        "relativeSizes": [],
+        "overflow": "unknown"
+      },
+      "contentSlots": [
+        {
+          "slotId": "chapter-01-aw-2026",
+          "kind": "text",
+          "valueRef": "design://g3-hero-fixture-source/254:43",
+          "method": "observed",
+          "evidence": {
+            "evidenceId": "e-56d902ab2344",
+            "kind": "document",
+            "locator": "design://g3-hero-fixture-source/254:43",
+            "retrievedAt": "2026-11-09T04:55:42.665Z",
+            "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+            "method": "design-source-adapter"
+          }
+        },
+        {
+          "slotId": "refined-tailoring-knitwear-and-leather-for-the-season",
+          "kind": "text",
+          "valueRef": "design://g3-hero-fixture-source/254:45",
+          "method": "observed",
+          "evidence": {
+            "evidenceId": "e-d96465259af0",
+            "kind": "document",
+            "locator": "design://g3-hero-fixture-source/254:45",
+            "retrievedAt": "2026-11-09T04:55:42.665Z",
+            "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+            "method": "design-source-adapter"
+          }
+        },
+        {
+          "slotId": "the-quiet-grandeur",
+          "kind": "text",
+          "valueRef": "design://g3-hero-fixture-source/254:44",
+          "method": "observed",
+          "evidence": {
+            "evidenceId": "e-abbc36eee649",
+            "kind": "document",
+            "locator": "design://g3-hero-fixture-source/254:44",
+            "retrievedAt": "2026-11-09T04:55:42.665Z",
+            "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+            "method": "design-source-adapter"
+          }
+        }
+      ],
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-c0092454cfe7",
+          "kind": "document",
+          "locator": "design://g3-hero-fixture-source/254:42",
+          "retrievedAt": "2026-11-09T04:55:42.665Z",
+          "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-1ba6a2c44dc1",
+      "kind": "container",
+      "name": "SLOT/HeroMedia",
+      "role": "SLOT",
+      "visible": true,
+      "childrenNodeIds": [],
+      "parentNodeId": "n-f26ba3d1e8c2",
+      "layout": {
+        "direction": "unknown",
+        "positioning": "static",
+        "constraints": [
+          {
+            "axis": "height",
+            "type": "fixed",
+            "value": "880"
+          },
+          {
+            "axis": "width",
+            "type": "fixed",
+            "value": "1440"
+          },
+          {
+            "axis": "x",
+            "type": "fixed",
+            "value": "0"
+          },
+          {
+            "axis": "y",
+            "type": "fixed",
+            "value": "0"
+          }
+        ],
+        "relativeSizes": [],
+        "overflow": "unknown"
+      },
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-deb6d0b2d172",
+          "kind": "document",
+          "locator": "design://g3-hero-fixture-source/254:40",
+          "retrievedAt": "2026-11-09T04:55:42.665Z",
+          "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-28a895e0e2ab",
+      "kind": "text",
+      "name": "CHAPTER 01 / AW 2026",
+      "visible": true,
+      "childrenNodeIds": [],
+      "parentNodeId": "n-10ad9a6e3d9e",
+      "layout": {
+        "direction": "unknown",
+        "positioning": "unknown",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "unknown"
+      },
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-56d902ab2344",
+          "kind": "document",
+          "locator": "design://g3-hero-fixture-source/254:43",
+          "retrievedAt": "2026-11-09T04:55:42.665Z",
+          "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-53bd7af6795b",
+      "kind": "container",
+      "name": "SLOT/HeroActions",
+      "role": "SLOT",
+      "visible": true,
+      "childrenNodeIds": [
+        "n-b58a32ef1573"
+      ],
+      "parentNodeId": "n-10ad9a6e3d9e",
+      "layout": {
+        "direction": "unknown",
+        "positioning": "static",
+        "constraints": [
+          {
+            "axis": "height",
+            "type": "fixed",
+            "value": "116"
+          },
+          {
+            "axis": "width",
+            "type": "fixed",
+            "value": "241"
+          },
+          {
+            "axis": "x",
+            "type": "fixed",
+            "value": "0"
+          },
+          {
+            "axis": "y",
+            "type": "fixed",
+            "value": "260"
+          }
+        ],
+        "relativeSizes": [],
+        "overflow": "unknown"
+      },
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-1a6efa93580d",
+          "kind": "document",
+          "locator": "design://g3-hero-fixture-source/254:46",
+          "retrievedAt": "2026-11-09T04:55:42.665Z",
+          "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-b58a32ef1573",
+      "kind": "component",
+      "name": "Proto / Button/Primary",
+      "visible": true,
+      "childrenNodeIds": [],
+      "parentNodeId": "n-53bd7af6795b",
+      "layout": {
+        "direction": "unknown",
+        "positioning": "static",
+        "constraints": [
+          {
+            "axis": "height",
+            "type": "fixed",
+            "value": "100"
+          },
+          {
+            "axis": "width",
+            "type": "fixed",
+            "value": "241"
+          },
+          {
+            "axis": "x",
+            "type": "fixed",
+            "value": "0"
+          },
+          {
+            "axis": "y",
+            "type": "fixed",
+            "value": "16"
+          }
+        ],
+        "relativeSizes": [],
+        "overflow": "unknown"
+      },
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-b6b91f090b72",
+          "kind": "document",
+          "locator": "design://g3-hero-fixture-source/254:47",
+          "retrievedAt": "2026-11-09T04:55:42.665Z",
+          "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-ba03acaef964",
+      "kind": "container",
+      "name": "DECOR/ScrollIndicator",
+      "role": "DECOR",
+      "visible": true,
+      "childrenNodeIds": [
+        "n-f8ec37e53659",
+        "n-0fe39f75af97"
+      ],
+      "parentNodeId": "n-f26ba3d1e8c2",
+      "layout": {
+        "direction": "unknown",
+        "positioning": "absolute",
+        "constraints": [
+          {
+            "axis": "height",
+            "type": "fixed",
+            "value": "76"
+          },
+          {
+            "axis": "width",
+            "type": "fixed",
+            "value": "50"
+          },
+          {
+            "axis": "x",
+            "type": "fixed",
+            "value": "695"
+          },
+          {
+            "axis": "y",
+            "type": "fixed",
+            "value": "776"
+          }
+        ],
+        "relativeSizes": [],
+        "overflow": "unknown"
+      },
+      "contentSlots": [
+        {
+          "slotId": "scroll",
+          "kind": "text",
+          "valueRef": "design://g3-hero-fixture-source/254:59",
+          "method": "observed",
+          "evidence": {
+            "evidenceId": "e-cfcb8143f662",
+            "kind": "document",
+            "locator": "design://g3-hero-fixture-source/254:59",
+            "retrievedAt": "2026-11-09T04:55:42.665Z",
+            "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+            "method": "design-source-adapter"
+          }
+        }
+      ],
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-5db7f79636d6",
+          "kind": "document",
+          "locator": "design://g3-hero-fixture-source/254:57",
+          "retrievedAt": "2026-11-09T04:55:42.665Z",
+          "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-f26ba3d1e8c2",
+      "kind": "container",
+      "name": "SECTION/Hero/Primary",
+      "role": "SECTION",
+      "visible": true,
+      "childrenNodeIds": [
+        "n-1ba6a2c44dc1",
+        "n-0216280216bf",
+        "n-10ad9a6e3d9e",
+        "n-ba03acaef964"
+      ],
+      "parentNodeId": "n-0c7b175166e5",
+      "layout": {
+        "direction": "unknown",
+        "positioning": "static",
+        "constraints": [
+          {
+            "axis": "height",
+            "type": "fixed",
+            "value": "880"
+          },
+          {
+            "axis": "width",
+            "type": "fixed",
+            "value": "1440"
+          },
+          {
+            "axis": "x",
+            "type": "fixed",
+            "value": "0"
+          },
+          {
+            "axis": "y",
+            "type": "fixed",
+            "value": "120"
+          }
+        ],
+        "relativeSizes": [],
+        "overflow": "unknown"
+      },
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-2661adc4a7f3",
+          "kind": "document",
+          "locator": "design://g3-hero-fixture-source/245:5",
+          "retrievedAt": "2026-11-09T04:55:42.665Z",
+          "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-f465fcdb5e6e",
+      "kind": "text",
+      "name": "Refined tailoring, knitwear and leather for the season.",
+      "visible": true,
+      "childrenNodeIds": [],
+      "parentNodeId": "n-10ad9a6e3d9e",
+      "layout": {
+        "direction": "unknown",
+        "positioning": "unknown",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "unknown"
+      },
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-d96465259af0",
+          "kind": "document",
+          "locator": "design://g3-hero-fixture-source/254:45",
+          "retrievedAt": "2026-11-09T04:55:42.665Z",
+          "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-f8ec37e53659",
+      "kind": "unknown",
+      "name": "Rectangle",
+      "visible": true,
+      "childrenNodeIds": [],
+      "parentNodeId": "n-ba03acaef964",
+      "layout": {
+        "direction": "unknown",
+        "positioning": "unknown",
+        "constraints": [],
+        "relativeSizes": [],
+        "overflow": "unknown"
+      },
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-add2bdf9c634",
+          "kind": "document",
+          "locator": "design://g3-hero-fixture-source/254:58",
+          "retrievedAt": "2026-11-09T04:55:42.665Z",
+          "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+          "method": "design-source-adapter"
+        }
+      ]
+    }
+  ],
+  "diagnostics": [
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Source kind 'rounded-rectangle' on 'Overlay' is outside the mapped kind table; inventoried as kind 'unknown' — human review required.",
+      "subject": {
+        "type": "node",
+        "id": "n-0216280216bf"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Component reference 'Proto / Button/Primary' on 'Proto / Button/Primary' does not resolve to an inventoried component definition (external library or invalid).",
+      "subject": {
+        "type": "node",
+        "id": "n-b58a32ef1573"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Source kind 'rounded-rectangle' on 'Rectangle' is outside the mapped kind table; inventoried as kind 'unknown' — human review required.",
+      "subject": {
+        "type": "node",
+        "id": "n-f8ec37e53659"
+      }
+    }
+  ]
+}

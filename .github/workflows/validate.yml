@@ -4,6 +4,9 @@
 # scope escapes, plan-on-PageStructure, source neutrality) the KB-01..KB-29 engine tests, and the portability scans.
 # npm test = tsc build + 95 checks. The task/issue prefix is never hardcoded here (spec §8).
 # The task/issue prefix is never hardcoded here (spec §8): this workflow is issue-agnostic.
+#
+# The second job gates the studio web app (apps/studio, its own npm lockfile):
+# full vitest suite + typecheck + lint + production build on the exact PR tip.
 name: validate-contracts
 on:
   push:
@@ -28,3 +31,30 @@ jobs:
           find schemas examples profiles projects tests/fixtures -name '*.json' -print0 | while IFS= read -r -d '' f; do
             node -e "JSON.parse(require('fs').readFileSync(process.argv[1],'utf8'))" "$f" || exit 1
           done
+
+  studio:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/studio/package-lock.json
+      - name: Install (isolated apps/studio lockfile)
+        run: npm ci
+        working-directory: apps/studio
+      - name: Tests (vitest suite incl. real det-output interop)
+        run: npm test
+        working-directory: apps/studio
+      - name: Typecheck
+        run: npm run typecheck
+        working-directory: apps/studio
+      - name: Lint
+        run: npm run lint
+        working-directory: apps/studio
+      - name: Production build
+        run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
+        working-directory: apps/studio

@@ -42,14 +42,16 @@ function toolRunPayload(extra: Record<string, unknown> = {}): string {
         contentHash: HEX64,
       },
       {
-        role: "compose-output",
-        file: "compose-output.json",
+        role: "compose-report",
+        file: "compose-report.json",
         schemaRef: "https://example.invalid/schemas/cli/compose-output.schema.json",
+        contentHash: HEX64,
       },
       {
         role: "registry",
         file: "registry.json",
         schemaRef: "https://example.invalid/schemas/registry.schema.json",
+        contentHash: HEX64,
       },
     ],
     runDiagnostics: [
@@ -302,7 +304,7 @@ async function writeRun(root: string, runId: string, files: Record<string, strin
 function happyFiles(): Record<string, string> {
   return {
     "tool-run.json": toolRunPayload(),
-    "compose-output.json": composePayload(),
+    "compose-report.json": composePayload(),
     "source-review.json": sourceReviewPayload(),
     "page-structure.json": pageStructurePayload(),
     "node-ir.json": nodeIrPayload(),
@@ -446,7 +448,7 @@ describe("DirectoryDetRunReader — assembly", () => {
     // artifacts: manifest entries with derived downloadability
     const byId = new Map(run.artifacts.map((artifact) => [artifact.artifactId, artifact]));
     expect(byId.get("node-ir/node-ir.json")?.downloadable).toBe(true);
-    expect(byId.get("compose-output/compose-output.json")?.downloadable).toBe(true);
+    expect(byId.get("compose-report/compose-report.json")?.downloadable).toBe(true);
     expect(byId.get("registry/registry.json")?.downloadable).toBe(true);
     expect(byId.get("registry/registry.json")?.file).toBe("registry.json");
 
@@ -520,7 +522,7 @@ describe("DirectoryDetRunReader — assembly", () => {
   it("enforces the frozen invariants: mapped without target → invalid-payload", async () => {
     await writeRun(root, "run-bad-invariant", {
       "tool-run.json": toolRunPayload(),
-      "compose-output.json": composePayload([], {
+      "compose-report.json": composePayload([], {
         mapping: [
           {
             sourceNodeId: "n-aaaaaaaaaaaa",
@@ -553,12 +555,12 @@ describe("DirectoryDetRunReader — failures and security", () => {
   it("invalid JSON payload → invalid-payload (message carries no server path)", async () => {
     await writeRun(root, "run-corrupt", {
       "tool-run.json": toolRunPayload(),
-      "compose-output.json": "{oops",
+      "compose-report.json": "{oops",
     });
     const reader = await DirectoryDetRunReader.open(root);
     const error = await expectReaderError(reader.getRun("run-corrupt"), "invalid-payload");
     expect(error.message).not.toContain(root);
-    expect(error.details).toContain("compose-output.json");
+    expect(error.details).toContain("compose-report.json");
   });
 
   it.each(["../evil", "a/b", "a\\b", ".hidden", "", "sp ace"])("runId %j → run-not-found (never content)", async (runId) => {
@@ -698,5 +700,86 @@ describe("DirectoryDetRunReader — failures and security", () => {
     expect(download.fileName).toBe("registry.json");
     expect(download.contentType).toBe("application/json");
     expect(new TextDecoder().decode(download.bytes)).toContain("schemaVersion");
+  });
+});
+
+/**
+ * Coordinator correction C1: interop against REAL `det compose` / `det extract`
+ * output, checked in byte-for-byte under `__fixtures__/real-det-runs/` (the
+ * compose run carries `compose-report.json` under manifest role
+ * `compose-report`; the extract run carries the tree artifacts). The invented
+ * name `compose-output.json` never existed on disk and is never read.
+ */
+describe("DirectoryDetRunReader — real det CLI output interop", () => {
+  const realRunsRoot = path.resolve(process.cwd(), "src/server/__fixtures__/real-det-runs");
+
+  it("assembles a REAL `det compose` run: 12 mappings, compose diagnostics, downloadable report", async () => {
+    const reader = await DirectoryDetRunReader.open(realRunsRoot);
+    const summaries = await reader.listRuns();
+    expect(summaries.map((summary) => summary.runId).sort()).toEqual(["compose-run", "extract-run"]);
+
+    const run = await reader.getRun("compose-run");
+    expect(run.mode).toBe("live");
+    expect(run.mappings).toHaveLength(12);
+    const dispositions = new Map(
+      ["mapped", "gap", "excluded"].map((d) => [d, run.mappings.filter((m) => m.composeDisposition === d).length])
+    );
+    expect(dispositions.get("mapped")).toBe(8);
+    expect(dispositions.get("gap")).toBe(2);
+    expect(dispositions.get("excluded")).toBe(2);
+    expect(run.diagnostics.filter((d) => d.origin === "compose")).toHaveLength(2);
+    expect(run.counts).toEqual({ errors: 0, warnings: 2, infos: 0 });
+    expect(run.source).toEqual({
+      sourceId: "g3-hero-fixture-source",
+      revisionId: "mcp-observed-unpinned-2026-11-06",
+      accessedAt: expect.any(String),
+    });
+    const byId = new Map(run.artifacts.map((a) => [a.artifactId, a]));
+    expect(byId.get("compose-report/compose-report.json")?.downloadable).toBe(true);
+    expect(byId.get("adapter-descriptor")?.downloadable).toBe(false);
+    expect(run.preview.status).toBe("unavailable");
+
+    const download = await reader.readArtifact("compose-run", "compose-report/compose-report.json");
+    expect(download.fileName).toBe("compose-report.json");
+    expect(download.bytes.byteLength).toBeGreaterThan(0);
+  });
+
+  it("assembles a REAL `det extract` run as a truthful partial: tree present, zero mappings", async () => {
+    const reader = await DirectoryDetRunReader.open(realRunsRoot);
+    const run = await reader.getRun("extract-run");
+    expect(run.mode).toBe("live");
+    expect(run.sections).toHaveLength(1);
+    expect(run.sections[0]?.elementCount).toBe(2);
+    expect(run.mappings).toHaveLength(0);
+    expect(run.source?.sourceId).toBe("g3-hero-fixture-source");
+    expect(run.counts).toEqual({ errors: 0, warnings: 1, infos: 0 });
+    expect(run.preview.status).toBe("unavailable");
+  });
+
+  it("refuses to join artifacts from MIXED design source revisions (correction C2)", async () => {
+    const root = await makeRoot();
+    await writeRun(root, "mixed-run", {
+      ...happyFiles(),
+      "compose-report.json": composePayload([], {
+        source: { sourceId: "demo-source", revisionId: "rev-OTHER", accessedAt: "2026-11-09T01:00:00.000Z" },
+      }),
+    });
+    const reader = await DirectoryDetRunReader.open(root);
+    const error = await expectReaderError(reader.getRun("mixed-run"), "invalid-payload");
+    expect(error.message).toContain("mixed design source revisions");
+    expect(error.message).toContain("rev-OTHER");
+  });
+
+  it("refuses a partially declared source identity (no revisionId) instead of guessing", async () => {
+    const root = await makeRoot();
+    await writeRun(root, "partial-identity", {
+      ...happyFiles(),
+      "compose-report.json": composePayload([], {
+        source: { sourceId: "demo-source", accessedAt: "2026-11-09T01:00:00.000Z" },
+      }),
+    });
+    const reader = await DirectoryDetRunReader.open(root);
+    const error = await expectReaderError(reader.getRun("partial-identity"), "invalid-payload");
+    expect(error.message).toContain("source identity incomplete");
   });
 });
