@@ -80,3 +80,7 @@ Reference **`thanhle74/seo-writer-engine@development`**:
 - `specs/architecture/BOUNDED-EXTENSION-POINTS.md` — only abstract when real provider variance exists.
 
 These rules are **adapted to DET**, not imported as an additional governance layer. Prioritize fast iteration and small diffs.
+
+## 8. Parallel Orca execution for [29]
+
+**MANDATORY:** Use the [Studio parallel worker contract](DET-STUDIO-PARALLEL-WORKERS.md) before starting multiple coding agents. It defines the bootstrap gate, four simultaneous worker lanes, exact file ownership, frozen shared types, integration owner, tests and stop conditions. Existing UI/Engine and trust-boundary rules above remain authoritative. **One issue, one integrated Draft PR; four bounded workers, not four competing implementations.**

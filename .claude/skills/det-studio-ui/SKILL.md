@@ -15,3 +15,7 @@ Read `specs/DET-STUDIO-MVP.md`, the live [29] Issue, and the current DET schemas
 6. **Boundary:** no licensed Hyvä source, client theme or Magento/Figma writes. No auth/database/queue/cloud system in MVP.
 
 Adapted from `seo-writer-engine@development` `specs/SPEC-DASHBOARD.md` (active shadcn doctrine and feature modules) and `components.json`. **Do not copy SEO-specific domain code.**
+
+## Parallel mode [29]
+
+Read `specs/DET-STUDIO-PARALLEL-WORKERS.md`. The lead integrator bootstraps/fixes the shared `StudioRunView` contract first and explicitly opens the parallel gate; only then do worker A (conversions), B (design-tree + mapping-review), C (preview + artifacts) and D (server reader + guarded routes) work simultaneously. Each worker may touch ONLY its owned paths. Workers never alter the shared schema, app route shell, shadcn primitives, package/lockfile or Engine. Ask integrator for shared changes. Workers provide exact changed-file list + targeted test evidence; integrator performs composition, full build, UI verification and the single Draft PR.
