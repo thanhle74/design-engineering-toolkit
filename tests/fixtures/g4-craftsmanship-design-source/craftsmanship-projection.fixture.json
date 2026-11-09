@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "profileId": "g4-craftsmanship-two-column",
+  "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+  "notes": "Explicit semantic projection for the G4 craftsmanship two-column slice (issue #25): the observed source names its text layers 'Overline'/'Title'/'Body' (no SLOT-role naming convention) and its media slots are plain frames carrying media fills, so this reason-carrying document is the recorded human decision that assigns composer roles to observed locators. The two-column roles (column-primary/column-secondary) declare WHICH observed slot containers become the native columns and in which order; inline-media declares which observed frames become native image elements inside their column. Every assignment is reviewable; nothing here invents nodes, content or asset URLs.",
+  "assignments": [
+    {
+      "sourceLocator": "design://g4-craftsmanship-fixture-source/299:344",
+      "role": "column-primary",
+      "reason": "Observed left media slot (620x620 at x80, SLOT/CraftMedia) — the section's primary media half; its own media fill composes as the column's image (content from the manifest)."
+    },
+    {
+      "sourceLocator": "design://g4-craftsmanship-fixture-source/299:345",
+      "role": "column-secondary",
+      "reason": "Observed right content slot (612x620 at x748, SLOT/CraftContent) — the section's content half holding the text block and the two detail-media frames."
+    },
+    {
+      "sourceLocator": "design://g4-craftsmanship-fixture-source/299:346",
+      "role": "content-lead",
+      "reason": "Observed overline text ('Overline', 123x16 at the top of the content slot) — the kicker line above the heading."
+    },
+    {
+      "sourceLocator": "design://g4-craftsmanship-fixture-source/299:347",
+      "role": "heading",
+      "reason": "Observed display heading text ('Title', 307x40) — the largest type in the content slot."
+    },
+    {
+      "sourceLocator": "design://g4-craftsmanship-fixture-source/299:348",
+      "role": "body",
+      "reason": "Observed supporting paragraph ('Body', 460x60) under the heading."
+    },
+    {
+      "sourceLocator": "design://g4-craftsmanship-fixture-source/299:349",
+      "role": "inline-media",
+      "reason": "Observed detail-media frame (292x254 at x0,y387, SLOT/DetailStitch) inside the content slot — composes as a native image element in that column (content from the manifest)."
+    },
+    {
+      "sourceLocator": "design://g4-craftsmanship-fixture-source/299:350",
+      "role": "inline-media",
+      "reason": "Observed detail-media frame (292x253 at x320,y415, SLOT/DetailFabric) inside the content slot — side-by-side peer of 299:349 (28px gap, 28px vertical stagger), composes as the paired native image element (content from the manifest)."
+    }
+  ]
+}

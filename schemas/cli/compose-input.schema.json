@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/compose-input.schema.json",
+  "$comment": "Design Engineering Toolkit CLI family — ComposeInput. Major version 1. Per-run transport contract from the det core to a native-content compose adapter subprocess (stdin, single JSON document; issue #23 G3). The core has already schema-validated every embedded payload and verified all cross-pins (registry/binding/NodeIR/PageStructure/manifest identity and revisions) BEFORE spawning; the adapter re-validates defensively against the same contracts. Platform-neutral transport: capability ids, appearance ids and content values appear only as data, never as schema vocabulary.",
+  "title": "Design Engineering Toolkit — Compose Input (transport)",
+  "type": "object",
+  "required": ["schemaVersion", "profileId", "platformId", "registry", "bindings", "nodeIr", "pageStructure", "content"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "type": "integer", "const": 1 },
+    "profileId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "platformId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9.-]*$", "description": "Must be one of the compose adapter's declared platformIds (checked by core before spawn)." },
+    "projection": {
+      "$ref": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/semantic-projection.schema.json",
+      "description": "Optional explicit, reason-carrying role assignment for observed locators whose source names do not carry the SLOT-role convention (raw text names, component instances). Present whenever the caller supplied --projection; absent when naming-convention hints alone drive the composition."
+    },
+    "registry": {
+      "$ref": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/capability-registry.schema.json",
+      "description": "The pinned capability registry the composer must ground every native target in."
+    },
+    "bindings": {
+      "$ref": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/component-binding-map.schema.json",
+      "description": "The pinned binding map (may be empty when the section carries no component instances)."
+    },
+    "nodeIr": {
+      "$ref": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/node-ir.schema.json",
+      "description": "The full semantic inventory; document order in childrenNodeIds is the composition order."
+    },
+    "pageStructure": {
+      "$ref": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/page-structure.schema.json",
+      "description": "The editorial-only structural plan; its sections, in order, are the composition units."
+    },
+    "content": {
+      "$ref": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/content-manifest.schema.json",
+      "description": "Caller-supplied literal content, pinned to the same source revision."
+    }
+  }
+}

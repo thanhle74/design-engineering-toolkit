@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "profileId": "g3-hero-vertical-slice",
+  "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+  "notes": "Explicit semantic projection for the G3 hero slice (issue #23 coordinator correction): the observed source carries no SLOT-role text names (text layers are named by their content) and the CTA is a button component instance, so this reason-carrying document is the recorded human decision that assigns composer roles to observed locators. Every assignment is reviewable; nothing here invents nodes, content or asset URLs.",
+  "assignments": [
+    {
+      "sourceLocator": "design://g3-hero-fixture-source/254:40",
+      "role": "background-media",
+      "reason": "Observed full-bleed frame (1440x880, SLOT/HeroMedia) carrying the hero media fill behind all content."
+    },
+    {
+      "sourceLocator": "design://g3-hero-fixture-source/254:43",
+      "role": "content-lead",
+      "reason": "Observed first text in the overlaid content block ('CHAPTER 01 / AW 2026') — kicker line above the heading."
+    },
+    {
+      "sourceLocator": "design://g3-hero-fixture-source/254:44",
+      "role": "heading",
+      "reason": "Observed display heading text ('The Quiet Grandeur') — largest type in the overlaid content block."
+    },
+    {
+      "sourceLocator": "design://g3-hero-fixture-source/254:45",
+      "role": "body",
+      "reason": "Observed supporting paragraph under the heading."
+    },
+    {
+      "sourceLocator": "design://g3-hero-fixture-source/254:47",
+      "role": "cta",
+      "reason": "Observed button component instance 'Proto / Button/Primary' inside SLOT/HeroActions; its label resolves from the content manifest (definition is external to the bounded read)."
+    },
+    {
+      "sourceLocator": "design://g3-hero-fixture-source/254:41",
+      "role": "decoration",
+      "reason": "Observed full-bleed overlay rectangle; native banner overlay is a single color and no gradient field exists — explicitly excluded from content (recorded, not silently dropped)."
+    },
+    {
+      "sourceLocator": "design://g3-hero-fixture-source/254:57",
+      "role": "decoration",
+      "reason": "Observed scroll-indicator group (DECOR/ScrollIndicator with line + SCROLL label); no native equivalent — explicitly excluded from content (recorded, not silently dropped)."
+    }
+  ]
+}

@@ -6,12 +6,14 @@ import type { Diagnostic } from "./types.js";
 
 export const TOOL_NAME = "det";
 
-export type CommandName = "validate" | "inspect" | "plan" | "extract" | "kb";
+export type CommandName = "validate" | "inspect" | "plan" | "extract" | "kb" | "compose";
 export type ExitCode = 0 | 1 | 2 | 3;
 // Issue #15: kb-store roles are additive minors of the tool-run family (schemas/cli/README.md).
+// Issue #23: compose-report is the additive G3 role (native content composition output).
 export type ArtifactRole =
   | "registry" | "resolution-report" | "node-ir" | "page-structure" | "source-review" | "profile-input" | "binding-map" | "structure-input" | "adapter-descriptor"
-  | "kb-ingest-manifest" | "kb-records" | "kb-query-result" | "kb-sync-report" | "kb-store-descriptor";
+  | "kb-ingest-manifest" | "kb-records" | "kb-query-result" | "kb-sync-report" | "kb-store-descriptor"
+  | "compose-report";
 
 export interface ArtifactRecord {
   role: ArtifactRole;
@@ -63,6 +65,8 @@ const SCHEMA_REFS: Record<string, string> = {
   "kb-query-result": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-engine-output.schema.json",
   "kb-sync-report": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-engine-output.schema.json",
   "kb-store-descriptor": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-store.schema.json",
+  // Native content composition family (issue #23)
+  "compose-report": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/compose-output.schema.json",
 };
 
 export function artifact(

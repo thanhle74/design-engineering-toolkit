@@ -41,9 +41,10 @@
         "inspect",
         "plan",
         "extract",
-        "kb"
+        "kb",
+        "compose"
       ],
-      "description": "Closed major-1 enum, 1.1.0 additive: extract (G2 #14) + kb (#15)."
+      "description": "Closed major-1 enum, 1.1.0 additive: extract (G2 #14) + kb (#15) + compose (G3 #23)."
     },
     "exitCode": {
       "type": "integer",

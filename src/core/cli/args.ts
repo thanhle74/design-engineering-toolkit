@@ -10,9 +10,9 @@ export interface ParsedArgs {
 }
 
 const BOOL_FLAGS = new Set(["help", "h", "version", "json", "dry-run", "quiet"]);
-const VALUE_FLAGS = new Set(["profile", "adapter", "project", "out", "input", "registry", "bindings", "design-file", "design-node", "manifest", "store", "root", "where", "text", "kb", "edge-type", "related-to", "include-lifecycle", "require-proof"]);
+const VALUE_FLAGS = new Set(["profile", "adapter", "project", "out", "input", "registry", "bindings", "design-file", "design-node", "manifest", "store", "root", "where", "text", "kb", "edge-type", "related-to", "include-lifecycle", "require-proof", "nodeir", "content", "projection"]);
 const REPEATABLE_FLAGS = new Set(["root", "where", "include-lifecycle"]);
-const COMMANDS = new Set(["validate", "inspect", "plan", "extract", "kb"]);
+const COMMANDS = new Set(["validate", "inspect", "plan", "extract", "kb", "compose"]);
 const KB_VERBS = new Set(["ingest", "sync", "query", "validate"]);
 
 function storeFlag(out: ParsedArgs, name: string, value: string): void {
@@ -92,6 +92,7 @@ const COMMAND_VALUE_FLAGS: Record<string, Set<string>> = {
   plan: new Set(["profile", "registry", "bindings", "input", "out"]),
   extract: new Set(["profile", "adapter", "project", "out", "design-file", "design-node", "registry", "bindings"]),
   kb: new Set(["manifest", "store", "out", "root", "where", "text", "kb", "edge-type", "related-to", "include-lifecycle", "require-proof", "project"]),
+  compose: new Set(["profile", "registry", "bindings", "input", "nodeir", "content", "projection", "adapter", "out"]),
 };
 
 export function unexpectedFlagsForCommand(command: string, flags: Record<string, string | boolean | string[]>): string[] {

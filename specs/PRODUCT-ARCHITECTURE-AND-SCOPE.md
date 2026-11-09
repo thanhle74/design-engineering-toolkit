@@ -119,6 +119,22 @@ Approved Figma [read-only, later gate]
 
 **Component selection:** reuse the closest *supported semantic component* first, then custom appearance/component only for an evidenced gap. `HTML Code` is not an acceptable silent shortcut to claim merchant editability. No new `content_type.xml` per page. Header/footer/nav/search/cart are `THEME_CHROME` and excluded from Page Builder page content. Reuse existing Slaunchpad research #32 and #42; unresolved Admin round-trip remains a verification gate until a real receipt exists.
 
+
+### Owner decision — 2026-11-06: lean internal tool, native Page Builder first
+
+**Product priority: save developers time.** This is an **internal productivity CLI**, not a commercial platform or compliance/security project. Choose the **simplest useful implementation** that is faster than manually building the same layout. Prefer existing `det` CLI, NodeIR/PageStructure and the native Magento Page Builder over new abstraction layers, custom engines, databases, services, dashboards, or elaborate governance. If an automation requires more effort than it saves, **stop and simplify**.
+
+**First deliverable:** for **one or two selected Figma CMS sections**, generate the **correct editable native Page Builder structure**: Row, Columns, Banner, Text and Image (only add other content types when actually needed and available). No FigmaToCode, Tailwind, Hyvä UI integration, custom CSS, animation or pixel-perfect styling in the initial iteration.
+
+**Practical sequence and minimal DONE checks:**
+
+1. **Understand the source:** check meaningful Figma node names and the actual section/column hierarchy; reuse the already normalized Desktop names, do not rename everything. Keep node IDs for traceability, mark ambiguous cases briefly. No new Figma writes without separate Owner approval.
+2. **Map the layout:** reuse existing NodeIR/PageStructure and capability information. Output native Row/Column/Banner/Text/Image in the correct order and nesting; preserve key proportions such as 40/60 rather than silently changing them to 50/50. Unsupported pieces get one concise warning, not a new research project.
+3. **Verify on a local CMS page (future G3, separate GO):** create an isolated test page, open it in Admin, edit, save and reload. **PASS = structure stays intact and merchants can edit native blocks.** One representative end-to-end smoke test and focused automated regressions are enough for the first iteration.
+4. **Polish later:** after editable layout works, optionally improve visual detail, CSS/Tailwind, Hyvä reuse and more complex sections as separate incremental work.
+
+**Engineering discipline, kept proportionate:** implement one vertical slice, run the smallest relevant tests, fix confirmed defects, and move on. Avoid duplicate audits, speculative adapters, large universal abstractions, verbose evidence ceremonies and extensive negative-case suites unrelated to the current change. Retain simple essentials: don't commit credentials/licensed sources, don't alter production or active merchant content, and don't misreport a mock/preview as a working Magento page. Existing read-only contracts for running [#18](https://github.com/thanhle74/design-engineering-toolkit/issues/18) and [#19](https://github.com/thanhle74/design-engineering-toolkit/issues/19) remain unchanged; this decision adds **no new task or execution authorization**.
+
 ## 5. Installation, import and runtime safety
 
 - **Do not default to a Data Patch** that overwrites CMS content on deploy. Prefer an explicit, scoped importer command/API using `dry-run → diff → preview → approved import → verify → rollback`. Idempotence, store/page scoping, conflict detection and merchant-edited-content preservation are mandatory.
