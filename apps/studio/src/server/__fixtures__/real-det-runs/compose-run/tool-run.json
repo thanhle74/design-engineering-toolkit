@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "tool": {
+    "name": "det",
+    "toolVersion": "0.1.0"
+  },
+  "command": "compose",
+  "exitCode": 0,
+  "generatedAt": "2026-11-09T04:55:43.186Z",
+  "profileId": "g3-hero-vertical-slice",
+  "platformId": "magento-pagebuilder",
+  "adapter": {
+    "id": "magento-pagebuilder-compose",
+    "version": "1.1.1"
+  },
+  "artifacts": [
+    {
+      "role": "adapter-descriptor",
+      "schemaRef": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/adapter-descriptor.schema.json",
+      "contentHash": "f0793d18b9e937f2294901267a3ad6af0f98ba2573437254df060c5043157429",
+      "volatileContentHash": "f0793d18b9e937f2294901267a3ad6af0f98ba2573437254df060c5043157429"
+    },
+    {
+      "role": "compose-report",
+      "schemaRef": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/compose-output.schema.json",
+      "contentHash": "f948dfd471642e9e7554623a09827bd99e588286667058c7bc5bdc89f5e47f80",
+      "volatileContentHash": "b408171101e80dd581147e98340e63bf2f62c3310189210e35db4acb036bcb69",
+      "file": "compose-report.json"
+    }
+  ],
+  "converterDiagnostics": [
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Decoration 'Overlay' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
+      "subject": {
+        "type": "node",
+        "id": "n-0216280216bf"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Decoration 'DECOR/ScrollIndicator' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
+      "subject": {
+        "type": "node",
+        "id": "n-ba03acaef964"
+      }
+    }
+  ],
+  "runDiagnostics": [],
+  "counts": {
+    "errors": 0,
+    "warnings": 2,
+    "infos": 0
+  },
+  "wroteFiles": true
+}

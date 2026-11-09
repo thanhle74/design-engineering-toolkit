@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "tool": {
+    "name": "det",
+    "toolVersion": "0.1.0"
+  },
+  "command": "extract",
+  "exitCode": 0,
+  "generatedAt": "2026-11-09T04:55:42.681Z",
+  "profileId": "g3-hero-vertical-slice",
+  "platformId": "magento-pagebuilder",
+  "adapter": {
+    "id": "design-source-fixture",
+    "version": "1.0.0"
+  },
+  "artifacts": [
+    {
+      "role": "node-ir",
+      "schemaRef": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/node-ir.schema.json",
+      "contentHash": "8500a7df2a645457a3a1763ca6f744e5115a2d9d9244538a1707993d1fa33135",
+      "volatileContentHash": "4827b6c32e6ded1b1ab12de245a4eaac02b279f0ef33074aba1d3df9cd8d4fcd",
+      "file": "node-ir.json"
+    },
+    {
+      "role": "page-structure",
+      "schemaRef": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/page-structure.schema.json",
+      "contentHash": "59b14f1b35b7b3888eeb350ca3b597d9d29bae17f82c4ffdbe101cb7fb36ee22",
+      "volatileContentHash": "f30c35fbcdcbe12010f99736b7debc831967536226e456fa8f34189286e46b43",
+      "file": "page-structure.json"
+    },
+    {
+      "role": "source-review",
+      "schemaRef": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/source-review.schema.json",
+      "contentHash": "9d8481c154837ff2f035b213d1faba4044e7b4882df658bfa6f98f940a4412d7",
+      "volatileContentHash": "66e5eb24fe0e88afc079dafeee21ac5eb3bfc32e2127a876dd430844638943c4",
+      "file": "source-review.json"
+    }
+  ],
+  "converterDiagnostics": [
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "1 source component(s) have no proven target capability (custom-required pending); no CMS content may be generated from them without review.",
+      "subject": {
+        "type": "profile",
+        "id": "g3-hero-vertical-slice"
+      }
+    }
+  ],
+  "runDiagnostics": [],
+  "counts": {
+    "errors": 0,
+    "warnings": 1,
+    "infos": 0
+  },
+  "wroteFiles": true
+}

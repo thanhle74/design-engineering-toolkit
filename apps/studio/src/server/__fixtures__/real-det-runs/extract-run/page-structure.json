@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "profileId": "g3-hero-vertical-slice",
+  "generatedAt": "2026-11-09T04:55:42.676Z",
+  "source": {
+    "sourceId": "g3-hero-fixture-source",
+    "revisionId": "mcp-observed-unpinned-2026-11-06",
+    "accessedAt": "2026-11-09T04:55:42.665Z"
+  },
+  "inputs": {
+    "nodeIrContentHash": "4827b6c32e6ded1b1ab12de245a4eaac02b279f0ef33074aba1d3df9cd8d4fcd",
+    "registryRevisionId": "content:9ee428e468bbaf7e",
+    "bindingMapContentHash": "adfa88369beacbf91d7604d5fc863957c805bfc8f4a079362189c716938d8117"
+  },
+  "sections": [
+    {
+      "sectionId": "s-28d5ef24ffa3",
+      "order": 0,
+      "name": "SECTION/Hero/Primary",
+      "role": "SECTION",
+      "layout": {
+        "direction": "unknown",
+        "positioning": "static",
+        "constraints": [
+          {
+            "axis": "height",
+            "type": "fixed",
+            "value": "880"
+          },
+          {
+            "axis": "width",
+            "type": "fixed",
+            "value": "1440"
+          },
+          {
+            "axis": "x",
+            "type": "fixed",
+            "value": "0"
+          },
+          {
+            "axis": "y",
+            "type": "fixed",
+            "value": "120"
+          }
+        ],
+        "relativeSizes": [],
+        "overflow": "unknown"
+      },
+      "elements": [
+        {
+          "elementId": "n-1ba6a2c44dc1",
+          "childrenElementIds": [],
+          "resolution": {
+            "status": "unmapped",
+            "mappingConfidence": "low",
+            "diagnostics": []
+          }
+        },
+        {
+          "elementId": "n-10ad9a6e3d9e",
+          "contentSlots": [
+            {
+              "slotId": "chapter-01-aw-2026",
+              "contentType": "text",
+              "valueRef": "design://g3-hero-fixture-source/254:43"
+            },
+            {
+              "slotId": "refined-tailoring-knitwear-and-leather-for-the-season",
+              "contentType": "text",
+              "valueRef": "design://g3-hero-fixture-source/254:45"
+            },
+            {
+              "slotId": "the-quiet-grandeur",
+              "contentType": "text",
+              "valueRef": "design://g3-hero-fixture-source/254:44"
+            }
+          ],
+          "childrenElementIds": [
+            "n-53bd7af6795b"
+          ],
+          "resolution": {
+            "status": "unmapped",
+            "mappingConfidence": "low",
+            "diagnostics": []
+          }
+        }
+      ],
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-2661adc4a7f3",
+          "kind": "document",
+          "locator": "design://g3-hero-fixture-source/245:5",
+          "retrievedAt": "2026-11-09T04:55:42.665Z",
+          "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+          "method": "design-source-adapter"
+        }
+      ]
+    }
+  ],
+  "diagnostics": []
+}
