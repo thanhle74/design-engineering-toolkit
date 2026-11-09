@@ -194,7 +194,7 @@ export default async function registerG28Suite(checkAsync) {
       for (const m of c.matchAll(/<div class="pagebuilder-column" [^>]*\sstyle="/g)) assert.fail(`inline style on a structural column: ${m[0]}`);
       // Honest gap accounting: gradients, affordances, hotspots limit; nothing invented.
       const gaps = report.mapping.filter((m) => m.disposition === "gap");
-      assert.ok(gaps.length >= 20, `explicit gaps recorded (${gaps.length})`);
+      assert.ok(gaps.length >= 19, `explicit gaps recorded (${gaps.length})`);
       assert.ok(gaps.some((m) => (m.note ?? "").includes("decoration")), "decoration gaps recorded");
       assert.equal(report.diagnostics.filter((d) => d.severity === "error").length, 0, "no error diagnostics");
       return `12/12 sections composed (${c.length}B): hero + 2 two-column-family splits + 4 grids + 2 bands; ${gaps.length} honest gaps`;

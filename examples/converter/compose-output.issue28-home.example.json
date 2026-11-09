@@ -4,7 +4,7 @@
   "source": {
     "sourceId": "g28-home-fixture-source",
     "revisionId": "mcp-observed-unpinned-2026-11-09",
-    "accessedAt": "2026-11-09T04:16:44.746Z"
+    "accessedAt": "2026-11-09T04:54:34.616Z"
   },
   "inputs": {
     "nodeIrContentHash": "f0487d534b374f9779a4f8e5a4979b82c3259dcc6860861d163caca244e9dfcc",
@@ -621,8 +621,14 @@
       "sourceNodeId": "n-4b66d1a7f27c",
       "sourceName": "Image",
       "sourceLocator": "design://g28-home-fixture-source/I436:460;436:395",
-      "disposition": "gap",
-      "note": "Node outside the column-grid composition table; not composed."
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "column children (container folded)"
+      },
+      "note": "Structural container folded into its native column; its composable descendants compose in document order; no separate native container."
     },
     {
       "sourceNodeId": "n-4ca29ed41994",
@@ -809,8 +815,14 @@
       "sourceNodeId": "n-616920d28c54",
       "sourceName": "Image",
       "sourceLocator": "design://g28-home-fixture-source/I254:99;250:3",
-      "disposition": "gap",
-      "note": "Node outside the column-grid composition table; not composed."
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "column children (container folded)"
+      },
+      "note": "Structural container folded into its native column; its composable descendants compose in document order; no separate native container."
     },
     {
       "sourceNodeId": "n-62daa7d53ad4",
@@ -988,8 +1000,14 @@
       "sourceNodeId": "n-73cf0db5b329",
       "sourceName": "Body",
       "sourceLocator": "design://g28-home-fixture-source/I254:72;250:7",
-      "disposition": "gap",
-      "note": "Node outside the column-grid composition table; not composed."
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "column children (container folded)"
+      },
+      "note": "Structural container folded into its native column; its composable descendants compose in document order; no separate native container."
     },
     {
       "sourceNodeId": "n-73f60a4fffe5",
@@ -1009,8 +1027,14 @@
       "sourceNodeId": "n-7c510158b125",
       "sourceName": "Body",
       "sourceLocator": "design://g28-home-fixture-source/I254:99;250:7",
-      "disposition": "gap",
-      "note": "Node outside the column-grid composition table; not composed."
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "column children (container folded)"
+      },
+      "note": "Structural container folded into its native column; its composable descendants compose in document order; no separate native container."
     },
     {
       "sourceNodeId": "n-7c851c3ff554",
@@ -1096,15 +1120,27 @@
       "sourceNodeId": "n-888338f12809",
       "sourceName": "Label",
       "sourceLocator": "design://g28-home-fixture-source/I436:460;436:398",
-      "disposition": "gap",
-      "note": "Node outside the column-grid composition table; not composed."
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "column children (container folded)"
+      },
+      "note": "Structural container folded into its native column; its composable descendants compose in document order; no separate native container."
     },
     {
       "sourceNodeId": "n-88865e63ecdc",
       "sourceName": "Body",
       "sourceLocator": "design://g28-home-fixture-source/I254:81;250:7",
-      "disposition": "gap",
-      "note": "Node outside the column-grid composition table; not composed."
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "column children (container folded)"
+      },
+      "note": "Structural container folded into its native column; its composable descendants compose in document order; no separate native container."
     },
     {
       "sourceNodeId": "n-8b2b58f8c90b",
@@ -1205,8 +1241,14 @@
       "sourceNodeId": "n-942c8c014a7c",
       "sourceName": "Image",
       "sourceLocator": "design://g28-home-fixture-source/I254:72;250:3",
-      "disposition": "gap",
-      "note": "Node outside the column-grid composition table; not composed."
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "column children (container folded)"
+      },
+      "note": "Structural container folded into its native column; its composable descendants compose in document order; no separate native container."
     },
     {
       "sourceNodeId": "n-954698d7ccbc",
@@ -1486,8 +1528,14 @@
       "sourceNodeId": "n-b1d7e50c8166",
       "sourceName": "Image",
       "sourceLocator": "design://g28-home-fixture-source/I254:90;250:3",
-      "disposition": "gap",
-      "note": "Node outside the column-grid composition table; not composed."
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "column children (container folded)"
+      },
+      "note": "Structural container folded into its native column; its composable descendants compose in document order; no separate native container."
     },
     {
       "sourceNodeId": "n-b21f092b74de",
@@ -1696,8 +1744,14 @@
       "sourceNodeId": "n-c10c69da44e3",
       "sourceName": "Body",
       "sourceLocator": "design://g28-home-fixture-source/I254:90;250:7",
-      "disposition": "gap",
-      "note": "Node outside the column-grid composition table; not composed."
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "column children (container folded)"
+      },
+      "note": "Structural container folded into its native column; its composable descendants compose in document order; no separate native container."
     },
     {
       "sourceNodeId": "n-c369c98aca1e",
@@ -1820,8 +1874,14 @@
       "sourceNodeId": "n-d2b3e21b91c5",
       "sourceName": "Image",
       "sourceLocator": "design://g28-home-fixture-source/I254:81;250:3",
-      "disposition": "gap",
-      "note": "Node outside the column-grid composition table; not composed."
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "column children (container folded)"
+      },
+      "note": "Structural container folded into its native column; its composable descendants compose in document order; no separate native container."
     },
     {
       "sourceNodeId": "n-d2d6335d4aa2",
@@ -2244,15 +2304,6 @@
     {
       "code": "NOT_VERIFIED",
       "severity": "warning",
-      "message": "Node 'Image' (kind 'container', role 'none') is outside the column-grid composition table; not composed.",
-      "subject": {
-        "type": "node",
-        "id": "n-4b66d1a7f27c"
-      }
-    },
-    {
-      "code": "NOT_VERIFIED",
-      "severity": "warning",
       "message": "Decoration 'Gradient' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
       "subject": {
         "type": "node",
@@ -2271,15 +2322,6 @@
     {
       "code": "NOT_VERIFIED",
       "severity": "warning",
-      "message": "Node 'Image' (kind 'container', role 'none') is outside the column-grid composition table; not composed.",
-      "subject": {
-        "type": "node",
-        "id": "n-616920d28c54"
-      }
-    },
-    {
-      "code": "NOT_VERIFIED",
-      "severity": "warning",
       "message": "Decoration 'Frame' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
       "subject": {
         "type": "node",
@@ -2289,46 +2331,10 @@
     {
       "code": "NOT_VERIFIED",
       "severity": "warning",
-      "message": "Node 'Body' (kind 'container', role 'none') is outside the column-grid composition table; not composed.",
-      "subject": {
-        "type": "node",
-        "id": "n-73cf0db5b329"
-      }
-    },
-    {
-      "code": "NOT_VERIFIED",
-      "severity": "warning",
-      "message": "Node 'Body' (kind 'container', role 'none') is outside the column-grid composition table; not composed.",
-      "subject": {
-        "type": "node",
-        "id": "n-7c510158b125"
-      }
-    },
-    {
-      "code": "NOT_VERIFIED",
-      "severity": "warning",
       "message": "Decoration 'DECOR/ScrollIndicator' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
       "subject": {
         "type": "node",
         "id": "n-84dfd8aac84d"
-      }
-    },
-    {
-      "code": "NOT_VERIFIED",
-      "severity": "warning",
-      "message": "Node 'Label' (kind 'container', role 'none') is outside the column-grid composition table; not composed.",
-      "subject": {
-        "type": "node",
-        "id": "n-888338f12809"
-      }
-    },
-    {
-      "code": "NOT_VERIFIED",
-      "severity": "warning",
-      "message": "Node 'Body' (kind 'container', role 'none') is outside the column-grid composition table; not composed.",
-      "subject": {
-        "type": "node",
-        "id": "n-88865e63ecdc"
       }
     },
     {
@@ -2352,28 +2358,10 @@
     {
       "code": "NOT_VERIFIED",
       "severity": "warning",
-      "message": "Node 'Image' (kind 'container', role 'none') is outside the column-grid composition table; not composed.",
-      "subject": {
-        "type": "node",
-        "id": "n-942c8c014a7c"
-      }
-    },
-    {
-      "code": "NOT_VERIFIED",
-      "severity": "warning",
       "message": "Decoration 'Wishlist' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
       "subject": {
         "type": "node",
         "id": "n-ad89b7a077c6"
-      }
-    },
-    {
-      "code": "NOT_VERIFIED",
-      "severity": "warning",
-      "message": "Node 'Image' (kind 'container', role 'none') is outside the column-grid composition table; not composed.",
-      "subject": {
-        "type": "node",
-        "id": "n-b1d7e50c8166"
       }
     },
     {
@@ -2392,15 +2380,6 @@
       "subject": {
         "type": "node",
         "id": "n-bdafdb940c67"
-      }
-    },
-    {
-      "code": "NOT_VERIFIED",
-      "severity": "warning",
-      "message": "Node 'Body' (kind 'container', role 'none') is outside the column-grid composition table; not composed.",
-      "subject": {
-        "type": "node",
-        "id": "n-c10c69da44e3"
       }
     },
     {
@@ -2446,15 +2425,6 @@
       "subject": {
         "type": "node",
         "id": "n-d2808784da56"
-      }
-    },
-    {
-      "code": "NOT_VERIFIED",
-      "severity": "warning",
-      "message": "Node 'Image' (kind 'container', role 'none') is outside the column-grid composition table; not composed.",
-      "subject": {
-        "type": "node",
-        "id": "n-d2b3e21b91c5"
       }
     },
     {

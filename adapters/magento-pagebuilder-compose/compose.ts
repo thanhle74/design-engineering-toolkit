@@ -1065,6 +1065,14 @@ function composeColumnGridSection(section: PageStructureSection, sectionNodeId: 
         mapping.push({ ...entryBase, disposition: "gap", note: `Nested projected ${role} inside a column; the pinned parents/children policies forbid nesting a column-group inside a column, so this composes nothing (recorded, never approximated).` });
         return;
       }
+      if (node.kind === "container" || node.kind === "component") {
+        // Transparent structural fold inside a projected column: the container itself has no
+        // native box (its composable descendants compose in document order); one fold entry.
+        flushText();
+        flushButtons();
+        mapping.push({ ...entryBase, disposition: "mapped", target: { capabilityId: COLUMN_ID, appearanceId: COLUMN_APPEARANCE, nativeElement: "column (full-height)", nativeField: "column children (container folded)" }, note: "Structural container folded into its native column; its composable descendants compose in document order; no separate native container." });
+        return;
+      }
       flushText();
       flushButtons();
       diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Node '${node.name}' (kind '${node.kind}', role '${node.role ?? "none"}') is outside the ${GRID_TABLE_LABEL} composition table; not composed.`, node.nodeId));
