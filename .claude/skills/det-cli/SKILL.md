@@ -45,6 +45,16 @@ node bin/det.js compose --profile <profile.json> --registry out/capability-regis
 # Structural composition evidence ONLY — never an Admin-round-trip or visual claim; a local
 # isolated CMS write requires a separate explicit operator-selected target.
 
+# 5. One-shot validated build (issue #28 C1) — thin orchestrator over the shipped commands:
+node bin/det.js build --config <build-config.json> [--out <dir>] [--dry-run] [--json]
+# Config paths resolve relative to the config file itself; major 1 builds run from OFFLINE
+# snapshot/tree documents only (a live design-source mode is not representable and fails
+# closed). Bundle = staged stage dirs + build-manifest.json: the per-FILE-BYTE sha256
+# inventory of every generated artifact and consumed input, stage provenance and honest gaps
+# (preview installation into a checkout is OPERATOR_GATED — det build never writes to any
+# platform). Example config: examples/build/project.example.json; preview install runbook:
+# examples/local-preview/README.md.
+
 # 4. Read-only design-source extraction (G2, SYNTHETIC fixtures only — see gate note)
 node bin/det.js extract --profile profiles/your-profile.json --project /path/to/design-source \
   --design-file <tree-document> --design-node <root-locator> \

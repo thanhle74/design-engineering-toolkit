@@ -6,14 +6,17 @@ import type { Diagnostic } from "./types.js";
 
 export const TOOL_NAME = "det";
 
-export type CommandName = "validate" | "inspect" | "plan" | "extract" | "kb" | "compose";
+export type CommandName = "validate" | "inspect" | "plan" | "extract" | "kb" | "compose" | "build";
 export type ExitCode = 0 | 1 | 2 | 3;
 // Issue #15: kb-store roles are additive minors of the tool-run family (schemas/cli/README.md).
 // Issue #23: compose-report is the additive G3 role (native content composition output).
 export type ArtifactRole =
   | "registry" | "resolution-report" | "node-ir" | "page-structure" | "source-review" | "profile-input" | "binding-map" | "structure-input" | "adapter-descriptor"
   | "kb-ingest-manifest" | "kb-records" | "kb-query-result" | "kb-sync-report" | "kb-store-descriptor"
-  | "compose-report";
+  | "compose-report"
+  // Issue #28 C2: the composed platform content document (hashed over its exact emitted bytes,
+  // not a canonical JSON payload) and the build bundle inventory (issue #28 C1).
+  | "native-content" | "build-manifest";
 
 export interface ArtifactRecord {
   role: ArtifactRole;
@@ -67,13 +70,29 @@ const SCHEMA_REFS: Record<string, string> = {
   "kb-store-descriptor": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-store.schema.json",
   // Native content composition family (issue #23)
   "compose-report": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/compose-output.schema.json",
+  // One-shot build family (issue #28 C1/C2)
+  "native-content": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/compose-output.schema.json#native-content",
+  "build-manifest": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/build-manifest.schema.json",
 };
 
 export function artifact(
   role: ArtifactRole,
   payload: unknown,
-  opts: { file?: string } = {}
+  opts: { file?: string; rawContent?: string } = {}
 ): ArtifactRecord {
+  // Raw byte artifacts (the composed native content document): the hashes cover the EXACT
+  // emitted bytes — deliberately a different, documented notion from the canonical payload
+  // contentHash (issue #28 C2: the drift found in review; the schema states both notions).
+  if (opts.rawContent !== undefined) {
+    const record: ArtifactRecord = {
+      role,
+      schemaRef: SCHEMA_REFS[role],
+      contentHash: sha256Hex(opts.rawContent),
+      volatileContentHash: sha256Hex(opts.rawContent),
+    };
+    if (opts.file) record.file = opts.file;
+    return record;
+  }
   const record: ArtifactRecord = {
     role,
     schemaRef: SCHEMA_REFS[role],

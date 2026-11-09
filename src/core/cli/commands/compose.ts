@@ -407,6 +407,7 @@ export async function commandCompose(flags: Record<string, string | boolean>, io
       runDiagnostics,
       artifacts: [
         artifact("compose-report", output, { file: "compose-report.json" }),
+        artifact("native-content", null, { file: "native-content.html", rawContent: output.content }),
         artifact("adapter-descriptor", descriptor),
       ],
       files: [

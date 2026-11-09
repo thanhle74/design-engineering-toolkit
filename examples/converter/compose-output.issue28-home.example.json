@@ -1,0 +1,2485 @@
+{
+  "schemaVersion": 1,
+  "platformId": "magento-pagebuilder",
+  "source": {
+    "sourceId": "g28-home-fixture-source",
+    "revisionId": "mcp-observed-unpinned-2026-11-09",
+    "accessedAt": "2026-11-09T04:54:34.616Z"
+  },
+  "inputs": {
+    "nodeIrContentHash": "f0487d534b374f9779a4f8e5a4979b82c3259dcc6860861d163caca244e9dfcc",
+    "pageStructureContentHash": "cba810723f2be89a172dbc6c4dadf96552c8683dad05dd9a45f981b35e115976",
+    "contentManifestContentHash": "948877957945e0369d9bdeeda1ce57231f4bcbda1a7758558b02ec8823fa0752",
+    "projectionContentHash": "83db32f5b80955152da5401ca8d33c82d22c3912d3ee774dee677bf8d2fe3a93",
+    "registryRevisionId": "content:9ee428e468bbaf7e",
+    "bindingMapContentHash": "13ad31ca7b57f35048aa207be8e7d6d68a0b8027aeb60d2924ddd9cd9e53adb9"
+  },
+  "content": "<style>#html-body [data-pb-style=P312714]{min-height:880px}</style><div data-content-type=\"row\" data-appearance=\"contained\" data-element=\"main\"><div data-enable-parallax=\"0\" data-parallax-speed=\"0.5\" data-background-images=\"{}\" data-background-type=\"image\" data-video-loop=\"true\" data-video-play-only-visible=\"true\" data-video-lazy-load=\"true\" data-video-fallback-src=\"\" data-element=\"inner\"><div data-content-type=\"banner\" data-appearance=\"poster\" data-show-button=\"always\" data-show-overlay=\"never\" data-element=\"main\"><a href=\"/collections\" data-element=\"link\"><div class=\"pagebuilder-banner-wrapper\" data-background-images=\"{&quot;desktop_image&quot;:&quot;{{media url=wysiwyg/det-home-preview/hero-bg-1440x880-placeholder.jpg}}&quot;}\" data-background-type=\"image\" data-video-loop=\"true\" data-video-play-only-visible=\"true\" data-video-lazy-load=\"true\" data-video-fallback-src=\"\" data-element=\"wrapper\"><div class=\"pagebuilder-overlay pagebuilder-poster-overlay\" data-overlay-color=\"\" aria-label=\"\" title=\"\" data-element=\"overlay\" data-pb-style=\"P312714\"><div class=\"pagebuilder-poster-content\"><div data-element=\"content\"><p>CHAPTER 01 / AW 2026</p><h2>The Quiet Grandeur</h2><p>Refined tailoring, knitwear and leather for the season.</p></div><button type=\"button\" class=\"pagebuilder-banner-button\" data-element=\"button\" style=\"opacity: 1; visibility: visible;\">Explore the Collection</button></div></div></div></a></div></div></div><style>#html-body [data-pb-style=PE6E4C1]{min-height:280px}</style><div data-content-type=\"row\" data-appearance=\"contained\" data-element=\"main\"><div data-enable-parallax=\"0\" data-parallax-speed=\"0.5\" data-background-images=\"{}\" data-background-type=\"image\" data-video-loop=\"true\" data-video-play-only-visible=\"true\" data-video-lazy-load=\"true\" data-video-fallback-src=\"\" data-element=\"inner\" data-pb-style=\"PE6E4C1\"><div data-content-type=\"text\" data-appearance=\"default\" data-element=\"main\"><p>THE HOUSE</p><h2>Luxury is what remains when everything unnecessary has been removed.</h2></div></div></div><style>#html-body [data-pb-style=P42915C]{min-height:780px}#html-body [data-pb-style=P367D77]{display:flex;width:100%}#html-body [data-pb-style=P84F36D]{justify-content:flex-start;display:flex;flex-direction:column;width:73%;align-self:stretch}#html-body [data-pb-style=PBDA17B]{justify-content:flex-start;display:flex;flex-direction:column;width:27%;align-self:stretch}</style><div data-content-type=\"row\" data-appearance=\"contained\" data-element=\"main\"><div data-enable-parallax=\"0\" data-parallax-speed=\"0.5\" data-background-images=\"{}\" data-background-type=\"image\" data-video-loop=\"true\" data-video-play-only-visible=\"true\" data-video-lazy-load=\"true\" data-video-fallback-src=\"\" data-element=\"inner\" data-pb-style=\"P42915C\"><div class=\"pagebuilder-column-group\" data-content-type=\"column-group\" data-appearance=\"default\" data-grid-size=\"12\" data-background-images=\"{}\" data-element=\"main\"><div class=\"pagebuilder-column-line\" data-content-type=\"column-line\" data-element=\"main\" data-pb-style=\"P367D77\"><div class=\"pagebuilder-column\" data-content-type=\"column\" data-appearance=\"full-height\" data-background-images=\"{}\" data-element=\"main\" data-pb-style=\"PBDA17B\"><div data-content-type=\"text\" data-appearance=\"default\" data-element=\"main\"><p>CHAPTER 02 / THE COLLECTION</p><h2>The Modern Silhouette</h2><p>An exploration of modern form and effortless style.</p></div><style>#html-body [data-pb-style=P52CC8B]{display:inline-block}#html-body [data-pb-style=P4BF33E]{text-align:center}</style><div data-content-type=\"buttons\" data-appearance=\"inline\" data-same-width=\"false\" data-element=\"main\"><div data-content-type=\"button-item\" data-appearance=\"default\" data-element=\"main\" data-pb-style=\"P52CC8B\"><a class=\"pagebuilder-button-primary\" href=\"#\" target=\"\" data-link-type=\"default\" data-element=\"link\" data-pb-style=\"P4BF33E\"><span data-element=\"link_text\">DISCOVER THE EDIT</span></a></div></div></div><div class=\"pagebuilder-column\" data-content-type=\"column\" data-appearance=\"full-height\" data-background-images=\"{}\" data-element=\"main\" data-pb-style=\"P84F36D\"><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/det-home-preview/hero-secondary-940x780-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure></div></div></div></div></div><style>#html-body [data-pb-style=P814F78]{min-height:796px}#html-body [data-pb-style=P0FE429]{display:flex;width:100%}#html-body [data-pb-style=PA45540]{justify-content:flex-start;display:flex;flex-direction:column;width:50%;align-self:stretch}#html-body [data-pb-style=P1FE914]{justify-content:flex-start;display:flex;flex-direction:column;width:50%;align-self:stretch}</style><div data-content-type=\"row\" data-appearance=\"contained\" data-element=\"main\"><div data-enable-parallax=\"0\" data-parallax-speed=\"0.5\" data-background-images=\"{}\" data-background-type=\"image\" data-video-loop=\"true\" data-video-play-only-visible=\"true\" data-video-lazy-load=\"true\" data-video-fallback-src=\"\" data-element=\"inner\" data-pb-style=\"P814F78\"><div data-content-type=\"text\" data-appearance=\"default\" data-element=\"main\"><h2>Explore by Wardrobe</h2></div><div class=\"pagebuilder-column-group\" data-content-type=\"column-group\" data-appearance=\"default\" data-grid-size=\"12\" data-background-images=\"{}\" data-element=\"main\"><div class=\"pagebuilder-column-line\" data-content-type=\"column-line\" data-element=\"main\" data-pb-style=\"P0FE429\"><div class=\"pagebuilder-column\" data-content-type=\"column\" data-appearance=\"full-height\" data-background-images=\"{}\" data-element=\"main\" data-pb-style=\"PA45540\"><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/det-home-preview/collection-women-640x616-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure><div data-content-type=\"text\" data-appearance=\"default\" data-element=\"main\"><p>Women</p><p>24 PIECES</p></div></div><div class=\"pagebuilder-column\" data-content-type=\"column\" data-appearance=\"full-height\" data-background-images=\"{}\" data-element=\"main\" data-pb-style=\"P1FE914\"><div data-content-type=\"text\" data-appearance=\"default\" data-element=\"main\"><p>THE COLLECTIONS</p></div><style>#html-body [data-pb-style=P6EA8AF]{display:inline-block}#html-body [data-pb-style=P4C55C3]{text-align:center}</style><div data-content-type=\"buttons\" data-appearance=\"inline\" data-same-width=\"false\" data-element=\"main\"><div data-content-type=\"button-item\" data-appearance=\"default\" data-element=\"main\" data-pb-style=\"P6EA8AF\"><a class=\"pagebuilder-button-primary\" href=\"#\" target=\"\" data-link-type=\"default\" data-element=\"link\" data-pb-style=\"P4C55C3\"><span data-element=\"link_text\">ALL COLLECTIONS</span></a></div></div><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/det-home-preview/collection-men-616x288-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure><div data-content-type=\"text\" data-appearance=\"default\" data-element=\"main\"><p>Men</p><p>24 PIECES</p></div><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/det-home-preview/collection-accessories-360x304-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure><div data-content-type=\"text\" data-appearance=\"default\" data-element=\"main\"><p>Accessories</p><p>24 PIECES</p></div><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/det-home-preview/fabric-detail-232x304-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure></div></div></div></div></div><style>#html-body [data-pb-style=PB0E67C]{min-height:654px}#html-body [data-pb-style=P7C457F]{display:flex;width:100%}#html-body [data-pb-style=PB8F011]{justify-content:flex-start;display:flex;flex-direction:column;width:25%;align-self:stretch}#html-body [data-pb-style=P4A0FB1]{justify-content:flex-start;display:flex;flex-direction:column;width:25%;align-self:stretch}#html-body [data-pb-style=P138197]{justify-content:flex-start;display:flex;flex-direction:column;width:25%;align-self:stretch}#html-body [data-pb-style=P556BCB]{justify-content:flex-start;display:flex;flex-direction:column;width:25%;align-self:stretch}</style><div data-content-type=\"row\" data-appearance=\"contained\" data-element=\"main\"><div data-enable-parallax=\"0\" data-parallax-speed=\"0.5\" data-background-images=\"{}\" data-background-type=\"image\" data-video-loop=\"true\" data-video-play-only-visible=\"true\" data-video-lazy-load=\"true\" data-video-fallback-src=\"\" data-element=\"inner\" data-pb-style=\"PB0E67C\"><div data-content-type=\"text\" data-appearance=\"default\" data-element=\"main\"><p>NEW ARRIVALS</p><h2>Selected Pieces</h2></div><style>#html-body [data-pb-style=P8BAA2A]{display:inline-block}#html-body [data-pb-style=P1E1FC7]{text-align:center}</style><div data-content-type=\"buttons\" data-appearance=\"inline\" data-same-width=\"false\" data-element=\"main\"><div data-content-type=\"button-item\" data-appearance=\"default\" data-element=\"main\" data-pb-style=\"P8BAA2A\"><a class=\"pagebuilder-button-primary\" href=\"#\" target=\"\" data-link-type=\"default\" data-element=\"link\" data-pb-style=\"P1E1FC7\"><span data-element=\"link_text\">VIEW ALL</span></a></div></div><div class=\"pagebuilder-column-group\" data-content-type=\"column-group\" data-appearance=\"default\" data-grid-size=\"12\" data-background-images=\"{}\" data-element=\"main\"><div class=\"pagebuilder-column-line\" data-content-type=\"column-line\" data-element=\"main\" data-pb-style=\"P7C457F\"><div class=\"pagebuilder-column\" data-content-type=\"column\" data-appearance=\"full-height\" data-background-images=\"{}\" data-element=\"main\" data-pb-style=\"PB8F011\"><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/det-home-preview/classic-cotton-shirt-302x384-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure><div data-content-type=\"text\" data-appearance=\"default\" data-element=\"main\"><h2>Classic Cotton Shirt</h2><p>SHIRTING</p><p>$490</p></div></div><div class=\"pagebuilder-column\" data-content-type=\"column\" data-appearance=\"full-height\" data-background-images=\"{}\" data-element=\"main\" data-pb-style=\"P4A0FB1\"><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/det-home-preview/fringed-knit-poncho-302x384-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure><div data-content-type=\"text\" data-appearance=\"default\" data-element=\"main\"><h2>Fringed Knit Poncho</h2><p>KNITWEAR</p><p>$860</p></div></div><div class=\"pagebuilder-column\" data-content-type=\"column\" data-appearance=\"full-height\" data-background-images=\"{}\" data-element=\"main\" data-pb-style=\"P138197\"><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/det-home-preview/chelsea-boot-03-302x384-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure><div data-content-type=\"text\" data-appearance=\"default\" data-element=\"main\"><h2>Chelsea Boot 03</h2><p>SHOES</p><p>$720</p></div></div><div class=\"pagebuilder-column\" data-content-type=\"column\" data-appearance=\"full-height\" data-background-images=\"{}\" data-element=\"main\" data-pb-style=\"P556BCB\"><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/det-home-preview/tan-leather-satchel-302x384-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure><div data-content-type=\"text\" data-appearance=\"default\" data-element=\"main\"><h2>Tan Leather Satchel</h2><p>ACCESSORIES</p><p>$540</p></div></div></div></div></div></div><style>#html-body [data-pb-style=PD82721]{min-height:940px}#html-body [data-pb-style=P5B713E]{display:flex;width:100%}#html-body [data-pb-style=P7D3091]{justify-content:flex-start;display:flex;flex-direction:column;width:67%;align-self:stretch}#html-body [data-pb-style=P516B9F]{justify-content:flex-start;display:flex;flex-direction:column;width:33%;align-self:stretch}</style><div data-content-type=\"row\" data-appearance=\"contained\" data-element=\"main\"><div data-enable-parallax=\"0\" data-parallax-speed=\"0.5\" data-background-images=\"{}\" data-background-type=\"image\" data-video-loop=\"true\" data-video-play-only-visible=\"true\" data-video-lazy-load=\"true\" data-video-fallback-src=\"\" data-element=\"inner\" data-pb-style=\"PD82721\"><div class=\"pagebuilder-column-group\" data-content-type=\"column-group\" data-appearance=\"default\" data-grid-size=\"12\" data-background-images=\"{}\" data-element=\"main\"><div class=\"pagebuilder-column-line\" data-content-type=\"column-line\" data-element=\"main\" data-pb-style=\"P5B713E\"><div class=\"pagebuilder-column\" data-content-type=\"column\" data-appearance=\"full-height\" data-background-images=\"{}\" data-element=\"main\" data-pb-style=\"P516B9F\"><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/det-home-preview/campaign-secondary-340x484-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure><div data-content-type=\"text\" data-appearance=\"default\" data-element=\"main\"><p>THE CAMPAIGN</p><h2>The Season in Two Acts</h2></div><style>#html-body [data-pb-style=PB92669]{display:inline-block}#html-body [data-pb-style=P5971DA]{text-align:center}</style><div data-content-type=\"buttons\" data-appearance=\"inline\" data-same-width=\"false\" data-element=\"main\"><div data-content-type=\"button-item\" data-appearance=\"default\" data-element=\"main\" data-pb-style=\"PB92669\"><a class=\"pagebuilder-button-primary\" href=\"#\" target=\"\" data-link-type=\"default\" data-element=\"link\" data-pb-style=\"P5971DA\"><span data-element=\"link_text\">EXPLORE THE COLLECTION</span></a></div></div></div><div class=\"pagebuilder-column\" data-content-type=\"column\" data-appearance=\"full-height\" data-background-images=\"{}\" data-element=\"main\" data-pb-style=\"P7D3091\"><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/det-home-preview/campaign-primary-860x720-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure></div></div></div></div></div><style>#html-body [data-pb-style=PE1A30D]{min-height:836px}#html-body [data-pb-style=PCBA620]{display:flex;width:100%}#html-body [data-pb-style=P4F3274]{justify-content:flex-start;display:flex;flex-direction:column;width:25%;align-self:stretch}#html-body [data-pb-style=P264AB0]{justify-content:flex-start;display:flex;flex-direction:column;width:50%;align-self:stretch}#html-body [data-pb-style=PC37B99]{justify-content:flex-start;display:flex;flex-direction:column;width:25%;align-self:stretch}</style><div data-content-type=\"row\" data-appearance=\"contained\" data-element=\"main\"><div data-enable-parallax=\"0\" data-parallax-speed=\"0.5\" data-background-images=\"{}\" data-background-type=\"image\" data-video-loop=\"true\" data-video-play-only-visible=\"true\" data-video-lazy-load=\"true\" data-video-fallback-src=\"\" data-element=\"inner\" data-pb-style=\"PE1A30D\"><div data-content-type=\"text\" data-appearance=\"default\" data-element=\"main\"><p>CURATED LOOKS</p><h2>The Lookbook</h2></div><style>#html-body [data-pb-style=P082404]{display:inline-block}#html-body [data-pb-style=PFE8F41]{text-align:center}</style><div data-content-type=\"buttons\" data-appearance=\"inline\" data-same-width=\"false\" data-element=\"main\"><div data-content-type=\"button-item\" data-appearance=\"default\" data-element=\"main\" data-pb-style=\"P082404\"><a class=\"pagebuilder-button-primary\" href=\"#\" target=\"\" data-link-type=\"default\" data-element=\"link\" data-pb-style=\"PFE8F41\"><span data-element=\"link_text\">VIEW LOOKBOOK</span></a></div></div><div class=\"pagebuilder-column-group\" data-content-type=\"column-group\" data-appearance=\"default\" data-grid-size=\"12\" data-background-images=\"{}\" data-element=\"main\"><div class=\"pagebuilder-column-line\" data-content-type=\"column-line\" data-element=\"main\" data-pb-style=\"PCBA620\"><div class=\"pagebuilder-column\" data-content-type=\"column\" data-appearance=\"full-height\" data-background-images=\"{}\" data-element=\"main\" data-pb-style=\"P4F3274\"><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/det-home-preview/look-01-300x540-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure><div data-content-type=\"text\" data-appearance=\"default\" data-element=\"main\"><p>LOOK 01 — DAY</p></div></div><div class=\"pagebuilder-column\" data-content-type=\"column\" data-appearance=\"full-height\" data-background-images=\"{}\" data-element=\"main\" data-pb-style=\"P264AB0\"><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/det-home-preview/look-02-600x612-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure><div data-content-type=\"text\" data-appearance=\"default\" data-element=\"main\"><p>LOOK 02 — EVENING</p></div></div><div class=\"pagebuilder-column\" data-content-type=\"column\" data-appearance=\"full-height\" data-background-images=\"{}\" data-element=\"main\" data-pb-style=\"PC37B99\"><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/det-home-preview/look-03-300x540-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure><div data-content-type=\"text\" data-appearance=\"default\" data-element=\"main\"><p>LOOK 03 — WEEKEND</p></div></div></div></div></div></div><style>#html-body [data-pb-style=P3E9906]{min-height:1220px}#html-body [data-pb-style=P015D0E]{display:flex;width:100%}#html-body [data-pb-style=PF53244]{justify-content:flex-start;display:flex;flex-direction:column;width:23%;align-self:stretch}#html-body [data-pb-style=PADBFD5]{justify-content:flex-start;display:flex;flex-direction:column;width:28%;align-self:stretch}#html-body [data-pb-style=P8DC3F5]{justify-content:flex-start;display:flex;flex-direction:column;width:22%;align-self:stretch}#html-body [data-pb-style=PA6C271]{justify-content:flex-start;display:flex;flex-direction:column;width:27%;align-self:stretch}</style><div data-content-type=\"row\" data-appearance=\"contained\" data-element=\"main\"><div data-enable-parallax=\"0\" data-parallax-speed=\"0.5\" data-background-images=\"{}\" data-background-type=\"image\" data-video-loop=\"true\" data-video-play-only-visible=\"true\" data-video-lazy-load=\"true\" data-video-fallback-src=\"\" data-element=\"inner\" data-pb-style=\"P3E9906\"><div data-content-type=\"text\" data-appearance=\"default\" data-element=\"main\"><p>CAMPAIGN — FW26</p><h2>Scenes from the Collection</h2></div><style>#html-body [data-pb-style=PEB1DD6]{display:inline-block}#html-body [data-pb-style=P15E4CA]{text-align:center}</style><div data-content-type=\"buttons\" data-appearance=\"inline\" data-same-width=\"false\" data-element=\"main\"><div data-content-type=\"button-item\" data-appearance=\"default\" data-element=\"main\" data-pb-style=\"PEB1DD6\"><a class=\"pagebuilder-button-primary\" href=\"#\" target=\"\" data-link-type=\"default\" data-element=\"link\" data-pb-style=\"P15E4CA\"><span data-element=\"link_text\">FULL EDITORIAL</span></a></div></div><div class=\"pagebuilder-column-group\" data-content-type=\"column-group\" data-appearance=\"default\" data-grid-size=\"12\" data-background-images=\"{}\" data-element=\"main\"><div class=\"pagebuilder-column-line\" data-content-type=\"column-line\" data-element=\"main\" data-pb-style=\"P015D0E\"><div class=\"pagebuilder-column\" data-content-type=\"column\" data-appearance=\"full-height\" data-background-images=\"{}\" data-element=\"main\" data-pb-style=\"PF53244\"><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/det-home-preview/mosaic-c01-t1-280x560-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/det-home-preview/mosaic-c01-t2-280x456-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure></div><div class=\"pagebuilder-column\" data-content-type=\"column\" data-appearance=\"full-height\" data-background-images=\"{}\" data-element=\"main\" data-pb-style=\"PADBFD5\"><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/det-home-preview/mosaic-c02-t1-340x436-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/det-home-preview/mosaic-c02-t2-340x580-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure></div><div class=\"pagebuilder-column\" data-content-type=\"column\" data-appearance=\"full-height\" data-background-images=\"{}\" data-element=\"main\" data-pb-style=\"P8DC3F5\"><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/det-home-preview/mosaic-c03-t1-268x560-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/det-home-preview/mosaic-c03-t2-268x456-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure></div><div class=\"pagebuilder-column\" data-content-type=\"column\" data-appearance=\"full-height\" data-background-images=\"{}\" data-element=\"main\" data-pb-style=\"PA6C271\"><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/det-home-preview/mosaic-c04-t1-320x620-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/det-home-preview/mosaic-c04-t2-320x396-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure></div></div></div></div></div><style>#html-body [data-pb-style=P111FA0]{min-height:780px}#html-body [data-pb-style=P101044]{display:flex;width:100%}#html-body [data-pb-style=P064D95]{justify-content:flex-start;display:flex;flex-direction:column;width:50%;align-self:stretch}#html-body [data-pb-style=P11A24B]{justify-content:flex-start;display:flex;flex-direction:column;width:50%;align-self:stretch}</style><div data-content-type=\"row\" data-appearance=\"contained\" data-element=\"main\"><div data-enable-parallax=\"0\" data-parallax-speed=\"0.5\" data-background-images=\"{}\" data-background-type=\"image\" data-video-loop=\"true\" data-video-play-only-visible=\"true\" data-video-lazy-load=\"true\" data-video-fallback-src=\"\" data-element=\"inner\" data-pb-style=\"P111FA0\"><div class=\"pagebuilder-column-group\" data-content-type=\"column-group\" data-appearance=\"default\" data-grid-size=\"12\" data-background-images=\"{}\" data-element=\"main\"><div class=\"pagebuilder-column-line\" data-content-type=\"column-line\" data-element=\"main\" data-pb-style=\"P101044\"><div class=\"pagebuilder-column\" data-content-type=\"column\" data-appearance=\"full-height\" data-background-images=\"{}\" data-element=\"main\" data-pb-style=\"P064D95\"><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/det-home-preview/craft-media-620x620-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure></div><div class=\"pagebuilder-column\" data-content-type=\"column\" data-appearance=\"full-height\" data-background-images=\"{}\" data-element=\"main\" data-pb-style=\"P11A24B\"><div data-content-type=\"text\" data-appearance=\"default\" data-element=\"main\"><p>CRAFTSMANSHIP</p><h2>Materials, considered</h2><p>Fabric, stitch and finish — considered at every step of the making.</p></div><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/det-home-preview/craft-detail-stitch-292x254-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/det-home-preview/craft-detail-fabric-292x253-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure></div></div></div></div></div><style>#html-body [data-pb-style=PAE26E2]{min-height:1000px}#html-body [data-pb-style=P764EE9]{display:flex;width:100%}#html-body [data-pb-style=PCE6550]{justify-content:flex-start;display:flex;flex-direction:column;width:30%;align-self:stretch}#html-body [data-pb-style=P037C04]{justify-content:flex-start;display:flex;flex-direction:column;width:21%;align-self:stretch}#html-body [data-pb-style=PA3732F]{justify-content:flex-start;display:flex;flex-direction:column;width:36%;align-self:stretch}#html-body [data-pb-style=PA1B81A]{justify-content:flex-start;display:flex;flex-direction:column;width:13%;align-self:stretch}</style><div data-content-type=\"row\" data-appearance=\"contained\" data-element=\"main\"><div data-enable-parallax=\"0\" data-parallax-speed=\"0.5\" data-background-images=\"{}\" data-background-type=\"image\" data-video-loop=\"true\" data-video-play-only-visible=\"true\" data-video-lazy-load=\"true\" data-video-fallback-src=\"\" data-element=\"inner\" data-pb-style=\"PAE26E2\"><div data-content-type=\"text\" data-appearance=\"default\" data-element=\"main\"><p>THE PEOPLE</p><h2>Worn in Their Own Way</h2><p>Personal perspectives on modern dressing.</p><p>04 LOOKS</p></div><div class=\"pagebuilder-column-group\" data-content-type=\"column-group\" data-appearance=\"default\" data-grid-size=\"12\" data-background-images=\"{}\" data-element=\"main\"><div class=\"pagebuilder-column-line\" data-content-type=\"column-line\" data-element=\"main\" data-pb-style=\"P764EE9\"><div class=\"pagebuilder-column\" data-content-type=\"column\" data-appearance=\"full-height\" data-background-images=\"{}\" data-element=\"main\" data-pb-style=\"PCE6550\"><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/det-home-preview/people-look-01-560x680-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure><div data-content-type=\"text\" data-appearance=\"default\" data-element=\"main\"><p>LOOK 01 — WOMEN'S TAILORING</p></div></div><div class=\"pagebuilder-column\" data-content-type=\"column\" data-appearance=\"full-height\" data-background-images=\"{}\" data-element=\"main\" data-pb-style=\"P037C04\"><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/det-home-preview/people-look-02-400x500-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure></div><div class=\"pagebuilder-column\" data-content-type=\"column\" data-appearance=\"full-height\" data-background-images=\"{}\" data-element=\"main\" data-pb-style=\"PA3732F\"><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/det-home-preview/people-look-04-668x220-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure><div data-content-type=\"text\" data-appearance=\"default\" data-element=\"main\"><p>LOOK 02 — MINIMAL MENSWEAR</p><p>LOOK 03 — CONTEMPORARY STREET</p><p>LOOK 04 — EVERYDAY LUXURY</p></div></div><div class=\"pagebuilder-column\" data-content-type=\"column\" data-appearance=\"full-height\" data-background-images=\"{}\" data-element=\"main\" data-pb-style=\"PA1B81A\"><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/det-home-preview/people-look-03-252x500-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure></div></div></div><div data-content-type=\"text\" data-appearance=\"default\" data-element=\"main\"><p>PLACEHOLDER — RIGHTS UNVERIFIED</p></div><style>#html-body [data-pb-style=PD136B7]{display:inline-block}#html-body [data-pb-style=P43C783]{text-align:center}</style><div data-content-type=\"buttons\" data-appearance=\"inline\" data-same-width=\"false\" data-element=\"main\"><div data-content-type=\"button-item\" data-appearance=\"default\" data-element=\"main\" data-pb-style=\"PD136B7\"><a class=\"pagebuilder-button-primary\" href=\"#\" target=\"\" data-link-type=\"default\" data-element=\"link\" data-pb-style=\"P43C783\"><span data-element=\"link_text\">EXPLORE THE LOOKS →</span></a></div></div></div></div><style>#html-body [data-pb-style=P1A8067]{min-height:680px}#html-body [data-pb-style=P5E2E1A]{display:flex;width:100%}#html-body [data-pb-style=P9B4F26]{justify-content:flex-start;display:flex;flex-direction:column;width:58%;align-self:stretch}#html-body [data-pb-style=P3DCBB6]{justify-content:flex-start;display:flex;flex-direction:column;width:42%;align-self:stretch}</style><div data-content-type=\"row\" data-appearance=\"contained\" data-element=\"main\"><div data-enable-parallax=\"0\" data-parallax-speed=\"0.5\" data-background-images=\"{}\" data-background-type=\"image\" data-video-loop=\"true\" data-video-play-only-visible=\"true\" data-video-lazy-load=\"true\" data-video-fallback-src=\"\" data-element=\"inner\" data-pb-style=\"P1A8067\"><div class=\"pagebuilder-column-group\" data-content-type=\"column-group\" data-appearance=\"default\" data-grid-size=\"12\" data-background-images=\"{}\" data-element=\"main\"><div class=\"pagebuilder-column-line\" data-content-type=\"column-line\" data-element=\"main\" data-pb-style=\"P5E2E1A\"><div class=\"pagebuilder-column\" data-content-type=\"column\" data-appearance=\"full-height\" data-background-images=\"{}\" data-element=\"main\" data-pb-style=\"P3DCBB6\"><div data-content-type=\"text\" data-appearance=\"default\" data-element=\"main\"><p>N°1</p><p>SIGNATURE OUTERWEAR</p><h2>The Signature Trench</h2><p>Relaxed tailoring in warm neutrals — the defining layer of the season.</p></div><style>#html-body [data-pb-style=PF3D666]{display:inline-block}#html-body [data-pb-style=P07BB72]{text-align:center}#html-body [data-pb-style=PFF4CB2]{display:inline-block}#html-body [data-pb-style=P673301]{text-align:center}</style><div data-content-type=\"buttons\" data-appearance=\"inline\" data-same-width=\"false\" data-element=\"main\"><div data-content-type=\"button-item\" data-appearance=\"default\" data-element=\"main\" data-pb-style=\"PF3D666\"><a class=\"pagebuilder-button-primary\" href=\"#\" target=\"\" data-link-type=\"default\" data-element=\"link\" data-pb-style=\"P07BB72\"><span data-element=\"link_text\">Add to Bag</span></a></div><div data-content-type=\"button-item\" data-appearance=\"default\" data-element=\"main\" data-pb-style=\"PFF4CB2\"><a class=\"pagebuilder-button-secondary\" href=\"#\" target=\"\" data-link-type=\"default\" data-element=\"link\" data-pb-style=\"P673301\"><span data-element=\"link_text\">View Details</span></a></div></div></div><div class=\"pagebuilder-column\" data-content-type=\"column\" data-appearance=\"full-height\" data-background-images=\"{}\" data-element=\"main\" data-pb-style=\"P9B4F26\"><figure data-content-type=\"image\" data-appearance=\"full-width\" data-element=\"main\"><img class=\"pagebuilder-mobile-hidden\" src=\"{{media url=wysiwyg/det-home-preview/spotlight-720x680-placeholder.jpg}}\" alt=\"\" title=\"\" data-element=\"desktop_image\"></figure></div></div></div></div></div><style>#html-body [data-pb-style=P577797]{min-height:492px}</style><div data-content-type=\"row\" data-appearance=\"contained\" data-element=\"main\"><div data-enable-parallax=\"0\" data-parallax-speed=\"0.5\" data-background-images=\"{}\" data-background-type=\"image\" data-video-loop=\"true\" data-video-play-only-visible=\"true\" data-video-lazy-load=\"true\" data-video-fallback-src=\"\" data-element=\"inner\" data-pb-style=\"P577797\"><div data-content-type=\"text\" data-appearance=\"default\" data-element=\"main\"><p>THE CIRCULAR</p><h2>Letters from the House</h2><p>New arrivals, styling notes and private previews — one letter a month.</p></div><style>#html-body [data-pb-style=P241869]{display:inline-block}#html-body [data-pb-style=PC3EC7C]{text-align:center}</style><div data-content-type=\"buttons\" data-appearance=\"inline\" data-same-width=\"false\" data-element=\"main\"><div data-content-type=\"button-item\" data-appearance=\"default\" data-element=\"main\" data-pb-style=\"P241869\"><a class=\"pagebuilder-button-primary\" href=\"#\" target=\"\" data-link-type=\"default\" data-element=\"link\" data-pb-style=\"PC3EC7C\"><span data-element=\"link_text\">Subscribe</span></a></div></div></div></div>",
+  "contentHash": "sha256:78b3ad118a3d8a29e1e3db0a963f562d399b49bd50f1dda5347287a82afa34f4",
+  "mapping": [
+    {
+      "sourceNodeId": "n-0341a0ba899d",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "2 role-resolved loose text(s) composed as one leading text WYSIWYG band in document order; the observed standalone styling of the cluster is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-059fdf1a20d0",
+      "sourceName": "SECTION/FeaturedProducts",
+      "sourceLocator": "design://g28-home-fixture-source/245:7",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/row",
+        "appearanceId": "contained",
+        "nativeElement": "main",
+        "nativeField": "row(contained) > column-group(default) > column-line x1 > column(full-height) x4"
+      },
+      "note": "Grid section composed as the declaration-backed column chain: 1 line(s), 4 projected grid column(s), widths apportioned from observed fixed widths to integer percents (largest remainder, sum 100); observed vertical overlap bands define the lines (nesting a column-group inside a column is NOT declaration-backed); observed gutters/staggering are not native fields — recorded fidelity limits; mobile breakpoint not composed."
+    },
+    {
+      "sourceNodeId": "n-08fa2739e360",
+      "sourceName": "SECTION/Lookbook",
+      "sourceLocator": "design://g28-home-fixture-source/299:311",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/row",
+        "appearanceId": "contained",
+        "nativeElement": "main",
+        "nativeField": "row(contained) > column-group(default) > column-line x1 > column(full-height) x3"
+      },
+      "note": "Grid section composed as the declaration-backed column chain: 1 line(s), 3 projected grid column(s), widths apportioned from observed fixed widths to integer percents (largest remainder, sum 100); observed vertical overlap bands define the lines (nesting a column-group inside a column is NOT declaration-backed); observed gutters/staggering are not native fields — recorded fidelity limits; mobile breakpoint not composed."
+    },
+    {
+      "sourceNodeId": "n-0d1fe8875e5d",
+      "sourceName": "Proto / Product Card",
+      "sourceLocator": "design://g28-home-fixture-source/254:90",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "grid column at 25% of line 1 (observed proportion of its line)"
+      },
+      "note": "Grid slot composed as one native column (full-height) at 25% width of line 1."
+    },
+    {
+      "sourceNodeId": "n-0da4a40500d8",
+      "sourceName": "Link/Arrow",
+      "sourceLocator": "design://g28-home-fixture-source/I256:96;251:101",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "synthesized complement column (container folded)"
+      },
+      "note": "Structural container folded into the synthesized complement column; its composable descendants compose in document order; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-0db52ca2335f",
+      "sourceName": "SCROLL",
+      "sourceLocator": "design://g28-home-fixture-source/254:59",
+      "disposition": "excluded",
+      "note": "Inside a subtree explicitly projected as decoration; recorded, never silently dropped."
+    },
+    {
+      "sourceNodeId": "n-0eb19b9473b4",
+      "sourceName": "SLOT/LookbookCards",
+      "sourceLocator": "design://g28-home-fixture-source/299:321",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "grid structure (container folded)"
+      },
+      "note": "Structural container folded into the grid structure; its composable descendants compose in the bands/columns; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-130fc57e6b1d",
+      "sourceName": "Img",
+      "sourceLocator": "design://g28-home-fixture-source/I254:99;348:313",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/image",
+        "appearanceId": "full-width",
+        "nativeElement": "image",
+        "nativeField": "desktop_image (src)"
+      },
+      "note": "Explicitly projected media composed as a native image element (labeled offline placeholder (302x384); the operator supplies the real local asset before any CMS write); observed overlays (gradients, arrow affordances) and side-by-side media pairings have no native field and compose stacked — see the section's fidelity warnings."
+    },
+    {
+      "sourceNodeId": "n-187d57bcbd4b",
+      "sourceName": "SLOT/CraftContent",
+      "sourceLocator": "design://g28-home-fixture-source/299:345",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (secondary)",
+        "nativeField": "column children"
+      },
+      "note": "Secondary slot composed as the right native column (full-height); no manifest media entry on the slot frame itself."
+    },
+    {
+      "sourceNodeId": "n-194b852ebebb",
+      "sourceName": "LOOK 01 — WOMEN'S TAILORING",
+      "sourceLocator": "design://g28-home-fixture-source/522:548",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the column text WYSIWYG field as <p>; standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-1a7448ae7c57",
+      "sourceName": "SLOT/MosaicColumn/03",
+      "sourceLocator": "design://g28-home-fixture-source/284:413",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "grid column at 22% of line 1 (observed proportion of its line)"
+      },
+      "note": "Grid slot composed as one native column (full-height) at 22% width of line 1."
+    },
+    {
+      "sourceNodeId": "n-1aeaf1a1c29f",
+      "sourceName": "Proto / Collection Tile",
+      "sourceLocator": "design://g28-home-fixture-source/436:472",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "synthesized complement column (container folded)"
+      },
+      "note": "Structural container folded into the synthesized complement column; its composable descendants compose in document order; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-1b2a278d4b3a",
+      "sourceName": "SECTION/Newsletter",
+      "sourceLocator": "design://g28-home-fixture-source/245:14",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/row",
+        "appearanceId": "contained",
+        "nativeElement": "main",
+        "nativeField": "row(contained) > text(default) WYSIWYG [+ buttons(inline)]"
+      },
+      "note": "Band section composed as a contained row carrying one text WYSIWYG (role runs in document order) and, when CTAs resolve, one native buttons container; the section's fixed height persists as the row inner min-height via the platform's rehydratable style-block mechanism; mobile breakpoint not composed."
+    },
+    {
+      "sourceNodeId": "n-1b64ec74742a",
+      "sourceName": "SLOT/CampaignMedia/Secondary",
+      "sourceLocator": "design://g28-home-fixture-source/299:302",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/image",
+        "appearanceId": "full-width",
+        "nativeElement": "image",
+        "nativeField": "desktop_image (src)"
+      },
+      "note": "Explicitly projected media composed as a native image element in the synthesized complement column; observed overlay styling composes stacked — see the section's fidelity warnings."
+    },
+    {
+      "sourceNodeId": "n-1b7b5fcbd0cf",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "synthesized complement column"
+      },
+      "note": "The section's remaining loose composable content composed as ONE synthesized complement column (640px of the observed 1280px content width -> 50%); the source carries no explicit container for it — recorded decision, never invented structurally."
+    },
+    {
+      "sourceNodeId": "n-1ba2532d2bda",
+      "sourceName": "SECTION/Hero/Secondary",
+      "sourceLocator": "design://g28-home-fixture-source/394:386",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/row",
+        "appearanceId": "contained",
+        "nativeElement": "main",
+        "nativeField": "row(contained) > column-group(default) > column-line > column(full-height) x2"
+      },
+      "note": "Split section composed as the declaration-backed two-column chain: explicit slot (940px of the observed 1280px content width -> 73%) + ONE synthesized complement column (27%) from the section's remaining loose composable content in document order; observed side placement/any full-bleed media edge are approximated by the contained row (recorded fidelity limits); mobile breakpoint not composed."
+    },
+    {
+      "sourceNodeId": "n-1cae7a80346b",
+      "sourceName": "Link Label",
+      "sourceLocator": "design://g28-home-fixture-source/I299:312;251:101;251:72",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/button-item",
+        "appearanceId": "default",
+        "nativeElement": "button-item",
+        "nativeField": "button_text + link (button_link)"
+      },
+      "note": "Explicitly projected CTA composed as a native button-item inside the leading band buttons container (label \"VIEW LOOKBOOK\", link target from the manifest); the observed per-button visual styling (fill, radius, icon) is the theme's button CSS, not a composed field."
+    },
+    {
+      "sourceNodeId": "n-1dc64133d2cf",
+      "sourceName": "Editorial Tile",
+      "sourceLocator": "design://g28-home-fixture-source/284:411",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/image",
+        "appearanceId": "full-width",
+        "nativeElement": "image",
+        "nativeField": "desktop_image (src)"
+      },
+      "note": "Explicitly projected media composed as a native image element (labeled offline placeholder (340x436); the operator supplies the real local asset before any CMS write); observed overlays (gradients, arrow affordances) and side-by-side media pairings have no native field and compose stacked — see the section's fidelity warnings."
+    },
+    {
+      "sourceNodeId": "n-1de84526f101",
+      "sourceName": "SECTION/Craftsmanship",
+      "sourceLocator": "design://g28-home-fixture-source/299:343",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/row",
+        "appearanceId": "contained",
+        "nativeElement": "main",
+        "nativeField": "row(contained) > column-group(default) > column-line > column(full-height) x2"
+      },
+      "note": "Section composed as the declaration-backed two-column chain; column-line is the mandated bridge; observed slot proportions (620:612) simplified to 50/50 persisted via the platform's rehydratable style-block mechanism (deterministic data-pb-style keys); mobile breakpoint not composed."
+    },
+    {
+      "sourceNodeId": "n-1f8ac307653c",
+      "sourceName": "SLOT/PeopleLook/03-Street",
+      "sourceLocator": "design://g28-home-fixture-source/522:551",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "grid column at 13% of line 1 (observed proportion of its line)"
+      },
+      "note": "Grid slot composed as one native column (full-height) at 13% width of line 1."
+    },
+    {
+      "sourceNodeId": "n-1fa87a2f4649",
+      "sourceName": "Category",
+      "sourceLocator": "design://g28-home-fixture-source/I254:99;250:9",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the column text WYSIWYG field as <p> (consecutive texts merged into one field, document order); standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-2422bd637477",
+      "sourceName": "Link/Arrow",
+      "sourceLocator": "design://g28-home-fixture-source/I299:312;251:101",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "grid structure (container folded)"
+      },
+      "note": "Structural container folded into the grid structure; its composable descendants compose in the bands/columns; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-24ea2ee557ec",
+      "sourceName": "Product Name",
+      "sourceLocator": "design://g28-home-fixture-source/I254:81;250:8",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the column text WYSIWYG field as <h2> (consecutive texts merged into one field, document order); standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-2a5dde38b125",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/buttons",
+        "appearanceId": "inline",
+        "nativeElement": "buttons",
+        "nativeField": "1 button-item child(ren)"
+      },
+      "note": "1 projected CTA(s) composed as one native buttons (inline) container after the trailing band text WYSIWYG."
+    },
+    {
+      "sourceNodeId": "n-2a5ec5d64311",
+      "sourceName": "Left",
+      "sourceLocator": "design://g28-home-fixture-source/I299:312;250:27",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "grid structure (container folded)"
+      },
+      "note": "Structural container folded into the grid structure; its composable descendants compose in the bands/columns; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-2ba5f9df6798",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "synthesized complement column"
+      },
+      "note": "The section's remaining loose composable content composed as ONE synthesized complement column (528px of the observed 1248px content width -> 42%); the source carries no explicit container for it — recorded decision, never invented structurally."
+    },
+    {
+      "sourceNodeId": "n-2ba93b34b17c",
+      "sourceName": "Proto / Collection Tile",
+      "sourceLocator": "design://g28-home-fixture-source/436:484",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "synthesized complement column (container folded)"
+      },
+      "note": "Structural container folded into the synthesized complement column; its composable descendants compose in document order; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-2d3d1488b6c1",
+      "sourceName": "SLOT/MosaicColumn/01",
+      "sourceLocator": "design://g28-home-fixture-source/284:407",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "grid column at 23% of line 1 (observed proportion of its line)"
+      },
+      "note": "Grid slot composed as one native column (full-height) at 23% width of line 1."
+    },
+    {
+      "sourceNodeId": "n-2fbb4459b214",
+      "sourceName": "SLOT/PeopleLook/01-Tailoring",
+      "sourceLocator": "design://g28-home-fixture-source/522:547",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "grid column at 30% of line 1 (observed proportion of its line)"
+      },
+      "note": "Grid slot composed as one native column (full-height) at 30% width of line 1."
+    },
+    {
+      "sourceNodeId": "n-331d0ec922ab",
+      "sourceName": "THE HOUSE",
+      "sourceLocator": "design://g28-home-fixture-source/254:60",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the band text WYSIWYG field as <p> (document order); standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-337047ebb368",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "synthesized complement column"
+      },
+      "note": "The section's remaining loose composable content composed as ONE synthesized complement column (340px of the observed 1280px content width -> 27%); the source carries no explicit container for it — recorded decision, never invented structurally."
+    },
+    {
+      "sourceNodeId": "n-344ab686bb10",
+      "sourceName": "Img",
+      "sourceLocator": "design://g28-home-fixture-source/I254:90;348:313",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/image",
+        "appearanceId": "full-width",
+        "nativeElement": "image",
+        "nativeField": "desktop_image (src)"
+      },
+      "note": "Explicitly projected media composed as a native image element (labeled offline placeholder (302x384); the operator supplies the real local asset before any CMS write); observed overlays (gradients, arrow affordances) and side-by-side media pairings have no native field and compose stacked — see the section's fidelity warnings."
+    },
+    {
+      "sourceNodeId": "n-345bc149ea08",
+      "sourceName": "Left",
+      "sourceLocator": "design://g28-home-fixture-source/I256:96;250:27",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "synthesized complement column (container folded)"
+      },
+      "note": "Structural container folded into the synthesized complement column; its composable descendants compose in document order; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-362bfd0b28d0",
+      "sourceName": "LOOK 02 — MINIMAL MENSWEAR",
+      "sourceLocator": "design://g28-home-fixture-source/522:550",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the column text WYSIWYG field as <p> (consecutive texts merged into one field, document order); standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-36da9618bfe9",
+      "sourceName": "Caption",
+      "sourceLocator": "design://g28-home-fixture-source/299:335",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the column text WYSIWYG field as <p>; standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-394b43296427",
+      "sourceName": "Proto / Button/Primary Light",
+      "sourceLocator": "design://g28-home-fixture-source/257:131",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/button-item",
+        "appearanceId": "default",
+        "nativeElement": "button-item",
+        "nativeField": "button_text + link (button_link)"
+      },
+      "note": "Explicitly projected CTA composed as a native button-item in the synthesized complement column (label \"Add to Bag\", link target from the manifest, primary variant); the observed per-button visual styling (fill, radius, icon) is the theme's button CSS, not a composed field."
+    },
+    {
+      "sourceNodeId": "n-394b43296427",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/buttons",
+        "appearanceId": "inline",
+        "nativeElement": "buttons",
+        "nativeField": "2 button-item child(ren)"
+      },
+      "note": "2 projected CTA(s) composed as one native buttons (inline) container in the synthesized complement column; consecutive CTAs merge into one container, document order preserved."
+    },
+    {
+      "sourceNodeId": "n-3cbcc6e00252",
+      "sourceName": "SLOT/MosaicColumn/02",
+      "sourceLocator": "design://g28-home-fixture-source/284:410",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "grid column at 28% of line 1 (observed proportion of its line)"
+      },
+      "note": "Grid slot composed as one native column (full-height) at 28% width of line 1."
+    },
+    {
+      "sourceNodeId": "n-3f11487dd293",
+      "sourceName": "Editorial Tile",
+      "sourceLocator": "design://g28-home-fixture-source/284:412",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/image",
+        "appearanceId": "full-width",
+        "nativeElement": "image",
+        "nativeField": "desktop_image (src)"
+      },
+      "note": "Explicitly projected media composed as a native image element (labeled offline placeholder (340x580); the operator supplies the real local asset before any CMS write); observed overlays (gradients, arrow affordances) and side-by-side media pairings have no native field and compose stacked — see the section's fidelity warnings."
+    },
+    {
+      "sourceNodeId": "n-3f28d8038303",
+      "sourceName": "Body",
+      "sourceLocator": "design://g28-home-fixture-source/299:348",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the column text WYSIWYG field as <p> (consecutive texts merged into one field, document order); standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-3fc0f8944b0c",
+      "sourceName": "SLOT/DetailStitch",
+      "sourceLocator": "design://g28-home-fixture-source/299:349",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/image",
+        "appearanceId": "full-width",
+        "nativeElement": "image",
+        "nativeField": "desktop_image (src)"
+      },
+      "note": "Explicitly projected media slot composed as a native image element (labeled offline placeholder (292x254); the operator supplies the real local asset before any CMS write); the observed side-by-side pairing of detail media is not declaration-backed and composes stacked — see the section's fidelity warnings."
+    },
+    {
+      "sourceNodeId": "n-401cb33cab52",
+      "sourceName": "$0,000",
+      "sourceLocator": "design://g28-home-fixture-source/I254:72;250:10",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the column text WYSIWYG field as <p> (consecutive texts merged into one field, document order); standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-45360844f61f",
+      "sourceName": "Fade",
+      "sourceLocator": "design://g28-home-fixture-source/257:123",
+      "disposition": "gap",
+      "note": "Explicitly projected decoration without a native equivalent; excluded (not silently dropped)."
+    },
+    {
+      "sourceNodeId": "n-465d81dbb422",
+      "sourceName": "Label",
+      "sourceLocator": "design://g28-home-fixture-source/I436:484;436:442",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "synthesized complement column (container folded)"
+      },
+      "note": "Structural container folded into the synthesized complement column; its composable descendants compose in document order; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-46ff73247045",
+      "sourceName": "Proto / Button/Primary",
+      "sourceLocator": "design://g28-home-fixture-source/254:47",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/banner",
+        "appearanceId": "poster",
+        "nativeElement": "button",
+        "nativeField": "button_text"
+      },
+      "note": "Explicitly projected CTA (Proto / Button/Primary) — label text + link target from the manifest."
+    },
+    {
+      "sourceNodeId": "n-471827a938ea",
+      "sourceName": "Section Header",
+      "sourceLocator": "design://g28-home-fixture-source/254:62",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "grid structure (container folded)"
+      },
+      "note": "Structural container folded into the grid structure; its composable descendants compose in the bands/columns; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-480135e0f030",
+      "sourceName": "Link Label",
+      "sourceLocator": "design://g28-home-fixture-source/I256:139;251:101;251:72",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/button-item",
+        "appearanceId": "default",
+        "nativeElement": "button-item",
+        "nativeField": "button_text + link (button_link)"
+      },
+      "note": "Explicitly projected CTA composed as a native button-item inside the leading band buttons container (label \"FULL EDITORIAL\", link target from the manifest); the observed per-button visual styling (fill, radius, icon) is the theme's button CSS, not a composed field."
+    },
+    {
+      "sourceNodeId": "n-4b1c2dd407bd",
+      "sourceName": "Section Header",
+      "sourceLocator": "design://g28-home-fixture-source/299:312",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "grid structure (container folded)"
+      },
+      "note": "Structural container folded into the grid structure; its composable descendants compose in the bands/columns; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-4b66d1a7f27c",
+      "sourceName": "Image",
+      "sourceLocator": "design://g28-home-fixture-source/I436:460;436:395",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "column children (container folded)"
+      },
+      "note": "Structural container folded into its native column; its composable descendants compose in document order; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-4ca29ed41994",
+      "sourceName": "SLOT/PeopleLook/02-Menswear",
+      "sourceLocator": "design://g28-home-fixture-source/522:549",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "grid column at 21% of line 1 (observed proportion of its line)"
+      },
+      "note": "Grid slot composed as one native column (full-height) at 21% width of line 1."
+    },
+    {
+      "sourceNodeId": "n-50b1f8057efa",
+      "sourceName": "Image",
+      "sourceLocator": "design://g28-home-fixture-source/I436:472;436:417",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "synthesized complement column (container folded)"
+      },
+      "note": "Structural container folded into the synthesized complement column; its composable descendants compose in document order; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-52297f794538",
+      "sourceName": "Section Header",
+      "sourceLocator": "design://g28-home-fixture-source/256:139",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "grid structure (container folded)"
+      },
+      "note": "Structural container folded into the grid structure; its composable descendants compose in the bands/columns; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-52a5dbec87f4",
+      "sourceName": "SLOT/SecondaryHeroMedia",
+      "sourceLocator": "design://g28-home-fixture-source/394:387",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "explicit grid-column slot (940px)"
+      },
+      "note": "Explicit slot composed as one native column (full-height) of the split section (73% of the observed 1280px content width)."
+    },
+    {
+      "sourceNodeId": "n-52ac8f384b5f",
+      "sourceName": "Img",
+      "sourceLocator": "design://g28-home-fixture-source/I436:460;436:396",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/image",
+        "appearanceId": "full-width",
+        "nativeElement": "image",
+        "nativeField": "desktop_image (src)"
+      },
+      "note": "Explicitly projected media composed as a native image element (labeled offline placeholder (640x616); the operator supplies the real local asset before any CMS write); observed overlays (gradients, arrow affordances) and side-by-side media pairings have no native field and compose stacked — see the section's fidelity warnings."
+    },
+    {
+      "sourceNodeId": "n-54182cc78f52",
+      "sourceName": "Gradient",
+      "sourceLocator": "design://g28-home-fixture-source/I436:484;436:441",
+      "disposition": "gap",
+      "note": "Explicitly projected decoration without a native equivalent; excluded (not silently dropped)."
+    },
+    {
+      "sourceNodeId": "n-54d75ca4f9ac",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "2 role-resolved loose text(s) composed as one text WYSIWYG in the synthesized complement column (document order); the source carries no explicit container for this cluster — the column is synthesized from the section's own children (recorded decision), and standalone per-field styling is not preserved."
+    },
+    {
+      "sourceNodeId": "n-564ae4e8d46e",
+      "sourceName": "$0,000",
+      "sourceLocator": "design://g28-home-fixture-source/I254:90;250:10",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the column text WYSIWYG field as <p> (consecutive texts merged into one field, document order); standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-565a869e0952",
+      "sourceName": "Label",
+      "sourceLocator": "design://g28-home-fixture-source/I436:472;436:420",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "synthesized complement column (container folded)"
+      },
+      "note": "Structural container folded into the synthesized complement column; its composable descendants compose in document order; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-57f252725695",
+      "sourceName": "Caption",
+      "sourceLocator": "design://g28-home-fixture-source/299:328",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the column text WYSIWYG field as <p>; standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-581ecc1af347",
+      "sourceName": "Wishlist",
+      "sourceLocator": "design://g28-home-fixture-source/I254:81;250:4",
+      "disposition": "gap",
+      "note": "Explicitly projected decoration without a native equivalent; excluded (not silently dropped)."
+    },
+    {
+      "sourceNodeId": "n-5a4a75f2e9d5",
+      "sourceName": "Product Name",
+      "sourceLocator": "design://g28-home-fixture-source/I254:90;250:8",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the column text WYSIWYG field as <h2> (consecutive texts merged into one field, document order); standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-5e8df9f1e519",
+      "sourceName": "SLOT/SpotlightContent",
+      "sourceLocator": "design://g28-home-fixture-source/257:125",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "synthesized complement column (container folded)"
+      },
+      "note": "Structural container folded into the synthesized complement column; its composable descendants compose in document order; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-5ec56d5bf585",
+      "sourceName": "LOOK 03 — CONTEMPORARY STREET",
+      "sourceLocator": "design://g28-home-fixture-source/522:552",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the column text WYSIWYG field as <p> (consecutive texts merged into one field, document order); standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-601f97005710",
+      "sourceName": "New arrivals, styling notes and private previews — one letter a month.",
+      "sourceLocator": "design://g28-home-fixture-source/257:183",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the band text WYSIWYG field as <p> (document order); standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-616920d28c54",
+      "sourceName": "Image",
+      "sourceLocator": "design://g28-home-fixture-source/I254:99;250:3",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "column children (container folded)"
+      },
+      "note": "Structural container folded into its native column; its composable descendants compose in document order; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-62daa7d53ad4",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "3 role-resolved loose text(s) composed as one text WYSIWYG in the synthesized complement column (document order); the source carries no explicit container for this cluster — the column is synthesized from the section's own children (recorded decision), and standalone per-field styling is not preserved."
+    },
+    {
+      "sourceNodeId": "n-6456722ecd97",
+      "sourceName": "Frame",
+      "sourceLocator": "design://g28-home-fixture-source/I254:62;251:101;251:73",
+      "disposition": "gap",
+      "note": "Explicitly projected decoration without a native equivalent; excluded (not silently dropped)."
+    },
+    {
+      "sourceNodeId": "n-665f98731e69",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "2 role-resolved loose text(s) composed as one leading text WYSIWYG band in document order; the observed standalone styling of the cluster is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-6703f584669d",
+      "sourceName": "CHAPTER 01 / AW 2026",
+      "sourceLocator": "design://g28-home-fixture-source/254:43",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/banner",
+        "appearanceId": "poster",
+        "nativeElement": "content",
+        "nativeField": "message"
+      },
+      "note": "Explicitly projected text folded into the banner content WYSIWYG field as <p>; standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-690f0223fa85",
+      "sourceName": "Img",
+      "sourceLocator": "design://g28-home-fixture-source/I254:72;348:313",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/image",
+        "appearanceId": "full-width",
+        "nativeElement": "image",
+        "nativeField": "desktop_image (src)"
+      },
+      "note": "Explicitly projected media composed as a native image element (labeled offline placeholder (302x384); the operator supplies the real local asset before any CMS write); observed overlays (gradients, arrow affordances) and side-by-side media pairings have no native field and compose stacked — see the section's fidelity warnings."
+    },
+    {
+      "sourceNodeId": "n-6a76ea62f3ed",
+      "sourceName": "The Quiet Grandeur",
+      "sourceLocator": "design://g28-home-fixture-source/254:44",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/banner",
+        "appearanceId": "poster",
+        "nativeElement": "content",
+        "nativeField": "message"
+      },
+      "note": "Explicitly projected text folded into the banner content WYSIWYG field as <h2>; standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-6becd519b3ff",
+      "sourceName": "Editorial Tile",
+      "sourceLocator": "design://g28-home-fixture-source/284:409",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/image",
+        "appearanceId": "full-width",
+        "nativeElement": "image",
+        "nativeField": "desktop_image (src)"
+      },
+      "note": "Explicitly projected media composed as a native image element (labeled offline placeholder (280x456); the operator supplies the real local asset before any CMS write); observed overlays (gradients, arrow affordances) and side-by-side media pairings have no native field and compose stacked — see the section's fidelity warnings."
+    },
+    {
+      "sourceNodeId": "n-6d2579da44ce",
+      "sourceName": "Luxury is what remains when everything unnecessary has been removed.",
+      "sourceLocator": "design://g28-home-fixture-source/254:61",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the band text WYSIWYG field as <h2> (document order); standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-6d91b74ea708",
+      "sourceName": "SLOT/HeroMedia",
+      "sourceLocator": "design://g28-home-fixture-source/254:40",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/banner",
+        "appearanceId": "poster",
+        "nativeElement": "wrapper",
+        "nativeField": "background_image"
+      },
+      "note": "Desktop background image (labeled offline placeholder (1440x880); the operator supplies the real local asset before any CMS write); mobile breakpoint not composed."
+    },
+    {
+      "sourceNodeId": "n-6eb49cd056cc",
+      "sourceName": "Proto / Button/Primary",
+      "sourceLocator": "design://g28-home-fixture-source/257:187",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/button-item",
+        "appearanceId": "default",
+        "nativeElement": "button-item",
+        "nativeField": "button_text + link (button_link)"
+      },
+      "note": "Explicitly projected CTA composed as a native button-item inside the band buttons container (label \"Subscribe\", link target from the manifest); the observed per-button visual styling (fill, radius, icon) is the theme's button CSS, not a composed field."
+    },
+    {
+      "sourceNodeId": "n-703263c600a9",
+      "sourceName": "Proto / Button/Ghost Light",
+      "sourceLocator": "design://g28-home-fixture-source/257:136",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/button-item",
+        "appearanceId": "default",
+        "nativeElement": "button-item",
+        "nativeField": "button_text + link (button_link)"
+      },
+      "note": "Explicitly projected CTA composed as a native button-item in the synthesized complement column (label \"View Details\", link target from the manifest, secondary variant); the observed per-button visual styling (fill, radius, icon) is the theme's button CSS, not a composed field."
+    },
+    {
+      "sourceNodeId": "n-7091779ff563",
+      "sourceName": "Refined tailoring, knitwear and leather for the season.",
+      "sourceLocator": "design://g28-home-fixture-source/254:45",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/banner",
+        "appearanceId": "poster",
+        "nativeElement": "content",
+        "nativeField": "message"
+      },
+      "note": "Explicitly projected text folded into the banner content WYSIWYG field as <p>; standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-709e82ae2689",
+      "sourceName": "SLOT/PeopleLook/04-Everyday",
+      "sourceLocator": "design://g28-home-fixture-source/522:553",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "grid column at 36% of line 1 (observed proportion of its line)"
+      },
+      "note": "Grid slot composed as one native column (full-height) at 36% width of line 1."
+    },
+    {
+      "sourceNodeId": "n-724c3873c2b3",
+      "sourceName": "SLOT/MosaicColumn/04",
+      "sourceLocator": "design://g28-home-fixture-source/284:416",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "grid column at 27% of line 1 (observed proportion of its line)"
+      },
+      "note": "Grid slot composed as one native column (full-height) at 27% width of line 1."
+    },
+    {
+      "sourceNodeId": "n-73cf0db5b329",
+      "sourceName": "Body",
+      "sourceLocator": "design://g28-home-fixture-source/I254:72;250:7",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "column children (container folded)"
+      },
+      "note": "Structural container folded into its native column; its composable descendants compose in document order; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-73f60a4fffe5",
+      "sourceName": "Proto / icon — Heart Toggle",
+      "sourceLocator": "design://g28-home-fixture-source/I254:72;348:311",
+      "disposition": "excluded",
+      "note": "Inside a subtree explicitly projected as decoration; recorded, never silently dropped."
+    },
+    {
+      "sourceNodeId": "n-78719c2812a3",
+      "sourceName": "Proto / icon — Heart Toggle",
+      "sourceLocator": "design://g28-home-fixture-source/I254:81;348:311",
+      "disposition": "excluded",
+      "note": "Inside a subtree explicitly projected as decoration; recorded, never silently dropped."
+    },
+    {
+      "sourceNodeId": "n-7c510158b125",
+      "sourceName": "Body",
+      "sourceLocator": "design://g28-home-fixture-source/I254:99;250:7",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "column children (container folded)"
+      },
+      "note": "Structural container folded into its native column; its composable descendants compose in document order; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-7c851c3ff554",
+      "sourceName": "Label",
+      "sourceLocator": "design://g28-home-fixture-source/I257:187;251:77",
+      "disposition": "excluded",
+      "note": "Inside a projected CTA instance that composed as the native button element; the label composes via the manifest entry, the rest is the button's visual chrome."
+    },
+    {
+      "sourceNodeId": "n-7dca38688059",
+      "sourceName": "SLOT/LookMedia/03",
+      "sourceLocator": "design://g28-home-fixture-source/299:337",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/image",
+        "appearanceId": "full-width",
+        "nativeElement": "image",
+        "nativeField": "desktop_image (src)"
+      },
+      "note": "Explicitly projected media composed as a native image element (labeled offline placeholder (300x540); the operator supplies the real local asset before any CMS write); observed overlays (gradients, arrow affordances) and side-by-side media pairings have no native field and compose stacked — see the section's fidelity warnings."
+    },
+    {
+      "sourceNodeId": "n-7dd35ce8f240",
+      "sourceName": "Proto / icon — Heart Toggle",
+      "sourceLocator": "design://g28-home-fixture-source/I254:90;348:311",
+      "disposition": "excluded",
+      "note": "Inside a subtree explicitly projected as decoration; recorded, never silently dropped."
+    },
+    {
+      "sourceNodeId": "n-82b87cc6e75f",
+      "sourceName": "SLOT/CraftMedia",
+      "sourceLocator": "design://g28-home-fixture-source/299:344",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (primary)",
+        "nativeField": "column children (own media slot -> image desktop_image src)"
+      },
+      "note": "Primary slot composed as the left native column (full-height); the slot's own media fill composes as the column's image element."
+    },
+    {
+      "sourceNodeId": "n-839f424484c4",
+      "sourceName": "Proto / icon — Heart Toggle",
+      "sourceLocator": "design://g28-home-fixture-source/I254:99;348:311",
+      "disposition": "excluded",
+      "note": "Inside a subtree explicitly projected as decoration; recorded, never silently dropped."
+    },
+    {
+      "sourceNodeId": "n-8408ac5cdd83",
+      "sourceName": "Image",
+      "sourceLocator": "design://g28-home-fixture-source/I436:484;436:439",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "synthesized complement column (container folded)"
+      },
+      "note": "Structural container folded into the synthesized complement column; its composable descendants compose in document order; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-84dfd8aac84d",
+      "sourceName": "DECOR/ScrollIndicator",
+      "sourceLocator": "design://g28-home-fixture-source/254:57",
+      "disposition": "gap",
+      "note": "Explicitly projected decoration without a native equivalent; excluded (not silently dropped)."
+    },
+    {
+      "sourceNodeId": "n-85f7fb3bf6cb",
+      "sourceName": "Editorial Tile",
+      "sourceLocator": "design://g28-home-fixture-source/284:418",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/image",
+        "appearanceId": "full-width",
+        "nativeElement": "image",
+        "nativeField": "desktop_image (src)"
+      },
+      "note": "Explicitly projected media composed as a native image element (labeled offline placeholder (320x396); the operator supplies the real local asset before any CMS write); observed overlays (gradients, arrow affordances) and side-by-side media pairings have no native field and compose stacked — see the section's fidelity warnings."
+    },
+    {
+      "sourceNodeId": "n-888338f12809",
+      "sourceName": "Label",
+      "sourceLocator": "design://g28-home-fixture-source/I436:460;436:398",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "column children (container folded)"
+      },
+      "note": "Structural container folded into its native column; its composable descendants compose in document order; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-88865e63ecdc",
+      "sourceName": "Body",
+      "sourceLocator": "design://g28-home-fixture-source/I254:81;250:7",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "column children (container folded)"
+      },
+      "note": "Structural container folded into its native column; its composable descendants compose in document order; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-8b2b58f8c90b",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "4 role-resolved loose text(s) composed as one text WYSIWYG in the synthesized complement column (document order); the source carries no explicit container for this cluster — the column is synthesized from the section's own children (recorded decision), and standalone per-field styling is not preserved."
+    },
+    {
+      "sourceNodeId": "n-8b330072a696",
+      "sourceName": "SECTION/ProductSpotlight",
+      "sourceLocator": "design://g28-home-fixture-source/245:12",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/row",
+        "appearanceId": "contained",
+        "nativeElement": "main",
+        "nativeField": "row(contained) > column-group(default) > column-line > column(full-height) x2"
+      },
+      "note": "Split section composed as the declaration-backed two-column chain: explicit slot (720px of the observed 1248px content width -> 58%) + ONE synthesized complement column (42%) from the section's remaining loose composable content in document order; observed side placement/any full-bleed media edge are approximated by the contained row (recorded fidelity limits); mobile breakpoint not composed."
+    },
+    {
+      "sourceNodeId": "n-8c03c587bbd5",
+      "sourceName": "Gradient",
+      "sourceLocator": "design://g28-home-fixture-source/I436:472;436:419",
+      "disposition": "gap",
+      "note": "Explicitly projected decoration without a native equivalent; excluded (not silently dropped)."
+    },
+    {
+      "sourceNodeId": "n-8c6ee00c614c",
+      "sourceName": "Proto / CTA — Arrow (Desktop)",
+      "sourceLocator": "design://g28-home-fixture-source/354:386",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/button-item",
+        "appearanceId": "default",
+        "nativeElement": "button-item",
+        "nativeField": "button_text + link (button_link)"
+      },
+      "note": "Explicitly projected CTA composed as a native button-item in the synthesized complement column (label \"EXPLORE THE COLLECTION\", link target from the manifest); the observed per-button visual styling (fill, radius, icon) is the theme's button CSS, not a composed field."
+    },
+    {
+      "sourceNodeId": "n-8c6ee00c614c",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/buttons",
+        "appearanceId": "inline",
+        "nativeElement": "buttons",
+        "nativeField": "1 button-item child(ren)"
+      },
+      "note": "1 projected CTA(s) composed as one native buttons (inline) container in the synthesized complement column; consecutive CTAs merge into one container, document order preserved."
+    },
+    {
+      "sourceNodeId": "n-8d0c67ccbd92",
+      "sourceName": "Caption",
+      "sourceLocator": "design://g28-home-fixture-source/299:342",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the column text WYSIWYG field as <p>; standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-8fe5d81140a0",
+      "sourceName": "Frame",
+      "sourceLocator": "design://g28-home-fixture-source/I436:460;436:402",
+      "disposition": "excluded",
+      "note": "Inside a subtree explicitly projected as decoration; recorded, never silently dropped."
+    },
+    {
+      "sourceNodeId": "n-9157dd412055",
+      "sourceName": "Gradient",
+      "sourceLocator": "design://g28-home-fixture-source/I436:460;436:397",
+      "disposition": "gap",
+      "note": "Explicitly projected decoration without a native equivalent; excluded (not silently dropped)."
+    },
+    {
+      "sourceNodeId": "n-940df189997b",
+      "sourceName": "SLOT/MosaicGrid",
+      "sourceLocator": "design://g28-home-fixture-source/284:406",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "grid structure (container folded)"
+      },
+      "note": "Structural container folded into the grid structure; its composable descendants compose in the bands/columns; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-942c8c014a7c",
+      "sourceName": "Image",
+      "sourceLocator": "design://g28-home-fixture-source/I254:72;250:3",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "column children (container folded)"
+      },
+      "note": "Structural container folded into its native column; its composable descendants compose in document order; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-954698d7ccbc",
+      "sourceName": "Category",
+      "sourceLocator": "design://g28-home-fixture-source/I254:72;250:9",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the column text WYSIWYG field as <p> (consecutive texts merged into one field, document order); standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-966d6fab54e7",
+      "sourceName": "SLOT/LookMedia/01",
+      "sourceLocator": "design://g28-home-fixture-source/299:323",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/image",
+        "appearanceId": "full-width",
+        "nativeElement": "image",
+        "nativeField": "desktop_image (src)"
+      },
+      "note": "Explicitly projected media composed as a native image element (labeled offline placeholder (300x540); the operator supplies the real local asset before any CMS write); observed overlays (gradients, arrow affordances) and side-by-side media pairings have no native field and compose stacked — see the section's fidelity warnings."
+    },
+    {
+      "sourceNodeId": "n-97098df84145",
+      "sourceName": "Title",
+      "sourceLocator": "design://g28-home-fixture-source/299:347",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the column text WYSIWYG field as <h2> (consecutive texts merged into one field, document order); standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-9738efc4aa7e",
+      "sourceName": "Proto / Product Card",
+      "sourceLocator": "design://g28-home-fixture-source/254:81",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "grid column at 25% of line 1 (observed proportion of its line)"
+      },
+      "note": "Grid slot composed as one native column (full-height) at 25% width of line 1."
+    },
+    {
+      "sourceNodeId": "n-9750226b8cc9",
+      "sourceName": "Link Label",
+      "sourceLocator": "design://g28-home-fixture-source/I256:96;251:101;251:72",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/button-item",
+        "appearanceId": "default",
+        "nativeElement": "button-item",
+        "nativeField": "button_text + link (button_link)"
+      },
+      "note": "Explicitly projected CTA composed as a native button-item in the synthesized complement column (label \"ALL COLLECTIONS\", link target from the manifest); the observed per-button visual styling (fill, radius, icon) is the theme's button CSS, not a composed field."
+    },
+    {
+      "sourceNodeId": "n-9750226b8cc9",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/buttons",
+        "appearanceId": "inline",
+        "nativeElement": "buttons",
+        "nativeField": "1 button-item child(ren)"
+      },
+      "note": "1 projected CTA(s) composed as one native buttons (inline) container in the synthesized complement column; consecutive CTAs merge into one container, document order preserved."
+    },
+    {
+      "sourceNodeId": "n-99af4b19ee4c",
+      "sourceName": "THE CIRCULAR",
+      "sourceLocator": "design://g28-home-fixture-source/257:181",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the band text WYSIWYG field as <p> (document order); standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-9c2e78869a39",
+      "sourceName": "Product Name",
+      "sourceLocator": "design://g28-home-fixture-source/I254:72;250:8",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the column text WYSIWYG field as <h2> (consecutive texts merged into one field, document order); standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-9c7f7f7fce94",
+      "sourceName": "Product Name",
+      "sourceLocator": "design://g28-home-fixture-source/I254:99;250:8",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the column text WYSIWYG field as <h2> (consecutive texts merged into one field, document order); standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-9d3a2e38f24d",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "synthesized complement column"
+      },
+      "note": "The section's remaining loose composable content composed as ONE synthesized complement column (420px of the observed 1280px content width -> 33%); the source carries no explicit container for it — recorded decision, never invented structurally."
+    },
+    {
+      "sourceNodeId": "n-9e7611a0c5cb",
+      "sourceName": "Link Label",
+      "sourceLocator": "design://g28-home-fixture-source/I254:62;251:101;251:72",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/button-item",
+        "appearanceId": "default",
+        "nativeElement": "button-item",
+        "nativeField": "button_text + link (button_link)"
+      },
+      "note": "Explicitly projected CTA composed as a native button-item inside the leading band buttons container (label \"VIEW ALL\", link target from the manifest); the observed per-button visual styling (fill, radius, icon) is the theme's button CSS, not a composed field."
+    },
+    {
+      "sourceNodeId": "n-a042a74ddc64",
+      "sourceName": "SLOT/CollectionTiles",
+      "sourceLocator": "design://g28-home-fixture-source/256:105",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "synthesized complement column (container folded)"
+      },
+      "note": "Structural container folded into the synthesized complement column; its composable descendants compose in document order; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-a11e60fb60f7",
+      "sourceName": "Editorial Tile",
+      "sourceLocator": "design://g28-home-fixture-source/284:408",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/image",
+        "appearanceId": "full-width",
+        "nativeElement": "image",
+        "nativeField": "desktop_image (src)"
+      },
+      "note": "Explicitly projected media composed as a native image element (labeled offline placeholder (280x560); the operator supplies the real local asset before any CMS write); observed overlays (gradients, arrow affordances) and side-by-side media pairings have no native field and compose stacked — see the section's fidelity warnings."
+    },
+    {
+      "sourceNodeId": "n-a2379dca89b8",
+      "sourceName": "SLOT/HeroActions",
+      "sourceLocator": "design://g28-home-fixture-source/254:46",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/banner",
+        "appearanceId": "poster",
+        "nativeElement": "button",
+        "nativeField": "button_text"
+      },
+      "note": "Structural container folded into the banner button area; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-a752dfa76d2c",
+      "sourceName": "SLOT/DetailFabric",
+      "sourceLocator": "design://g28-home-fixture-source/299:350",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/image",
+        "appearanceId": "full-width",
+        "nativeElement": "image",
+        "nativeField": "desktop_image (src)"
+      },
+      "note": "Explicitly projected media slot composed as a native image element (labeled offline placeholder (292x253); the operator supplies the real local asset before any CMS write); the observed side-by-side pairing of detail media is not declaration-backed and composes stacked — see the section's fidelity warnings."
+    },
+    {
+      "sourceNodeId": "n-a892caea6871",
+      "sourceName": "SLOT/HeroContent",
+      "sourceLocator": "design://g28-home-fixture-source/254:42",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/banner",
+        "appearanceId": "poster",
+        "nativeElement": "content",
+        "nativeField": "message"
+      },
+      "note": "Structural container folded into the banner content WYSIWYG; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-a9532b2e1afa",
+      "sourceName": "SECTION/Hero/Primary",
+      "sourceLocator": "design://g28-home-fixture-source/245:5",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/banner",
+        "appearanceId": "poster",
+        "nativeElement": "main",
+        "nativeField": "banner (row > banner container)"
+      },
+      "note": "Section composed as native row(contained) > banner(poster) per the pinned declarations; the row provides the platform's standard top-level container."
+    },
+    {
+      "sourceNodeId": "n-abf402252804",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/buttons",
+        "appearanceId": "inline",
+        "nativeElement": "buttons",
+        "nativeField": "1 button-item child(ren)"
+      },
+      "note": "1 projected CTA(s) composed as one native buttons (inline) container after the leading band text WYSIWYG."
+    },
+    {
+      "sourceNodeId": "n-ac63e2faedb8",
+      "sourceName": "SLOT/LookbookLook/01",
+      "sourceLocator": "design://g28-home-fixture-source/299:322",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "grid column at 25% of line 1 (observed proportion of its line)"
+      },
+      "note": "Grid slot composed as one native column (full-height) at 25% width of line 1."
+    },
+    {
+      "sourceNodeId": "n-ad7438bcc562",
+      "sourceName": "SLOT/SpotlightMedia",
+      "sourceLocator": "design://g28-home-fixture-source/257:122",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "explicit grid-column slot (720px)"
+      },
+      "note": "Explicit slot composed as one native column (full-height) of the split section (58% of the observed 1248px content width)."
+    },
+    {
+      "sourceNodeId": "n-ad89b7a077c6",
+      "sourceName": "Wishlist",
+      "sourceLocator": "design://g28-home-fixture-source/I254:99;250:4",
+      "disposition": "gap",
+      "note": "Explicitly projected decoration without a native equivalent; excluded (not silently dropped)."
+    },
+    {
+      "sourceNodeId": "n-b1b861a3bec4",
+      "sourceName": "Letters from the House",
+      "sourceLocator": "design://g28-home-fixture-source/257:182",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the band text WYSIWYG field as <h2> (document order); standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-b1d7e50c8166",
+      "sourceName": "Image",
+      "sourceLocator": "design://g28-home-fixture-source/I254:90;250:3",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "column children (container folded)"
+      },
+      "note": "Structural container folded into its native column; its composable descendants compose in document order; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-b21f092b74de",
+      "sourceName": "Link/Arrow",
+      "sourceLocator": "design://g28-home-fixture-source/I254:62;251:101",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "grid structure (container folded)"
+      },
+      "note": "Structural container folded into the grid structure; its composable descendants compose in the bands/columns; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-b23ecc7c7c52",
+      "sourceName": "SLOT/LookbookLook/03",
+      "sourceLocator": "design://g28-home-fixture-source/299:336",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "grid column at 25% of line 1 (observed proportion of its line)"
+      },
+      "note": "Grid slot composed as one native column (full-height) at 25% width of line 1."
+    },
+    {
+      "sourceNodeId": "n-b2aeac68a3ee",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/buttons",
+        "appearanceId": "inline",
+        "nativeElement": "buttons",
+        "nativeField": "1 button-item child(ren)"
+      },
+      "note": "1 projected CTA(s) composed as one native buttons (inline) container after the leading band text WYSIWYG."
+    },
+    {
+      "sourceNodeId": "n-b34a3f4782ad",
+      "sourceName": "Img",
+      "sourceLocator": "design://g28-home-fixture-source/I254:81;348:313",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/image",
+        "appearanceId": "full-width",
+        "nativeElement": "image",
+        "nativeField": "desktop_image (src)"
+      },
+      "note": "Explicitly projected media composed as a native image element (labeled offline placeholder (302x384); the operator supplies the real local asset before any CMS write); observed overlays (gradients, arrow affordances) and side-by-side media pairings have no native field and compose stacked — see the section's fidelity warnings."
+    },
+    {
+      "sourceNodeId": "n-b537de910e20",
+      "sourceName": "SECTION/BrandStatement",
+      "sourceLocator": "design://g28-home-fixture-source/245:6",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/row",
+        "appearanceId": "contained",
+        "nativeElement": "main",
+        "nativeField": "row(contained) > text(default) WYSIWYG [+ buttons(inline)]"
+      },
+      "note": "Band section composed as a contained row carrying one text WYSIWYG (role runs in document order) and, when CTAs resolve, one native buttons container; the section's fixed height persists as the row inner min-height via the platform's rehydratable style-block mechanism; mobile breakpoint not composed."
+    },
+    {
+      "sourceNodeId": "n-b6bc35c01f12",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "1 role-resolved loose text(s) composed as one trailing text WYSIWYG band in document order; the observed standalone styling of the cluster is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-b7549b75c751",
+      "sourceName": "$0,000",
+      "sourceLocator": "design://g28-home-fixture-source/I254:81;250:10",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the column text WYSIWYG field as <p> (consecutive texts merged into one field, document order); standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-b85e25730822",
+      "sourceName": "SECTION/CampaignEditorial",
+      "sourceLocator": "design://g28-home-fixture-source/299:300",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/row",
+        "appearanceId": "contained",
+        "nativeElement": "main",
+        "nativeField": "row(contained) > column-group(default) > column-line > column(full-height) x2"
+      },
+      "note": "Split section composed as the declaration-backed two-column chain: explicit slot (860px of the observed 1280px content width -> 67%) + ONE synthesized complement column (33%) from the section's remaining loose composable content in document order; observed side placement/any full-bleed media edge are approximated by the contained row (recorded fidelity limits); mobile breakpoint not composed."
+    },
+    {
+      "sourceNodeId": "n-b86ecf8570fc",
+      "sourceName": "Frame",
+      "sourceLocator": "design://g28-home-fixture-source/I257:187;251:78",
+      "disposition": "excluded",
+      "note": "Inside a projected CTA instance that composed as the native button element; the label composes via the manifest entry, the rest is the button's visual chrome."
+    },
+    {
+      "sourceNodeId": "n-bae816c79c57",
+      "sourceName": "24 PIECES",
+      "sourceLocator": "design://g28-home-fixture-source/I436:460;436:400",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the column text WYSIWYG field as <p> (consecutive texts merged into one field, document order); standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-bc939158312c",
+      "sourceName": "SECTION/ThePeople",
+      "sourceLocator": "design://g28-home-fixture-source/522:542",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/row",
+        "appearanceId": "contained",
+        "nativeElement": "main",
+        "nativeField": "row(contained) > column-group(default) > column-line x1 > column(full-height) x4"
+      },
+      "note": "Grid section composed as the declaration-backed column chain: 1 line(s), 4 projected grid column(s), widths apportioned from observed fixed widths to integer percents (largest remainder, sum 100); observed vertical overlap bands define the lines (nesting a column-group inside a column is NOT declaration-backed); observed gutters/staggering are not native fields — recorded fidelity limits; mobile breakpoint not composed."
+    },
+    {
+      "sourceNodeId": "n-bcc2b3e46477",
+      "sourceName": "$0,000",
+      "sourceLocator": "design://g28-home-fixture-source/I254:99;250:10",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the column text WYSIWYG field as <p> (consecutive texts merged into one field, document order); standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-bdafdb940c67",
+      "sourceName": "Frame",
+      "sourceLocator": "design://g28-home-fixture-source/I256:139;251:101;251:73",
+      "disposition": "gap",
+      "note": "Explicitly projected decoration without a native equivalent; excluded (not silently dropped)."
+    },
+    {
+      "sourceNodeId": "n-bea494bce3fa",
+      "sourceName": "Link/Arrow",
+      "sourceLocator": "design://g28-home-fixture-source/I256:139;251:101",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "grid structure (container folded)"
+      },
+      "note": "Structural container folded into the grid structure; its composable descendants compose in the bands/columns; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-bef13940d81e",
+      "sourceName": "Proto / CTA — Arrow (Desktop)",
+      "sourceLocator": "design://g28-home-fixture-source/394:391",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/button-item",
+        "appearanceId": "default",
+        "nativeElement": "button-item",
+        "nativeField": "button_text + link (button_link)"
+      },
+      "note": "Explicitly projected CTA composed as a native button-item in the synthesized complement column (label \"DISCOVER THE EDIT\", link target from the manifest); the observed per-button visual styling (fill, radius, icon) is the theme's button CSS, not a composed field."
+    },
+    {
+      "sourceNodeId": "n-bef13940d81e",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/buttons",
+        "appearanceId": "inline",
+        "nativeElement": "buttons",
+        "nativeField": "1 button-item child(ren)"
+      },
+      "note": "1 projected CTA(s) composed as one native buttons (inline) container in the synthesized complement column; consecutive CTAs merge into one container, document order preserved."
+    },
+    {
+      "sourceNodeId": "n-bf0cbd243bdc",
+      "sourceName": "Img",
+      "sourceLocator": "design://g28-home-fixture-source/I436:472;436:418",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/image",
+        "appearanceId": "full-width",
+        "nativeElement": "image",
+        "nativeField": "desktop_image (src)"
+      },
+      "note": "Explicitly projected media composed as a native image element in the synthesized complement column; observed overlay styling composes stacked — see the section's fidelity warnings."
+    },
+    {
+      "sourceNodeId": "n-c10c69da44e3",
+      "sourceName": "Body",
+      "sourceLocator": "design://g28-home-fixture-source/I254:90;250:7",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "column children (container folded)"
+      },
+      "note": "Structural container folded into its native column; its composable descendants compose in document order; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-c369c98aca1e",
+      "sourceName": "SLOT/CampaignMedia/Primary",
+      "sourceLocator": "design://g28-home-fixture-source/299:301",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "explicit grid-column slot (860px)"
+      },
+      "note": "Explicit slot composed as one native column (full-height) of the split section (67% of the observed 1280px content width)."
+    },
+    {
+      "sourceNodeId": "n-c8ce71248acf",
+      "sourceName": "Email address",
+      "sourceLocator": "design://g28-home-fixture-source/I354:419;354:411",
+      "disposition": "gap",
+      "note": "Node outside the band composition table (e.g. a form input — no native Page Builder form field exists); not composed."
+    },
+    {
+      "sourceNodeId": "n-c984f35d408d",
+      "sourceName": "Overline",
+      "sourceLocator": "design://g28-home-fixture-source/299:346",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the column text WYSIWYG field as <p> (consecutive texts merged into one field, document order); standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-c9f94e281609",
+      "sourceName": "Overlay",
+      "sourceLocator": "design://g28-home-fixture-source/254:41",
+      "disposition": "gap",
+      "note": "Explicitly projected decoration without a native equivalent; excluded (not silently dropped)."
+    },
+    {
+      "sourceNodeId": "n-ca29a464b4d7",
+      "sourceName": "SLOT/ProductCards",
+      "sourceLocator": "design://g28-home-fixture-source/254:71",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "grid structure (container folded)"
+      },
+      "note": "Structural container folded into the grid structure; its composable descendants compose in the bands/columns; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-ccc3a95b81ce",
+      "sourceName": "Arrow",
+      "sourceLocator": "design://g28-home-fixture-source/I436:472;436:423",
+      "disposition": "gap",
+      "note": "Explicitly projected decoration without a native equivalent; excluded (not silently dropped)."
+    },
+    {
+      "sourceNodeId": "n-cdf119353433",
+      "sourceName": "Editorial Tile",
+      "sourceLocator": "design://g28-home-fixture-source/284:415",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/image",
+        "appearanceId": "full-width",
+        "nativeElement": "image",
+        "nativeField": "desktop_image (src)"
+      },
+      "note": "Explicitly projected media composed as a native image element (labeled offline placeholder (268x456); the operator supplies the real local asset before any CMS write); observed overlays (gradients, arrow affordances) and side-by-side media pairings have no native field and compose stacked — see the section's fidelity warnings."
+    },
+    {
+      "sourceNodeId": "n-ce46077d2464",
+      "sourceName": "SECTION/EditorialMosaic",
+      "sourceLocator": "design://g28-home-fixture-source/245:10",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/row",
+        "appearanceId": "contained",
+        "nativeElement": "main",
+        "nativeField": "row(contained) > column-group(default) > column-line x1 > column(full-height) x4"
+      },
+      "note": "Grid section composed as the declaration-backed column chain: 1 line(s), 4 projected grid column(s), widths apportioned from observed fixed widths to integer percents (largest remainder, sum 100); observed vertical overlap bands define the lines (nesting a column-group inside a column is NOT declaration-backed); observed gutters/staggering are not native fields — recorded fidelity limits; mobile breakpoint not composed."
+    },
+    {
+      "sourceNodeId": "n-cf7f69529d24",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "1 role-resolved loose text(s) composed as one leading text WYSIWYG band in document order; the observed standalone styling of the cluster is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-d1dd27931fb0",
+      "sourceName": "Section Header",
+      "sourceLocator": "design://g28-home-fixture-source/256:96",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "synthesized complement column (container folded)"
+      },
+      "note": "Structural container folded into the synthesized complement column; its composable descendants compose in document order; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-d2808784da56",
+      "sourceName": "Frame",
+      "sourceLocator": "design://g28-home-fixture-source/I256:96;251:101;251:73",
+      "disposition": "gap",
+      "note": "Explicitly projected decoration without a native equivalent; excluded (not silently dropped)."
+    },
+    {
+      "sourceNodeId": "n-d2b3e21b91c5",
+      "sourceName": "Image",
+      "sourceLocator": "design://g28-home-fixture-source/I254:81;250:3",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "column children (container folded)"
+      },
+      "note": "Structural container folded into its native column; its composable descendants compose in document order; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-d2d6335d4aa2",
+      "sourceName": "Wishlist",
+      "sourceLocator": "design://g28-home-fixture-source/I254:90;250:4",
+      "disposition": "gap",
+      "note": "Explicitly projected decoration without a native equivalent; excluded (not silently dropped)."
+    },
+    {
+      "sourceNodeId": "n-d51ff3dbef8e",
+      "sourceName": "SLOT/LookbookLook/02",
+      "sourceLocator": "design://g28-home-fixture-source/299:329",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "grid column at 50% of line 1 (observed proportion of its line)"
+      },
+      "note": "Grid slot composed as one native column (full-height) at 50% width of line 1."
+    },
+    {
+      "sourceNodeId": "n-d5300e626f71",
+      "sourceName": "Arrow",
+      "sourceLocator": "design://g28-home-fixture-source/I436:460;436:401",
+      "disposition": "gap",
+      "note": "Explicitly projected decoration without a native equivalent; excluded (not silently dropped)."
+    },
+    {
+      "sourceNodeId": "n-d5d574752b9d",
+      "sourceName": "Category",
+      "sourceLocator": "design://g28-home-fixture-source/I254:90;250:9",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the column text WYSIWYG field as <p> (consecutive texts merged into one field, document order); standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-d78e14fd802a",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "1 role-resolved loose text(s) composed as one text WYSIWYG in the synthesized complement column (document order); the source carries no explicit container for this cluster — the column is synthesized from the section's own children (recorded decision), and standalone per-field styling is not preserved."
+    },
+    {
+      "sourceNodeId": "n-d78e14fd802a",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "2 role-resolved loose text(s) composed as one text WYSIWYG in the synthesized complement column (document order); the source carries no explicit container for this cluster — the column is synthesized from the section's own children (recorded decision), and standalone per-field styling is not preserved."
+    },
+    {
+      "sourceNodeId": "n-d78e14fd802a",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "2 role-resolved loose text(s) composed as one text WYSIWYG in the synthesized complement column (document order); the source carries no explicit container for this cluster — the column is synthesized from the section's own children (recorded decision), and standalone per-field styling is not preserved."
+    },
+    {
+      "sourceNodeId": "n-d7c326c8678e",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "4 role-resolved loose text(s) composed as one leading text WYSIWYG band in document order; the observed standalone styling of the cluster is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-d9735d1f881b",
+      "sourceName": "SECTION/FeaturedCollections",
+      "sourceLocator": "design://g28-home-fixture-source/245:9",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/row",
+        "appearanceId": "contained",
+        "nativeElement": "main",
+        "nativeField": "row(contained) > column-group(default) > column-line > column(full-height) x2"
+      },
+      "note": "Split section composed as the declaration-backed two-column chain: explicit slot (640px of the observed 1280px content width -> 50%) + ONE synthesized complement column (50%) from the section's remaining loose composable content in document order; observed side placement/any full-bleed media edge are approximated by the contained row (recorded fidelity limits); mobile breakpoint not composed."
+    },
+    {
+      "sourceNodeId": "n-dc443f703226",
+      "sourceName": "Arrow",
+      "sourceLocator": "design://g28-home-fixture-source/I436:484;436:445",
+      "disposition": "gap",
+      "note": "Explicitly projected decoration without a native equivalent; excluded (not silently dropped)."
+    },
+    {
+      "sourceNodeId": "n-dd423ec949ed",
+      "sourceName": "Wishlist",
+      "sourceLocator": "design://g28-home-fixture-source/I254:72;250:4",
+      "disposition": "gap",
+      "note": "Explicitly projected decoration without a native equivalent; excluded (not silently dropped)."
+    },
+    {
+      "sourceNodeId": "n-e38bbc869107",
+      "sourceName": "LOOK 04 — EVERYDAY LUXURY",
+      "sourceLocator": "design://g28-home-fixture-source/522:554",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the column text WYSIWYG field as <p> (consecutive texts merged into one field, document order); standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-e3d8bc16f899",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "2 role-resolved loose text(s) composed as one leading text WYSIWYG band in document order; the observed standalone styling of the cluster is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-e4b2b727aaa5",
+      "sourceName": "Editorial Tile",
+      "sourceLocator": "design://g28-home-fixture-source/284:417",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/image",
+        "appearanceId": "full-width",
+        "nativeElement": "image",
+        "nativeField": "desktop_image (src)"
+      },
+      "note": "Explicitly projected media composed as a native image element (labeled offline placeholder (320x620); the operator supplies the real local asset before any CMS write); observed overlays (gradients, arrow affordances) and side-by-side media pairings have no native field and compose stacked — see the section's fidelity warnings."
+    },
+    {
+      "sourceNodeId": "n-ea5774296a58",
+      "sourceName": "SLOT/SpotlightActions",
+      "sourceLocator": "design://g28-home-fixture-source/257:130",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "synthesized complement column (container folded)"
+      },
+      "note": "Structural container folded into the synthesized complement column; its composable descendants compose in document order; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-eb0f72053699",
+      "sourceName": "Editorial Tile",
+      "sourceLocator": "design://g28-home-fixture-source/284:414",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/image",
+        "appearanceId": "full-width",
+        "nativeElement": "image",
+        "nativeField": "desktop_image (src)"
+      },
+      "note": "Explicitly projected media composed as a native image element (labeled offline placeholder (268x560); the operator supplies the real local asset before any CMS write); observed overlays (gradients, arrow affordances) and side-by-side media pairings have no native field and compose stacked — see the section's fidelity warnings."
+    },
+    {
+      "sourceNodeId": "n-eb6c616eea20",
+      "sourceName": "Category",
+      "sourceLocator": "design://g28-home-fixture-source/I254:81;250:9",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the column text WYSIWYG field as <p> (consecutive texts merged into one field, document order); standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-ebe87331a05d",
+      "sourceName": "Women",
+      "sourceLocator": "design://g28-home-fixture-source/I436:460;436:399",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Explicitly projected text folded into the column text WYSIWYG field as <p> (consecutive texts merged into one field, document order); standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-edf0eb1a16f7",
+      "sourceName": "Rectangle",
+      "sourceLocator": "design://g28-home-fixture-source/254:58",
+      "disposition": "excluded",
+      "note": "Inside a subtree explicitly projected as decoration; recorded, never silently dropped."
+    },
+    {
+      "sourceNodeId": "n-ef59791f8781",
+      "sourceName": "Img",
+      "sourceLocator": "design://g28-home-fixture-source/I436:484;436:440",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/image",
+        "appearanceId": "full-width",
+        "nativeElement": "image",
+        "nativeField": "desktop_image (src)"
+      },
+      "note": "Explicitly projected media composed as a native image element in the synthesized complement column; observed overlay styling composes stacked — see the section's fidelity warnings."
+    },
+    {
+      "sourceNodeId": "n-f17f30e2bbb9",
+      "sourceName": "Frame",
+      "sourceLocator": "design://g28-home-fixture-source/I299:312;251:101;251:73",
+      "disposition": "gap",
+      "note": "Explicitly projected decoration without a native equivalent; excluded (not silently dropped)."
+    },
+    {
+      "sourceNodeId": "n-f344e115f8a8",
+      "sourceName": "Proto / Product Card",
+      "sourceLocator": "design://g28-home-fixture-source/254:72",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "grid column at 25% of line 1 (observed proportion of its line)"
+      },
+      "note": "Grid slot composed as one native column (full-height) at 25% width of line 1."
+    },
+    {
+      "sourceNodeId": "n-f37af3d7d7b8",
+      "sourceName": "EXPLORE THE LOOKS →",
+      "sourceLocator": "design://g28-home-fixture-source/522:555",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/button-item",
+        "appearanceId": "default",
+        "nativeElement": "button-item",
+        "nativeField": "button_text + link (button_link)"
+      },
+      "note": "Explicitly projected CTA composed as a native button-item inside the trailing band buttons container (label \"EXPLORE THE LOOKS →\", link target from the manifest); the observed per-button visual styling (fill, radius, icon) is the theme's button CSS, not a composed field."
+    },
+    {
+      "sourceNodeId": "n-f4a3ea1dc3f4",
+      "sourceName": "Proto / Product Card",
+      "sourceLocator": "design://g28-home-fixture-source/254:99",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "grid column at 25% of line 1 (observed proportion of its line)"
+      },
+      "note": "Grid slot composed as one native column (full-height) at 25% width of line 1."
+    },
+    {
+      "sourceNodeId": "n-f5ff4a5666e2",
+      "sourceName": "Left",
+      "sourceLocator": "design://g28-home-fixture-source/I256:139;250:27",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "grid structure (container folded)"
+      },
+      "note": "Structural container folded into the grid structure; its composable descendants compose in the bands/columns; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-f6a69c303e84",
+      "sourceName": "SLOT/EditorialFabricDetail",
+      "sourceLocator": "design://g28-home-fixture-source/453:394",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/image",
+        "appearanceId": "full-width",
+        "nativeElement": "image",
+        "nativeField": "desktop_image (src)"
+      },
+      "note": "Explicitly projected media composed as a native image element in the synthesized complement column; observed overlay styling composes stacked — see the section's fidelity warnings."
+    },
+    {
+      "sourceNodeId": "n-f87c860d4873",
+      "sourceName": "Left",
+      "sourceLocator": "design://g28-home-fixture-source/I254:62;250:27",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "grid structure (container folded)"
+      },
+      "note": "Structural container folded into the grid structure; its composable descendants compose in the bands/columns; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-f975f07c547d",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/buttons",
+        "appearanceId": "inline",
+        "nativeElement": "buttons",
+        "nativeField": "1 button-item child(ren)"
+      },
+      "note": "1 projected CTA(s) composed as one native buttons (inline) container after the leading band text WYSIWYG."
+    },
+    {
+      "sourceNodeId": "n-fa7628af6be5",
+      "sourceName": "Proto / Input — Email",
+      "sourceLocator": "design://g28-home-fixture-source/354:419",
+      "disposition": "gap",
+      "note": "Node outside the band composition table (e.g. a form input — no native Page Builder form field exists); not composed."
+    },
+    {
+      "sourceNodeId": "n-fae2be3c9e35",
+      "sourceName": "SLOT/LookMedia/02",
+      "sourceLocator": "design://g28-home-fixture-source/299:330",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/image",
+        "appearanceId": "full-width",
+        "nativeElement": "image",
+        "nativeField": "desktop_image (src)"
+      },
+      "note": "Explicitly projected media composed as a native image element (labeled offline placeholder (600x612); the operator supplies the real local asset before any CMS write); observed overlays (gradients, arrow affordances) and side-by-side media pairings have no native field and compose stacked — see the section's fidelity warnings."
+    },
+    {
+      "sourceNodeId": "n-fbeb892cf7de",
+      "sourceName": "Proto / Collection Tile",
+      "sourceLocator": "design://g28-home-fixture-source/436:460",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/column",
+        "appearanceId": "full-height",
+        "nativeElement": "column (full-height)",
+        "nativeField": "explicit grid-column slot (640px)"
+      },
+      "note": "Explicit slot composed as one native column (full-height) of the split section (50% of the observed 1280px content width)."
+    },
+    {
+      "sourceNodeId": "n-fe42ae77408e",
+      "sourceName": "SLOT/NewsletterForm",
+      "sourceLocator": "design://g28-home-fixture-source/257:184",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content (WYSIWYG HTML)"
+      },
+      "note": "Structural container folded into the band content; its composable descendants compose in document order; no separate native container."
+    }
+  ],
+  "diagnostics": [
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Observed media in 'SECTION/FeaturedProducts' (4 slot(s)) composes as native image elements at natural aspect to column width — no native aspect/crop field; the section's fixed height persists only as the row min-height. Overlay/decoration styling (gradients, affordances) has no native field. Recorded as fidelity limits, never custom CSS.",
+      "subject": {
+        "type": "node",
+        "id": "n-059fdf1a20d0"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Observed media in 'SECTION/Lookbook' (3 slot(s)) composes as native image elements at natural aspect to column width — no native aspect/crop field; the section's fixed height persists only as the row min-height. Overlay/decoration styling (gradients, affordances) has no native field. Recorded as fidelity limits, never custom CSS.",
+      "subject": {
+        "type": "node",
+        "id": "n-08fa2739e360"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Observed media aspect ratios in 'SECTION/Craftsmanship' are not enforced by the native image element (natural aspect at column width; no native aspect/crop field); the section's fixed height persists only as the row min-height.",
+      "subject": {
+        "type": "node",
+        "id": "n-1de84526f101"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "secondary column of 'SECTION/Craftsmanship' carries 2 observed media slots; they compose as stacked native image elements — the observed side-by-side arrangement is not declaration-backed (a column-group nested inside a column violates the pinned parents/children policies), and the observed vertical staggering of the pair is not a native field. Recorded as a fidelity gap, never custom CSS.",
+      "subject": {
+        "type": "node",
+        "id": "n-1de84526f101"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "The observed 48px gutter between the two columns of 'SECTION/Craftsmanship' is not composed — native columns carry no gutter field (the attested inline widths approximate the observed proportions at 50/50).",
+      "subject": {
+        "type": "node",
+        "id": "n-1de84526f101"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Decoration 'Fade' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
+      "subject": {
+        "type": "node",
+        "id": "n-45360844f61f"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Decoration 'Gradient' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
+      "subject": {
+        "type": "node",
+        "id": "n-54182cc78f52"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Decoration 'Wishlist' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
+      "subject": {
+        "type": "node",
+        "id": "n-581ecc1af347"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Decoration 'Frame' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
+      "subject": {
+        "type": "node",
+        "id": "n-6456722ecd97"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Decoration 'DECOR/ScrollIndicator' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
+      "subject": {
+        "type": "node",
+        "id": "n-84dfd8aac84d"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Decoration 'Gradient' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
+      "subject": {
+        "type": "node",
+        "id": "n-8c03c587bbd5"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Decoration 'Gradient' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
+      "subject": {
+        "type": "node",
+        "id": "n-9157dd412055"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Decoration 'Wishlist' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
+      "subject": {
+        "type": "node",
+        "id": "n-ad89b7a077c6"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Observed media in 'SECTION/ThePeople' (4 slot(s)) composes as native image elements at natural aspect to column width — no native aspect/crop field; the section's fixed height persists only as the row min-height. Overlay/decoration styling (gradients, affordances) has no native field. Recorded as fidelity limits, never custom CSS.",
+      "subject": {
+        "type": "node",
+        "id": "n-bc939158312c"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Decoration 'Frame' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
+      "subject": {
+        "type": "node",
+        "id": "n-bdafdb940c67"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Node 'Email address' (kind 'text', role 'none') has no native Page Builder equivalent in the band shape; not composed.",
+      "subject": {
+        "type": "node",
+        "id": "n-c8ce71248acf"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Decoration 'Overlay' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
+      "subject": {
+        "type": "node",
+        "id": "n-c9f94e281609"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Decoration 'Arrow' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
+      "subject": {
+        "type": "node",
+        "id": "n-ccc3a95b81ce"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Observed media in 'SECTION/EditorialMosaic' (8 slot(s)) composes as native image elements at natural aspect to column width — no native aspect/crop field; the section's fixed height persists only as the row min-height. Overlay/decoration styling (gradients, affordances) has no native field. Recorded as fidelity limits, never custom CSS.",
+      "subject": {
+        "type": "node",
+        "id": "n-ce46077d2464"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Decoration 'Frame' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
+      "subject": {
+        "type": "node",
+        "id": "n-d2808784da56"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Decoration 'Wishlist' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
+      "subject": {
+        "type": "node",
+        "id": "n-d2d6335d4aa2"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Decoration 'Arrow' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
+      "subject": {
+        "type": "node",
+        "id": "n-d5300e626f71"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Decoration 'Arrow' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
+      "subject": {
+        "type": "node",
+        "id": "n-dc443f703226"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Decoration 'Wishlist' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
+      "subject": {
+        "type": "node",
+        "id": "n-dd423ec949ed"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Decoration 'Frame' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
+      "subject": {
+        "type": "node",
+        "id": "n-f17f30e2bbb9"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Node 'Proto / Input — Email' (kind 'component', role 'none') has no native Page Builder equivalent in the band shape; not composed.",
+      "subject": {
+        "type": "node",
+        "id": "n-fa7628af6be5"
+      }
+    }
+  ]
+}

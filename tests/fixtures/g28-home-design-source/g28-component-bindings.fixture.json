@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "profileId": "g28-home-preview",
+  "platformId": "magento-pagebuilder",
+  "generatedAt": "1970-01-01T00:00:00Z",
+  "registry": {
+    "platformId": "magento-pagebuilder",
+    "registryRevisionId": "content:9ee428e468bbaf7e"
+  },
+  "bindings": [],
+  "diagnostics": []
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!--
+  DET Preview Theme head assets (issue #28): exactly ONE scoped stylesheet on top of the inherited
+  Hyvä base CSS. Plain CSS by design — no build chain, no Tailwind config writes; a production
+  port may fold these rules into the target theme's own Tailwind pipeline instead.
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="css/det-preview.css"/>
+    </head>
+</page>

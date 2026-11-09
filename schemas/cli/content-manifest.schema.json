@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/content-manifest.schema.json",
-  "$comment": "Design Engineering Toolkit CLI family — ContentManifest. Major version 1. Caller-supplied literal content for composition (issue #23 G3): maps the design-source valueRefs already pinned in NodeIR content slots (design://<sourceId>/<locator>) to the text/media/link values a later gated compose stage may place into native platform content. The manifest carries LITERAL content only — it never introduces nodes, never invents asset URLs (an absent entry is reported as a gap by the composing adapter, never defaulted), and it is pinned to the same source revision as the PageStructure it feeds. Platform-neutral: mediaUrl/linkUrl are open strings; each platform adapter defines and documents its own accepted forms.",
+  "$comment": "Design Engineering Toolkit CLI family — ContentManifest. Major version 1. Caller-supplied literal content for composition (issue #23 G3): maps the design-source valueRefs already pinned in NodeIR content slots (design://<sourceId>/<locator>) to the text/media/link values a later gated compose stage may place into native platform content. The manifest carries LITERAL content only — it never introduces nodes, never invents asset URLs (an absent entry is reported as a gap by the composing adapter, never defaulted), and it is pinned to the same source revision as the PageStructure it feeds. Platform-neutral: mediaUrl/linkUrl are open strings; each platform adapter defines and documents its own accepted forms. Version 1.1 (issue #28) adds the optional buttonVariant hint for link entries consumed as native button elements (primary vs secondary; absent -> the adapter's deterministic default).",
   "title": "Design Engineering Toolkit — Content Manifest",
   "type": "object",
   "required": ["schemaVersion", "profileId", "sourceRevisionId", "entries"],
@@ -34,6 +34,7 @@
         "assetLabel": { "type": "string", "description": "Provenance label for a media entry (e.g. 'operator-supplied local asset' or 'labeled offline placeholder'). Free text; never parsed." },
         "linkUrl": { "type": "string", "minLength": 1, "description": "Required for kind=link: the explicit link target for the node (open form; the platform adapter validates what it can accept)." },
         "linkTarget": { "type": "string", "enum": ["_self", "_blank"], "description": "Optional link window target; default is the platform's own default." },
+        "buttonVariant": { "enum": ["primary", "secondary"], "description": "Optional (1.1, issue #28): for kind=link consumed as a native button element, the platform's own button-style variant the observed evidence carries (e.g. the design's primary vs ghost buttons). Absent -> the composing adapter's deterministic default. Platform adapters document the exact mapping." },
         "note": { "type": "string", "description": "Free-text provenance note; never parsed." }
       },
       "allOf": [
