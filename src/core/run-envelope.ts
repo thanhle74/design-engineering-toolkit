@@ -1,6 +1,7 @@
 // Tool-run envelope assembly (schemas/cli/tool-run.schema.json): the deterministic record of
 // one det command — artifacts + hashes + converter diagnostics + process-level run diagnostics.
 import { contentHash, sha256Hex, canonicalStringify, sortDiagnostics, stableContentHash, stripVolatile } from "./canonical.js";
+import { contractId } from "./schema-registry.js";
 import { sortRunDiagnostics, type RunDiagnostic } from "./adapter-runtime.js";
 import type { Diagnostic } from "./types.js";
 
@@ -52,28 +53,60 @@ export function setToolVersion(v: string): void {
   TOOL_VERSION = v;
 }
 
-const SCHEMA_REFS: Record<string, string> = {
-  registry: "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/capability-registry.schema.json",
-  "resolution-report": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/resolution-report.schema.json",
-  "profile-input": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/converter-profile.schema.json",
-  "binding-map": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/component-binding-map.schema.json",
-  "structure-input": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/CONTRACTS-harness-shape",
-  "adapter-descriptor": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/adapter-descriptor.schema.json",
-  "node-ir": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/node-ir.schema.json",
-  "page-structure": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/page-structure.schema.json",
-  "source-review": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/source-review.schema.json",
-  // Knowledge Engine family (issue #15)
-  "kb-ingest-manifest": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-ingest-manifest.schema.json",
-  "kb-records": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-engine-output.schema.json",
-  "kb-query-result": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-engine-output.schema.json",
-  "kb-sync-report": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-engine-output.schema.json",
-  "kb-store-descriptor": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-store.schema.json",
+// Artifact role -> contract alias in schemas/registry.json (issue #41): the registry and the
+// schema files' own $id are the single source of schema identity; this map only assigns roles
+// to contracts and never restates a URL. `structure-input` is the documented exception below.
+const ROLE_CONTRACT: Record<Exclude<ArtifactRole, "structure-input">, string> = {
+  registry: "capability-registry",
+  "resolution-report": "resolution-report",
+  "profile-input": "converter-profile",
+  "binding-map": "component-binding-map",
+  "adapter-descriptor": "adapter-descriptor",
+  "node-ir": "node-ir",
+  "page-structure": "page-structure",
+  "source-review": "source-review",
+  // Knowledge Engine family (issue #15): records/query/sync views share one engine-output contract.
+  "kb-ingest-manifest": "kb-ingest-manifest",
+  "kb-records": "kb-engine-output",
+  "kb-query-result": "kb-engine-output",
+  "kb-sync-report": "kb-engine-output",
+  "kb-store-descriptor": "kb-store",
   // Native content composition family (issue #23)
-  "compose-report": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/compose-output.schema.json",
+  "compose-report": "compose-output",
   // One-shot build family (issue #28 C1/C2)
-  "native-content": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/compose-output.schema.json#native-content",
-  "build-manifest": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/build-manifest.schema.json",
+  "native-content": "compose-output",
+  "build-manifest": "build-manifest",
 };
+
+// Issue #28 C2: native-content artifacts pin the compose-output family with the documented
+// '#native-content' fragment suffix — the serialized schemaRef since G3 and part of the
+// observable manifest format, kept byte-for-byte. The fragment is a manifest convention, not
+// a $defs pointer the schema declares, so it is composed here rather than invented in schema.
+const NATIVE_CONTENT_REF_SUFFIX = "#native-content";
+
+// G1 harness structure pseudo-ref (docs/converter/CONTRACTS.md §4): a docs contract, not a
+// materialized schema file — the one identifier outside schemas/registry.json, kept
+// byte-for-byte for envelope compatibility. The role is legacy (not emitted since the G2
+// materialization) and its staged retirement is follow-up work per issue #14.
+const STRUCTURE_INPUT_HARNESS_REF =
+  "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/CONTRACTS-harness-shape";
+
+const schemaRefs = new Map<string, string>();
+
+// schemaRef for one artifact role, resolved through schemas/registry.json + the schema file's
+// own $id (memoized). Throws loudly on an unknown role or a broken registry entry.
+export function schemaRefFor(role: ArtifactRole): string {
+  const cached = schemaRefs.get(role);
+  if (cached !== undefined) return cached;
+  const ref =
+    role === "structure-input"
+      ? STRUCTURE_INPUT_HARNESS_REF
+      : role === "native-content"
+        ? `${contractId(ROLE_CONTRACT[role])}${NATIVE_CONTENT_REF_SUFFIX}`
+        : contractId(ROLE_CONTRACT[role]);
+  schemaRefs.set(role, ref);
+  return ref;
+}
 
 export function artifact(
   role: ArtifactRole,
@@ -86,7 +119,7 @@ export function artifact(
   if (opts.rawContent !== undefined) {
     const record: ArtifactRecord = {
       role,
-      schemaRef: SCHEMA_REFS[role],
+      schemaRef: schemaRefFor(role),
       contentHash: sha256Hex(opts.rawContent),
       volatileContentHash: sha256Hex(opts.rawContent),
     };
@@ -95,7 +128,7 @@ export function artifact(
   }
   const record: ArtifactRecord = {
     role,
-    schemaRef: SCHEMA_REFS[role],
+    schemaRef: schemaRefFor(role),
     contentHash: typeof payload === "object" && payload !== null ? contentHash(payload as Record<string, unknown>) : sha256Hex(canonicalStringify(payload)),
     volatileContentHash: stableContentHash(payload),
   };
