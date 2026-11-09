@@ -72,6 +72,7 @@ interface ManifestEntry {
   assetLabel?: string;
   linkUrl?: string;
   linkTarget?: string;
+  buttonVariant?: "primary" | "secondary";
   note?: string;
 }
 interface ComposeInput {
@@ -80,7 +81,7 @@ interface ComposeInput {
   platformId: string;
   registry: { source: { revisionId: string }; capabilities: Capability[] };
   bindings: { bindings: { sourceComponentId: string; variantConditions: { prop: string; op?: string; value: string }[] }[] };
-  projection?: { assignments: { sourceLocator: string; role: "background-media" | "content-lead" | "heading" | "body" | "cta" | "decoration" | "column-primary" | "column-secondary" | "inline-media"; reason: string }[] };
+  projection?: { assignments: { sourceLocator: string; role: "background-media" | "content-lead" | "heading" | "body" | "cta" | "decoration" | "column-primary" | "column-secondary" | "inline-media" | "grid-column" | "grid-caption"; reason: string }[] };
   nodeIr: { nodes: NodeIRNode[]; rootNodeId: string };
   pageStructure: { sections: PageStructureSection[]; source: { sourceId: string; revisionId: string; accessedAt: string } };
   content: { entries: ManifestEntry[] };
@@ -175,6 +176,13 @@ const IMAGE_ID = "magento_pagebuilder/image";
 const IMAGE_APPEARANCE = "full-width";
 const TEXT_ID = "magento_pagebuilder/text";
 const TEXT_APPEARANCE = "default";
+// Native CTA pair (issue #28): declarations verified on the pinned checkout before use — buttons
+// (appearance "inline") allows exactly button-item children; button-item parents allow only
+// buttons. The persisted shape mirrors the canonical editor-saved content in the target checkout.
+const BUTTONS_ID = "magento_pagebuilder/buttons";
+const BUTTONS_APPEARANCE = "inline";
+const BUTTON_ITEM_ID = "magento_pagebuilder/button-item";
+const BUTTON_ITEM_APPEARANCE = "default";
 
 const diagnostics: Diagnostic[] = [];
 const mapping: MappingEntry[] = [];
@@ -204,15 +212,15 @@ const registryReady = requireCap(ROW_ID, ROW_APPEARANCE) && requireCap(BANNER_ID
 // ---- Content manifest indexes ---------------------------------------------------------------
 const textByRef = new Map<string, string>();
 const mediaByRef = new Map<string, { mediaUrl: string; assetLabel?: string }>();
-const linkByRef = new Map<string, { linkUrl: string; linkTarget?: string }>();
+const linkByRef = new Map<string, { linkUrl: string; linkTarget?: string; variant?: "primary" | "secondary" }>();
 for (const e of input.content.entries) {
   if (e.kind === "text" && typeof e.text === "string") textByRef.set(e.valueRef, e.text);
   if (e.kind === "media" && typeof e.mediaUrl === "string") mediaByRef.set(e.valueRef, { mediaUrl: e.mediaUrl, ...(e.assetLabel ? { assetLabel: e.assetLabel } : {}) });
-  if (e.kind === "link" && typeof e.linkUrl === "string") linkByRef.set(e.valueRef, { linkUrl: e.linkUrl, ...(e.linkTarget ? { linkTarget: e.linkTarget } : {}) });
+  if (e.kind === "link" && typeof e.linkUrl === "string") linkByRef.set(e.valueRef, { linkUrl: e.linkUrl, ...(e.linkTarget ? { linkTarget: e.linkTarget } : {}), ...(e.buttonVariant ? { variant: e.buttonVariant } : {}) });
 }
 
 // ---- Explicit semantic projection (optional; the recorded human decision) --------------------
-type ComposerRole = "background-media" | "content-lead" | "heading" | "body" | "cta" | "decoration" | "column-primary" | "column-secondary" | "inline-media";
+type ComposerRole = "background-media" | "content-lead" | "heading" | "body" | "cta" | "decoration" | "column-primary" | "column-secondary" | "inline-media" | "grid-column" | "grid-caption";
 const roleByLocator = new Map<string, ComposerRole>();
 for (const a of input.projection?.assignments ?? []) roleByLocator.set(a.sourceLocator, a.role);
 
@@ -236,6 +244,19 @@ for (const [loc, role] of roleByLocator) {
   walkSubtree(rootId, (n) => {
     const l = locatorOf(n);
     if (l) excludedLocators.add(l);
+  });
+}
+// Subtrees of explicitly projected CTA instances compose THROUGH their cta manifest entry (label)
+// and the native button element (visual chrome); their descendants are accounted once, as
+// "inside the composed CTA element" — recorded, never silently dropped, never double-counted.
+const ctaSubtreeLocators = new Set<string>();
+for (const [loc, role] of roleByLocator) {
+  if (role !== "cta") continue;
+  const rootId = nodeIdOfLocator.get(loc);
+  if (!rootId) continue;
+  walkSubtree(rootId, (n) => {
+    const l = locatorOf(n);
+    if (l) ctaSubtreeLocators.add(l);
   });
 }
 
@@ -302,6 +323,8 @@ function resolveComposerRole(node: NodeIRNode): ComposerRole | undefined {
 const esc = (s: string): string => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 const escText = (s: string): string => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
+const SEP = "\u241f"; // canonical separator (U+241F), same convention as the core evidence/derivation ids
+
 // Deterministic master-format style key (issue #25 NaN correction): the Admin stage rehydrates
 // element styles EXCLUSIVELY from the `<style>` block keyed by data-pb-style (stage-builder
 // convertToInlineStyles -> data-<viewport>-style -> configurable reader), never from inline
@@ -311,6 +334,47 @@ const escText = (s: string): string => s.replace(/&/g, "&amp;").replace(/</g, "&
 // own uniqueid keys take in stored content (real cms_page rows).
 function pbStyleKey(nodeKeySource: string): string {
   return "P" + sha256Hex(nodeKeySource).slice(0, 6).toUpperCase();
+}
+
+// Deterministic auxiliary mapping id for composed structures that have no single source node
+// (band/synthesized-complement containers): same 12-hex id space as derived node ids, namespaced
+// by the "aux" key prefix so it cannot collide with source-derived ids.
+function auxNodeId(nodeKeySource: string): string {
+  return `n-${sha256Hex(`aux${SEP}${nodeKeySource}`).slice(0, 12)}`;
+}
+
+// ---- Shared element emit helpers (one definition for every section shape) --------------------
+// The image/text bytes are exactly the shapes the G3/G4 shapes have always emitted (extracted
+// verbatim so both-column and grid composers share one canonical markup); the buttons block is
+// the platform's own declaration-backed pair (buttons appearance "inline" > button-item default,
+// declarations verified on the pinned checkout before use) whose persisted shape mirrors the
+// canonical editor-saved content in the target checkout (real cms_page: buttons container with
+// data-same-width, button-item main keyed {display:inline-block}, link keyed {text-align:center},
+// button_type css class on the link, virtual link attributes href/target/data-link-type).
+interface TextRun {
+  role: "content-lead" | "heading" | "body";
+  text: string;
+}
+const imageElementHtml = (mediaUrl: string): string =>
+  `<figure data-content-type="image" data-appearance="full-width" data-element="main"><img class="pagebuilder-mobile-hidden" src="${esc(mediaUrl)}" alt="" title="" data-element="desktop_image"></figure>`;
+const textElementHtml = (runs: TextRun[]): string =>
+  `<div data-content-type="text" data-appearance="default" data-element="main">${runs.map((run) => (run.role === "heading" ? `<h2>${escText(run.text)}</h2>` : `<p>${escText(run.text)}</p>`)).join("")}</div>`;
+// A button composes ONLY with a manifest link entry (no invented targets, no empty-link shell —
+// a CTA whose link is missing is an explicit gap, never an unlinked pseudo-button). The variant
+// css class maps the manifest buttonVariant to the platform's own button_type classes; the Admin
+// button_type field stays fully editable either way.
+const buttonVariantClass = (variant: "primary" | "secondary" | undefined): string => (variant === "secondary" ? "pagebuilder-button-secondary" : "pagebuilder-button-primary");
+function buttonsElementHtml(buttonsSectionNodeId: string, buttons: { keySource: string; label: string; linkUrl: string; linkTarget?: string; variant: "primary" | "secondary" | undefined }[]): string {
+  const styleRules: string[] = [];
+  const items = buttons.map((b) => {
+    const mainKey = pbStyleKey(`${b.keySource}:button-item`);
+    const linkKey = pbStyleKey(`${b.keySource}:button-link`);
+    styleRules.push(`#html-body [data-pb-style=${mainKey}]{display:inline-block}`);
+    styleRules.push(`#html-body [data-pb-style=${linkKey}]{text-align:center}`);
+    const target = b.linkTarget ? ` target="${esc(b.linkTarget)}"` : ` target=""`;
+    return `<div data-content-type="button-item" data-appearance="default" data-element="main" data-pb-style="${mainKey}"><a class="${buttonVariantClass(b.variant)}" href="${esc(b.linkUrl)}"${target} data-link-type="default" data-element="link" data-pb-style="${linkKey}"><span data-element="link_text">${escText(b.label)}</span></a></div>`;
+  });
+  return `<style>${styleRules.join("")}</style><div data-content-type="buttons" data-appearance="inline" data-same-width="false" data-element="main">${items.join("")}</div>`;
 }
 
 // ---- G4 two-column composition (issue #25) ---------------------------------------------------
@@ -325,6 +389,7 @@ function pbStyleKey(nodeKeySource: string): string {
 // as explicit NOT_VERIFIED warnings + accountable mapping entries — never custom CSS.
 type EmitItem =
   | { kind: "image"; nodeId: string; name: string; locator: string | null; media: { mediaUrl: string; assetLabel?: string }; viaProjection: boolean; accountedByContainer: boolean }
+  | { kind: "buttons"; nodeId: string; name: string; locator: string | null; buttons: { nodeId: string; name: string; locator: string | null; label: string; linkUrl: string; linkTarget?: string; variant: "primary" | "secondary" | undefined; viaProjection: boolean }[] }
   | { kind: "text"; runs: { role: "content-lead" | "heading" | "body"; nodeId: string; name: string; locator: string | null; text: string; viaProjection: boolean }[] };
 
 function composeTwoColumnSection(section: PageStructureSection, sectionNodeId: string, primaryNode: NodeIRNode, secondaryNode: NodeIRNode): string | null {
@@ -338,7 +403,9 @@ function composeTwoColumnSection(section: PageStructureSection, sectionNodeId: s
     requireCap(COLUMN_LINE_ID, COLUMN_LINE_APPEARANCE) &&
     requireCap(COLUMN_ID, COLUMN_APPEARANCE) &&
     requireCap(IMAGE_ID, IMAGE_APPEARANCE) &&
-    requireCap(TEXT_ID, TEXT_APPEARANCE);
+    requireCap(TEXT_ID, TEXT_APPEARANCE) &&
+    requireCap(BUTTONS_ID, BUTTONS_APPEARANCE) &&
+    requireCap(BUTTON_ITEM_ID, BUTTON_ITEM_APPEARANCE);
   if (!shapeReady) return null;
 
   // Column widths derive from the observed fixed-width constraints (rounded to integer
@@ -361,18 +428,24 @@ function composeTwoColumnSection(section: PageStructureSection, sectionNodeId: s
   }
 
   // Per-column content. Document-order walk; consecutive role-resolved texts merge into one
-  // text WYSIWYG element at their position; each projected inline-media node becomes one image
-  // element. Everything else is accounted explicitly (gap / excluded / decoration).
+  // text WYSIWYG element at their position, consecutive CTAs merge into ONE buttons container;
+  // each projected inline-media node becomes one image element. Everything else is accounted
+  // explicitly (gap / excluded / decoration).
   const composeColumn = (columnNode: NodeIRNode, isPrimary: boolean): string => {
     const items: EmitItem[] = [];
     let pendingText: EmitItem | null = null;
+    let pendingButtons: Extract<EmitItem, { kind: "buttons" }> | null = null;
     const flushText = (): void => {
       if (pendingText && pendingText.kind === "text" && pendingText.runs.length > 0) items.push(pendingText);
       pendingText = null;
     };
+    const flushButtons = (): void => {
+      if (pendingButtons && pendingButtons.kind === "buttons" && pendingButtons.buttons.length > 0) items.push(pendingButtons);
+      pendingButtons = null;
+    };
     const pushTextRun = (run: Extract<EmitItem, { kind: "text" }>["runs"][number]): void => {
       if (pendingText && pendingText.kind === "text") pendingText.runs.push(run);
-      else pendingText = { kind: "text", runs: [run] };
+      else { flushButtons(); pendingText = { kind: "text", runs: [run] }; }
     };
 
     // The column container's own media entry first (the observed media slot frame IS the media;
@@ -381,6 +454,7 @@ function composeTwoColumnSection(section: PageStructureSection, sectionNodeId: s
     const ownMedia = colLocator ? mediaByRef.get(colLocator) : undefined;
     if (ownMedia) {
       flushText();
+      flushButtons();
       items.push({ kind: "image", nodeId: columnNode.nodeId, name: columnNode.name, locator: colLocator, media: ownMedia, viaProjection: false, accountedByContainer: true });
     }
 
@@ -395,12 +469,20 @@ function composeTwoColumnSection(section: PageStructureSection, sectionNodeId: s
       }
       if (loc && excludedLocators.has(loc)) {
         flushText();
+        flushButtons();
         mapping.push({ ...entryBase, disposition: "excluded", note: "Inside a subtree explicitly projected as decoration; recorded, never silently dropped." });
+        return;
+      }
+      if (loc && ctaSubtreeLocators.has(loc)) {
+        flushText();
+        flushButtons();
+        mapping.push({ ...entryBase, disposition: "excluded", note: "Inside a projected CTA instance that composed as the native button element; the label composes via the manifest entry, the rest is the button's visual chrome." });
         return;
       }
       const role = resolveComposerRole(node);
       if (loc !== null && roleByLocator.get(loc) === "inline-media") {
         flushText();
+        flushButtons();
         const media = loc ? mediaByRef.get(loc) : undefined;
         if (!media) {
           diagnostics.push(nodeDiag("EVIDENCE_MISSING", "warning", `No content-manifest media entry for projected inline-media node '${node.name}' (${loc ?? "no locator"}); no image element is composed — no asset URL is ever invented.`, node.nodeId));
@@ -421,16 +503,47 @@ function composeTwoColumnSection(section: PageStructureSection, sectionNodeId: s
         return;
       }
       if (role === "cta") {
+        // Native landing (issue #28 extension): the declaration-backed buttons > button-item pair.
+        // A button composes ONLY with both a manifest text entry (the label) and a manifest link
+        // entry (the target) — anything less is an explicit gap, never an invented or unlinked
+        // pseudo-button. The composed CTA instance's own subtree is accounted by the shared
+        // ctaSubtreeLocators walk (recorded, never silently dropped, never double-counted).
         flushText();
-        diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `CTA '${node.name}' has no native target inside a two-column column in this slice (the banner button belongs to the hero shape); not composed.`, node.nodeId));
-        mapping.push({ ...entryBase, disposition: "gap", note: "Projected CTA outside the two-column composition table; not composed." });
+        const label = loc ? textByRef.get(loc) : undefined;
+        const link = loc ? linkByRef.get(loc) : undefined;
+        if (label === undefined || link === undefined) {
+          diagnostics.push(nodeDiag("EVIDENCE_MISSING", "warning", `CTA '${node.name}' lacks a manifest ${label === undefined ? "text (label)" : "link (target)"} entry; no button is composed — no label or link target is ever invented.`, node.nodeId));
+          mapping.push({ ...entryBase, disposition: "gap", note: "Projected CTA without a manifest label/link entry; no button composed." });
+        } else if (pendingButtons && pendingButtons.kind === "buttons") {
+          pendingButtons.buttons.push({ nodeId: node.nodeId, name: node.name, locator: loc, label, linkUrl: link.linkUrl, ...(link.linkTarget ? { linkTarget: link.linkTarget } : {}), variant: link.variant, viaProjection: true });
+        } else {
+          flushButtons();
+          pendingButtons = { kind: "buttons", nodeId: node.nodeId, name: node.name, locator: loc, buttons: [{ nodeId: node.nodeId, name: node.name, locator: loc, label, linkUrl: link.linkUrl, ...(link.linkTarget ? { linkTarget: link.linkTarget } : {}), variant: link.variant, viaProjection: true }] };
+        }
+        mapping.push({
+          ...entryBase,
+          disposition: label !== undefined && link !== undefined ? "mapped" : "gap",
+          ...(label !== undefined && link !== undefined ? { target: { capabilityId: BUTTON_ITEM_ID, appearanceId: BUTTON_ITEM_APPEARANCE, nativeElement: "button-item", nativeField: "button_text + link (button_link)" } } : {}),
+          note: label !== undefined && link !== undefined
+            ? `Explicitly projected CTA composed as a native button-item inside one buttons container (label "${label}", link target from the manifest${link.variant ? `, ${link.variant} variant` : ""}${link.linkTarget ? `, target ${link.linkTarget}` : ""}); the observed per-button visual styling (fill, radius, icon) is the theme's button CSS, not a composed field.`
+            : "Projected CTA without a manifest label/link entry; no button composed.",
+        });
+        return;
+      }
+      if (role === "grid-column" || role === "grid-caption") {
+        flushText();
+        flushButtons();
+        diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Grid role '${role}' on '${node.name}' is only meaningful inside the column-grid shape; not composed here.`, node.nodeId));
+        mapping.push({ ...entryBase, disposition: "gap", note: `Projected ${role} outside the column-grid composition table; not composed.` });
         return;
       }
       flushText();
+      flushButtons();
       diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Node '${node.name}' (kind '${node.kind}', role '${node.role ?? "none"}') is outside the two-column composition table; not composed.`, node.nodeId));
       mapping.push({ ...entryBase, disposition: "gap", note: "Node outside the two-column composition table; not composed." });
     });
     flushText();
+    flushButtons();
 
     const html = items
       .map((item) => {
@@ -445,7 +558,22 @@ function composeTwoColumnSection(section: PageStructureSection, sectionNodeId: s
               note: `Explicitly projected media slot composed as a native image element${item.media.assetLabel ? ` (${item.media.assetLabel})` : ""}; the observed side-by-side pairing of detail media is not declaration-backed and composes stacked — see the section's fidelity warnings.`,
             });
           }
-          return `<figure data-content-type="image" data-appearance="full-width" data-element="main"><img class="pagebuilder-mobile-hidden" src="${esc(item.media.mediaUrl)}" alt="" title="" data-element="desktop_image"></figure>`;
+          return imageElementHtml(item.media.mediaUrl);
+        }
+        if (item.kind === "buttons") {
+          for (const b of item.buttons) {
+            // The per-CTA mapping entry was already pushed at detection time; this emission-level
+            // record covers the shared buttons container landing.
+          }
+          mapping.push({
+            sourceNodeId: item.nodeId,
+            sourceName: item.name,
+            ...(item.locator ? { sourceLocator: item.locator } : {}),
+            disposition: "mapped",
+            target: { capabilityId: BUTTONS_ID, appearanceId: BUTTONS_APPEARANCE, nativeElement: "buttons", nativeField: `${item.buttons.length} button-item child(ren)` },
+            note: `${item.buttons.length} projected CTA(s) composed as one native buttons (inline) container with button-item children; consecutive CTAs merge into one container, document order preserved.`,
+          });
+          return buttonsElementHtml(item.nodeId, item.buttons.map((b) => ({ keySource: b.nodeId, label: b.label, linkUrl: b.linkUrl, ...(b.linkTarget ? { linkTarget: b.linkTarget } : {}), variant: b.variant })));
         }
         for (const run of item.runs) {
           mapping.push({
@@ -457,7 +585,7 @@ function composeTwoColumnSection(section: PageStructureSection, sectionNodeId: s
             note: `${run.viaProjection ? "Explicitly projected " : ""}text folded into the column text WYSIWYG field as ${run.role === "heading" ? "<h2>" : "<p>"}${item.runs.length > 1 ? " (consecutive texts merged into one field, document order)" : ""}; standalone per-field styling is not preserved (single WYSIWYG field).`,
           });
         }
-        return `<div data-content-type="text" data-appearance="default" data-element="main">${item.runs.map((run) => (run.role === "heading" ? `<h2>${escText(run.text)}</h2>` : `<p>${escText(run.text)}</p>`)).join("")}</div>`;
+        return textElementHtml(item.runs);
       })
       .join("");
 
@@ -582,6 +710,930 @@ function composeTwoColumnSection(section: PageStructureSection, sectionNodeId: s
   );
 }
 
+// ---- Issue #28: absolute-geometry + percent helpers (shared by the column-grid shape) --------
+// Absolute offsets are the deterministic sum of the observed fixed x/y constraints up the
+// inventoried ancestor chain (every constraint in this pipeline's snapshots is fixed); any
+// missing/non-numeric link yields null and the affected rule records it, never guesses.
+function absOffsetOf(node: NodeIRNode, axis: "x" | "y"): number | null {
+  let value = 0;
+  let cur: NodeIRNode | undefined = node;
+  let guard = 0;
+  while (cur && guard++ < 256) {
+    const c = cur.layout.constraints.find((x) => x.axis === axis && x.type === "fixed");
+    const num = c ? Number(c.value) : NaN;
+    if (!Number.isFinite(num)) return null;
+    value += num;
+    cur = cur.parentNodeId ? nodesById.get(cur.parentNodeId) : undefined;
+  }
+  return value;
+}
+function fixedOf(node: NodeIRNode, axis: "width" | "height"): number | null {
+  const c = node.layout.constraints.find((x) => x.axis === axis && x.type === "fixed");
+  const px = c ? Number(c.value) : NaN;
+  return Number.isFinite(px) && px > 0 ? px : null;
+}
+// Integer percent split (largest remainder, deterministic; tie -> lower index). Sums to exactly 100.
+function percentSplit(widths: number[]): number[] {
+  const total = widths.reduce((a, b) => a + b, 0);
+  if (!(total > 0)) return widths.map(() => Math.floor(100 / Math.max(1, widths.length)));
+  const exact = widths.map((w) => (w / total) * 100);
+  const floors = exact.map((p) => Math.floor(p));
+  let leftover = 100 - floors.reduce((a, b) => a + b, 0);
+  const order = exact
+    .map((p, i) => ({ i, frac: p - Math.floor(p) }))
+    .sort((a, b) => b.frac - a.frac || a.i - b.i);
+  for (const { i } of order) {
+    if (leftover <= 0) break;
+    floors[i] += 1;
+    leftover -= 1;
+  }
+  return floors;
+}
+
+// ---- Issue #28: text-band composition (row > text WYSIWYG [+ buttons]) -----------------------
+// A band section carries role-resolved text/CTA content but NO background media and NO projected
+// column roles. Guarded eligibility (computed by the dispatcher): any direct-child container that
+// carries a manifest media entry, or any visible descendant that is not (a projected CTA, inside
+// a projected-CTA subtree, projected decoration, or inside an unprojected instance's subtree)
+// BLOCKS the band — an unprojected two-column or media section honestly skips instead of silently
+// losing its media or its column structure. Emission: row(contained) > inner(min-height style
+// block) > one text (default) WYSIWYG with the role runs in document order > one buttons
+// container when CTAs resolve. Everything in scope is accounted exactly like the other shapes.
+function composeTextBandSection(section: PageStructureSection, sectionNodeId: string): string | null {
+  const sectionNode = nodesById.get(sectionNodeId) as NodeIRNode;
+  const sectionLocator = locatorOf(sectionNode) ?? undefined;
+  const inScope: NodeIRNode[] = [];
+  walkSubtree(sectionNodeId, (node) => { if (node.visible !== false) inScope.push(node); });
+  const roleRuns: { role: "content-lead" | "heading" | "body"; node: NodeIRNode }[] = [];
+  const ctaNodes: NodeIRNode[] = [];
+  for (const node of inScope) {
+    const loc = locatorOf(node);
+    if (loc && excludedLocators.has(loc)) continue;
+    if (loc && ctaSubtreeLocators.has(loc)) continue;
+    const role = resolveComposerRole(node);
+    if (role === "content-lead" || role === "heading" || role === "body") roleRuns.push({ role, node });
+    else if (role === "cta") ctaNodes.push(node);
+  }
+  if (roleRuns.length === 0 && ctaNodes.length === 0) return null;
+
+  const contentFragments: string[] = [];
+  const bandRuns: TextRun[] = [];
+  for (const run of roleRuns) {
+    const loc = locatorOf(run.node);
+    const text = loc ? textByRef.get(loc) : undefined;
+    const entryBase = { sourceNodeId: run.node.nodeId, sourceName: run.node.name, ...(loc ? { sourceLocator: loc } : {}) };
+    if (text === undefined) {
+      diagnostics.push(nodeDiag("EVIDENCE_MISSING", "warning", `No content-manifest text entry for '${run.node.name}' (${loc ?? "no locator"}); the ${run.role} field is left empty — no text is invented.`, run.node.nodeId));
+      mapping.push({ ...entryBase, disposition: "gap", note: `No manifest text entry for the ${run.role} field.` });
+      continue;
+    }
+    bandRuns.push({ role: run.role, text });
+    const as = run.role === "heading" ? "<h2>" : "<p>";
+    mapping.push({
+      ...entryBase,
+      disposition: "mapped",
+      target: { capabilityId: TEXT_ID, appearanceId: TEXT_APPEARANCE, nativeElement: "text", nativeField: "content (WYSIWYG HTML)" },
+      note: `Explicitly projected text folded into the band text WYSIWYG field as ${as} (document order); standalone per-field styling is not preserved (single WYSIWYG field).`,
+    });
+  }
+  if (bandRuns.length > 0) contentFragments.push(textElementHtml(bandRuns));
+
+  const buttonSpecs: { keySource: string; label: string; linkUrl: string; linkTarget?: string; variant: "primary" | "secondary" | undefined }[] = [];
+  for (const cta of ctaNodes) {
+    const loc = locatorOf(cta);
+    const label = loc ? textByRef.get(loc) : undefined;
+    const link = loc ? linkByRef.get(loc) : undefined;
+    const entryBase = { sourceNodeId: cta.nodeId, sourceName: cta.name, ...(loc ? { sourceLocator: loc } : {}) };
+    if (label === undefined || link === undefined) {
+      diagnostics.push(nodeDiag("EVIDENCE_MISSING", "warning", `CTA '${cta.name}' lacks a manifest ${label === undefined ? "text (label)" : "link (target)"} entry; no button is composed — no label or link target is ever invented.`, cta.nodeId));
+      mapping.push({ ...entryBase, disposition: "gap", note: "Projected CTA without a manifest label/link entry; no button composed." });
+    } else {
+      buttonSpecs.push({ keySource: cta.nodeId, label, linkUrl: link.linkUrl, ...(link.linkTarget ? { linkTarget: link.linkTarget } : {}), variant: link.variant });
+      mapping.push({
+        ...entryBase,
+        disposition: "mapped",
+        target: { capabilityId: BUTTON_ITEM_ID, appearanceId: BUTTON_ITEM_APPEARANCE, nativeElement: "button-item", nativeField: "button_text + link (button_link)" },
+        note: `Explicitly projected CTA composed as a native button-item inside the band buttons container (label "${label}", link target from the manifest${link.variant ? `, ${link.variant} variant` : ""}); the observed per-button visual styling (fill, radius, icon) is the theme's button CSS, not a composed field.`,
+      });
+    }
+  }
+  if (buttonSpecs.length > 0) contentFragments.push(buttonsElementHtml(`${sectionNodeId}:band-buttons`, buttonSpecs));
+
+  // Every other in-scope node gets its explicit, accountable treatment (same policy as hero).
+  const accounted = new Set<string>([...roleRuns.map((r) => r.node.nodeId), ...ctaNodes.map((c) => c.nodeId)]);
+  for (const other of inScope) {
+    if (accounted.has(other.nodeId)) continue;
+    const otherLocator = locatorOf(other);
+    const entryBase = { sourceNodeId: other.nodeId, sourceName: other.name, ...(otherLocator ? { sourceLocator: otherLocator } : {}) };
+    if (otherLocator && roleByLocator.get(otherLocator) === "decoration") {
+      diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Decoration '${other.name}' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.`, other.nodeId));
+      mapping.push({ ...entryBase, disposition: "gap", note: "Explicitly projected decoration without a native equivalent; excluded (not silently dropped)." });
+      continue;
+    }
+    if (otherLocator && excludedLocators.has(otherLocator)) {
+      mapping.push({ ...entryBase, disposition: "excluded", note: "Inside a subtree explicitly projected as decoration; recorded, never silently dropped." });
+      continue;
+    }
+    if (otherLocator && ctaSubtreeLocators.has(otherLocator)) {
+      mapping.push({ ...entryBase, disposition: "excluded", note: "Inside a projected CTA instance that composed as the native button element; the label composes via the manifest entry, the rest is the button's visual chrome." });
+      continue;
+    }
+    if (other.role === "DECOR" || other.kind === "icon") {
+      diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Decoration '${other.name}' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.`, other.nodeId));
+      mapping.push({ ...entryBase, disposition: "gap", note: "Decoration without a native equivalent; explicitly excluded (not silently dropped)." });
+      continue;
+    }
+    if (other.role === "SLOT" && other.kind === "container") {
+      mapping.push({ ...entryBase, disposition: "mapped", target: { capabilityId: TEXT_ID, appearanceId: TEXT_APPEARANCE, nativeElement: "text", nativeField: "content (WYSIWYG HTML)" }, note: "Structural container folded into the band content; its composable descendants compose in document order; no separate native container." });
+      continue;
+    }
+    diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Node '${other.name}' (kind '${other.kind}', role '${other.role ?? "none"}') has no native Page Builder equivalent in the band shape; not composed.`, other.nodeId));
+    mapping.push({ ...entryBase, disposition: "gap", note: "Node outside the band composition table (e.g. a form input — no native Page Builder form field exists); not composed." });
+  }
+
+  const heightConstraint = section.layout.constraints.find((c) => c.axis === "height" && c.type === "fixed");
+  let rowMinHeight: number | undefined;
+  if (heightConstraint) {
+    const px = Number(heightConstraint.value);
+    if (Number.isFinite(px) && px > 0) rowMinHeight = px;
+    else diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Section height constraint '${heightConstraint.value}' is not a positive number; row min-height not composed.`, sectionNodeId));
+  } else {
+    diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Section '${section.name}' carries no fixed height constraint; row min-height not composed (Admin default applies).`, sectionNodeId));
+  }
+
+  const innerKey = pbStyleKey(`${sectionNodeId}:inner`);
+  const styleRules: string[] = [];
+  if (rowMinHeight !== undefined) styleRules.push(`#html-body [data-pb-style=${innerKey}]{min-height:${rowMinHeight}px}`);
+  const styleBlock = styleRules.length > 0 ? `<style>${styleRules.join("")}</style>` : "";
+  mapping.push({
+    sourceNodeId: sectionNodeId,
+    ...(sectionNode.name ? { sourceName: sectionNode.name } : {}),
+    ...(sectionLocator ? { sourceLocator: sectionLocator } : {}),
+    disposition: "mapped",
+    target: { capabilityId: ROW_ID, appearanceId: ROW_APPEARANCE, nativeElement: "main", nativeField: "row(contained) > text(default) WYSIWYG [+ buttons(inline)]" },
+    note: "Band section composed as a contained row carrying one text WYSIWYG (role runs in document order) and, when CTAs resolve, one native buttons container; the section's fixed height persists as the row inner min-height via the platform's rehydratable style-block mechanism; mobile breakpoint not composed.",
+  });
+  return (
+    styleBlock +
+    `<div data-content-type="row" data-appearance="contained" data-element="main">` +
+    `<div data-enable-parallax="0" data-parallax-speed="0.5" data-background-images="{}" data-background-type="image" data-video-loop="true" data-video-play-only-visible="true" data-video-lazy-load="true" data-video-fallback-src="" data-element="inner"${rowMinHeight !== undefined ? ` data-pb-style="${innerKey}"` : ""}>` +
+    contentFragments.join("") +
+    `</div>` +
+    `</div>`
+  );
+}
+
+// ---- Issue #28: column-grid composition ------------------------------------------------------
+// The declaration-backed generalization of the G4 two-column chain: row(contained) > [leading
+// text band] > column-group(default) > column-line(s) > column(full-height) xN > [trailing text
+// band]. Two deterministic rules, decided purely from the explicit projection:
+//   Rule B ("split"): exactly ONE projected grid-column in the section — the explicit slot
+//     becomes one native column; the section's remaining loose composable content composes, in
+//     its own document order, as ONE synthesized complement column (full-width loose text
+//     clusters ABOVE the explicit column compose as a leading text band instead).
+//   Rule A ("grid"): two or more projected grid-columns group into lines by their observed
+//     common parent + vertical overlap bands (absolute y), columns ordered by absolute x; loose
+//     role-resolved texts ABOVE the first line compose as a leading text band, everything else
+//     loose composes as a trailing text band; grid-caption texts compose inside the column whose
+//     absolute x-range geometrically contains them, appended after that column's own content.
+// Column widths are the observed fixed widths apportioned to integer percents (largest remainder,
+// sum exactly 100; Rule B complement = the observed content width minus the explicit slot).
+// Styles persist via the platform's rehydratable style-block mechanism (issue #25 correction
+// class): deterministic data-pb-style keys + a leading <style> block; no inline style attributes.
+// Fidelity limits (gutters, stacked side-by-side pairs, aspect ratios, overlay styling, mobile
+// breakpoint) come back as explicit NOT_VERIFIED warnings + accountable mapping entries.
+const GRID_TABLE_LABEL = "column-grid";
+interface GridContent {
+  html: string;
+  landed: boolean;
+}
+function composeColumnGridSection(section: PageStructureSection, sectionNodeId: string, explicitColumns: NodeIRNode[]): string | null {
+  const sectionNode = nodesById.get(sectionNodeId) as NodeIRNode;
+  const sectionLocator = locatorOf(sectionNode) ?? undefined;
+  const shapeReady =
+    requireCap(ROW_ID, ROW_APPEARANCE) &&
+    requireCap(COLUMN_GROUP_ID, COLUMN_GROUP_APPEARANCE) &&
+    requireCap(COLUMN_LINE_ID, COLUMN_LINE_APPEARANCE) &&
+    requireCap(COLUMN_ID, COLUMN_APPEARANCE) &&
+    requireCap(IMAGE_ID, IMAGE_APPEARANCE) &&
+    requireCap(TEXT_ID, TEXT_APPEARANCE) &&
+    requireCap(BUTTONS_ID, BUTTONS_APPEARANCE) &&
+    requireCap(BUTTON_ITEM_ID, BUTTON_ITEM_APPEARANCE);
+  if (!shapeReady) return null;
+
+  // Absolute offsets first (needed by caption assignment and line grouping).
+  const colYCache = new Map<string, number>();
+  for (const col of explicitColumns) {
+    const y = absOffsetOf(col, "y");
+    if (y !== null) colYCache.set(col.nodeId, y);
+  }
+  const colYAbs = (col: NodeIRNode): number => colYCache.get(col.nodeId) ?? absOffsetOf(col, "y") ?? 0;
+  const colXAbs = (col: NodeIRNode): number => absOffsetOf(col, "x") ?? 0;
+
+  // Caption assignment (explicit grid-caption projections): the column whose absolute x-range
+  // geometrically contains the caption (nearest below-or-overlapping vertical position; ties ->
+  // leftmost). Unassignable captions are explicit gaps, never guessed into a column.
+  const captions: NodeIRNode[] = [];
+  walkSubtree(sectionNodeId, (node) => {
+    if (node.visible === false) return;
+    const loc = locatorOf(node);
+    if (loc && roleByLocator.get(loc) === "grid-caption") captions.push(node);
+  });
+  const captionsByColumn = new Map<string, NodeIRNode[]>();
+  for (const caption of captions) {
+    const capX = absOffsetOf(caption, "x");
+    const capY = absOffsetOf(caption, "y");
+    const capW = fixedOf(caption, "width");
+    let best: { node: NodeIRNode; distance: number; x: number } | null = null;
+    for (const col of explicitColumns) {
+      const colX = colXAbs(col);
+      const colW = fixedOf(col, "width");
+      const colY = colYAbs(col);
+      if (capX === null || capY === null || capW === null || colW === null) continue;
+      if (!(capX + capW > colX && capX < colX + colW)) continue;
+      const distance = Math.max(0, capY - colY);
+      if (best === null || distance < best.distance || (distance === best.distance && colX < best.x)) best = { node: col, distance, x: colX };
+    }
+    if (best) {
+      const list = captionsByColumn.get(best.node.nodeId) ?? [];
+      list.push(caption);
+      captionsByColumn.set(best.node.nodeId, list);
+    } else {
+      const loc = locatorOf(caption);
+      diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Projected grid-caption '${caption.name}' overlaps no projected grid-column's absolute x-range; not composed.`, caption.nodeId));
+      mapping.push({ sourceNodeId: caption.nodeId, sourceName: caption.name, ...(loc ? { sourceLocator: loc } : {}), disposition: "gap", note: "Projected grid-caption without a geometrically containing column; not composed." });
+    }
+  }
+
+  // Column content: the same composition table as the two-column shape (own media -> image,
+  // inline-media -> image, text roles -> one WYSIWYG in document order, CTA -> one buttons
+  // container), plus appended grid-caption runs.
+  const composeGridColumn = (columnNode: NodeIRNode): GridContent => {
+    const items: EmitItem[] = [];
+    let pendingText: EmitItem | null = null;
+    let pendingButtons: Extract<EmitItem, { kind: "buttons" }> | null = null;
+    const flushText = (): void => {
+      if (pendingText && pendingText.kind === "text" && pendingText.runs.length > 0) items.push(pendingText);
+      pendingText = null;
+    };
+    const flushButtons = (): void => {
+      if (pendingButtons && pendingButtons.kind === "buttons" && pendingButtons.buttons.length > 0) items.push(pendingButtons);
+      pendingButtons = null;
+    };
+    const pushTextRun = (run: Extract<EmitItem, { kind: "text" }>["runs"][number]): void => {
+      if (pendingText && pendingText.kind === "text") pendingText.runs.push(run);
+      else { flushButtons(); pendingText = { kind: "text", runs: [run] }; }
+    };
+    const colLocator = locatorOf(columnNode);
+    const ownMedia = colLocator ? mediaByRef.get(colLocator) : undefined;
+    if (ownMedia) {
+      flushText();
+      flushButtons();
+      items.push({ kind: "image", nodeId: columnNode.nodeId, name: columnNode.name, locator: colLocator, media: ownMedia, viaProjection: false, accountedByContainer: true });
+    }
+    walkSubtree(columnNode.nodeId, (node) => {
+      if (node.visible === false) return;
+      const loc = locatorOf(node);
+      const entryBase = { sourceNodeId: node.nodeId, sourceName: node.name, ...(loc ? { sourceLocator: loc } : {}) };
+      if (loc && roleByLocator.get(loc) === "decoration") {
+        diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Decoration '${node.name}' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.`, node.nodeId));
+        mapping.push({ ...entryBase, disposition: "gap", note: "Explicitly projected decoration without a native equivalent; excluded (not silently dropped)." });
+        return;
+      }
+      if (loc && excludedLocators.has(loc)) {
+        flushText();
+        flushButtons();
+        mapping.push({ ...entryBase, disposition: "excluded", note: "Inside a subtree explicitly projected as decoration; recorded, never silently dropped." });
+        return;
+      }
+      if (loc && ctaSubtreeLocators.has(loc)) {
+        flushText();
+        flushButtons();
+        mapping.push({ ...entryBase, disposition: "excluded", note: "Inside a projected CTA instance that composed as the native button element; the label composes via the manifest entry, the rest is the button's visual chrome." });
+        return;
+      }
+      const role = resolveComposerRole(node);
+      if (loc !== null && roleByLocator.get(loc) === "inline-media") {
+        flushText();
+        flushButtons();
+        const media = loc ? mediaByRef.get(loc) : undefined;
+        if (!media) {
+          diagnostics.push(nodeDiag("EVIDENCE_MISSING", "warning", `No content-manifest media entry for projected inline-media node '${node.name}' (${loc ?? "no locator"}); no image element is composed — no asset URL is ever invented.`, node.nodeId));
+          mapping.push({ ...entryBase, disposition: "gap", note: "Projected inline-media without a manifest media entry; no image element composed." });
+          return;
+        }
+        items.push({ kind: "image", nodeId: node.nodeId, name: node.name, locator: loc, media, viaProjection: true, accountedByContainer: false });
+        return;
+      }
+      if (role === "content-lead" || role === "heading" || role === "body") {
+        const text = loc ? textByRef.get(loc) : undefined;
+        if (text === undefined) {
+          diagnostics.push(nodeDiag("EVIDENCE_MISSING", "warning", `No content-manifest text entry for '${node.name}' (${loc ?? "no locator"}); the ${role} field is left empty — no text is invented.`, node.nodeId));
+          mapping.push({ ...entryBase, disposition: "gap", note: `No manifest text entry for the ${role} field.` });
+          return;
+        }
+        pushTextRun({ role, nodeId: node.nodeId, name: node.name, locator: loc, text, viaProjection: loc !== null && roleByLocator.get(loc) !== undefined });
+        return;
+      }
+      if (role === "cta") {
+        flushText();
+        const label = loc ? textByRef.get(loc) : undefined;
+        const link = loc ? linkByRef.get(loc) : undefined;
+        if (label === undefined || link === undefined) {
+          diagnostics.push(nodeDiag("EVIDENCE_MISSING", "warning", `CTA '${node.name}' lacks a manifest ${label === undefined ? "text (label)" : "link (target)"} entry; no button is composed — no label or link target is ever invented.`, node.nodeId));
+          mapping.push({ ...entryBase, disposition: "gap", note: "Projected CTA without a manifest label/link entry; no button composed." });
+        } else if (pendingButtons && pendingButtons.kind === "buttons") {
+          pendingButtons.buttons.push({ nodeId: node.nodeId, name: node.name, locator: loc, label, linkUrl: link.linkUrl, ...(link.linkTarget ? { linkTarget: link.linkTarget } : {}), variant: link.variant, viaProjection: true });
+        } else {
+          flushButtons();
+          pendingButtons = { kind: "buttons", nodeId: node.nodeId, name: node.name, locator: loc, buttons: [{ nodeId: node.nodeId, name: node.name, locator: loc, label, linkUrl: link.linkUrl, ...(link.linkTarget ? { linkTarget: link.linkTarget } : {}), variant: link.variant, viaProjection: true }] };
+        }
+        mapping.push({
+          ...entryBase,
+          disposition: label !== undefined && link !== undefined ? "mapped" : "gap",
+          ...(label !== undefined && link !== undefined ? { target: { capabilityId: BUTTON_ITEM_ID, appearanceId: BUTTON_ITEM_APPEARANCE, nativeElement: "button-item", nativeField: "button_text + link (button_link)" } } : {}),
+          note: label !== undefined && link !== undefined
+            ? `Explicitly projected CTA composed as a native button-item inside one buttons container (label "${label}", link target from the manifest${link.variant ? `, ${link.variant} variant` : ""}${link.linkTarget ? `, target ${link.linkTarget}` : ""}); the observed per-button visual styling (fill, radius, icon) is the theme's button CSS, not a composed field.`
+            : "Projected CTA without a manifest label/link entry; no button composed.",
+        });
+        return;
+      }
+      if (role === "grid-column" || role === "grid-caption") {
+        flushText();
+        flushButtons();
+        diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Nested grid role '${role}' on '${node.name}' is not declaration-backed (a column-group cannot nest inside a column); not composed.`, node.nodeId));
+        mapping.push({ ...entryBase, disposition: "gap", note: `Nested projected ${role} inside a column; the pinned parents/children policies forbid nesting a column-group inside a column, so this composes nothing (recorded, never approximated).` });
+        return;
+      }
+      if (node.kind === "container" || node.kind === "component") {
+        // Transparent structural fold inside a projected column: the container itself has no
+        // native box (its composable descendants compose in document order); one fold entry.
+        flushText();
+        flushButtons();
+        mapping.push({ ...entryBase, disposition: "mapped", target: { capabilityId: COLUMN_ID, appearanceId: COLUMN_APPEARANCE, nativeElement: "column (full-height)", nativeField: "column children (container folded)" }, note: "Structural container folded into its native column; its composable descendants compose in document order; no separate native container." });
+        return;
+      }
+      flushText();
+      flushButtons();
+      diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Node '${node.name}' (kind '${node.kind}', role '${node.role ?? "none"}') is outside the ${GRID_TABLE_LABEL} composition table; not composed.`, node.nodeId));
+      mapping.push({ ...entryBase, disposition: "gap", note: `Node outside the ${GRID_TABLE_LABEL} composition table; not composed.` });
+    });
+    flushText();
+    flushButtons();
+    // Appended grid-caption runs (explicit projections; geometric containment decided above).
+    const captionList = captionsByColumn.get(columnNode.nodeId) ?? [];
+    if (captionList.length > 0) {
+      const runs: Extract<EmitItem, { kind: "text" }>["runs"] = [];
+      for (const caption of captionList) {
+        const loc = locatorOf(caption);
+        const text = loc ? textByRef.get(loc) : undefined;
+        const entryBase = { sourceNodeId: caption.nodeId, sourceName: caption.name, ...(loc ? { sourceLocator: loc } : {}) };
+        if (text === undefined) {
+          diagnostics.push(nodeDiag("EVIDENCE_MISSING", "warning", `No content-manifest text entry for grid-caption '${caption.name}' (${loc ?? "no locator"}); the caption is left empty — no text is invented.`, caption.nodeId));
+          mapping.push({ ...entryBase, disposition: "gap", note: "No manifest text entry for the grid-caption." });
+          continue;
+        }
+        runs.push({ role: "body", nodeId: caption.nodeId, name: caption.name, locator: loc, text, viaProjection: true });
+      }
+      if (runs.length > 0) items.push({ kind: "text", runs });
+    }
+
+    const html = items
+      .map((item) => {
+        if (item.kind === "image") {
+          if (!item.accountedByContainer) {
+            mapping.push({
+              sourceNodeId: item.nodeId,
+              sourceName: item.name,
+              ...(item.locator ? { sourceLocator: item.locator } : {}),
+              disposition: "mapped",
+              target: { capabilityId: IMAGE_ID, appearanceId: IMAGE_APPEARANCE, nativeElement: "image", nativeField: "desktop_image (src)" },
+              note: `Explicitly projected media composed as a native image element${item.media.assetLabel ? ` (${item.media.assetLabel})` : ""}; observed overlays (gradients, arrow affordances) and side-by-side media pairings have no native field and compose stacked — see the section's fidelity warnings.`,
+            });
+          }
+          return imageElementHtml(item.media.mediaUrl);
+        }
+        if (item.kind === "buttons") {
+          mapping.push({
+            sourceNodeId: item.nodeId,
+            sourceName: item.name,
+            ...(item.locator ? { sourceLocator: item.locator } : {}),
+            disposition: "mapped",
+            target: { capabilityId: BUTTONS_ID, appearanceId: BUTTONS_APPEARANCE, nativeElement: "buttons", nativeField: `${item.buttons.length} button-item child(ren)` },
+            note: `${item.buttons.length} projected CTA(s) composed as one native buttons (inline) container with button-item children; consecutive CTAs merge into one container, document order preserved.`,
+          });
+          return buttonsElementHtml(item.nodeId, item.buttons.map((b) => ({ keySource: b.nodeId, label: b.label, linkUrl: b.linkUrl, ...(b.linkTarget ? { linkTarget: b.linkTarget } : {}), variant: b.variant })));
+        }
+        for (const run of item.runs) {
+          mapping.push({
+            sourceNodeId: run.nodeId,
+            sourceName: run.name,
+            ...(run.locator ? { sourceLocator: run.locator } : {}),
+            disposition: "mapped",
+            target: { capabilityId: TEXT_ID, appearanceId: TEXT_APPEARANCE, nativeElement: "text", nativeField: "content (WYSIWYG HTML)" },
+            note: `${run.viaProjection ? "Explicitly projected " : ""}text folded into the column text WYSIWYG field as ${run.role === "heading" ? "<h2>" : "<p>"}${item.runs.length > 1 ? " (consecutive texts merged into one field, document order)" : ""}; standalone per-field styling is not preserved (single WYSIWYG field).`,
+          });
+        }
+        return textElementHtml(item.runs);
+      })
+      .join("");
+    const landed = ownMedia !== undefined || html.length > 0;
+    return { html, landed };
+  };
+
+  // Column container accounting (one entry per column node).
+  const accountColumn = (columnNode: NodeIRNode, content: GridContent, nativeFieldNote: string, landedNote: string): void => {
+    const colLocator = locatorOf(columnNode);
+    mapping.push({
+      sourceNodeId: columnNode.nodeId,
+      sourceName: columnNode.name,
+      ...(colLocator ? { sourceLocator: colLocator } : {}),
+      disposition: content.landed ? "mapped" : "gap",
+      ...(content.landed ? { target: { capabilityId: COLUMN_ID, appearanceId: COLUMN_APPEARANCE, nativeElement: "column (full-height)", nativeField: nativeFieldNote } } : {}),
+      note: content.landed ? landedNote : `Projected grid-column '${columnNode.name}' carries no manifest media entry and no composable descendants; only the empty native column shell is emitted — the slot's media is NOT composed.`,
+    });
+    if (!content.landed) {
+      diagnostics.push(nodeDiag("EVIDENCE_MISSING", "warning", `Projected grid-column '${columnNode.name}' resolved to zero content elements (no own media entry, no composable descendants); an empty native column shell is emitted — nothing invented.`, columnNode.nodeId));
+    }
+  };
+
+  // Section content width: the observed content area (section width minus twice the smallest
+  // observed child x offset), falling back to the section width; used only for Rule B complement
+  // proportions — recorded, never silently assumed.
+  const sectionW = fixedOf(sectionNode, "width") ?? 0;
+  let minX: number | null = null;
+  walkSubtree(sectionNodeId, (node) => {
+    if (node.visible === false) return;
+    const x = absOffsetOf(node, "x");
+    if (x !== null && (minX === null || x < minX)) minX = x;
+  });
+  const contentX = minX ?? 0;
+  const contentW = sectionW - 2 * contentX > 0 ? sectionW - 2 * contentX : sectionW;
+
+  const heightConstraint = section.layout.constraints.find((c) => c.axis === "height" && c.type === "fixed");
+  let rowMinHeight: number | undefined;
+  if (heightConstraint) {
+    const px = Number(heightConstraint.value);
+    if (Number.isFinite(px) && px > 0) rowMinHeight = px;
+    else diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Section height constraint '${heightConstraint.value}' is not a positive number; row min-height not composed.`, sectionNodeId));
+  } else {
+    diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Section '${section.name}' carries no fixed height constraint; row min-height not composed (Admin default applies).`, sectionNodeId));
+  }
+
+  const innerKey = pbStyleKey(`${sectionNodeId}:inner`);
+  const styleRules: string[] = [];
+  if (rowMinHeight !== undefined) styleRules.push(`#html-body [data-pb-style=${innerKey}]{min-height:${rowMinHeight}px}`);
+
+  // Band emission helper (shared by Rule A/B leading + trailing bands): role-resolved loose
+  // texts fold into one WYSIWYG; projected CTAs compose one buttons container after it.
+  const composeBand = (bandNodes: NodeIRNode[], bandLabel: "leading" | "trailing"): string => {
+    const runs: Extract<EmitItem, { kind: "text" }>["runs"] = [];
+    const buttons: { keySource: string; label: string; linkUrl: string; linkTarget?: string; variant: "primary" | "secondary" | undefined }[] = [];
+    for (const node of bandNodes) {
+      const loc = locatorOf(node);
+      const role = resolveComposerRole(node);
+      const entryBase = { sourceNodeId: node.nodeId, sourceName: node.name, ...(loc ? { sourceLocator: loc } : {}) };
+      if (role === "content-lead" || role === "heading" || role === "body") {
+        const text = loc ? textByRef.get(loc) : undefined;
+        if (text === undefined) {
+          diagnostics.push(nodeDiag("EVIDENCE_MISSING", "warning", `No content-manifest text entry for '${node.name}' (${loc ?? "no locator"}); the ${role} field is left empty — no text is invented.`, node.nodeId));
+          mapping.push({ ...entryBase, disposition: "gap", note: `No manifest text entry for the ${role} field.` });
+          continue;
+        }
+        runs.push({ role, nodeId: node.nodeId, name: node.name, locator: loc, text, viaProjection: true });
+      } else if (role === "cta") {
+        const label = loc ? textByRef.get(loc) : undefined;
+        const link = loc ? linkByRef.get(loc) : undefined;
+        if (label === undefined || link === undefined) {
+          diagnostics.push(nodeDiag("EVIDENCE_MISSING", "warning", `CTA '${node.name}' lacks a manifest ${label === undefined ? "text (label)" : "link (target)"} entry; no button is composed — no label or link target is ever invented.`, node.nodeId));
+          mapping.push({ ...entryBase, disposition: "gap", note: "Projected CTA without a manifest label/link entry; no button composed." });
+        } else {
+          buttons.push({ keySource: node.nodeId, label, linkUrl: link.linkUrl, ...(link.linkTarget ? { linkTarget: link.linkTarget } : {}), variant: link.variant });
+          mapping.push({
+            ...entryBase,
+            disposition: "mapped",
+            target: { capabilityId: BUTTON_ITEM_ID, appearanceId: BUTTON_ITEM_APPEARANCE, nativeElement: "button-item", nativeField: "button_text + link (button_link)" },
+            note: `Explicitly projected CTA composed as a native button-item inside the ${bandLabel} band buttons container (label "${label}", link target from the manifest${link.variant ? `, ${link.variant} variant` : ""}); the observed per-button visual styling (fill, radius, icon) is the theme's button CSS, not a composed field.`,
+          });
+        }
+      }
+    }
+    let html = "";
+    if (runs.length > 0) {
+      mapping.push({
+        sourceNodeId: auxNodeId(`${sectionNodeId}:${bandLabel}-band`),
+        disposition: "mapped",
+        target: { capabilityId: TEXT_ID, appearanceId: TEXT_APPEARANCE, nativeElement: "text", nativeField: "content (WYSIWYG HTML)" },
+        note: `${runs.length} role-resolved loose text(s) composed as one ${bandLabel} text WYSIWYG band in document order; the observed standalone styling of the cluster is not preserved (single WYSIWYG field).`,
+      });
+      html += textElementHtml(runs);
+    }
+    if (buttons.length > 0) {
+      mapping.push({
+        sourceNodeId: auxNodeId(`${sectionNodeId}:${bandLabel}-band-buttons`),
+        disposition: "mapped",
+        target: { capabilityId: BUTTONS_ID, appearanceId: BUTTONS_APPEARANCE, nativeElement: "buttons", nativeField: `${buttons.length} button-item child(ren)` },
+        note: `${buttons.length} projected CTA(s) composed as one native buttons (inline) container after the ${bandLabel} band text WYSIWYG.`,
+      });
+      html += buttonsElementHtml(`${sectionNodeId}:${bandLabel}-band-buttons`, buttons);
+    }
+    return html;
+  };
+
+  // ---- Rule B: exactly one projected grid-column -> explicit column + synthesized complement --
+  if (explicitColumns.length === 1) {
+    const explicit = explicitColumns[0] as NodeIRNode;
+    const explicitW = fixedOf(explicit, "width");
+    const complementW = explicitW !== null && contentW - explicitW > 0 ? contentW - explicitW : null;
+    let explicitPct = 50;
+    let complementPct = 50;
+    if (explicitW !== null && complementW !== null) {
+      const split = percentSplit([explicitW, complementW]);
+      explicitPct = split[0] as number;
+      complementPct = split[1] as number;
+    } else {
+      diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Section '${section.name}' carries no fixed width for the explicit column or its complement is non-positive; widths fall back to the platform's own equal-column default (50/50) — recorded, not inferred.`, sectionNodeId));
+    }
+
+    // Loose content walk: visible in-scope nodes outside the explicit column subtree, projected
+    // captions and decoration/CTA subtrees. Full-width loose text clusters ABOVE the explicit
+    // column's top compose as a leading band; everything else composable feeds the synthesized
+    // complement column IN ITS OWN DOCUMENT ORDER (texts merge, CTAs -> buttons, inline-media ->
+    // images at their position). Containers/instances fold transparently (their descendants are
+    // visited) and get one fold entry each.
+    const explicitAbsY = absOffsetOf(explicit, "y") ?? 0;
+    const captionLocatorsB = new Set(captions.map((c) => locatorOf(c)).filter((l): l is string => l !== null));
+    const inExplicitSubtree = new Set<string>();
+    walkSubtree(explicit.nodeId, (n) => inExplicitSubtree.add(n.nodeId));
+    const bandNodes: NodeIRNode[] = [];
+    type SynthItem =
+      | { kind: "text"; role: "content-lead" | "heading" | "body"; node: NodeIRNode }
+      | { kind: "cta"; node: NodeIRNode }
+      | { kind: "media"; node: NodeIRNode };
+    const synthItems: SynthItem[] = [];
+    const visit = (id: string): void => {
+      for (const childId of nodesById.get(id)?.childrenNodeIds ?? []) {
+        const node = nodesById.get(childId);
+        if (!node || node.visible === false) continue;
+        if (inExplicitSubtree.has(node.nodeId)) continue;
+        const loc = locatorOf(node);
+        const entryBase = { sourceNodeId: node.nodeId, sourceName: node.name, ...(loc ? { sourceLocator: loc } : {}) };
+        if (loc && roleByLocator.get(loc) === "decoration") {
+          diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Decoration '${node.name}' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.`, node.nodeId));
+          mapping.push({ ...entryBase, disposition: "gap", note: "Explicitly projected decoration without a native equivalent; excluded (not silently dropped)." });
+          continue;
+        }
+        if (loc && excludedLocators.has(loc)) {
+          mapping.push({ ...entryBase, disposition: "excluded", note: "Inside a subtree explicitly projected as decoration; recorded, never silently dropped." });
+          continue;
+        }
+        if (loc && ctaSubtreeLocators.has(loc)) {
+          mapping.push({ ...entryBase, disposition: "excluded", note: "Inside a projected CTA instance that composed as the native button element; the label composes via the manifest entry, the rest is the button's visual chrome." });
+          continue;
+        }
+        if (captionLocatorsB.has(loc ?? "")) {
+          mapping.push({ ...entryBase, disposition: "gap", note: "Projected grid-caption in a single-column (split) section: captions compose only in multi-column grids; not composed." });
+          continue;
+        }
+        const role = resolveComposerRole(node);
+        if (role === "content-lead" || role === "heading" || role === "body" || role === "cta") {
+          const nodeW = fixedOf(node, "width") ?? 0;
+          const nodeAbsY = absOffsetOf(node, "y") ?? 0;
+          if (role !== "cta" && nodeW >= 0.6 * contentW && nodeAbsY < explicitAbsY - 24) {
+            bandNodes.push(node);
+            continue;
+          }
+          synthItems.push(role === "cta" ? { kind: "cta", node } : { kind: "text", role: role as "content-lead" | "heading" | "body", node });
+          continue;
+        }
+        if (loc && roleByLocator.get(loc) === "inline-media") {
+          synthItems.push({ kind: "media", node });
+          continue;
+        }
+        if (role === "grid-column" || role === "grid-caption") continue;
+        if (node.kind === "container" || node.kind === "component") {
+          // Transparent fold: visit descendants; one fold entry for the container itself.
+          mapping.push({ ...entryBase, disposition: "mapped", target: { capabilityId: COLUMN_ID, appearanceId: COLUMN_APPEARANCE, nativeElement: "column (full-height)", nativeField: "synthesized complement column (container folded)" }, note: "Structural container folded into the synthesized complement column; its composable descendants compose in document order; no separate native container." });
+          visit(childId);
+          continue;
+        }
+        if (node.kind === "icon") {
+          diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Decoration '${node.name}' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.`, node.nodeId));
+          mapping.push({ ...entryBase, disposition: "gap", note: "Decoration without a native equivalent; explicitly excluded (not silently dropped)." });
+          continue;
+        }
+        diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Node '${node.name}' (kind '${node.kind}', role '${node.role ?? "none"}') is outside the ${GRID_TABLE_LABEL} composition table; not composed.`, node.nodeId));
+        mapping.push({ ...entryBase, disposition: "gap", note: `Node outside the ${GRID_TABLE_LABEL} composition table; not composed.` });
+      }
+    };
+    visit(sectionNodeId);
+
+    // Emit the synthesized complement content in collected (document) order.
+    let synthHtml = "";
+    {
+      const runs: Extract<EmitItem, { kind: "text" }>["runs"] = [];
+      let pendingButtonsSpecs: { keySource: string; label: string; linkUrl: string; linkTarget?: string; variant: "primary" | "secondary" | undefined }[] | null = null;
+      const flushRuns = (): void => {
+        if (runs.length > 0) {
+          mapping.push({
+            sourceNodeId: auxNodeId(`${sectionNodeId}:synth-text`),
+            disposition: "mapped",
+            target: { capabilityId: TEXT_ID, appearanceId: TEXT_APPEARANCE, nativeElement: "text", nativeField: "content (WYSIWYG HTML)" },
+            note: `${runs.length} role-resolved loose text(s) composed as one text WYSIWYG in the synthesized complement column (document order); the source carries no explicit container for this cluster — the column is synthesized from the section's own children (recorded decision), and standalone per-field styling is not preserved.`,
+          });
+          synthHtml += textElementHtml(runs);
+          runs.length = 0;
+        }
+      };
+      const flushButtonsSpecs = (): void => {
+        if (pendingButtonsSpecs && pendingButtonsSpecs.length > 0) {
+          mapping.push({
+            sourceNodeId: pendingButtonsSpecs[0]!.keySource,
+            disposition: "mapped",
+            target: { capabilityId: BUTTONS_ID, appearanceId: BUTTONS_APPEARANCE, nativeElement: "buttons", nativeField: `${pendingButtonsSpecs.length} button-item child(ren)` },
+            note: `${pendingButtonsSpecs.length} projected CTA(s) composed as one native buttons (inline) container in the synthesized complement column; consecutive CTAs merge into one container, document order preserved.`,
+          });
+          synthHtml += buttonsElementHtml(`${sectionNodeId}:synth-buttons`, pendingButtonsSpecs);
+          pendingButtonsSpecs = null;
+        }
+      };
+      for (const item of synthItems) {
+        const loc = locatorOf(item.node);
+        const entryBase = { sourceNodeId: item.node.nodeId, sourceName: item.node.name, ...(loc ? { sourceLocator: loc } : {}) };
+        if (item.kind === "text") {
+          const text = loc ? textByRef.get(loc) : undefined;
+          if (text === undefined) {
+            diagnostics.push(nodeDiag("EVIDENCE_MISSING", "warning", `No content-manifest text entry for '${item.node.name}' (${loc ?? "no locator"}); the ${item.role} field is left empty — no text is invented.`, item.node.nodeId));
+            mapping.push({ ...entryBase, disposition: "gap", note: `No manifest text entry for the ${item.role} field.` });
+            continue;
+          }
+          flushButtonsSpecs();
+          runs.push({ role: item.role, nodeId: item.node.nodeId, name: item.node.name, locator: loc, text, viaProjection: true });
+          continue;
+        }
+        if (item.kind === "cta") {
+          const label = loc ? textByRef.get(loc) : undefined;
+          const link = loc ? linkByRef.get(loc) : undefined;
+          if (label === undefined || link === undefined) {
+            diagnostics.push(nodeDiag("EVIDENCE_MISSING", "warning", `CTA '${item.node.name}' lacks a manifest ${label === undefined ? "text (label)" : "link (target)"} entry; no button is composed — no label or link target is ever invented.`, item.node.nodeId));
+            mapping.push({ ...entryBase, disposition: "gap", note: "Projected CTA without a manifest label/link entry; no button composed." });
+            continue;
+          }
+          flushRuns();
+          if (pendingButtonsSpecs) pendingButtonsSpecs.push({ keySource: item.node.nodeId, label, linkUrl: link.linkUrl, ...(link.linkTarget ? { linkTarget: link.linkTarget } : {}), variant: link.variant });
+          else pendingButtonsSpecs = [{ keySource: item.node.nodeId, label, linkUrl: link.linkUrl, ...(link.linkTarget ? { linkTarget: link.linkTarget } : {}), variant: link.variant }];
+          mapping.push({
+            ...entryBase,
+            disposition: "mapped",
+            target: { capabilityId: BUTTON_ITEM_ID, appearanceId: BUTTON_ITEM_APPEARANCE, nativeElement: "button-item", nativeField: "button_text + link (button_link)" },
+            note: `Explicitly projected CTA composed as a native button-item in the synthesized complement column (label "${label}", link target from the manifest${link.variant ? `, ${link.variant} variant` : ""}); the observed per-button visual styling (fill, radius, icon) is the theme's button CSS, not a composed field.`,
+          });
+          continue;
+        }
+        // media
+        flushRuns();
+        flushButtonsSpecs();
+        const media = loc ? mediaByRef.get(loc) : undefined;
+        if (!media) {
+          diagnostics.push(nodeDiag("EVIDENCE_MISSING", "warning", `No content-manifest media entry for projected inline-media node '${item.node.name}' (${loc ?? "no locator"}); no image element is composed — no asset URL is ever invented.`, item.node.nodeId));
+          mapping.push({ ...entryBase, disposition: "gap", note: "Projected inline-media without a manifest media entry; no image element composed." });
+          continue;
+        }
+        mapping.push({
+          ...entryBase,
+          disposition: "mapped",
+          target: { capabilityId: IMAGE_ID, appearanceId: IMAGE_APPEARANCE, nativeElement: "image", nativeField: "desktop_image (src)" },
+          note: "Explicitly projected media composed as a native image element in the synthesized complement column; observed overlay styling composes stacked — see the section's fidelity warnings.",
+        });
+        synthHtml += imageElementHtml(media.mediaUrl);
+      }
+      flushRuns();
+      flushButtonsSpecs();
+    }
+    const synthLanded = synthHtml.length > 0;
+    const synthKey = pbStyleKey(`${sectionNodeId}:synth`);
+    const explicitKey = pbStyleKey(explicit.nodeId);
+    const columnLineKey = pbStyleKey(`${sectionNodeId}:line`);
+    styleRules.push(`#html-body [data-pb-style=${columnLineKey}]{display:flex;width:100%}`);
+    styleRules.push(`#html-body [data-pb-style=${explicitKey}]{justify-content:flex-start;display:flex;flex-direction:column;width:${explicitPct}%;align-self:stretch}`);
+    styleRules.push(`#html-body [data-pb-style=${synthKey}]{justify-content:flex-start;display:flex;flex-direction:column;width:${complementPct}%;align-self:stretch}`);
+
+    const explicitContent = composeGridColumn(explicit);
+    accountColumn(explicit, explicitContent, `explicit grid-column slot (${explicitW !== null ? `${explicitW}px` : "width unknown"})`, `Explicit slot composed as one native column (full-height) of the split section (${explicitPct}% of the observed ${contentW}px content width).`);
+
+    mapping.push({
+      sourceNodeId: auxNodeId(`${sectionNodeId}:synth-column`),
+      disposition: synthLanded ? "mapped" : "gap",
+      ...(synthLanded ? { target: { capabilityId: COLUMN_ID, appearanceId: COLUMN_APPEARANCE, nativeElement: "column (full-height)", nativeField: "synthesized complement column" } } : {}),
+      note: synthLanded
+        ? `The section's remaining loose composable content composed as ONE synthesized complement column (${complementW !== null ? `${complementW}px` : "width unknown"} of the observed ${contentW}px content width -> ${complementPct}%); the source carries no explicit container for it — recorded decision, never invented structurally.`
+        : "No loose composable content remained for the synthesized complement column; an empty native column shell is emitted.",
+    });
+
+    // Column order by absolute x (tie -> explicit first).
+    const explicitX = colXAbs(explicit);
+    let synthX = explicitX;
+    for (const item of synthItems) {
+      const x = absOffsetOf(item.node, "x");
+      if (x !== null && x < synthX) synthX = x;
+    }
+    const explicitFirst = explicitX <= synthX;
+    const explicitHtml = `<div class="pagebuilder-column" data-content-type="column" data-appearance="full-height" data-background-images="{}" data-element="main" data-pb-style="${explicitKey}">${explicitContent.html}</div>`;
+    const synthHtmlColumn = `<div class="pagebuilder-column" data-content-type="column" data-appearance="full-height" data-background-images="{}" data-element="main" data-pb-style="${synthKey}">${synthHtml}</div>`;
+    const lineHtml = explicitFirst ? explicitHtml + synthHtmlColumn : synthHtmlColumn + explicitHtml;
+    const leadingHtml = bandNodes.length > 0 ? composeBand(bandNodes, "leading") : "";
+    mapping.push({
+      sourceNodeId: sectionNodeId,
+      ...(sectionNode.name ? { sourceName: sectionNode.name } : {}),
+      ...(sectionLocator ? { sourceLocator: sectionLocator } : {}),
+      disposition: "mapped",
+      target: { capabilityId: ROW_ID, appearanceId: ROW_APPEARANCE, nativeElement: "main", nativeField: "row(contained) > column-group(default) > column-line > column(full-height) x2" },
+      note: `Split section composed as the declaration-backed two-column chain: explicit slot (${explicitW !== null ? `${explicitW}px` : "width unknown"} of the observed ${contentW}px content width -> ${explicitPct}%) + ONE synthesized complement column (${complementPct}%) from the section's remaining loose composable content in document order; observed side placement/any full-bleed media edge are approximated by the contained row (recorded fidelity limits); mobile breakpoint not composed.`,
+    });
+    const styleBlock = `<style>${styleRules.join("")}</style>`;
+    return (
+      styleBlock +
+      `<div data-content-type="row" data-appearance="contained" data-element="main">` +
+      `<div data-enable-parallax="0" data-parallax-speed="0.5" data-background-images="{}" data-background-type="image" data-video-loop="true" data-video-play-only-visible="true" data-video-lazy-load="true" data-video-fallback-src="" data-element="inner"${rowMinHeight !== undefined ? ` data-pb-style="${innerKey}"` : ""}>` +
+      leadingHtml +
+      `<div class="pagebuilder-column-group" data-content-type="column-group" data-appearance="default" data-grid-size="12" data-background-images="{}" data-element="main">` +
+      `<div class="pagebuilder-column-line" data-content-type="column-line" data-element="main" data-pb-style="${columnLineKey}">` +
+      lineHtml +
+      `</div>` +
+      `</div>` +
+      `</div>` +
+      `</div>`
+    );
+  }
+
+  // ---- Rule A: two or more projected grid-columns -> lines by common parent + y-overlap --------
+  // Cluster columns into lines: group by parent node, sweep by y (absolute) splitting on
+  // non-overlap; columns within a line ordered by absolute x; lines by their first column's y.
+  const parentOf = new Map<string, string | null>();
+  for (const col of explicitColumns) parentOf.set(col.nodeId, col.parentNodeId);
+  const groups = new Map<string, NodeIRNode[]>();
+  for (const col of explicitColumns) {
+    const key = parentOf.get(col.nodeId) ?? "root";
+    const list = groups.get(key) ?? [];
+    list.push(col);
+    groups.set(key, list);
+  }
+  const lines: { cols: NodeIRNode[] }[] = [];
+  for (const [, cols] of [...groups.entries()].sort((a, b) => {
+    const fa = a[1][0] as NodeIRNode;
+    const fb = b[1][0] as NodeIRNode;
+    return colYAbs(fa) - colYAbs(fb) || colXAbs(fa) - colXAbs(fb);
+  })) {
+    const sorted = [...cols].sort((a, b) => colYAbs(a) - colYAbs(b) || colXAbs(a) - colXAbs(b));
+    let current: { cols: NodeIRNode[]; y1: number } | null = null;
+    for (const col of sorted) {
+      const y = colYAbs(col);
+      const y1 = y + (fixedOf(col, "height") ?? 0);
+      if (current && y < current.y1) {
+        current.cols.push(col);
+        current.y1 = Math.max(current.y1, y1);
+      } else {
+        if (current) lines.push({ cols: current.cols });
+        current = { cols: [col], y1 };
+      }
+    }
+    if (current) lines.push({ cols: current.cols });
+  }
+  for (const line of lines) line.cols.sort((a, b) => colXAbs(a) - colXAbs(b));
+  lines.sort((a, b) => colYAbs(a.cols[0] as NodeIRNode) - colYAbs(b.cols[0] as NodeIRNode));
+  if (lines.length === 0) return null;
+
+  // Widths per line from the observed fixed widths (largest remainder, sum exactly 100).
+  const linePcts = lines.map((line) => {
+    const widths = line.cols.map((c) => fixedOf(c, "width") ?? 0);
+    const usable = widths.every((w) => w > 0) ? widths : widths.map((w) => (w > 0 ? w : 1));
+    return percentSplit(usable);
+  });
+  for (const [li, line] of lines.entries()) {
+    const lineKey = pbStyleKey(`${sectionNodeId}:line-${li}`);
+    styleRules.push(`#html-body [data-pb-style=${lineKey}]{display:flex;width:100%}`);
+    const pcts = linePcts[li] as number[];
+    for (const [ci, col] of line.cols.entries()) {
+      const key = pbStyleKey(col.nodeId);
+      styleRules.push(`#html-body [data-pb-style=${key}]{justify-content:flex-start;display:flex;flex-direction:column;width:${pcts[ci]}%;align-self:stretch}`);
+    }
+  }
+
+  // Loose content bands (Rule A): role-resolved loose texts/CTAs outside every column subtree;
+  // above the first line -> leading band, otherwise -> trailing band; captions attach per column.
+  const inColumnSubtree = new Set<string>();
+  for (const col of explicitColumns) walkSubtree(col.nodeId, (n) => inColumnSubtree.add(n.nodeId));
+  const captionLocatorsA = new Set(captions.map((c) => locatorOf(c)).filter((l): l is string => l !== null));
+  const firstLineTop = colYAbs((lines[0] as { cols: NodeIRNode[] }).cols[0] as NodeIRNode);
+  const leadingNodes: NodeIRNode[] = [];
+  const trailingNodes: NodeIRNode[] = [];
+  const visitA = (id: string): void => {
+    for (const childId of nodesById.get(id)?.childrenNodeIds ?? []) {
+      const node = nodesById.get(childId);
+      if (!node || node.visible === false) continue;
+      if (inColumnSubtree.has(node.nodeId)) continue;
+      const loc = locatorOf(node);
+      const entryBase = { sourceNodeId: node.nodeId, sourceName: node.name, ...(loc ? { sourceLocator: loc } : {}) };
+      if (loc && roleByLocator.get(loc) === "decoration") {
+        diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Decoration '${node.name}' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.`, node.nodeId));
+        mapping.push({ ...entryBase, disposition: "gap", note: "Explicitly projected decoration without a native equivalent; excluded (not silently dropped)." });
+        continue;
+      }
+      if (loc && excludedLocators.has(loc)) {
+        mapping.push({ ...entryBase, disposition: "excluded", note: "Inside a subtree explicitly projected as decoration; recorded, never silently dropped." });
+        continue;
+      }
+      if (loc && ctaSubtreeLocators.has(loc)) {
+        mapping.push({ ...entryBase, disposition: "excluded", note: "Inside a projected CTA instance that composed as the native button element; the label composes via the manifest entry, the rest is the button's visual chrome." });
+        continue;
+      }
+      if (captionLocatorsA.has(loc ?? "")) continue; // attached to a column above
+      const role = resolveComposerRole(node);
+      if (role === "content-lead" || role === "heading" || role === "body" || role === "cta") {
+        const y = absOffsetOf(node, "y");
+        (y !== null && y < firstLineTop ? leadingNodes : trailingNodes).push(node);
+        continue;
+      }
+      if (loc && roleByLocator.get(loc) === "inline-media") {
+        diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Projected inline-media '${node.name}' sits outside every projected grid-column; loose media outside columns is not composed.`, node.nodeId));
+        mapping.push({ ...entryBase, disposition: "gap", note: "Projected inline-media outside any projected column; not composed." });
+        continue;
+      }
+      if (role === "grid-column" || role === "grid-caption") continue;
+      if (node.kind === "container" || node.kind === "component") {
+        // Transparent fold: visit descendants; one fold entry for the container itself.
+        mapping.push({ ...entryBase, disposition: "mapped", target: { capabilityId: COLUMN_ID, appearanceId: COLUMN_APPEARANCE, nativeElement: "column (full-height)", nativeField: "grid structure (container folded)" }, note: "Structural container folded into the grid structure; its composable descendants compose in the bands/columns; no separate native container." });
+        visitA(childId);
+        continue;
+      }
+      if (node.kind === "icon") {
+        diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Decoration '${node.name}' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.`, node.nodeId));
+        mapping.push({ ...entryBase, disposition: "gap", note: "Decoration without a native equivalent; explicitly excluded (not silently dropped)." });
+        continue;
+      }
+      diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Node '${node.name}' (kind '${node.kind}', role '${node.role ?? "none"}') is outside the ${GRID_TABLE_LABEL} composition table; not composed.`, node.nodeId));
+      mapping.push({ ...entryBase, disposition: "gap", note: `Node outside the ${GRID_TABLE_LABEL} composition table; not composed.` });
+    }
+  };
+  visitA(sectionNodeId);
+  const leadingHtml = leadingNodes.length > 0 ? composeBand(leadingNodes, "leading") : "";
+  const trailingHtml = trailingNodes.length > 0 ? composeBand(trailingNodes, "trailing") : "";
+
+  // Column content + container accounting + line markup.
+  const lineHtmlParts: string[] = [];
+  for (const [li, line] of lines.entries()) {
+    const lineKey = pbStyleKey(`${sectionNodeId}:line-${li}`);
+    const pcts = linePcts[li] as number[];
+    const colsHtml = line.cols
+      .map((col, ci) => {
+        const content = composeGridColumn(col);
+        accountColumn(col, content, `grid column at ${pcts[ci]}% of line ${li + 1} (observed proportion of its line)`, `Grid slot composed as one native column (full-height) at ${pcts[ci]}% width of line ${li + 1}.`);
+        const key = pbStyleKey(col.nodeId);
+        return `<div class="pagebuilder-column" data-content-type="column" data-appearance="full-height" data-background-images="{}" data-element="main" data-pb-style="${key}">${content.html}</div>`;
+      })
+      .join("");
+    lineHtmlParts.push(`<div class="pagebuilder-column-line" data-content-type="column-line" data-element="main" data-pb-style="${lineKey}">${colsHtml}</div>`);
+  }
+
+  // Aggregated fidelity warning (once per section, from the observed inventory).
+  const totalMedia = explicitColumns.map((col) => {
+    let count = 0;
+    const colLocator = locatorOf(col);
+    if (colLocator && mediaByRef.has(colLocator)) count += 1;
+    walkSubtree(col.nodeId, (n) => {
+      if (n.visible === false) return;
+      const loc = locatorOf(n);
+      if (loc && (roleByLocator.get(loc) === "inline-media" || mediaByRef.has(loc))) count += 1;
+    });
+    return count;
+  }).reduce((a, b) => a + b, 0);
+  if (totalMedia > 0) {
+    diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Observed media in '${section.name}' (${totalMedia} slot(s)) composes as native image elements at natural aspect to column width — no native aspect/crop field; the section's fixed height persists only as the row min-height. Overlay/decoration styling (gradients, affordances) has no native field. Recorded as fidelity limits, never custom CSS.`, sectionNodeId));
+  }
+
+  mapping.push({
+    sourceNodeId: sectionNodeId,
+    ...(sectionNode.name ? { sourceName: sectionNode.name } : {}),
+    ...(sectionLocator ? { sourceLocator: sectionLocator } : {}),
+    disposition: "mapped",
+    target: { capabilityId: ROW_ID, appearanceId: ROW_APPEARANCE, nativeElement: "main", nativeField: `row(contained) > column-group(default) > column-line x${lines.length} > column(full-height) x${explicitColumns.length}` },
+    note: `Grid section composed as the declaration-backed column chain: ${lines.length} line(s), ${explicitColumns.length} projected grid column(s), widths apportioned from observed fixed widths to integer percents (largest remainder, sum 100); observed vertical overlap bands define the lines (nesting a column-group inside a column is NOT declaration-backed); observed gutters/staggering are not native fields — recorded fidelity limits; mobile breakpoint not composed.`,
+  });
+  const styleBlock = `<style>${styleRules.join("")}</style>`;
+  return (
+    styleBlock +
+    `<div data-content-type="row" data-appearance="contained" data-element="main">` +
+    `<div data-enable-parallax="0" data-parallax-speed="0.5" data-background-images="{}" data-background-type="image" data-video-loop="true" data-video-play-only-visible="true" data-video-lazy-load="true" data-video-fallback-src="" data-element="inner"${rowMinHeight !== undefined ? ` data-pb-style="${innerKey}"` : ""}>` +
+    leadingHtml +
+    `<div class="pagebuilder-column-group" data-content-type="column-group" data-appearance="default" data-grid-size="12" data-background-images="{}" data-element="main">` +
+    lineHtmlParts.join("") +
+    `</div>` +
+    trailingHtml +
+    `</div>` +
+    `</div>`
+  );
+}
+
 function composeSection(section: PageStructureSection, sectionNodeId: string): string | null {
   const sectionNode = nodesById.get(sectionNodeId);
   if (!sectionNode) {
@@ -608,6 +1660,42 @@ function composeSection(section: PageStructureSection, sectionNodeId: string): s
   if (primaries.length === 1 && secondaries.length === 1) {
     return composeTwoColumnSection(section, sectionNodeId, primaries[0] as NodeIRNode, secondaries[0] as NodeIRNode);
   }
+
+  // Issue #28 dispatch (deterministic precedence after the G4 two-column shape): explicit
+  // grid-column projections compose the declaration-backed column-grid shape (Rule B split /
+  // Rule A grid); hero-eligible sections keep the hero composer; role-resolved text/CTA sections
+  // without background media and without blocking containers compose the guarded text-band
+  // shape; everything else skips through the hero path's full accountable scan below.
+  const gridColumns: NodeIRNode[] = [];
+  walkSubtree(sectionNodeId, (node) => {
+    if (node.visible === false) return;
+    const loc = locatorOf(node);
+    if (loc && roleByLocator.get(loc) === "grid-column") gridColumns.push(node);
+  });
+  if (gridColumns.length > 0) {
+    return composeColumnGridSection(section, sectionNodeId, gridColumns);
+  }
+  // Band guard: a direct-child container that carries its own manifest media entry, or that
+  // contains structured (non-CTA) role-resolved text, marks a hero/column-shaped section — the
+  // band shape must not silently flatten it. Such sections honestly skip instead.
+  const textBandBlocked = (): string | null => {
+    for (const child of directVisibleChildren) {
+      if (child.kind !== "container" && child.kind !== "component") continue;
+      const childLoc = locatorOf(child);
+      if (childLoc && mediaByRef.has(childLoc)) return `direct-child container '${child.name}' carries a manifest media entry`;
+      let reason: string | null = null;
+      walkSubtree(child.nodeId, (n) => {
+        if (reason || n.visible === false) return;
+        const l = locatorOf(n);
+        if (l && (excludedLocators.has(l) || ctaSubtreeLocators.has(l))) return;
+        const r = resolveComposerRole(n);
+        if ((r === "content-lead" || r === "heading" || r === "body") && n.nodeId !== child.nodeId) reason = `structured text content (role '${r}') inside '${child.name}'`;
+      });
+      if (reason) return reason;
+    }
+    return null;
+  };
+  const bandBlocker = textBandBlocked();
 
   // Deterministic role resolution: explicit projection assignment > SLOT naming-contract table.
   // Only the hero's own text roles fold here; other projected roles (columns, inline-media,
@@ -636,8 +1724,14 @@ function composeSection(section: PageStructureSection, sectionNodeId: string): s
     return role !== undefined && role !== "background-media";
   });
   if (bgCandidates.length === 0 || textCandidates.length === 0) {
-    diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Section '${section.name}' does not carry the hero shape this slice composes (needs a background-media node and role-resolved overlaid text — via explicit projection or SLOT naming hints); skipped — nothing invented.`, sectionNodeId));
-    mapping.push({ sourceNodeId: sectionNodeId, ...(sectionNode.name ? { sourceName: sectionNode.name } : {}), ...(sectionLocator ? { sourceLocator: sectionLocator } : {}), disposition: "skipped", note: "Section shape is outside this slice's hero composer (background media + role-resolved overlaid text)." });
+    // Issue #28: guarded text-band attempt before the honest skip (no background media and no
+    // blocking container structure — loose role-resolved text/CTA content only).
+    if (!bandBlocker) {
+      const band = composeTextBandSection(section, sectionNodeId);
+      if (band) return band;
+    }
+    diagnostics.push(nodeDiag("NOT_VERIFIED", "warning", `Section '${section.name}' does not carry the hero shape this slice composes (needs a background-media node and role-resolved overlaid text — via explicit projection or SLOT naming hints); skipped — nothing invented.${bandBlocker ? ` The guarded text-band shape is not applicable: ${bandBlocker}.` : ""}`, sectionNodeId));
+    mapping.push({ sourceNodeId: sectionNodeId, ...(sectionNode.name ? { sourceName: sectionNode.name } : {}), ...(sectionLocator ? { sourceLocator: sectionLocator } : {}), disposition: "skipped", note: "Section shape is outside this slice's composers (background media + role-resolved overlaid text; projected column/grid shapes; loose text/CTA band)." });
     return null;
   }
 
@@ -706,6 +1800,10 @@ function composeSection(section: PageStructureSection, sectionNodeId: string): s
     }
     if (otherLocator && excludedLocators.has(otherLocator)) {
       mapping.push({ ...entryBase, disposition: "excluded", note: "Inside a subtree explicitly projected as decoration; recorded, never silently dropped." });
+      continue;
+    }
+    if (otherLocator && ctaSubtreeLocators.has(otherLocator)) {
+      mapping.push({ ...entryBase, disposition: "excluded", note: "Inside a projected CTA instance that composed as the native button element; the label composes via the manifest entry, the rest is the button's visual chrome." });
       continue;
     }
     if (other.role === "DECOR" || other.kind === "icon") {
@@ -843,7 +1941,9 @@ const payload = {
   },
   content,
   contentHash: `sha256:${sha256Hex(content)}`,
-  mapping: [...mapping].sort((a, b) => a.sourceNodeId.localeCompare(b.sourceNodeId)),
+  mapping: [...mapping]
+    .map((m) => (m.note !== undefined && m.note.length > 500 ? { ...m, note: `${m.note.slice(0, 497)}…` } : m))
+    .sort((a, b) => a.sourceNodeId.localeCompare(b.sourceNodeId)),
   diagnostics: sortDiagnostics(diagnostics),
 };
 

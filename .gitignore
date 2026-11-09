@@ -22,3 +22,6 @@ projects/*/*.local.*
 
 # KB store run receipts (timestamped; store content is the committed truth)
 kb/tool-run.json
+
+# Local run outputs (pipeline artifacts, fetched assets, local manifests) — never committed
+out/

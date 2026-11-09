@@ -24,13 +24,8 @@ const PROOF_LEVELS = new Set(["DETECTED", "ASSUMED", "TESTED", "UNKNOWN"]);
 
 // Engine artifact payloads validate against the engine-output envelope (records view /
 // sync report / query result); the store descriptor validates against kb-store directly.
-const SCHEMA_REFS: Record<string, string> = {
-  "kb-ingest-manifest": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-ingest-manifest.schema.json",
-  "kb-records": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-engine-output.schema.json",
-  "kb-query-result": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-engine-output.schema.json",
-  "kb-sync-report": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-engine-output.schema.json",
-  "kb-store-descriptor": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-store.schema.json",
-};
+// Schema identity for every artifact comes solely from run-envelope SCHEMA_REFS — never
+// re-declare schema URLs here (single-source contract identifiers, issue #35).
 
 // KB stable hashes strip ALL observation timestamps (scannedAt/capturedAt/recordedAt ride on
 // records, unlike converter payloads) — the cross-run determinism proof hash.

@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/tool-run.schema.json",
-  "$comment": "Design Engineering Toolkit CLI family — ToolRun envelope. Major version 1. Deterministic, evidence-carrying record of one det command run: which tool/command/inputs, which artifacts with content hashes, which converter-family diagnostics the run produced, and which process-level (open-vocabulary) diagnostics occurred. converterDiagnostics reuse the converter family's closed diagnostic registry via $id-pinned $ref (semantic reuse, documented in schemas/cli/README.md); runDiagnostics are process-level only — new process concerns must go here, never into the closed converter enum.",
-  "title": "Design Engineering Toolkit — Tool Run Envelope",
+  "$comment": "Design Engineering Toolkit CLI family \u2014 ToolRun envelope. Major version 1. Deterministic, evidence-carrying record of one det command run: which tool/command/inputs, which artifacts with content hashes, which converter-family diagnostics the run produced, and which process-level (open-vocabulary) diagnostics occurred. converterDiagnostics reuse the converter family's closed diagnostic registry via $id-pinned $ref (semantic reuse, documented in schemas/cli/README.md); runDiagnostics are process-level only \u2014 new process concerns must go here, never into the closed converter enum. Version 1.4.0 (issue #28 corrections C1/C2, additive): command enum gains `build` (the one-shot validated orchestrator over the shipped commands); the artifact role enum gains `compose-report` (closing the run-envelope.ts/schema drift found in review), `native-content` (the composed platform content document, hashed over its EXACT emitted bytes rather than a canonical-JSON payload hash), and `build-manifest` (the build bundle inventory).",
+  "title": "Design Engineering Toolkit \u2014 Tool Run Envelope",
   "type": "object",
   "required": [
     "schemaVersion",
@@ -42,9 +42,10 @@
         "plan",
         "extract",
         "kb",
-        "compose"
+        "compose",
+        "build"
       ],
-      "description": "Closed major-1 enum, 1.1.0 additive: extract (G2 #14) + kb (#15) + compose (G3 #23)."
+      "description": "Closed major-1 enum, additive: 1.1.0 extract (G2 #14) + kb (#15) + compose (G3 #23); 1.4.0 build (issue #28 C1, the one-shot validated orchestrator over the shipped commands)."
     },
     "exitCode": {
       "type": "integer",
@@ -115,9 +116,12 @@
               "kb-records",
               "kb-query-result",
               "kb-sync-report",
-              "kb-store-descriptor"
+              "kb-store-descriptor",
+              "compose-report",
+              "native-content",
+              "build-manifest"
             ],
-            "description": "Closed major-1 role enum with G2 and KB additive roles in 1.1.0."
+            "description": "Closed major-1 role enum with G2/KB additive roles in 1.1.0; 1.4.0 (issue #28 C2) adds compose-report (drift closure: run-envelope.ts already carried it), native-content (the composed platform content document; its contentHash is over the exact emitted bytes, not a canonical JSON payload) and build-manifest (the build bundle inventory)."
           },
           "file": {
             "type": "string",
@@ -132,12 +136,12 @@
           "contentHash": {
             "type": "string",
             "pattern": "^[0-9a-f]{64}$",
-            "description": "SHA-256 over canonical JSON minus generatedAt (converter-family rule)."
+            "description": "SHA-256 over canonical JSON minus generatedAt (converter-family rule); for raw byte artifacts (native-content) it is the SHA-256 over the exact emitted bytes \u2014 recorded as such, never conflated."
           },
           "volatileContentHash": {
             "type": "string",
             "pattern": "^[0-9a-f]{64}$",
-            "description": "SHA-256 over canonical JSON with ALL observation timestamps removed — the cross-run determinism proof hash."
+            "description": "SHA-256 over canonical JSON with ALL observation timestamps removed \u2014 the cross-run determinism proof hash."
           }
         }
       },

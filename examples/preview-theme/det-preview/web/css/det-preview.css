@@ -1,0 +1,131 @@
+/*
+ * DET Preview Theme — scoped preview styles (issue #28).
+ *
+ * Everything here is scoped under `body.det-preview` (set by this theme's layout XML), so the
+ * rules can never bleed into any other theme. The stylesheet styles two things, and only those:
+ *   1. `det-*` classes carried by PREVIEW CMS content (e.g. the det-announcement strip block) —
+ *      the portable hook the toolkit's converter output is allowed to use.
+ *   2. The native Page Builder structural classes the deterministic composer emits (row, banner,
+ *      column-group/line/column, text, image, buttons/button-item), to approximate the observed
+ *      design's typography and spacing WITHIN the platform's native structures. Structural and
+ *      editable fields (widths, min-heights, `data-pb-style` rules) stay native — this sheet only
+ *      adds presentational polish, and every rule here is a preview approximation, not a
+ *      production contract (per-field typography inside folded WYSIWYG fields remains a recorded
+ *      converter fidelity limit).
+ *
+ * Fonts: the observed design uses Merriweather (display serif) + Open Sans (UI sans). The import
+ * below is a PREVIEW convenience; a production port must self-host fonts per its own license.
+ */
+@import url("https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&family=Open+Sans:wght@400;600;700&display=swap");
+
+body.det-preview {
+  --det-ink: #10141c;
+  --det-body: #606b7a;
+  --det-muted: #8992a0;
+  --det-hairline: rgba(32, 38, 50, 0.15);
+  --det-serif: "Merriweather", Georgia, "Times New Roman", serif;
+  --det-sans: "Open Sans", "Helvetica Neue", Arial, sans-serif;
+  --det-track: 0.08em;
+}
+
+/* ---- det-* preview content hooks (announcement strip; reusable pattern) ---- */
+body.det-preview .det-announcement {
+  background: var(--det-ink);
+  color: #fff;
+  text-align: center;
+  padding: 8px 16px;
+}
+body.det-preview .det-announcement p {
+  margin: 0;
+  font-family: var(--det-sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ---- CMS editorial area typography (composed Page Builder text WYSIWYGs) ---- */
+/* Display serif for headings; quiet gray for body copy — the observed design's two voices. */
+body.det-preview main#maincontent [data-content-type="text"] h1,
+body.det-preview main#maincontent [data-content-type="text"] h2,
+body.det-preview main#maincontent [data-content-type="text"] h3 {
+  font-family: var(--det-serif);
+  font-weight: 400;
+  color: var(--det-ink);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+body.det-preview main#maincontent [data-content-type="text"] h2 {
+  font-size: 32px;
+  margin: 0 0 12px;
+}
+body.det-preview main#maincontent [data-content-type="text"] p {
+  font-family: var(--det-sans);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--det-body);
+  margin: 0 0 10px;
+}
+
+/* ---- Native banner (hero shape): left-aligned poster content per the observed design ---- */
+body.det-preview .pagebuilder-poster-content {
+  text-align: left;
+  align-items: flex-start;
+}
+body.det-preview .pagebuilder-poster-content [data-element="content"] h2 {
+  font-size: 56px;
+  line-height: 1.1;
+  margin: 0 0 16px;
+}
+body.det-preview .pagebuilder-poster-content [data-element="content"] p {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 13px;
+}
+body.det-preview .pagebuilder-poster-content [data-element="content"] p:first-child {
+  letter-spacing: var(--det-track);
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.75);
+}
+body.det-preview .pagebuilder-banner-button {
+  background: var(--det-ink);
+  color: #fff;
+  border-radius: 0;
+  font-family: var(--det-sans);
+  font-size: 14px;
+  padding: 14px 28px;
+}
+
+/* ---- Column grids: the observed 24px inter-column gutter as a scoped approximation ----
+ * Native columns carry no gutter field; the flex gap visually approximates it at the cost of a
+ * few percent of column width (flex shrink) — a recorded preview fidelity trade-off. */
+body.det-preview .pagebuilder-column-line {
+  gap: 24px;
+}
+
+/* ---- Native buttons pair (buttons/button-item): the observed rectangular CTA look ---- */
+body.det-preview .pagebuilder-button-primary {
+  background: var(--det-ink);
+  color: #fff;
+  border-radius: 0;
+  font-family: var(--det-sans);
+  font-size: 14px;
+  padding: 14px 28px;
+}
+body.det-preview .pagebuilder-button-secondary {
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 0;
+  font-family: var(--det-sans);
+  font-size: 14px;
+  padding: 14px 28px;
+}
+
+/* ---- Native images: fill their column, keep natural aspect (native behavior kept) ---- */
+body.det-preview main#maincontent figure[data-content-type="image"] img {
+  width: 100%;
+  height: auto;
+  display: block;
+}

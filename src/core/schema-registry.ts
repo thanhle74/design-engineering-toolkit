@@ -63,6 +63,9 @@ const ids = new Map<string, string>([
   ["compose-input", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/compose-input.schema.json"],
   ["compose-output", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/compose-output.schema.json"],
   ["semantic-projection", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/semantic-projection.schema.json"],
+  // One-shot build family (issue #28 C1/C2)
+  ["build-config", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/build-config.schema.json"],
+  ["build-manifest", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/build-manifest.schema.json"],
   // Knowledge Engine family (issue #15)
   ["kb-capability", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-capability.schema.json"],
   ["kb-ui-component", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-ui-component.schema.json"],

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+  DET Preview Theme page scope (issue #28):
+  - Adds the `det-preview` body class so every rule in css/det-preview.css stays scoped to pages
+    rendered by THIS preview theme (one namespace, zero bleed into any other theme).
+  - Renders the design's announcement strip as a CMS block (`det-announcement`) in the standard
+    `top.container` slot above the inherited Hyvä header. The block is optional preview data
+    (MOCK editorial content, e.g. "NEW SEASON — AUTUMN/WINTER 2026"): when the block does not
+    exist, Magento\Cms\Block\Block renders nothing, so the theme stays self-contained.
+  - No layout XML touches any merchant theme, CMS record, or store configuration — assignment of
+    this theme to a store view is a scoped, reversible local operator step (see README.md).
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <attribute name="class" value="det-preview"/>
+        <referenceContainer name="top.container">
+            <block class="Magento\Cms\Block\Block" name="det.announcement">
+                <arguments>
+                    <argument name="block_id" xsi:type="string">det-announcement</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>
