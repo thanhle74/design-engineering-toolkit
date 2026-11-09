@@ -1,0 +1,658 @@
+{
+ "schemaVersion": 1,
+ "profileId": "g28-home-preview",
+ "sourceRevisionId": "mcp-observed-unpinned-2026-11-09",
+ "notes": "Section archetypes: 245:5 hero (G3); 299:343 two-column (G4); 245:6 + 245:14 text bands; 394:386 / 245:9 / 299:300 / 245:12 grid Rule B (one explicit slot + synthesized complement); 245:7 / 299:311 / 245:10 / 522:542 grid Rule A (2+ slots). CTA instances compose as native buttons/button-item pairs (labels from the content manifest; commerce labels are presentation-only MOCK). Tile/card gradients, arrows, wishlist hearts, hotspots and the newsletter input have no native equivalent \u2014 decoration projections or explicit gaps, never approximated.",
+ "assignments": [
+  {
+   "sourceLocator": "design://g28-home-fixture-source/254:40",
+   "role": "background-media",
+   "reason": "Full-bleed 1440x880 media slot frame observed behind the overlaid hero text cluster; the banner wrapper's background image is the platform's own field for it."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/254:43",
+   "role": "content-lead",
+   "reason": "Overline text ('CHAPTER 01 / AW 2026', 12px tracked caps) above the heading; composes as the banner content WYSIWYG lead paragraph."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/254:44",
+   "role": "heading",
+   "reason": "Hero display heading ('The Quiet Grandeur', Merriweather 88px); composes as the banner content WYSIWYG h2."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/254:45",
+   "role": "body",
+   "reason": "Hero supporting line; composes as the banner content WYSIWYG paragraph."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/254:47",
+   "role": "cta",
+   "reason": "Button component instance ('Proto / Button/Primary') under the hero text; composes as the native banner button with the manifest label/link."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/254:41",
+   "role": "decoration",
+   "reason": "Full-bleed overlay rounded-rectangle (scrim/gradient); the native banner overlay is a single color field, so the observed gradient has no native equivalent."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/254:57",
+   "role": "decoration",
+   "reason": "Scroll-indicator decoration frame; no native Page Builder equivalent."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/254:60",
+   "role": "content-lead",
+   "reason": "Small tracked overline ('THE HOUSE') above the statement; composes as the band WYSIWYG lead paragraph."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/254:61",
+   "role": "heading",
+   "reason": "Brand statement display text (Merriweather 48px, 900px wide); composes as the band WYSIWYG h2."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/394:387",
+   "role": "grid-column",
+   "reason": "940x780 media slot frame occupying the right side of the section (x=500); the explicit native column of the split shape."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/394:388",
+   "role": "content-lead",
+   "reason": "Overline text ('CHAPTER 02 / THE COLLECTION') of the loose left text cluster."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/394:389",
+   "role": "heading",
+   "reason": "Display heading ('The Modern Silhouette', 88px) of the loose left text cluster."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/394:390",
+   "role": "body",
+   "reason": "Supporting line of the loose left text cluster."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/394:391",
+   "role": "cta",
+   "reason": "CTA component instance ('Proto / CTA \u2014 Arrow (Desktop)') closing the loose left cluster; composes as a native button-item (label from manifest)."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/436:460",
+   "role": "grid-column",
+   "reason": "640x616 'Proto / Collection Tile' instance (Women) occupying the left half of the tiles container; the explicit native column."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I436:460;436:396",
+   "role": "inline-media",
+   "reason": "The tile's observed image fill carrier ('Img' rounded-rectangle inside its Image frame); composes as the column's native image element."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I436:460;436:397",
+   "role": "decoration",
+   "reason": "Observed bottom gradient overlay rounded-rectangle on the tile; native PB image elements carry no gradient overlay field."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I436:460;436:401",
+   "role": "decoration",
+   "reason": "Observed circular arrow affordance frame on the tile; decoration with no native equivalent."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I436:460;436:399",
+   "role": "content-lead",
+   "reason": "Tile label override text ('Women', white Merriweather 24px) over the image; composes as column WYSIWYG lead."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I436:460;436:400",
+   "role": "body",
+   "reason": "Tile label override sub-line ('24 PIECES'); composes as column WYSIWYG paragraph."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I436:472;436:418",
+   "role": "inline-media",
+   "reason": "Men tile (616x288) image fill carrier; composes as a native image element in the synthesized complement column."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I436:472;436:419",
+   "role": "decoration",
+   "reason": "Men tile gradient overlay; no native equivalent."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I436:472;436:423",
+   "role": "decoration",
+   "reason": "Men tile arrow affordance; no native equivalent."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I436:472;436:421",
+   "role": "content-lead",
+   "reason": "Men tile label override text ('Men')."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I436:472;436:422",
+   "role": "body",
+   "reason": "Men tile label override sub-line ('24 PIECES')."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I436:484;436:440",
+   "role": "inline-media",
+   "reason": "Accessories tile (360x304) image fill carrier; composes as a native image element in the synthesized complement column."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I436:484;436:441",
+   "role": "decoration",
+   "reason": "Accessories tile gradient overlay; no native equivalent."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I436:484;436:445",
+   "role": "decoration",
+   "reason": "Accessories tile arrow affordance; no native equivalent."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I436:484;436:443",
+   "role": "content-lead",
+   "reason": "Accessories tile label override text ('Accessories')."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I436:484;436:444",
+   "role": "body",
+   "reason": "Accessories tile label override sub-line ('24 PIECES')."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/453:394",
+   "role": "inline-media",
+   "reason": "SLOT/EditorialFabricDetail media frame (232x304) carrying its own image fill; composes as a native image element in the synthesized complement column (the observed side-by-side pairing with the Accessories tile composes stacked \u2014 not declaration-backed)."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I256:96;250:28",
+   "role": "content-lead",
+   "reason": "Section header overline override ('THE COLLECTIONS'); full-width header cluster composes as the leading text band."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I256:96;250:29",
+   "role": "heading",
+   "reason": "Section header title override ('Explore by Wardrobe', Merriweather 24px); full-width header cluster composes as the leading text band."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I256:96;251:101;251:72",
+   "role": "cta",
+   "reason": "Section header link override label ('ALL COLLECTIONS'); composes as a native button-item in the leading band buttons container."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I256:96;251:101;251:73",
+   "role": "decoration",
+   "reason": "Header link arrow icon frame; no native equivalent."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I254:62;250:28",
+   "role": "content-lead",
+   "reason": "Section header overline override ('NEW ARRIVALS'); loose header cluster above the card line composes as the leading text band."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I254:62;250:29",
+   "role": "heading",
+   "reason": "Section header title override ('Selected Pieces'); leading text band."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I254:62;251:101;251:72",
+   "role": "cta",
+   "reason": "Section header link override label ('VIEW ALL'); composes as a native button-item in the leading band buttons container."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I254:62;251:101;251:73",
+   "role": "decoration",
+   "reason": "Header link arrow icon frame; no native equivalent."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/254:72",
+   "role": "grid-column",
+   "reason": "302x474 'Proto / Product Card' instance (Classic Cotton Shirt card); one of the four equal card columns of the card line."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I254:72;348:313",
+   "role": "inline-media",
+   "reason": "The card image fill carrier ('Img' rounded-rectangle inside the card's Image frame); composes as the column's native image element."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I254:72;250:4",
+   "role": "decoration",
+   "reason": "Observed wishlist affordance frame (heart toggle instance) over the card image; commerce UI with no native CMS equivalent."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I254:72;250:8",
+   "role": "heading",
+   "reason": "Card product-name override text (design placeholder copy, MOCK presentation content \u2014 never live catalog data)."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I254:72;250:9",
+   "role": "body",
+   "reason": "Card category override text (MOCK presentation content)."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I254:72;250:10",
+   "role": "body",
+   "reason": "Card price override text ('$0,000' family, MOCK presentation content \u2014 no commerce integration exists behind it)."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/254:81",
+   "role": "grid-column",
+   "reason": "302x474 'Proto / Product Card' instance (Fringed Knit Poncho card); one of the four equal card columns of the card line."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I254:81;348:313",
+   "role": "inline-media",
+   "reason": "The card image fill carrier ('Img' rounded-rectangle inside the card's Image frame); composes as the column's native image element."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I254:81;250:4",
+   "role": "decoration",
+   "reason": "Observed wishlist affordance frame (heart toggle instance) over the card image; commerce UI with no native CMS equivalent."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I254:81;250:8",
+   "role": "heading",
+   "reason": "Card product-name override text (design placeholder copy, MOCK presentation content \u2014 never live catalog data)."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I254:81;250:9",
+   "role": "body",
+   "reason": "Card category override text (MOCK presentation content)."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I254:81;250:10",
+   "role": "body",
+   "reason": "Card price override text ('$0,000' family, MOCK presentation content \u2014 no commerce integration exists behind it)."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/254:90",
+   "role": "grid-column",
+   "reason": "302x474 'Proto / Product Card' instance (Chelsea Boot 03 card); one of the four equal card columns of the card line."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I254:90;348:313",
+   "role": "inline-media",
+   "reason": "The card image fill carrier ('Img' rounded-rectangle inside the card's Image frame); composes as the column's native image element."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I254:90;250:4",
+   "role": "decoration",
+   "reason": "Observed wishlist affordance frame (heart toggle instance) over the card image; commerce UI with no native CMS equivalent."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I254:90;250:8",
+   "role": "heading",
+   "reason": "Card product-name override text (design placeholder copy, MOCK presentation content \u2014 never live catalog data)."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I254:90;250:9",
+   "role": "body",
+   "reason": "Card category override text (MOCK presentation content)."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I254:90;250:10",
+   "role": "body",
+   "reason": "Card price override text ('$0,000' family, MOCK presentation content \u2014 no commerce integration exists behind it)."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/254:99",
+   "role": "grid-column",
+   "reason": "302x474 'Proto / Product Card' instance (Tan Leather Satchel card); one of the four equal card columns of the card line."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I254:99;348:313",
+   "role": "inline-media",
+   "reason": "The card image fill carrier ('Img' rounded-rectangle inside the card's Image frame); composes as the column's native image element."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I254:99;250:4",
+   "role": "decoration",
+   "reason": "Observed wishlist affordance frame (heart toggle instance) over the card image; commerce UI with no native CMS equivalent."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I254:99;250:8",
+   "role": "heading",
+   "reason": "Card product-name override text (design placeholder copy, MOCK presentation content \u2014 never live catalog data)."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I254:99;250:9",
+   "role": "body",
+   "reason": "Card category override text (MOCK presentation content)."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I254:99;250:10",
+   "role": "body",
+   "reason": "Card price override text ('$0,000' family, MOCK presentation content \u2014 no commerce integration exists behind it)."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/299:301",
+   "role": "grid-column",
+   "reason": "860x720 primary campaign media slot frame (right side, x=500); the explicit native column of the split shape."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/299:302",
+   "role": "inline-media",
+   "reason": "340x484 secondary campaign media slot frame (lower-left); composes as a native image element in the synthesized complement column (observed offset placement approximated stacked \u2014 recorded fidelity limit)."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/299:304",
+   "role": "content-lead",
+   "reason": "Overline text ('THE CAMPAIGN' observed content) of the loose left cluster."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/299:305",
+   "role": "heading",
+   "reason": "Display title ('The Season in Two Acts' observed content) of the loose left cluster."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/354:386",
+   "role": "cta",
+   "reason": "CTA component instance ('Proto / CTA \u2014 Arrow (Desktop)') closing the loose left cluster (label from manifest)."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I299:312;250:28",
+   "role": "content-lead",
+   "reason": "Section header overline override ('CURATED LOOKS'); leading text band."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I299:312;250:29",
+   "role": "heading",
+   "reason": "Section header title override ('The Lookbook'); leading text band."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I299:312;251:101;251:72",
+   "role": "cta",
+   "reason": "Section header link override label ('VIEW LOOKBOOK'); leading band buttons container."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I299:312;251:101;251:73",
+   "role": "decoration",
+   "reason": "Header link arrow icon frame; no native equivalent."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/299:322",
+   "role": "grid-column",
+   "reason": "300x596 look container 01 (media + caption) \u2014 one of the three look columns."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/299:329",
+   "role": "grid-column",
+   "reason": "600x674 look container 02 \u2014 the wide center look column."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/299:336",
+   "role": "grid-column",
+   "reason": "300x596 look container 03 \u2014 the third look column."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/299:323",
+   "role": "inline-media",
+   "reason": "Look 01 media frame (300x540) carrying its image fill; native image element inside its column."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/299:330",
+   "role": "inline-media",
+   "reason": "Look 02 media frame (600x612); native image element inside its column."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/299:337",
+   "role": "inline-media",
+   "reason": "Look 03 media frame (300x540); native image element inside its column."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/299:328",
+   "role": "body",
+   "reason": "Look 01 caption ('LOOK 01 \u2014 DAY'); child text of its column container, composes after the media in the column WYSIWYG. (The design's interactive hotspot overlays on this media are button-type nodes the metadata transport does not expose \u2014 recorded as the receipt's transport-limitation gap.)"
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/299:335",
+   "role": "body",
+   "reason": "Look 02 caption ('LOOK 02 \u2014 EVENING'); composes inside its column."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/299:342",
+   "role": "body",
+   "reason": "Look 03 caption ('LOOK 03 \u2014 WEEKEND'); composes inside its column."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I256:139;250:28",
+   "role": "content-lead",
+   "reason": "Section header overline override ('CAMPAIGN \u2014 FW26'); leading text band."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I256:139;250:29",
+   "role": "heading",
+   "reason": "Section header title override ('Scenes from the Collection'); leading text band."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I256:139;251:101;251:72",
+   "role": "cta",
+   "reason": "Section header link override label ('FULL EDITORIAL'); leading band buttons container."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/I256:139;251:101;251:73",
+   "role": "decoration",
+   "reason": "Header link arrow icon frame; no native equivalent."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/284:407",
+   "role": "grid-column",
+   "reason": "Observed mosaic column container (two stacked image tiles); one native full-height column of the four-column grid line."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/284:410",
+   "role": "grid-column",
+   "reason": "Observed mosaic column container (two stacked image tiles); one native full-height column of the four-column grid line."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/284:413",
+   "role": "grid-column",
+   "reason": "Observed mosaic column container (two stacked image tiles); one native full-height column of the four-column grid line."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/284:416",
+   "role": "grid-column",
+   "reason": "Observed mosaic column container (two stacked image tiles); one native full-height column of the four-column grid line."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/284:408",
+   "role": "inline-media",
+   "reason": "'Editorial Tile' rounded-rectangle carrying its own image fill (design-tool kind outside the core kind table; projected to its observed media role); composes as a native image element in its column."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/284:409",
+   "role": "inline-media",
+   "reason": "'Editorial Tile' rounded-rectangle carrying its own image fill (design-tool kind outside the core kind table; projected to its observed media role); composes as a native image element in its column."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/284:411",
+   "role": "inline-media",
+   "reason": "'Editorial Tile' rounded-rectangle carrying its own image fill (design-tool kind outside the core kind table; projected to its observed media role); composes as a native image element in its column."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/284:412",
+   "role": "inline-media",
+   "reason": "'Editorial Tile' rounded-rectangle carrying its own image fill (design-tool kind outside the core kind table; projected to its observed media role); composes as a native image element in its column."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/284:414",
+   "role": "inline-media",
+   "reason": "'Editorial Tile' rounded-rectangle carrying its own image fill (design-tool kind outside the core kind table; projected to its observed media role); composes as a native image element in its column."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/284:415",
+   "role": "inline-media",
+   "reason": "'Editorial Tile' rounded-rectangle carrying its own image fill (design-tool kind outside the core kind table; projected to its observed media role); composes as a native image element in its column."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/284:417",
+   "role": "inline-media",
+   "reason": "'Editorial Tile' rounded-rectangle carrying its own image fill (design-tool kind outside the core kind table; projected to its observed media role); composes as a native image element in its column."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/284:418",
+   "role": "inline-media",
+   "reason": "'Editorial Tile' rounded-rectangle carrying its own image fill (design-tool kind outside the core kind table; projected to its observed media role); composes as a native image element in its column."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/299:344",
+   "role": "column-primary",
+   "reason": "620x620 media slot frame observed left; the primary native column (G4 decision carried to the full-root run)."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/299:345",
+   "role": "column-secondary",
+   "reason": "612x620 content slot frame observed right; the secondary native column."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/299:346",
+   "role": "content-lead",
+   "reason": "Overline text ('CRAFTSMANSHIP' observed content)."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/299:347",
+   "role": "heading",
+   "reason": "Title text ('Materials, considered' observed content)."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/299:348",
+   "role": "body",
+   "reason": "Body text ('Fabric, stitch and finish\u2026' observed content)."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/299:349",
+   "role": "inline-media",
+   "reason": "Detail media frame (292x254); native image element in the secondary column (observed side-by-side pair composes stacked \u2014 G4 recorded gap)."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/299:350",
+   "role": "inline-media",
+   "reason": "Detail media frame (292x253); native image element in the secondary column."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/522:543",
+   "role": "content-lead",
+   "reason": "Overline text ('THE PEOPLE'); loose header cluster above the look grid composes as the leading text band."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/522:544",
+   "role": "heading",
+   "reason": "Display heading ('Worn in Their Own Way'); leading text band."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/522:545",
+   "role": "body",
+   "reason": "Supporting line ('Personal perspectives on modern dressing.'); leading text band."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/522:546",
+   "role": "body",
+   "reason": "Counter label ('04 LOOKS', top-right of the header cluster); leading text band."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/522:547",
+   "role": "grid-column",
+   "reason": "560x680 look media slot 01 (x=80,y=160); line 1 column 1 of the look grid."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/522:549",
+   "role": "grid-column",
+   "reason": "400x500 look media slot 02 (x=692,y=160); line 1 column 2."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/522:551",
+   "role": "grid-column",
+   "reason": "252x500 look media slot 03 (x=1108,y=160); line 1 column 3."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/522:553",
+   "role": "grid-column",
+   "reason": "668x220 wide look media slot 04 (x=692,y=700); its vertical span does not overlap the line-1 columns' spans, so it forms line 2."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/522:548",
+   "role": "grid-caption",
+   "reason": "Loose caption 'LOOK 01 \u2014 WOMEN'S TAILORING' (x=80..283) geometrically under column 522:547; composes inside that column after its media."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/522:550",
+   "role": "grid-caption",
+   "reason": "Loose caption 'LOOK 02 \u2014 MINIMAL MENSWEAR' (x=692..894) directly under column 522:549 (8px below its bottom edge; the wide slot 522:553 also overlaps x but sits BELOW the caption, so it is excluded by the follows-below rule)."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/522:552",
+   "role": "grid-caption",
+   "reason": "Loose caption 'LOOK 03 \u2014 CONTEMPORARY STREET' (x=1108..1330) directly under column 522:551."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/522:554",
+   "role": "grid-caption",
+   "reason": "Loose caption 'LOOK 04 \u2014 EVERYDAY LUXURY' (x=692..879) directly under column 522:553."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/522:555",
+   "role": "cta",
+   "reason": "Loose CTA text 'EXPLORE THE LOOKS \u2192' below the grid; composes as a native button-item in the trailing band buttons container."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/522:556",
+   "role": "body",
+   "reason": "Loose note text 'PLACEHOLDER \u2014 RIGHTS UNVERIFIED' (the design's own rights placeholder, carried verbatim); trailing band."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/257:122",
+   "role": "grid-column",
+   "reason": "720x680 media slot frame occupying the right half of the dark spotlight band; the explicit native column."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/257:123",
+   "role": "decoration",
+   "reason": "Observed gradient 'Fade' rounded-rectangle bridging media and content; no native equivalent."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/257:124",
+   "role": "body",
+   "reason": "Display numeral text 'N\u00b01' (Merriweather 220px); composes as a band-column WYSIWYG paragraph \u2014 its display typography is not a native field (recorded fidelity limit)."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/257:126",
+   "role": "content-lead",
+   "reason": "Overline text ('SIGNATURE OUTERWEAR') of the loose content cluster."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/257:127",
+   "role": "heading",
+   "reason": "Display heading ('The Signature Trench', white on dark)."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/257:129",
+   "role": "body",
+   "reason": "Supporting line of the loose content cluster."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/257:131",
+   "role": "cta",
+   "reason": "Button component instance ('Proto / Button/Primary Light') with override label 'Add to Bag' (presentation-only label; no commerce behavior exists behind it \u2014 MOCK, flagged in the manifest)."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/257:136",
+   "role": "cta",
+   "reason": "Button component instance ('Proto / Button/Ghost Light') with override label 'View Details'; composes as the secondary-variant button-item (manifest buttonVariant)."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/257:181",
+   "role": "content-lead",
+   "reason": "Overline text ('THE CIRCULAR'); centered band WYSIWYG lead."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/257:182",
+   "role": "heading",
+   "reason": "Display heading ('Letters from the House'); band WYSIWYG h2."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/257:183",
+   "role": "body",
+   "reason": "Supporting line ('New arrivals, styling notes and private previews \u2014 one letter a month.'); band WYSIWYG paragraph."
+  },
+  {
+   "sourceLocator": "design://g28-home-fixture-source/257:187",
+   "role": "cta",
+   "reason": "Button component instance ('Proto / Button/Primary') with override label 'Subscribe'; composes as a native button-item (the email input beside it has NO native Page Builder field \u2014 explicit gap, the subscribe form belongs to theme/system UI)."
+  }
+ ]
+}

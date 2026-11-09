@@ -308,6 +308,10 @@ await registerG3Suite(checkAsync);
 // ---- Issue #25 G4 two-column native composition suite (async) -------------------------------
 const { default: registerG4Suite } = await import("./g4-suite.mjs");
 await registerG4Suite(checkAsync);
+
+// ---- Issue #28 full-root homepage composition suite (async) ---------------------------------
+const { default: registerG28Suite } = await import("./g28-suite.mjs");
+await registerG28Suite(checkAsync);
 for (const { id, name, fn } of asyncChecks) {
   try {
     const detail = await fn();

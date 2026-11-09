@@ -1,0 +1,648 @@
+{
+ "schemaVersion": 1,
+ "profileId": "g28-home-preview",
+ "sourceRevisionId": "mcp-observed-unpinned-2026-11-09",
+ "entries": [
+  {
+   "valueRef": "design://g28-home-fixture-source/254:43",
+   "kind": "text",
+   "text": "CHAPTER 01 / AW 2026"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/254:44",
+   "kind": "text",
+   "text": "The Quiet Grandeur"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/254:45",
+   "kind": "text",
+   "text": "Refined tailoring, knitwear and leather for the season."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/254:47",
+   "kind": "text",
+   "text": "Explore the Collection",
+   "note": "Observed hero button instance label (G3 evidence); the instance's internal label layers are not exposed by the metadata transport, so the manifest carries the observed button text."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/254:47",
+   "kind": "link",
+   "linkUrl": "/collections",
+   "note": "Verified existing category url_rewrite in the target checkout (G3 evidence)."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/254:40",
+   "kind": "media",
+   "mediaUrl": "{{media url=wysiwyg/det-home-preview/hero-bg-1440x880-placeholder.jpg}}",
+   "assetLabel": "labeled offline placeholder (1440x880); the operator supplies the real local asset before any CMS write"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/254:60",
+   "kind": "text",
+   "text": "THE HOUSE"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/254:61",
+   "kind": "text",
+   "text": "Luxury is what remains when everything unnecessary has been removed."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/394:388",
+   "kind": "text",
+   "text": "CHAPTER 02 / THE COLLECTION"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/394:389",
+   "kind": "text",
+   "text": "The Modern Silhouette"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/394:390",
+   "kind": "text",
+   "text": "An exploration of modern form and effortless style."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/394:391",
+   "kind": "text",
+   "text": "DISCOVER THE EDIT",
+   "note": "CTA instance override label observed via the design-tool context pass."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/394:391",
+   "kind": "link",
+   "linkUrl": "#",
+   "note": "MOCK_LINK: no target route is derivable from the design; operator/merchant sets the real target in Admin."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/394:387",
+   "kind": "media",
+   "mediaUrl": "{{media url=wysiwyg/det-home-preview/hero-secondary-940x780-placeholder.jpg}}",
+   "assetLabel": "labeled offline placeholder (940x780); the operator supplies the real local asset before any CMS write"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I256:96;250:28",
+   "kind": "text",
+   "text": "THE COLLECTIONS",
+   "note": "Instance override content observed via the design-tool context pass."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I256:96;250:29",
+   "kind": "text",
+   "text": "Explore by Wardrobe",
+   "note": "Instance override content."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I256:96;251:101;251:72",
+   "kind": "text",
+   "text": "ALL COLLECTIONS",
+   "note": "Instance override content."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I256:96;251:101;251:72",
+   "kind": "link",
+   "linkUrl": "#",
+   "note": "MOCK_LINK: operator/merchant sets the real collections route."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I436:460;436:399",
+   "kind": "text",
+   "text": "Women",
+   "note": "Collection tile override label."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I436:460;436:400",
+   "kind": "text",
+   "text": "24 PIECES",
+   "note": "Collection tile override sub-line."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I436:472;436:421",
+   "kind": "text",
+   "text": "Men",
+   "note": "Collection tile override label."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I436:472;436:422",
+   "kind": "text",
+   "text": "24 PIECES",
+   "note": "Collection tile override sub-line."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I436:484;436:443",
+   "kind": "text",
+   "text": "Accessories",
+   "note": "Collection tile override label."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I436:484;436:444",
+   "kind": "text",
+   "text": "24 PIECES",
+   "note": "Collection tile override sub-line."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I436:460;436:396",
+   "kind": "media",
+   "mediaUrl": "{{media url=wysiwyg/det-home-preview/collection-women-640x616-placeholder.jpg}}",
+   "assetLabel": "labeled offline placeholder (640x616); the operator supplies the real local asset before any CMS write"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I436:472;436:418",
+   "kind": "media",
+   "mediaUrl": "{{media url=wysiwyg/det-home-preview/collection-men-616x288-placeholder.jpg}}",
+   "assetLabel": "labeled offline placeholder (616x288); the operator supplies the real local asset before any CMS write"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I436:484;436:440",
+   "kind": "media",
+   "mediaUrl": "{{media url=wysiwyg/det-home-preview/collection-accessories-360x304-placeholder.jpg}}",
+   "assetLabel": "labeled offline placeholder (360x304); the operator supplies the real local asset before any CMS write"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/453:394",
+   "kind": "media",
+   "mediaUrl": "{{media url=wysiwyg/det-home-preview/fabric-detail-232x304-placeholder.jpg}}",
+   "assetLabel": "labeled offline placeholder (232x304); the operator supplies the real local asset before any CMS write"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I254:72;250:8",
+   "kind": "text",
+   "text": "Classic Cotton Shirt",
+   "note": "MOCK_CONTENT: design placeholder product copy \u2014 never live catalog data; a merchant or a later BE-connected run replaces it."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I254:72;250:9",
+   "kind": "text",
+   "text": "SHIRTING",
+   "note": "MOCK_CONTENT: design placeholder category copy."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I254:72;250:10",
+   "kind": "text",
+   "text": "$490",
+   "note": "MOCK_CONTENT: design placeholder price text \u2014 NO pricing/commerce integration exists behind it."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I254:72;348:313",
+   "kind": "media",
+   "mediaUrl": "{{media url=wysiwyg/det-home-preview/classic-cotton-shirt-302x384-placeholder.jpg}}",
+   "assetLabel": "labeled offline placeholder (302x384); the operator supplies the real local asset before any CMS write"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I254:81;250:8",
+   "kind": "text",
+   "text": "Fringed Knit Poncho",
+   "note": "MOCK_CONTENT: design placeholder product copy \u2014 never live catalog data; a merchant or a later BE-connected run replaces it."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I254:81;250:9",
+   "kind": "text",
+   "text": "KNITWEAR",
+   "note": "MOCK_CONTENT: design placeholder category copy."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I254:81;250:10",
+   "kind": "text",
+   "text": "$860",
+   "note": "MOCK_CONTENT: design placeholder price text \u2014 NO pricing/commerce integration exists behind it."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I254:81;348:313",
+   "kind": "media",
+   "mediaUrl": "{{media url=wysiwyg/det-home-preview/fringed-knit-poncho-302x384-placeholder.jpg}}",
+   "assetLabel": "labeled offline placeholder (302x384); the operator supplies the real local asset before any CMS write"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I254:90;250:8",
+   "kind": "text",
+   "text": "Chelsea Boot 03",
+   "note": "MOCK_CONTENT: design placeholder product copy \u2014 never live catalog data; a merchant or a later BE-connected run replaces it."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I254:90;250:9",
+   "kind": "text",
+   "text": "SHOES",
+   "note": "MOCK_CONTENT: design placeholder category copy."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I254:90;250:10",
+   "kind": "text",
+   "text": "$720",
+   "note": "MOCK_CONTENT: design placeholder price text \u2014 NO pricing/commerce integration exists behind it."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I254:90;348:313",
+   "kind": "media",
+   "mediaUrl": "{{media url=wysiwyg/det-home-preview/chelsea-boot-03-302x384-placeholder.jpg}}",
+   "assetLabel": "labeled offline placeholder (302x384); the operator supplies the real local asset before any CMS write"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I254:99;250:8",
+   "kind": "text",
+   "text": "Tan Leather Satchel",
+   "note": "MOCK_CONTENT: design placeholder product copy \u2014 never live catalog data; a merchant or a later BE-connected run replaces it."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I254:99;250:9",
+   "kind": "text",
+   "text": "ACCESSORIES",
+   "note": "MOCK_CONTENT: design placeholder category copy."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I254:99;250:10",
+   "kind": "text",
+   "text": "$540",
+   "note": "MOCK_CONTENT: design placeholder price text \u2014 NO pricing/commerce integration exists behind it."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I254:99;348:313",
+   "kind": "media",
+   "mediaUrl": "{{media url=wysiwyg/det-home-preview/tan-leather-satchel-302x384-placeholder.jpg}}",
+   "assetLabel": "labeled offline placeholder (302x384); the operator supplies the real local asset before any CMS write"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I254:62;250:28",
+   "kind": "text",
+   "text": "NEW ARRIVALS",
+   "note": "Instance override content."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I254:62;250:29",
+   "kind": "text",
+   "text": "Selected Pieces",
+   "note": "Instance override content."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I254:62;251:101;251:72",
+   "kind": "text",
+   "text": "VIEW ALL",
+   "note": "Instance override content."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I254:62;251:101;251:72",
+   "kind": "link",
+   "linkUrl": "#",
+   "note": "MOCK_LINK: operator/merchant sets the real PLP route."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/299:304",
+   "kind": "text",
+   "text": "THE CAMPAIGN",
+   "note": "Observed content of the role-named text layer (design-tool context pass)."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/299:305",
+   "kind": "text",
+   "text": "The Season in Two Acts",
+   "note": "Observed content."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/354:386",
+   "kind": "text",
+   "text": "EXPLORE THE COLLECTION",
+   "note": "CTA instance override label."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/354:386",
+   "kind": "link",
+   "linkUrl": "#",
+   "note": "MOCK_LINK: operator/merchant sets the real campaign route."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/299:301",
+   "kind": "media",
+   "mediaUrl": "{{media url=wysiwyg/det-home-preview/campaign-primary-860x720-placeholder.jpg}}",
+   "assetLabel": "labeled offline placeholder (860x720); the operator supplies the real local asset before any CMS write"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/299:302",
+   "kind": "media",
+   "mediaUrl": "{{media url=wysiwyg/det-home-preview/campaign-secondary-340x484-placeholder.jpg}}",
+   "assetLabel": "labeled offline placeholder (340x484); the operator supplies the real local asset before any CMS write"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I299:312;250:28",
+   "kind": "text",
+   "text": "CURATED LOOKS",
+   "note": "Instance override content."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I299:312;250:29",
+   "kind": "text",
+   "text": "The Lookbook",
+   "note": "Instance override content."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I299:312;251:101;251:72",
+   "kind": "text",
+   "text": "VIEW LOOKBOOK",
+   "note": "Instance override content."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I299:312;251:101;251:72",
+   "kind": "link",
+   "linkUrl": "#",
+   "note": "MOCK_LINK: operator/merchant sets the real lookbook route."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/299:328",
+   "kind": "text",
+   "text": "LOOK 01 \u2014 DAY"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/299:335",
+   "kind": "text",
+   "text": "LOOK 02 \u2014 EVENING"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/299:342",
+   "kind": "text",
+   "text": "LOOK 03 \u2014 WEEKEND"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/299:323",
+   "kind": "media",
+   "mediaUrl": "{{media url=wysiwyg/det-home-preview/look-01-300x540-placeholder.jpg}}",
+   "assetLabel": "labeled offline placeholder (300x540); the operator supplies the real local asset before any CMS write"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/299:330",
+   "kind": "media",
+   "mediaUrl": "{{media url=wysiwyg/det-home-preview/look-02-600x612-placeholder.jpg}}",
+   "assetLabel": "labeled offline placeholder (600x612); the operator supplies the real local asset before any CMS write"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/299:337",
+   "kind": "media",
+   "mediaUrl": "{{media url=wysiwyg/det-home-preview/look-03-300x540-placeholder.jpg}}",
+   "assetLabel": "labeled offline placeholder (300x540); the operator supplies the real local asset before any CMS write"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I256:139;250:28",
+   "kind": "text",
+   "text": "CAMPAIGN \u2014 FW26",
+   "note": "Instance override content."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I256:139;250:29",
+   "kind": "text",
+   "text": "Scenes from the Collection",
+   "note": "Instance override content."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I256:139;251:101;251:72",
+   "kind": "text",
+   "text": "FULL EDITORIAL",
+   "note": "Instance override content."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/I256:139;251:101;251:72",
+   "kind": "link",
+   "linkUrl": "#",
+   "note": "MOCK_LINK: operator/merchant sets the real editorial route."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/284:408",
+   "kind": "media",
+   "mediaUrl": "{{media url=wysiwyg/det-home-preview/mosaic-c01-t1-280x560-placeholder.jpg}}",
+   "assetLabel": "labeled offline placeholder (280x560); the operator supplies the real local asset before any CMS write"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/284:409",
+   "kind": "media",
+   "mediaUrl": "{{media url=wysiwyg/det-home-preview/mosaic-c01-t2-280x456-placeholder.jpg}}",
+   "assetLabel": "labeled offline placeholder (280x456); the operator supplies the real local asset before any CMS write"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/284:411",
+   "kind": "media",
+   "mediaUrl": "{{media url=wysiwyg/det-home-preview/mosaic-c02-t1-340x436-placeholder.jpg}}",
+   "assetLabel": "labeled offline placeholder (340x436); the operator supplies the real local asset before any CMS write"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/284:412",
+   "kind": "media",
+   "mediaUrl": "{{media url=wysiwyg/det-home-preview/mosaic-c02-t2-340x580-placeholder.jpg}}",
+   "assetLabel": "labeled offline placeholder (340x580); the operator supplies the real local asset before any CMS write"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/284:414",
+   "kind": "media",
+   "mediaUrl": "{{media url=wysiwyg/det-home-preview/mosaic-c03-t1-268x560-placeholder.jpg}}",
+   "assetLabel": "labeled offline placeholder (268x560); the operator supplies the real local asset before any CMS write"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/284:415",
+   "kind": "media",
+   "mediaUrl": "{{media url=wysiwyg/det-home-preview/mosaic-c03-t2-268x456-placeholder.jpg}}",
+   "assetLabel": "labeled offline placeholder (268x456); the operator supplies the real local asset before any CMS write"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/284:417",
+   "kind": "media",
+   "mediaUrl": "{{media url=wysiwyg/det-home-preview/mosaic-c04-t1-320x620-placeholder.jpg}}",
+   "assetLabel": "labeled offline placeholder (320x620); the operator supplies the real local asset before any CMS write"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/284:418",
+   "kind": "media",
+   "mediaUrl": "{{media url=wysiwyg/det-home-preview/mosaic-c04-t2-320x396-placeholder.jpg}}",
+   "assetLabel": "labeled offline placeholder (320x396); the operator supplies the real local asset before any CMS write"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/299:346",
+   "kind": "text",
+   "text": "CRAFTSMANSHIP",
+   "note": "Observed content (G4 evidence)."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/299:347",
+   "kind": "text",
+   "text": "Materials, considered",
+   "note": "Observed content (G4 evidence)."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/299:348",
+   "kind": "text",
+   "text": "Fabric, stitch and finish \u2014 considered at every step of the making.",
+   "note": "Observed content (G4 evidence)."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/299:344",
+   "kind": "media",
+   "mediaUrl": "{{media url=wysiwyg/det-home-preview/craft-media-620x620-placeholder.jpg}}",
+   "assetLabel": "labeled offline placeholder (620x620); the operator supplies the real local asset before any CMS write"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/299:349",
+   "kind": "media",
+   "mediaUrl": "{{media url=wysiwyg/det-home-preview/craft-detail-stitch-292x254-placeholder.jpg}}",
+   "assetLabel": "labeled offline placeholder (292x254); the operator supplies the real local asset before any CMS write"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/299:350",
+   "kind": "media",
+   "mediaUrl": "{{media url=wysiwyg/det-home-preview/craft-detail-fabric-292x253-placeholder.jpg}}",
+   "assetLabel": "labeled offline placeholder (292x253); the operator supplies the real local asset before any CMS write"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/522:543",
+   "kind": "text",
+   "text": "THE PEOPLE"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/522:544",
+   "kind": "text",
+   "text": "Worn in Their Own Way"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/522:545",
+   "kind": "text",
+   "text": "Personal perspectives on modern dressing."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/522:546",
+   "kind": "text",
+   "text": "04 LOOKS"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/522:548",
+   "kind": "text",
+   "text": "LOOK 01 \u2014 WOMEN'S TAILORING"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/522:550",
+   "kind": "text",
+   "text": "LOOK 02 \u2014 MINIMAL MENSWEAR"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/522:552",
+   "kind": "text",
+   "text": "LOOK 03 \u2014 CONTEMPORARY STREET"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/522:554",
+   "kind": "text",
+   "text": "LOOK 04 \u2014 EVERYDAY LUXURY"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/522:555",
+   "kind": "text",
+   "text": "EXPLORE THE LOOKS \u2192"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/522:555",
+   "kind": "link",
+   "linkUrl": "#",
+   "note": "MOCK_LINK: operator/merchant sets the real looks route."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/522:556",
+   "kind": "text",
+   "text": "PLACEHOLDER \u2014 RIGHTS UNVERIFIED",
+   "note": "The design's own rights-placeholder text, carried verbatim and flagged: imagery rights must be verified before any production use."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/522:547",
+   "kind": "media",
+   "mediaUrl": "{{media url=wysiwyg/det-home-preview/people-look-01-560x680-placeholder.jpg}}",
+   "assetLabel": "labeled offline placeholder (560x680); the operator supplies the real local asset before any CMS write"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/522:549",
+   "kind": "media",
+   "mediaUrl": "{{media url=wysiwyg/det-home-preview/people-look-02-400x500-placeholder.jpg}}",
+   "assetLabel": "labeled offline placeholder (400x500); the operator supplies the real local asset before any CMS write"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/522:551",
+   "kind": "media",
+   "mediaUrl": "{{media url=wysiwyg/det-home-preview/people-look-03-252x500-placeholder.jpg}}",
+   "assetLabel": "labeled offline placeholder (252x500); the operator supplies the real local asset before any CMS write"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/522:553",
+   "kind": "media",
+   "mediaUrl": "{{media url=wysiwyg/det-home-preview/people-look-04-668x220-placeholder.jpg}}",
+   "assetLabel": "labeled offline placeholder (668x220); the operator supplies the real local asset before any CMS write"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/257:124",
+   "kind": "text",
+   "text": "N\u00b01",
+   "note": "Display numeral text; its 220px display typography is not a native field (recorded fidelity limit)."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/257:126",
+   "kind": "text",
+   "text": "SIGNATURE OUTERWEAR"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/257:127",
+   "kind": "text",
+   "text": "The Signature Trench"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/257:129",
+   "kind": "text",
+   "text": "Relaxed tailoring in warm neutrals \u2014 the defining layer of the season."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/257:131",
+   "kind": "text",
+   "text": "Add to Bag",
+   "note": "MOCK_CONTENT: commerce-action label is presentation-only \u2014 no cart/BE behavior exists or is implied behind the composed button."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/257:131",
+   "kind": "link",
+   "linkUrl": "#",
+   "buttonVariant": "primary",
+   "note": "MOCK_LINK + MOCK_COMMERCE: no BE integration; operator wires the real product/cart route later."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/257:136",
+   "kind": "text",
+   "text": "View Details"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/257:136",
+   "kind": "link",
+   "linkUrl": "#",
+   "buttonVariant": "secondary",
+   "note": "MOCK_LINK: no PDP route derivable from the design; operator wires the real product route later."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/257:122",
+   "kind": "media",
+   "mediaUrl": "{{media url=wysiwyg/det-home-preview/spotlight-720x680-placeholder.jpg}}",
+   "assetLabel": "labeled offline placeholder (720x680); the operator supplies the real local asset before any CMS write"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/257:181",
+   "kind": "text",
+   "text": "THE CIRCULAR"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/257:182",
+   "kind": "text",
+   "text": "Letters from the House"
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/257:183",
+   "kind": "text",
+   "text": "New arrivals, styling notes and private previews \u2014 one letter a month."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/257:187",
+   "kind": "text",
+   "text": "Subscribe",
+   "note": "The email input beside this button has NO native Page Builder field (explicit gap; the subscribe form belongs to theme/system UI), so the composed button is presentation-only."
+  },
+  {
+   "valueRef": "design://g28-home-fixture-source/257:187",
+   "kind": "link",
+   "linkUrl": "#",
+   "note": "MOCK_LINK: the native newsletter form is theme/system UI; operator wires the real subscribe action later."
+  }
+ ]
+}
