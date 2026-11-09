@@ -17,7 +17,13 @@ const geistMono = Geist_Mono({
 
 export const metadata = studioMetadata;
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+/**
+ * Explicit props — do NOT use Next's generated ambient `LayoutProps` here:
+ * it only exists after `next typegen`/build artifacts (`.next/types`), so a
+ * fresh checkout running `tsc --noEmit` before any build fails with TS2304
+ * (exactly what broke the first `studio` CI run).
+ */
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="en"
