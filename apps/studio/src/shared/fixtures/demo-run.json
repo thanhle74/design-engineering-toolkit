@@ -1,0 +1,428 @@
+{
+  "runId": "demo-run-245-2",
+  "mode": "fixture",
+  "label": "DEMO — Studio fixture shaped after DET schemas (not a live conversion)",
+  "generatedAt": "2026-11-09T00:00:00.000Z",
+  "exitCode": 0,
+  "toolCommand": "det compose --profile demo-fashion-storefront --fixture demo-fixture-rev-0001 (DEMO — illustrative command, never executed)",
+  "profileId": "demo-fashion-storefront",
+  "platformId": "magento-pagebuilder",
+  "source": {
+    "sourceId": "demo-fixture-source",
+    "revisionId": "demo-fixture-rev-0001",
+    "accessedAt": "2026-11-09T00:00:00.000Z"
+  },
+  "counts": { "errors": 0, "warnings": 3, "infos": 2 },
+  "sections": [
+    {
+      "sectionId": "s-0a1b2c3d4e5f",
+      "order": 0,
+      "name": "Hero — Quiet Grandeur",
+      "role": "hero",
+      "elementCount": 3,
+      "sourceLocators": ["design://demo-fixture-source/245:2"]
+    },
+    {
+      "sectionId": "s-1b2c3d4e5f6a",
+      "order": 1,
+      "name": "Craftsmanship — Two Columns",
+      "role": "two-column",
+      "elementCount": 5,
+      "sourceLocators": ["design://demo-fixture-source/245:16"]
+    },
+    {
+      "sectionId": "s-2c3d4e5f6a7b",
+      "order": 2,
+      "name": "Editorial — Materials Story",
+      "role": "editorial",
+      "elementCount": 2,
+      "sourceLocators": ["design://demo-fixture-source/245:31"]
+    },
+    {
+      "sectionId": "s-3d4e5f6a7b8c",
+      "order": 3,
+      "name": "Journal Strip",
+      "role": "editorial",
+      "elementCount": 0,
+      "sourceLocators": ["design://demo-fixture-source/245:44"]
+    }
+  ],
+  "mappings": [
+    {
+      "nodeId": "n-0f1e2d3c4b5a",
+      "sourceName": "SECTION/Hero",
+      "sourceLocator": "design://demo-fixture-source/245:2",
+      "composeDisposition": "mapped",
+      "reviewDisposition": "MAPPED",
+      "kind": "page-section",
+      "semanticClass": "EDITORIAL_SECTION",
+      "sectionId": "s-0a1b2c3d4e5f",
+      "target": {
+        "capabilityId": "magento_pagebuilder/banner",
+        "appearanceId": "poster",
+        "nativeElement": "banner",
+        "nativeField": "content"
+      },
+      "note": "Hero frame realized as native Banner (poster appearance); text folded into the content WYSIWYG field.",
+      "reasons": [],
+      "needsReview": false
+    },
+    {
+      "nodeId": "n-1a2b3c4d5e6f",
+      "sourceName": "The Quiet Grandeur",
+      "sourceLocator": "design://demo-fixture-source/245:3",
+      "composeDisposition": "mapped",
+      "reviewDisposition": "MAPPED",
+      "kind": "text",
+      "semanticClass": "PRESENTATIONAL",
+      "sectionId": "s-0a1b2c3d4e5f",
+      "target": {
+        "capabilityId": "magento_pagebuilder/banner",
+        "appearanceId": "poster",
+        "nativeElement": "content",
+        "nativeField": "message"
+      },
+      "note": "Heading folded into the banner message field as <h2>; standalone per-field styling is not preserved (single WYSIWYG field).",
+      "reasons": [],
+      "needsReview": false
+    },
+    {
+      "nodeId": "n-2b3c4d5e6f7a",
+      "sourceName": "Body — Quiet copy",
+      "sourceLocator": "design://demo-fixture-source/245:4",
+      "composeDisposition": "mapped",
+      "reviewDisposition": "MAPPED",
+      "kind": "text",
+      "semanticClass": "PRESENTATIONAL",
+      "sectionId": "s-0a1b2c3d4e5f",
+      "target": {
+        "capabilityId": "magento_pagebuilder/banner",
+        "appearanceId": "poster",
+        "nativeElement": "content",
+        "nativeField": "message"
+      },
+      "reasons": [],
+      "needsReview": false
+    },
+    {
+      "nodeId": "n-3c4d5e6f7a8b",
+      "sourceName": "CTA — Explore",
+      "sourceLocator": "design://demo-fixture-source/245:5",
+      "composeDisposition": "mapped",
+      "reviewDisposition": "MAPPED",
+      "kind": "component",
+      "semanticClass": "PRESENTATIONAL",
+      "sectionId": "s-0a1b2c3d4e5f",
+      "target": {
+        "capabilityId": "magento_pagebuilder/buttons",
+        "appearanceId": "default",
+        "nativeElement": "buttons",
+        "nativeField": "item_text"
+      },
+      "reasons": [],
+      "needsReview": false
+    },
+    {
+      "nodeId": "n-4d5e6f7a8b9c",
+      "sourceName": "Overlay",
+      "sourceLocator": "design://demo-fixture-source/245:6",
+      "composeDisposition": "gap",
+      "reviewDisposition": "DECORATION_MERGED",
+      "kind": "media",
+      "semanticClass": "PRESENTATIONAL",
+      "sectionId": "s-0a1b2c3d4e5f",
+      "target": null,
+      "reasons": [
+        "Decoration 'Overlay' has no native Page Builder equivalent; excluded from content with an explicit record — never silently dropped."
+      ],
+      "needsReview": false
+    },
+    {
+      "nodeId": "n-5e6f7a8b9c0d",
+      "sourceName": "SCROLL",
+      "sourceLocator": "design://demo-fixture-source/245:7",
+      "composeDisposition": "excluded",
+      "reviewDisposition": "EXCLUDED_WITH_REASON",
+      "kind": "icon",
+      "semanticClass": "PRESENTATIONAL",
+      "target": null,
+      "reasons": ["Inside a subtree explicitly projected as decoration; recorded, never silently dropped."],
+      "needsReview": false
+    },
+    {
+      "nodeId": "n-6f7a8b9c0d1e",
+      "sourceName": "DECOR/Backdrop",
+      "sourceLocator": "design://demo-fixture-source/245:8",
+      "composeDisposition": "decoration-merged",
+      "reviewDisposition": "DECORATION_MERGED",
+      "kind": "media",
+      "semanticClass": "PRESENTATIONAL",
+      "sectionId": "s-0a1b2c3d4e5f",
+      "target": null,
+      "reasons": ["Pure decoration folded into the banner background by policy; poster background_image carries the visual."],
+      "needsReview": false
+    },
+    {
+      "nodeId": "n-7a8b9c0d1e2f",
+      "sourceName": "SITE/Footer",
+      "sourceLocator": "design://demo-fixture-source/245:9",
+      "composeDisposition": "excluded",
+      "reviewDisposition": "EXCLUDED_WITH_REASON",
+      "kind": "container",
+      "semanticClass": "SITE_CHROME",
+      "target": null,
+      "reasons": ["Shared theme-owned chrome is excluded from the CMS plan and retained in the review with its source ref."],
+      "needsReview": false
+    },
+    {
+      "nodeId": "n-8b9c0d1e2f3a",
+      "sourceName": "SECTION/Craftsmanship",
+      "sourceLocator": "design://demo-fixture-source/245:16",
+      "composeDisposition": "mapped",
+      "reviewDisposition": "MAPPED",
+      "kind": "page-section",
+      "semanticClass": "EDITORIAL_SECTION",
+      "sectionId": "s-1b2c3d4e5f6a",
+      "target": {
+        "capabilityId": "magento_pagebuilder/row",
+        "appearanceId": "default",
+        "nativeElement": "row",
+        "nativeField": "structure"
+      },
+      "note": "Section realized as native Row containing a two-column inner layout.",
+      "reasons": [],
+      "needsReview": false
+    },
+    {
+      "nodeId": "n-9c0d1e2f3a4b",
+      "sourceName": "Column — Story",
+      "sourceLocator": "design://demo-fixture-source/245:17",
+      "composeDisposition": "mapped",
+      "reviewDisposition": "MAPPED",
+      "kind": "container",
+      "semanticClass": "PRESENTATIONAL",
+      "sectionId": "s-1b2c3d4e5f6a",
+      "target": {
+        "capabilityId": "magento_pagebuilder/columns",
+        "appearanceId": "two-columns",
+        "nativeElement": "column",
+        "nativeField": "structure"
+      },
+      "note": "Native column width 6/12 (flex layout), matching the source half-width.",
+      "reasons": [],
+      "needsReview": false
+    },
+    {
+      "nodeId": "n-0d1e2f3a4b5c",
+      "sourceName": "Column — Gallery",
+      "sourceLocator": "design://demo-fixture-source/245:18",
+      "composeDisposition": "mapped",
+      "reviewDisposition": "MAPPED",
+      "kind": "container",
+      "semanticClass": "PRESENTATIONAL",
+      "sectionId": "s-1b2c3d4e5f6a",
+      "target": {
+        "capabilityId": "magento_pagebuilder/columns",
+        "appearanceId": "two-columns",
+        "nativeElement": "column",
+        "nativeField": "structure"
+      },
+      "note": "Native column width 6/12 (flex layout), matching the source half-width.",
+      "reasons": [],
+      "needsReview": false
+    },
+    {
+      "nodeId": "n-1e2f3a4b5c6d",
+      "sourceName": "IMG/Workbench 01",
+      "sourceLocator": "design://demo-fixture-source/245:19",
+      "composeDisposition": "mapped",
+      "reviewDisposition": "MAPPED",
+      "kind": "media",
+      "semanticClass": "PRESENTATIONAL",
+      "sectionId": "s-1b2c3d4e5f6a",
+      "target": {
+        "capabilityId": "magento_pagebuilder/images",
+        "appearanceId": "default",
+        "nativeElement": "image",
+        "nativeField": "desktop_image"
+      },
+      "reasons": [],
+      "needsReview": false
+    },
+    {
+      "nodeId": "n-2f3a4b5c6d7e",
+      "sourceName": "Copy — Craft notes",
+      "sourceLocator": "design://demo-fixture-source/245:20",
+      "composeDisposition": "mapped",
+      "reviewDisposition": "MAPPED",
+      "kind": "text",
+      "semanticClass": "PRESENTATIONAL",
+      "sectionId": "s-1b2c3d4e5f6a",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content"
+      },
+      "reasons": [],
+      "needsReview": false
+    },
+    {
+      "nodeId": "n-3a4b5c6d7e8f",
+      "sourceName": "DECOR/Badge",
+      "sourceLocator": "design://demo-fixture-source/245:21",
+      "composeDisposition": "decoration-merged",
+      "reviewDisposition": "DECORATION_MERGED",
+      "kind": "icon",
+      "semanticClass": "PRESENTATIONAL",
+      "sectionId": "s-1b2c3d4e5f6a",
+      "target": null,
+      "reasons": ["Pure decoration folded/excluded by policy; no native equivalent in this slice."],
+      "needsReview": false
+    },
+    {
+      "nodeId": "n-4b5c6d7e8f9a",
+      "sourceName": "Heading — Materials",
+      "sourceLocator": "design://demo-fixture-source/245:31",
+      "composeDisposition": "mapped",
+      "reviewDisposition": "MAPPED",
+      "kind": "text",
+      "semanticClass": "PRESENTATIONAL",
+      "sectionId": "s-2c3d4e5f6a7b",
+      "target": {
+        "capabilityId": "magento_pagebuilder/heading",
+        "appearanceId": "default",
+        "nativeElement": "heading",
+        "nativeField": "content"
+      },
+      "reasons": [],
+      "needsReview": false
+    },
+    {
+      "nodeId": "n-5c6d7e8f9a0b",
+      "sourceName": "Paragraph — Materials story",
+      "sourceLocator": "design://demo-fixture-source/245:32",
+      "composeDisposition": "mapped",
+      "reviewDisposition": "MAPPED",
+      "kind": "text",
+      "semanticClass": "PRESENTATIONAL",
+      "sectionId": "s-2c3d4e5f6a7b",
+      "target": {
+        "capabilityId": "magento_pagebuilder/text",
+        "appearanceId": "default",
+        "nativeElement": "text",
+        "nativeField": "content"
+      },
+      "reasons": [],
+      "needsReview": false
+    },
+    {
+      "nodeId": "n-6d7e8f9a0b1c",
+      "sourceName": "Card — Journal 01",
+      "sourceLocator": "design://demo-fixture-source/245:45",
+      "composeDisposition": "skipped",
+      "reviewDisposition": "REFERENCE_ONLY",
+      "kind": "component",
+      "semanticClass": "SHARED_COMPONENT",
+      "sectionId": "s-3d4e5f6a7b8c",
+      "target": null,
+      "note": "Planned but not composable by this slice's composer; recorded with an explicit reason.",
+      "reasons": ["Shared component instance kept as reference; not composable in the current slice."],
+      "needsReview": false
+    },
+    {
+      "nodeId": "n-7e8f9a0b1c2d",
+      "sourceName": "Component 900:1",
+      "sourceLocator": "design://demo-fixture-source/245:46",
+      "composeDisposition": "skipped",
+      "reviewDisposition": "NEEDS_REVIEW",
+      "kind": "component",
+      "semanticClass": "SHARED_COMPONENT",
+      "sectionId": "s-3d4e5f6a7b8c",
+      "target": null,
+      "reasons": [
+        "Component reference '900:1' does not resolve to an inventoried component definition (external library or invalid)."
+      ],
+      "needsReview": true
+    }
+  ],
+  "diagnostics": [
+    {
+      "severity": "warning",
+      "code": "NOT_VERIFIED",
+      "message": "Decoration 'Overlay' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
+      "subjectType": "node",
+      "subjectId": "n-4d5e6f7a8b9c",
+      "origin": "compose"
+    },
+    {
+      "severity": "warning",
+      "code": "NOT_VERIFIED",
+      "message": "Decoration 'DECOR/Backdrop' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
+      "subjectType": "node",
+      "subjectId": "n-6f7a8b9c0d1e",
+      "origin": "compose"
+    },
+    {
+      "severity": "warning",
+      "code": "UNRESOLVED_COMPONENT",
+      "message": "Component reference '900:1' does not resolve to an inventoried component definition; marked NEEDS_REVIEW — a human mapping decision is required.",
+      "subjectType": "node",
+      "subjectId": "n-7e8f9a0b1c2d",
+      "origin": "review"
+    },
+    {
+      "severity": "info",
+      "code": "DEMO_FIXTURE",
+      "message": "DEMO fixture data shaped after schemas/cli and schemas/converter contracts; not produced by a live det run and not a Magento/Figma fidelity claim.",
+      "subjectType": "run",
+      "origin": "run"
+    },
+    {
+      "severity": "info",
+      "code": "PLAN",
+      "message": "Two-column section realized with native Row → Columns at 6/12 + 6/12 widths (flex layout).",
+      "subjectType": "section",
+      "subjectId": "s-1b2c3d4e5f6a",
+      "origin": "compose"
+    }
+  ],
+  "artifacts": [
+    {
+      "artifactId": "node-ir/node-ir.json",
+      "role": "node-ir",
+      "file": "node-ir.json",
+      "schemaRef": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/node-ir.schema.json",
+      "contentHash": "a3f1c9e27b04d5f8a1c3e9b7d2f406158ac9e3b7d1f5a9c3e7b1d5f9a3c7e1bd",
+      "downloadable": false
+    },
+    {
+      "artifactId": "page-structure/page-structure.json",
+      "role": "page-structure",
+      "file": "page-structure.json",
+      "schemaRef": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/page-structure.schema.json",
+      "contentHash": "b4e2d0f38c15e609b2d4f0c8e30517469bdf04c8e206a0d4f8c2e60b4d8f02ce",
+      "downloadable": false
+    },
+    {
+      "artifactId": "source-review/source-review.json",
+      "role": "source-review",
+      "file": "source-review.json",
+      "schemaRef": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/source-review.schema.json",
+      "contentHash": "c5d3e1049d26f710a3e5041d9f40628570ace159f317b1e509d3f71c5e90130d",
+      "downloadable": false
+    },
+    {
+      "artifactId": "compose-output/compose-output.json",
+      "role": "compose-output",
+      "file": "compose-output.json",
+      "schemaRef": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/compose-output.schema.json",
+      "contentHash": "d6e4f2150e375821b4f6152e80417396810bfd260428c2f610e4082d6fa124e0",
+      "downloadable": false
+    }
+  ],
+  "preview": {
+    "status": "unavailable",
+    "reason": "No verified DET Preview Theme render exists for this DEMO fixture. A preview becomes available only when [28]'s isolated Preview Theme output is bound and verified — Studio never renders a mock screenshot as Magento proof."
+  }
+}
