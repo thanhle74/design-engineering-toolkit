@@ -1,5 +1,19 @@
 # ACTIVE CHATGPT COORDINATOR HANDOFF — Design Engineering Toolkit
 
+## LATEST OWNER PRODUCT DECISION & LIVE-REF CHECKPOINT — 2026-11-09
+
+**Authoritative product scope:** [PRODUCT-ARCHITECTURE-AND-SCOPE.md](PRODUCT-ARCHITECTURE-AND-SCOPE.md), section **“Owner decision — 2026-11-09: two DISTINCT deliverables”**. Owner approves two **separate OUTPUT CONTRACTS**:
+
+1. **Figma → Native Page Builder** for CMS/editorial: native content types, merchant editability, real Admin Edit→Save→Reload→Storefront proof. Current priority: close and integrate existing two POCs.
+2. **Figma → Hyvä PHTML frontend-only** for PLP/PDP/theme UI: generate minimal `.phtml` (and only necessary small supporting assets) using **installed Hyvä UI + Tailwind + CSP-safe Alpine.js**; visually faithful desktop/mobile, responsive, real Hyvä render, presentational interactions. **NO Magento BE/domain logic, no modules, repositories, providers, product queries, pricing/stock/cart/search integration**. Use explicitly labeled mock/demo data and a small data contract for Magento devs to connect. **PLP first PHTML POC, then PDP**, only after separately scoped implementation GO. Do not make Theme/PHTML a full backend-powered page generator or split into many trivial files.
+3. **Acceptance is distinct:** Page Builder requires native Admin persistence; PHTML passes for **UI frontend quality**, while commerce functionality stays `INTEGRATION_PENDING` and belongs to developer. No false `FUNCTIONAL_PASS` for mocked PDP/PLP. Do not request Page Builder Admin round-trip for PHTML.
+
+**GitHub actual state observed 2026-11-09 (refresh live before action):** `[23]` G3 Hero / Draft PR **#24** (unmerged) needs a bounded native `data-pb-style` fix for hero min-height persistence on Admin resave; follow-up documented in [Issue #23](https://github.com/thanhle74/design-engineering-toolkit/issues/23). `[25]` G4 Craftsmanship / Draft PR **#26** tip `5057b5e` (unmerged) corrected Admin `NaN/12` by native style-block keys, **CI SUCCESS ×2**; Owner screenshot verified Admin shows **6/12 + 6/12**. Owner-specific edit→Save→Reload content persistence is not separately proved by that screenshot. New disposable local CMS page **40** is the corrected sample; page 39 is the old shape. Draft PR **#20** holds lean product-spec updates, **#21** REST Figma adapter and **#22** local knowledge input are unmerged; #21 PAT/live REST proof not required for the MCP-observed structural POCs. **No PR merge or new issue implied by this handoff.** After finishing [23] correction and [25] final smoke confirmation, review exact tips and propose dependency-aware integration **#20 → #24 → #26** for Owner merge GO. Do not launch another framework/audit loop.
+
+**Coordinator/worker communication:** issue, PR and Orca task names must start with **`[<real GitHub issue number>]`** (e.g. `[23]`, `[25]`), not `#`-less phase names; the Owner prefers **short Vietnamese** and one concrete next action. Read LIVE GitHub latest issue comments/PR head/CI; older dated checkpoints below are HISTORICAL and must not be mistaken for current prohibitions or work status. A local Orca worker does not start just because a GitHub comment exists.
+
+---
+
 ## LIVE READ-ONLY GO CHECKPOINT — 2026-11-04 — #18 #19
 
 - **Owner GO received** explicitly for live read-only #18 and M4 read-only #19, recorded in their issue comments. Does **not** authorize Figma Code Connect edits, any design write, Magento/CMS/DB/prod write, commercial-source redistribution or G3.
