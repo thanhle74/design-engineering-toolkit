@@ -160,7 +160,11 @@ describe("real end-to-end build through the runner", () => {
     const download = await reader.readArtifact(started.runId, "build-manifest.json");
     expect(download.bytes.byteLength).toBeGreaterThan(0);
 
-    // slot is free again
+    // slot is free again — the runner exposes the terminal state BEFORE its
+    // asynchronous manifest/journal finalization releases the slot, so poll
+    // boundedly and assert the slot eventually clears (never an instant null).
+    const slotDeadline = Date.now() + 5_000;
+    while (runner.activeSnapshot() !== null && Date.now() < slotDeadline) await sleep(50);
     expect(runner.activeSnapshot()).toBeNull();
     expect(await runner.snapshot(`definitely-not-${started.runId}`)).toBeNull();
   });
