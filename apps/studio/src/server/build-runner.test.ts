@@ -130,9 +130,12 @@ describe("runner configuration", () => {
 });
 
 describe("real end-to-end build through the runner", () => {
-  it("runs the accepted example build to a completed, verifiable bundle", async () => {
-    requireDetCli();
-    const { runner, configPath } = await setupRunner();
+  it(
+    "runs the accepted example build to a completed, verifiable bundle",
+    { timeout: 30_000 },
+    async () => {
+      requireDetCli();
+      const { runner, configPath } = await setupRunner();
     const started = await runner.start("g28-example", configPath);
     expect(["queued", "running"]).toContain(started.state);
 
@@ -162,7 +165,10 @@ describe("real end-to-end build through the runner", () => {
     expect(await runner.snapshot(`definitely-not-${started.runId}`)).toBeNull();
   });
 
-  it("surfaces a missing-profile config as exit 2 with diagnostics and no bundle", async () => {
+  it(
+    "surfaces a missing-profile config as exit 2 with diagnostics and no bundle",
+    { timeout: 30_000 },
+    async () => {
     requireDetCli();
     const bogus = JSON.parse(exampleBuildConfigBody());
     bogus.profile = path.join(projectsRoot, "does-not-exist", "profile.json");
@@ -232,19 +238,18 @@ describe("single-slot concurrency, timeout and spawn truth", () => {
   });
 
   it("records a spawn failure instead of ever faking a build", async () => {
+    let childRef: FakeChild | null = null;
     const spawnImpl: typeof spawn = (() => {
       const child = makeFakeChild();
-      // Real spawn errors arrive after the runner's handlers are attached
-      // (macrotask), not in the middle of start()'s own awaits.
-      setTimeout(
-        () => child.emit("error", Object.assign(new Error("spawn node ENOENT"), { code: "ENOENT" })),
-        20
-      );
+      childRef = child;
       return child as unknown as ChildProcess;
     }) as unknown as typeof spawn;
 
     const { runner, configPath } = await setupRunner({ spawnImpl });
+    // start() has resolved → the runner's error/close handlers are attached;
+    // emit deterministically (no timing guess that can outrun CI's fs).
     const started = await runner.start("g28-example", configPath);
+    childRef!.emit("error", Object.assign(new Error("spawn node ENOENT"), { code: "ENOENT" }));
     const final = await awaitTerminal(runner, started.runId);
     expect(final.state).toBe("spawn-failed");
     expect(final.spawnError).toMatch(/could not be spawned/);

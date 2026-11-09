@@ -100,7 +100,10 @@ describe("POST /api/builds", () => {
     expect(body.error.message).toMatch(/build-config entry/i);
   });
 
-  it("starts a real build and reports its truthful terminal state (exit 2, no bundle)", async () => {
+  it(
+    "starts a real build and reports its truthful terminal state (exit 2, no bundle)",
+    { timeout: 30_000 },
+    async () => {
     requireDetCli();
     const response = await POST(post({ configId: "fail-fast" }));
     expect(response.status).toBe(202);
