@@ -2,6 +2,10 @@
 
 ## LATEST OWNER PRODUCT DECISION & LIVE-REF CHECKPOINT — 2026-11-09
 
+**OWNER CORRECTION (2026-11-09) — INDEPENDENT DET PREVIEW THEME:** For both output paths, all converter-generated visual CSS and PHTML should be **developed and tested in one toolkit-owned isolated `DET Preview Theme`**, **NOT in the customer's active Hyvä child theme**. The preview theme can extend the licensed Hyvä base; “independent” means independent from client-theme code and local theme configuration, not a license-free substitute for Hyvä. **Page Builder output = native editable CMS content + optional portable `det-*`-scoped Tailwind/CSS/asset bundle**. Structural/editable Page Builder fields and `data-pb-style` stay native, never forced through theme CSS. **PHTML output = frontend-only `.phtml` + Tailwind + CSP-safe Alpine** in that same preview theme, mock/data contract, no Magento BE logic. Developer manually ports selected files into the actual target theme and wires BE. Never modify a client's theme, write directly into its Tailwind config, change its assigned theme, or regenerate a new theme per conversion. This supersedes prior advice to target the existing customer child theme. It is a spec/handoff decision only; do not implement new preview-theme work until separately scoped after the two Page Builder POCs. See [Product Specs — Owner correction](PRODUCT-ARCHITECTURE-AND-SCOPE.md).
+
+
+
 **Authoritative product scope:** [PRODUCT-ARCHITECTURE-AND-SCOPE.md](PRODUCT-ARCHITECTURE-AND-SCOPE.md), section **“Owner decision — 2026-11-09: two DISTINCT deliverables”**. Owner approves two **separate OUTPUT CONTRACTS**:
 
 1. **Figma → Native Page Builder** for CMS/editorial: native content types, merchant editability, real Admin Edit→Save→Reload→Storefront proof. Current priority: close and integrate existing two POCs.
