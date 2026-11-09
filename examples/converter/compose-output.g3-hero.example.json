@@ -4,7 +4,7 @@
   "source": {
     "sourceId": "g3-hero-fixture-source",
     "revisionId": "mcp-observed-unpinned-2026-11-06",
-    "accessedAt": "2026-11-06T08:18:20.029Z"
+    "accessedAt": "2026-11-09T02:29:17.201Z"
   },
   "inputs": {
     "nodeIrContentHash": "4827b6c32e6ded1b1ab12de245a4eaac02b279f0ef33074aba1d3df9cd8d4fcd",
@@ -14,8 +14,8 @@
     "registryRevisionId": "content:9ee428e468bbaf7e",
     "bindingMapContentHash": "adfa88369beacbf91d7604d5fc863957c805bfc8f4a079362189c716938d8117"
   },
-  "content": "<div data-content-type=\"row\" data-appearance=\"contained\" data-element=\"main\"><div data-enable-parallax=\"0\" data-parallax-speed=\"0.5\" data-background-images=\"{}\" data-background-type=\"image\" data-video-loop=\"true\" data-video-play-only-visible=\"true\" data-video-lazy-load=\"true\" data-video-fallback-src=\"\" data-element=\"inner\"><div data-content-type=\"banner\" data-appearance=\"poster\" data-show-button=\"always\" data-show-overlay=\"never\" data-element=\"main\"><a href=\"/collections\" data-element=\"link\"><div class=\"pagebuilder-banner-wrapper\" data-background-images=\"{&quot;desktop_image&quot;:&quot;{{media url=wysiwyg/g3-hero/hero-1440x880-placeholder.jpg}}&quot;}\" data-background-type=\"image\" data-video-loop=\"true\" data-video-play-only-visible=\"true\" data-video-lazy-load=\"true\" data-video-fallback-src=\"\" data-element=\"wrapper\"><div class=\"pagebuilder-overlay pagebuilder-poster-overlay\" data-overlay-color=\"\" aria-label=\"\" title=\"\" style=\"min-height: 880px;\" data-element=\"overlay\"><div class=\"pagebuilder-poster-content\"><div data-element=\"content\"><p>CHAPTER 01 / AW 2026</p><h2>The Quiet Grandeur</h2><p>Refined tailoring, knitwear and leather for the season.</p></div><button type=\"button\" class=\"pagebuilder-banner-button\" data-element=\"button\" style=\"opacity: 1; visibility: visible;\">Explore the Collection</button></div></div></div></a></div></div></div>",
-  "contentHash": "sha256:e83672eeb568cb5920154d3a5391b068330658b465a98fb84d177385765035bc",
+  "content": "<style>#html-body [data-pb-style=P655B4F]{min-height:880px}</style><div data-content-type=\"row\" data-appearance=\"contained\" data-element=\"main\"><div data-enable-parallax=\"0\" data-parallax-speed=\"0.5\" data-background-images=\"{}\" data-background-type=\"image\" data-video-loop=\"true\" data-video-play-only-visible=\"true\" data-video-lazy-load=\"true\" data-video-fallback-src=\"\" data-element=\"inner\"><div data-content-type=\"banner\" data-appearance=\"poster\" data-show-button=\"always\" data-show-overlay=\"never\" data-element=\"main\"><a href=\"/collections\" data-element=\"link\"><div class=\"pagebuilder-banner-wrapper\" data-background-images=\"{&quot;desktop_image&quot;:&quot;{{media url=wysiwyg/g3-hero/hero-1440x880-placeholder.jpg}}&quot;}\" data-background-type=\"image\" data-video-loop=\"true\" data-video-play-only-visible=\"true\" data-video-lazy-load=\"true\" data-video-fallback-src=\"\" data-element=\"wrapper\"><div class=\"pagebuilder-overlay pagebuilder-poster-overlay\" data-overlay-color=\"\" aria-label=\"\" title=\"\" data-element=\"overlay\" data-pb-style=\"P655B4F\"><div class=\"pagebuilder-poster-content\"><div data-element=\"content\"><p>CHAPTER 01 / AW 2026</p><h2>The Quiet Grandeur</h2><p>Refined tailoring, knitwear and leather for the season.</p></div><button type=\"button\" class=\"pagebuilder-banner-button\" data-element=\"button\" style=\"opacity: 1; visibility: visible;\">Explore the Collection</button></div></div></div></a></div></div></div>",
+  "contentHash": "sha256:a9f6ed95c475b9934f0ab1b18f33163fdabe674a3af2ff104629ea6445efcedb",
   "mapping": [
     {
       "sourceNodeId": "n-0216280216bf",
@@ -107,7 +107,7 @@
         "nativeElement": "button",
         "nativeField": "button_text"
       },
-      "note": "Explicitly projected CTA (Proto / Button/Primary) \u2014 label text + link target from the manifest."
+      "note": "Explicitly projected CTA (Proto / Button/Primary) — label text + link target from the manifest."
     },
     {
       "sourceNodeId": "n-ba03acaef964",
@@ -154,7 +154,7 @@
     {
       "code": "NOT_VERIFIED",
       "severity": "warning",
-      "message": "Decoration 'Overlay' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record \u2014 never silently dropped, never approximated.",
+      "message": "Decoration 'Overlay' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
       "subject": {
         "type": "node",
         "id": "n-0216280216bf"
@@ -163,7 +163,7 @@
     {
       "code": "NOT_VERIFIED",
       "severity": "warning",
-      "message": "Decoration 'DECOR/ScrollIndicator' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record \u2014 never silently dropped, never approximated.",
+      "message": "Decoration 'DECOR/ScrollIndicator' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
       "subject": {
         "type": "node",
         "id": "n-ba03acaef964"

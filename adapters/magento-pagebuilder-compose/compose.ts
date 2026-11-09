@@ -14,6 +14,12 @@
 //   The banner is the platform's own background-image-with-text-overlay unit: background media
 //   lands in the wrapper's data-background-images, overlaid text in the content WYSIWYG field,
 //   the CTA in the button element — each an Admin-editable form field.
+// - Layout persistence follows the platform's own rehydratable style-block mechanism (issue #25
+//   NaN correction class): the Admin master-format reader overwrites inline style attributes
+//   with the (absent) data-<viewport>-style attribute, so the one composed layout property — the
+//   banner poster overlay min-height — is emitted as a deterministic data-pb-style key on the
+//   overlay element plus a leading <style> rule the Admin stage parses back into the Min Height
+//   form field (and the storefront applies). It is never emitted inline.
 // - The emitted markup mirrors the platform's own persisted master format (its master templates
 //   stamp data-element="<declared element name>" on every element; the master-format reader
 //   populates forms by those names). Attributes not present in the pinned declarations are not
@@ -134,6 +140,18 @@ function bindingMapPinHash(bindings: ComposeInput["bindings"]): string {
     (a, b) => a.sourceComponentId.localeCompare(b.sourceComponentId) || sha256Hex(canonicalVariantKey(a)).localeCompare(sha256Hex(canonicalVariantKey(b)))
   );
   return stableHash({ ...(bindings as unknown as Record<string, unknown>), bindings: canonical });
+}
+
+// Deterministic master-format style key (issue #25 NaN correction, applied to the #23 banner
+// overlay): the Admin stage rehydrates element styles EXCLUSIVELY from the leading `<style>`
+// block keyed by data-pb-style (stage-builder convertToInlineStyles -> data-<viewport>-style ->
+// configurable reader), never from inline style attributes (which the reader clobbers:
+// `setAttribute("style", getAttribute("data-…-style"))` with a null fallback). Keys are 7-char
+// CSS-ident-safe uppercase tokens ("P" + 6 hex of a stable node-derived source) — deterministic
+// across runs, unique per element, the same shape the platform's own uniqueid keys take in
+// stored content (real cms_page rows, incl. the keyed poster-overlay min-height rule).
+function pbStyleKey(nodeKeySource: string): string {
+  return "P" + sha256Hex(nodeKeySource).slice(0, 6).toUpperCase();
 }
 
 // ---- Native target identities (verified against the pinned registry before any composition) --
@@ -411,19 +429,30 @@ function composeSection(section: PageStructureSection, sectionNodeId: string): s
   const buttonHtml = pieces.cta
     ? `<button type="button" class="pagebuilder-banner-button" data-element="button" style="opacity: 1; visibility: visible;">${escText(pieces.cta.text)}</button>`
     : "";
-  const overlayStyle = pieces.minHeight ? ` style="min-height: ${pieces.minHeight}px;"` : "";
+  // The one layout primitive persists via the platform's own rehydratable style-block mechanism
+  // (issue #25 NaN correction class, applied to the banner overlay): the Admin master-format
+  // reader overwrites inline style attributes with the (absent) data-<viewport>-style attribute,
+  // so an inline-only overlay min-height silently disappears on Admin open/save. The overlay
+  // element carries a deterministic data-pb-style key and a leading <style> block holds the
+  // exact rehydratable rule the Admin stage parses back into the Min Height form field (and the
+  // storefront applies). Rule shape mirrors the canonical editor-saved poster overlay in the
+  // target checkout's stored content (real cms_page: `#html-body [data-pb-style=KEY]{…min-height:…}`
+  // with no inline style on the overlay element). Nothing else in the hero mapping changes.
+  const overlayKey = pieces.minHeight !== undefined ? pbStyleKey(`${sectionNodeId}:overlay`) : undefined;
+  const styleBlock = overlayKey !== undefined ? `<style>#html-body [data-pb-style=${overlayKey}]{min-height:${pieces.minHeight}px}</style>` : "";
   const showButton = pieces.cta ? "always" : "never";
   const linkAttrs = pieces.cta?.link
     ? ` href="${esc(pieces.cta.link.linkUrl)}"${pieces.cta.link.linkTarget ? ` target="${esc(pieces.cta.link.linkTarget)}"` : ""}`
     : "";
 
   return (
+    styleBlock +
     `<div data-content-type="row" data-appearance="contained" data-element="main">` +
     `<div data-enable-parallax="0" data-parallax-speed="0.5" data-background-images="{}" data-background-type="image" data-video-loop="true" data-video-play-only-visible="true" data-video-lazy-load="true" data-video-fallback-src="" data-element="inner">` +
     `<div data-content-type="banner" data-appearance="poster" data-show-button="${showButton}" data-show-overlay="never" data-element="main">` +
     (pieces.cta?.link ? `<a${linkAttrs} data-element="link">` : `<div data-element="empty_link">`) +
     `<div class="pagebuilder-banner-wrapper" data-background-images="${backgroundImagesJson}" data-background-type="image" data-video-loop="true" data-video-play-only-visible="true" data-video-lazy-load="true" data-video-fallback-src="" data-element="wrapper">` +
-    `<div class="pagebuilder-overlay pagebuilder-poster-overlay" data-overlay-color="" aria-label="" title=""${overlayStyle} data-element="overlay">` +
+    `<div class="pagebuilder-overlay pagebuilder-poster-overlay" data-overlay-color="" aria-label="" title="" data-element="overlay"${overlayKey !== undefined ? ` data-pb-style="${overlayKey}"` : ""}>` +
     `<div class="pagebuilder-poster-content">` +
     `<div data-element="content">${contentFragments.join("")}</div>` +
     buttonHtml +

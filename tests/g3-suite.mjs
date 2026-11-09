@@ -155,7 +155,16 @@ export default async function registerG3Suite(checkAsync) {
         assert.ok(html.includes(">The Quiet Grandeur</h2>"), "heading folded into the banner content field");
         assert.ok(html.includes(">Explore the Collection</button>"), "CTA folded into the banner button");
         assert.ok(html.includes('href="/collections"'), "CTA link from the manifest");
-        assert.ok(html.includes('style="min-height: 880px;"'), "declaration-backed poster overlay min-height carries the observed section height");
+        // Styles persist via the platform's rehydratable style-block mechanism (issue #25 NaN
+        // correction class, applied to the banner overlay): the Admin reader clobbers inline
+        // style attributes, so the declaration-backed min-height lives in a keyed leading
+        // <style> rule — never inline on the overlay element.
+        assert.ok(html.startsWith("<style>#html-body [data-pb-style=P"), "leading keyed style block present");
+        assert.ok(html.includes("]{min-height:880px}</style>"), "poster overlay min-height rule in the style block");
+        assert.match(html, /data-element="overlay" data-pb-style="P[A-F0-9]{6}"/, "poster overlay keyed for rehydration");
+        assert.ok(!/data-element="overlay" style="/.test(html), "no inline style attribute on the poster overlay");
+        const pbKeys = [...html.matchAll(/data-pb-style="([^"]+)"/g)].map((m) => m[1]);
+        assert.equal(new Set(pbKeys).size, pbKeys.length, "style keys unique per element");
         // No arbitrary embeddable-markup content type; no invented URLs.
         assert.ok(!html.includes('data-content-type="html"'), "no arbitrary embeddable-markup content type");
         assert.ok(!/https?:\/\//.test(html), "no invented absolute URLs in the composed content");
