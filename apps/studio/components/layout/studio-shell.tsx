@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 
 export const studioNavItems = [
   { href: "/", label: "Overview" },
+  { href: "/build", label: "Build" },
 ] as const;
 
 export const studioMetadata: Metadata = {

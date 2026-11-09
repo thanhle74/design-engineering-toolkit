@@ -11,6 +11,8 @@ import "server-only";
 
 import { DetRunReaderError } from "@/src/shared/contracts";
 
+import { BuildBusyError } from "./build-runner";
+
 const STATUS_BY_CODE: Record<DetRunReaderError["code"], number> = {
   "not-configured": 503,
   "run-not-found": 404,
@@ -36,4 +38,26 @@ export function detRunErrorResponse(error: unknown): Response {
     { error: { code: "internal-error", message: "Unexpected server error while reading DET run data." } },
     { status: 500 }
   );
+}
+
+/**
+ * [40] build-control failure mapping for `/api/builds/**` and
+ * `/api/build-configs`: same reader codes as above, plus the single-slot
+ * busy case (409 with the active job so the UI can render truthful state).
+ * Job tails are already capped at capture time; no extra fields are added.
+ */
+export function buildControlErrorResponse(error: unknown): Response {
+  if (error instanceof BuildBusyError) {
+    return Response.json(
+      {
+        error: {
+          code: "build-busy",
+          message: sanitizeMessage(error.message),
+        },
+        active: error.active,
+      },
+      { status: 409 }
+    );
+  }
+  return detRunErrorResponse(error);
 }
