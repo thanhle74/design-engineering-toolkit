@@ -57,13 +57,35 @@ php det-preview-setup.php rollback
 #    + rm -rf app/design/frontend/DET && bin/magento setup:upgrade && bin/magento cache:flush
 ```
 
+## Real-Magento smoke (R2 correction round, 2026-11-09)
+
+The corrected scripts were proven against the running local Magento (2.4.8-p5) on a THROWAWAY
+store view `det_smoke` (id 6), full cycle: `store-theme` (n98-created store corrected to
+website 1/active through the store model) → import `det-home-preview-smoke` (identifier-based,
+integrity PASS) → verify by identifier → scoped homepage write via identifier lookup →
+announcement block create + **collision abort** on re-run → rollback **refusals** (tampered
+content: marker guard; store mismatch: store guard; modified-but-marked content: sha guard —
+page survived every refusal) → correct rollback deleted the page → full setup teardown (config
+scoped removal, content-guarded block deletion, store-view deletion through the Admin's own
+model path) → **baseline untouched** (cms_page count 42 incl. pages 2/36/38–42, real
+`det-announcement` block intact, `det_preview` store 5 + its scoped config intact, vi/en
+untouched, smoke records gone).
+
 ## Guardrails (enforced by the scripts, not by discipline)
 
 - Store view/theme/announcement/homepage writes are **scoped** to the preview store view id in
   the CONFIG block; baseline store views keep their values (verified in [28] after every step).
+- Identifier semantics (R2): **all lookups load with the explicit `identifier` field** and then
+  use the numeric primary key with the repository — `getById(string)` primary-key semantics are
+  never relied on.
 - CMS import: identifier collision **aborts** (never overwrites); content markers are required;
-  sha256 read-back must equal the composed bytes; `rollback` deletes only its own identifier.
-- Announcement rollback is **content-guarded** (a modified block is never deleted).
+  sha256 read-back must equal the composed bytes; `rollback` deletes ONLY after the per-store
+  assignment AND exact content-hash ownership checks pass — any mismatch refuses, the record
+  survives.
+- Setup rollback validates store ownership (exact code + id) **before** deleting anything;
+  the announcement block deletion is content-guarded (a modified block is never deleted); the
+  store-view deletion goes through the Admin's own model path with the framework's standard
+  secure-area switch, registered only after the ownership proof.
 - No direct SQL writes anywhere: store corrections use the store model save (the Admin's own
   path), config writes use the config `WriterInterface`, CMS via `PageRepositoryInterface`,
   blocks via `BlockRepositoryInterface`.

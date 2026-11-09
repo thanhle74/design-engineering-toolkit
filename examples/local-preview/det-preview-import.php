@@ -39,6 +39,7 @@ foreach (array_slice($argv, 2) as $opt) {
 
 $contentPath = null;
 for ($i = 2; $i < count($argv); $i++) {
+    if (str_starts_with($argv[$i], '--')) continue; // --key=value CONFIG overrides, handled below
     if ($contentPath === null) $contentPath = $argv[$i];
 }
 if ($contentPath === null) $contentPath = __DIR__ . '/out/det-home-preview/native-content.html';
@@ -66,6 +67,21 @@ $pageFactory = $objectManager->get(PageFactory::class);
 
 function fail(string $msg): never { fwrite(STDERR, "ABORT: $msg\n"); exit(1); }
 
+/**
+ * Identifier-based page lookup (R2 correction): `PageRepositoryInterface::getById()` loads by
+ * the NUMERIC primary key — whether a string identifier happens to resolve is a resource-model
+ * fallback that varies across Magento versions. Load a fresh model with the EXPLICIT
+ * 'identifier' field here, then use the returned numeric id with the repository.
+ * @return array{0: ?int, 1: \Magento\Cms\Model\Page} [numeric page id or null, loaded model]
+ */
+function findPageByIdentifier(PageResource $pageResource, PageFactory $pageFactory, string $identifier): array
+{
+    $lookup = $pageFactory->create();
+    $pageResource->load($lookup, $identifier, 'identifier');
+    $id = $lookup->getId() ? (int)$lookup->getId() : null;
+    return [$id, $lookup];
+}
+
 $content = @file_get_contents($contentPath);
 if ($content === false) fail("composed content not found: $contentPath");
 foreach (['data-content-type="column-group"', 'data-content-type="button-item"', 'data-content-type="banner"'] as $marker) {
@@ -74,12 +90,8 @@ foreach (['data-content-type="column-group"', 'data-content-type="button-item"',
 $sha = hash('sha256', $content);
 
 /** @var \Magento\Cms\Model\Page|null $existing */
-$existing = null;
-try {
-    $existing = $pageRepository->getById($identifier);
-} catch (Throwable $e) {
-    $existing = null;
-}
+[$existingId, $existing] = findPageByIdentifier($pageResource, $pageFactory, $identifier);
+$existing = $existingId !== null ? $pageRepository->getById($existingId) : null;
 
 switch ($action) {
     case 'import':
@@ -93,7 +105,9 @@ switch ($action) {
             ->setStores([$storeId])
             ->setPageLayout('cms-full-width'); // full-width CMS layout if present; harmless fallback otherwise
         $pageRepository->save($page);
-        $readBack = $pageRepository->getById($identifier);
+        [$savedId] = findPageByIdentifier($pageResource, $pageFactory, $identifier);
+        if ($savedId === null) fail("page '$identifier' not resolvable by identifier after save");
+        $readBack = $pageRepository->getById($savedId);
         $storedSha = hash('sha256', (string)$readBack->getContent());
         echo 'imported page_id=' . $readBack->getId() . ' stores=[' . implode(',', (array)$readBack->getStores()) . ']'
             . ' content_sha256=' . $storedSha . "\n";
@@ -135,14 +149,21 @@ switch ($action) {
         break;
 
     case 'rollback':
-        if (!$existing || !$existing->getId()) { echo "page '$identifier' absent; nothing to do\n"; exit(0); }
-        $pageRepository->delete($existing);
-        try {
-            $pageRepository->getById($identifier);
-            fail("page still present after delete");
-        } catch (Throwable $e) {
-            echo "page '$identifier' deleted\n";
+        if ($existingId === null) { echo "page '$identifier' absent; nothing to do\n"; exit(0); }
+        // Ownership guards (R2): a destructive rollback refuses any record this script cannot
+        // prove is its own — per-store assignment AND an exact content-hash match.
+        $stores = array_map('intval', (array)$existing->getStores());
+        if (!in_array($storeId, $stores, true)) {
+            fail("page '$identifier' (id $existingId) is not assigned to store view $storeId (stores: " . implode(',', $stores) . ") — refusing to delete a record that is not provably ours");
         }
+        $storedSha = hash('sha256', (string)$existing->getContent());
+        if ($storedSha !== $sha) {
+            fail("page '$identifier' content sha256 '$storedSha' does not match this script's composed content '$sha' — refusing to delete a modified/foreign page");
+        }
+        $pageRepository->delete($existing);
+        [$gone] = findPageByIdentifier($pageResource, $pageFactory, $identifier);
+        if ($gone !== null) fail("page '$identifier' still present after delete");
+        echo "page '$identifier' (id $existingId) deleted\n";
         break;
 }
 echo "done ($action)\n";

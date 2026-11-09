@@ -79,6 +79,38 @@ $objectManager->get(Magento\Framework\App\State::class)->setAreaCode('adminhtml'
 $storeRepository = $objectManager->get(StoreRepositoryInterface::class);
 /** @var WriterInterface $configWriter */
 $configWriter = $objectManager->get(WriterInterface::class);
+/** @var Magento\Cms\Model\ResourceModel\Block $blockResource */
+$blockResource = $objectManager->get(Magento\Cms\Model\ResourceModel\Block::class);
+/** @var Magento\Cms\Model\BlockFactory $blockFactory */
+$blockFactory = $objectManager->get(Magento\Cms\Model\BlockFactory::class);
+
+/**
+ * Identifier-based block lookup (R2 correction): `BlockRepositoryInterface::getById()` loads by
+ * the NUMERIC primary key; whether a string identifier resolves is a resource-model fallback
+ * that varies across Magento versions. Load with the EXPLICIT 'identifier' field here and use
+ * the returned numeric id with the repository.
+ * @return array{0: ?int, 1: \Magento\Cms\Model\Block} [numeric block id or null, loaded model]
+ */
+function findBlockByIdentifier($blockResource, $blockFactory, string $identifier): array
+{
+    $lookup = $blockFactory->create();
+    $blockResource->load($lookup, $identifier, 'identifier');
+    $id = $lookup->getId() ? (int)$lookup->getId() : null;
+    return [$id, $lookup];
+}
+
+/**
+ * Identifier-based page lookup (R2 correction — same rationale as the block helper): load with
+ * the EXPLICIT 'identifier' field, then use the returned numeric id with the repository.
+ * @return array{0: ?int, 1: \Magento\Cms\Model\Page} [numeric page id or null, loaded model]
+ */
+function findPageByIdentifier($pageResource, $pageFactory, string $identifier): array
+{
+    $lookup = $pageFactory->create();
+    $pageResource->load($lookup, $identifier, 'identifier');
+    $id = $lookup->getId() ? (int)$lookup->getId() : null;
+    return [$id, $lookup];
+}
 
 function fail(string $msg): never { fwrite(STDERR, "ABORT: $msg\n"); exit(1); }
 function ok(string $msg): void { echo "  $msg\n"; }
@@ -172,13 +204,8 @@ switch ($action) {
     case 'announcement':
         /** @var BlockRepositoryInterface $blockRepository */
         $blockRepository = $objectManager->get(BlockRepositoryInterface::class);
-        try {
-            $blockRepository->getById($blockId);
-            $existing = true;
-        } catch (Throwable $e) {
-            $existing = false;
-        }
-        if ($existing) fail("CMS block '$blockId' already exists — collision abort (never overwrite)");
+        [$existingBlockId] = findBlockByIdentifier($blockResource, $blockFactory, $blockId);
+        if ($existingBlockId !== null) fail("CMS block '$blockId' already exists (id $existingBlockId) — collision abort (never overwrite)");
         /** @var BlockFactory $blockFactory */
         $blockFactory = $objectManager->get(BlockFactory::class);
         $block = $blockFactory->create();
@@ -196,11 +223,13 @@ switch ($action) {
         $store = loadStoreOrFail($storeRepository, $storeCode, $storeViewId);
         /** @var Magento\Cms\Api\PageRepositoryInterface $pageRepository */
         $pageRepository = $objectManager->get(Magento\Cms\Api\PageRepositoryInterface::class);
-        try {
-            $page = $pageRepository->getById($homeIdentifier);
-        } catch (Throwable $e) {
-            fail("preview homepage '$homeIdentifier' does not exist yet — run det-preview-import.php import first");
-        }
+        /** @var Magento\Cms\Model\ResourceModel\Page $pageResource */
+        $pageResource = $objectManager->get(Magento\Cms\Model\ResourceModel\Page::class);
+        /** @var Magento\Cms\Model\PageFactory $pageFactory */
+        $pageFactory = $objectManager->get(Magento\Cms\Model\PageFactory::class);
+        [$pageId] = findPageByIdentifier($pageResource, $pageFactory, $homeIdentifier);
+        if ($pageId === null) fail("preview homepage '$homeIdentifier' does not exist yet — run det-preview-import.php import first");
+        $page = $pageRepository->getById($pageId);
         $stores = array_map('intval', (array)$page->getStores());
         if (!in_array($storeViewId, $stores, true)) {
             fail("page '$homeIdentifier' (id {$page->getId()}) is not assigned to store view $storeViewId (stores: " . implode(',', $stores) . ')');
@@ -208,7 +237,7 @@ switch ($action) {
         $current = scopeValue($objectManager, $homeConfigPath, 'stores', $storeViewId);
         if ($current !== $homeIdentifier) {
             $configWriter->save($homeConfigPath, $homeIdentifier, 'stores', $storeViewId);
-            ok("web/default/cms_home_page @ stores/$storeViewId = det-home-preview (scoped write only)");
+            ok("web/default/cms_home_page @ stores/$storeViewId = $homeIdentifier (scoped write only)");
         } else {
             ok("web/default/cms_home_page @ stores/$storeViewId already $homeIdentifier");
         }
@@ -226,43 +255,56 @@ switch ($action) {
             }
         }
         echo implode("\n", $rows) . "\n";
-        echo 'theme @ stores/5: ' . (scopeValue($objectManager, $themeConfigPath, 'stores', $storeViewId) ?? '(unset)') . "\n";
-        echo 'home  @ stores/5: ' . (scopeValue($objectManager, $homeConfigPath, 'stores', $storeViewId) ?? '(unset)') . "\n";
+        echo 'theme @ stores/' . $storeViewId . ': ' . (scopeValue($objectManager, $themeConfigPath, 'stores', $storeViewId) ?? '(unset)') . "\n";
+        echo 'home  @ stores/' . $storeViewId . ': ' . (scopeValue($objectManager, $homeConfigPath, 'stores', $storeViewId) ?? '(unset)') . "\n";
         echo 'theme @ stores/1 (baseline): ' . (scopeValue($objectManager, $themeConfigPath, 'stores', 1) ?? '(inherits websites/1)') . "\n";
         echo 'home  @ stores/4 (baseline): ' . (scopeValue($objectManager, $homeConfigPath, 'stores', 4) ?? '(unset)') . "\n";
-        /** @var BlockRepositoryInterface $blockRepository */
-        $blockRepository = $objectManager->get(BlockRepositoryInterface::class);
-        try {
-            $b = $blockRepository->getById($blockId);
+        [$statusBlockId, $b] = findBlockByIdentifier($blockResource, $blockFactory, $blockId);
+        if ($statusBlockId !== null) {
             echo "block $blockId: id={$b->getId()} active={$b->getIsActive()} stores=[" . implode(',', (array)$b->getStores()) . "]\n";
-        } catch (Throwable $e) {
+        } else {
             echo "block $blockId: absent\n";
         }
         break;
 
     case 'rollback':
-        // 1. unscoped config values
+        // 1. Store ownership FIRST (R2): nothing is deleted before the target store view is
+        //    proven to be this script's own record (exact code + id).
+        $store = loadStoreOrFail($storeRepository, $storeCode, $storeViewId);
+        ok("store view '$storeCode' (id $storeViewId) ownership verified");
+        // 2. scoped config values (after ownership proof)
         $configWriter->delete($themeConfigPath, 'stores', $storeViewId);
         $configWriter->delete($homeConfigPath, 'stores', $storeViewId);
         $configWriter->delete('hyva_theme_general/demo_content/show_homepage_demo_content', 'stores', $storeViewId);
         $configWriter->delete('design/head/demonotice', 'stores', $storeViewId);
         ok("scoped config removed @ stores/$storeViewId (theme + homepage + demo-content flag)");
-        // 2. the announcement block (content-guarded)
+        // 3. the announcement block (identifier lookup + content-guarded)
         /** @var BlockRepositoryInterface $blockRepository */
         $blockRepository = $objectManager->get(BlockRepositoryInterface::class);
-        try {
-            $b = $blockRepository->getById($blockId);
+        [$rollbackBlockId, $b] = findBlockByIdentifier($blockResource, $blockFactory, $blockId);
+        if ($rollbackBlockId !== null) {
             if (trim((string)$b->getContent()) !== trim($blockContent)) {
                 fail("block '$blockId' content does not match this script's payload — refusing to delete a record we did not create");
             }
-            $blockRepository->deleteById($b->getId());
-            ok("block '$blockId' deleted");
-        } catch (Throwable $e) {
+            $blockRepository->deleteById($rollbackBlockId);
+            ok("block '$blockId' (id $rollbackBlockId) deleted");
+        } else {
             ok("block '$blockId' absent");
         }
-        // 3. the store view (guarded: only ours)
-        $store = loadStoreOrFail($storeRepository, $storeCode, $storeViewId);
-        $storeRepository->delete($store);
+        // 4. the store view (guarded: only ours; the Admin's own deletion path — the store
+        //    model's delete through its resource model, see DeleteStorePost.php $model->delete().
+        //    Store is a protected model: the framework's RemoveAction validator requires the
+        //    standard secure-area registry flag outside a logged-in Admin session — the same
+        //    switch install/upgrade scripts use. Registered AFTER every ownership proof above.)
+        /** @var Magento\Framework\Registry $registry */
+        $registry = $objectManager->get(Magento\Framework\Registry::class);
+        if (!$registry->registry('isSecureArea')) {
+            $registry->register('isSecureArea', true);
+        }
+        $storeModel = $objectManager->create(Magento\Store\Model\Store::class);
+        $storeModel->load($storeViewId);
+        if ((int)$storeModel->getId() !== $storeViewId) fail("store model load failed for id $storeViewId before deletion");
+        $storeModel->delete();
         ok("store view '$storeCode' (id $storeViewId) deleted");
         $objectManager->get(Magento\Framework\App\Cache\Manager::class)->clean(['config', 'block_html', 'full_page']);
         ok('rollback complete');
