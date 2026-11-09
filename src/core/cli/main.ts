@@ -15,6 +15,7 @@ import { commandPlan } from "./commands/plan.js";
 import { commandExtract } from "./commands/extract.js";
 import { commandKb } from "./commands/kb.js";
 import { commandCompose } from "./commands/compose.js";
+import { commandBuild } from "./commands/build.js";
 
 // This module compiles to dist/src/core/cli/main.js — four levels up to the repository root.
 export const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..", "..", "..");
@@ -80,6 +81,18 @@ Usage:
       (schema'd, revision-pinned). Composition is structural evidence only: it never claims Admin
       round-trip or visual verification.
 
+  det build --config <build-config.json> [--out <dir>] [--dry-run] [--json]
+      One-shot validated build (issue #28 C1): a thin orchestrator over the SHIPPED commands —
+      capability probe (optional or a pre-built pinned registry), read-only design-source
+      extraction, gated native composition — driven by one schema'd build-config document whose
+      paths resolve relative to the config file itself (portable per-project configs; no engine
+      defaults, no hardcoded projects). Major 1 builds run from OFFLINE snapshot/tree documents
+      only; a live design-source mode is not representable and fails closed. The bundle lands in
+      --out (or config.outputDir) as versioned stage directories plus build-manifest.json — the
+      per-file-byte inventory (schemas/cli/build-manifest.schema.json) of every generated
+      artifact, consumed input, stage provenance and honest gap (preview installation into a
+      checkout is explicitly OPERATOR_GATED: the build never writes to any platform).
+
 Global flags:
   --json        Machine-readable JSON on stdout (the human summary is a presentation of it).
   --out <dir>   Write artifacts (capability-registry.json / resolution-report.json / store
@@ -122,7 +135,7 @@ export async function main(argv: string[], env: NodeJS.ProcessEnv = process.env,
     return 2;
   }
   if (parsed.command === null) {
-    io.err("det: no command given (expected validate|inspect|plan|extract|kb|compose). Run 'det --help' for usage.");
+    io.err("det: no command given (expected validate|inspect|plan|extract|kb|compose|build). Run 'det --help' for usage.");
     return 2;
   }
   const unexpectedFlags = unexpectedFlagsForCommand(parsed.command, parsed.flags);
@@ -155,6 +168,8 @@ export async function main(argv: string[], env: NodeJS.ProcessEnv = process.env,
       return commandKb(flags, io);
     case "compose":
       return commandCompose(flags as Record<string, string | boolean>, io);
+    case "build":
+      return commandBuild(flags as Record<string, string | boolean>, io);
     default:
       io.err(`det: unknown command '${parsed.command}'`);
       return 2;

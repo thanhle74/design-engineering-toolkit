@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/build-config.schema.json",
+  "$comment": "Design Engineering Toolkit CLI family \u2014 BuildConfig. Major version 1 (issue #28 coordinator correction C1): the declarative input of the one-shot `det build --config` orchestrator, which drives the ALREADY-SHIPPED commands (inspect -> extract -> compose) through their exact existing contracts and emits a versioned build bundle + build manifest (schemas/cli/build-manifest.schema.json). This config introduces NO new engine, NO defaults and NO provider access: every path is explicit caller input, resolved relative to the config file's own directory (portable per-project configs); a `live` design-source mode is deliberately NOT representable in major 1 \u2014 a build runs from an offline snapshot/tree document only, and any live-source need must go through a separately authorized adapter (fail closed, never claimed). The config never points at a CMS/store/theme write target: the build is offline computation; preview installation into a checkout is an explicitly operator-gated step outside this contract.",
+  "title": "Design Engineering Toolkit \u2014 Build Config",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "profileId",
+    "profile",
+    "designSource",
+    "bindings",
+    "content"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "const": 1
+    },
+    "profileId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "description": "The converter profile id this build drives (documentational; the pinned artifacts carry the authoritative identity checks)."
+    },
+    "profile": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Path of the converter profile file (relative to this config file's directory, or absolute)."
+    },
+    "designSource": {
+      "type": "object",
+      "required": [
+        "mode",
+        "project",
+        "designFile",
+        "designNode"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "const": "snapshot",
+          "description": "Major 1 supports OFFLINE snapshot/tree-document builds only. A live design-source read requires its own authorized adapter and is not expressible here \u2014 the build fails closed rather than approximating one."
+        },
+        "project": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Design-source project root containing the tree document (relative to this config file, or absolute)."
+        },
+        "designFile": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Tree-document filename inside the project root (plain filename; the extract adapter's own traversal guards apply)."
+        },
+        "designNode": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Caller-selected root locator inside the tree document \u2014 never a default."
+        }
+      }
+    },
+    "capabilityProbe": {
+      "type": "object",
+      "required": [
+        "project"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "project": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Platform checkout path for the read-only capability probe (relative to this config file, or absolute). Present -> the build runs `det inspect` first; absent -> `registry` is required."
+        }
+      }
+    },
+    "registry": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Path of a pre-built capability-registry.json to reuse (required when capabilityProbe is absent; when both are present the probe wins and this field is rejected as ambiguous)."
+    },
+    "bindings": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Path of the component binding map (relative to this config file, or absolute)."
+    },
+    "content": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Path of the content manifest (relative to this config file, or absolute)."
+    },
+    "projection": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Optional path of the semantic projection document (relative to this config file, or absolute)."
+    },
+    "outputDir": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Default build-bundle output directory (relative to this config file, or absolute). The --out CLI flag overrides it; exactly one of the two must be present."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "not": {
+          "required": [
+            "capabilityProbe"
+          ],
+          "properties": {
+            "capabilityProbe": {}
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "registry"
+        ],
+        "properties": {
+          "registry": {}
+        }
+      },
+      "description": "Without a capability probe, a pre-built registry path is mandatory \u2014 the build never invents capability evidence."
+    },
+    {
+      "if": {
+        "required": [
+          "capabilityProbe"
+        ],
+        "properties": {
+          "capabilityProbe": {}
+        }
+      },
+      "then": {
+        "not": {
+          "required": [
+            "registry"
+          ],
+          "properties": {
+            "registry": {}
+          }
+        }
+      },
+      "description": "Ambiguity guard: a probe and a pre-built registry together are a caller error \u2014 the build refuses to choose."
+    }
+  ]
+}

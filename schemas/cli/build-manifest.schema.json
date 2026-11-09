@@ -1,0 +1,227 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/build-manifest.schema.json",
+  "$comment": "Design Engineering Toolkit CLI family \u2014 BuildManifest. Major version 1 (issue #28 coordinator correction C2): the explicit, versioned inventory of ONE build bundle produced by `det build --config` \u2014 every generated artifact that belongs in the handoff with its per-FILE-BYTE sha256 (deliberately distinct from the converter family's canonical payload contentHash, which is documented as a canonical-payload hash, never a file-byte hash), the consumed inputs with their byte hashes, the exact stage provenance, and the honest gap list (including the explicitly OPERATOR_GATED preview-installation steps the offline build does not perform). This is the artifact manifest for downstream verification/discovery \u2014 it is never a substitute for the caller-supplied content-manifest (a content layer, not an inventory), and it invents nothing: a file absent from the bundle is absent from the manifest, and an unimplemented step is a gap, never a claim.",
+  "title": "Design Engineering Toolkit \u2014 Build Manifest",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "kind",
+    "profileId",
+    "platformId",
+    "source",
+    "config",
+    "stages",
+    "inputs",
+    "outputs",
+    "gaps"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "const": 1
+    },
+    "kind": {
+      "const": "det-build-manifest"
+    },
+    "profileId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$"
+    },
+    "platformId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9.-]*$"
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "sourceId",
+        "revisionId"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "sourceId": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*$"
+        },
+        "revisionId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The pinned source revision the extracted artifacts carry (verbatim from the PageStructure; OBSERVED markers stay honest \u2014 the manifest never upgrades an unpinned observation)."
+        }
+      }
+    },
+    "config": {
+      "type": "object",
+      "required": [
+        "contentHash"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "contentHash": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "description": "sha256 over the canonical JSON of the validated build config (volatile-free identity of what was asked)."
+        }
+      }
+    },
+    "stages": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "stage",
+          "status",
+          "exitCode"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "stage": {
+            "enum": [
+              "capability-probe",
+              "extraction",
+              "composition"
+            ]
+          },
+          "status": {
+            "enum": [
+              "completed",
+              "reused",
+              "failed",
+              "planned"
+            ],
+            "description": "reused = a caller-supplied pinned artifact was consumed instead of re-running the stage; planned = declared but not executed (a --dry-run build validates and inventories inputs without running stages \u2014 chained stages consume on-disk stage outputs, so a truthful dry run runs nothing)."
+          },
+          "exitCode": {
+            "type": "integer",
+            "enum": [
+              0,
+              1,
+              2,
+              3
+            ]
+          },
+          "outDir": {
+            "type": "string",
+            "pattern": "^(?!/)",
+            "description": "Stage output directory relative to the bundle root (never absolute)."
+          }
+        }
+      },
+      "description": "The shipped pipeline stages this build ran, in execution order."
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/fileRecord"
+      },
+      "description": "Every caller-supplied file the build consumed (profile, registry when reused, binding map, content manifest, projection), byte-hashed as read."
+    },
+    "outputs": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "$ref": "#/$defs/fileRecord"
+      },
+      "description": "Every generated file in the bundle (native content, reports, inventories, envelopes) with per-file-byte sha256 \u2014 empty in a --dry-run manifest, which inventories inputs only and records the dry-run gap."
+    },
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]*$",
+            "description": "Open manifest-level gap vocabulary (never a converter-family diagnostic code): e.g. COMPOSITION_GAPS_PRESENT, PREVIEW_INSTALL_OPERATOR_GATED, PREVIEW_ASSETS_NOT_GENERATED."
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      },
+      "description": "Honest gaps: composition mapping gaps summarized by class, plus every step this offline build explicitly does NOT perform (preview installation, asset generation, live-source reads) \u2014 a gap here is a precise boundary, never a claim."
+    }
+  },
+  "$defs": {
+    "fileRecord": {
+      "type": "object",
+      "required": [
+        "path",
+        "role",
+        "sha256",
+        "bytes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Bundle-relative path for outputs; the resolved caller path (or config-relative form) for inputs. Never a placeholder."
+        },
+        "role": {
+          "enum": [
+            "profile-input",
+            "registry",
+            "binding-map",
+            "content-manifest-input",
+            "projection-input",
+            "node-ir",
+            "page-structure",
+            "source-review",
+            "compose-report",
+            "native-content",
+            "tool-run-envelope",
+            "design-tree-input"
+          ],
+          "description": "Closed major-1 manifest role enum (additive minors only)."
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "SHA-256 over the EXACT file bytes as they sit on disk \u2014 the verification hash for downstream tooling (canonical payload contentHash values live inside the converter artifacts themselves and are deliberately a different notion)."
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "provenance": {
+          "type": "object",
+          "required": [
+            "via"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "via": {
+              "enum": [
+                "det-inspect",
+                "det-extract",
+                "det-compose",
+                "det-build",
+                "caller-input"
+              ],
+              "description": "Which shipped stage produced it (outputs) or that the caller supplied it (inputs)."
+            },
+            "stage": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Stage outDir for produced files."
+            }
+          }
+        }
+      }
+    }
+  }
+}

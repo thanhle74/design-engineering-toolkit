@@ -312,6 +312,10 @@ await registerG4Suite(checkAsync);
 // ---- Issue #28 full-root homepage composition suite (async) ---------------------------------
 const { default: registerG28Suite } = await import("./g28-suite.mjs");
 await registerG28Suite(checkAsync);
+
+// ---- Issue #28 one-shot build orchestrator suite (async) ------------------------------------
+const { default: registerBuildSuite } = await import("./build-suite.mjs");
+await registerBuildSuite(checkAsync);
 for (const { id, name, fn } of asyncChecks) {
   try {
     const detail = await fn();

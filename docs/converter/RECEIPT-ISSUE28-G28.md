@@ -1,8 +1,8 @@
 # Receipt — [28] DET Preview Theme + Figma Homepage 245:2 end-to-end
 
-**Status:** end-to-end EXECUTED through the existing pipeline — full-root extraction (253 nodes, all 12 sections planned) → full-page native Page Builder composition (12/12 sections, 0 skipped) → one independent DET Preview Theme → isolated local preview store view rendering the composed homepage; service-layer edit round-trip PASS (`ADMIN_ROUNDTRIP_SERVICE_LAYER_AND_STOREFRONT_PASS` on the preview page); literal Admin-UI form click-through **PENDING** (worker holds no admin credentials — `OWNER_ACTION_REQUIRED`, same gate as #23/#25) · Draft PR, no merge
+**Status:** end-to-end EXECUTED through the existing pipeline; coordinator review CORRECTION_REQUIRED (C1/C2/C3) → **corrections implemented on this same branch** (one-shot `det build --config` orchestrator + versioned build bundle/manifest + committed guarded preview runbook; see §10) — full-root extraction (253 nodes, all 12 sections planned) → full-page native Page Builder composition (12/12 sections, 0 skipped) → one independent DET Preview Theme → isolated local preview store view rendering the composed homepage; service-layer edit round-trip PASS (`ADMIN_ROUNDTRIP_SERVICE_LAYER_AND_STOREFRONT_PASS` on the preview page); literal Admin-UI form click-through **PENDING** (worker holds no admin credentials — `OWNER_ACTION_REQUIRED`, same gate as #23/#25) · Draft PR, no merge
 **Branch:** `thanhle74/28-det-preview-theme-figma-homepage-245-2-end-to` (the Orca worktree branch; the coordinator start comment named `task/28-det-preview-theme-figma-homepage`, which did not exist — same base `main` @ `9495f43`, same isolation intent, name differs as in #23/#25).
-**Gate:** `npm test` → **117/117** checks (was 110; +7 G28 checks incl. full-root extraction accountability, per-shape composition invariants, determinism, pin negatives, committed-example parity, neutrality). G3/G4 suites keep guarding their byte-identical baselines in the same run.
+**Gate:** `npm test` → **123/123** checks (110 baseline + 7 G28 + 6 build-suite checks incl. full-root extraction accountability, per-shape composition invariants, determinism, pin negatives, committed-example parity, neutrality). G3/G4 suites keep guarding their byte-identical baselines in the same run.
 
 ## 1. What was built (one integrated run, no new engine, no parallel converters)
 
@@ -66,6 +66,7 @@ SITE/AnnouncementBar, SITE/Header, SITE/Footer → excluded from CMS with reason
 - **CMS page** `det-home-preview` (**page_id 42**, stores [5], is_active 1) imported via `Magento\Cms\Api\PageRepositoryInterface` by the guarded one-off script (identifier collision aborts; content-marker guard; read-back sha256 equals the composed file byte-for-byte).
 - **CMS block** `det-announcement` (id 32, stores [5]) — MOCK editorial strip text from the design, flagged.
 - All 31 real media assets present in `pub/media/wysiwyg/det-home-preview/` and served HTTP 200.
+- The guarded scripts are **committed in the PR** as the reusable form (`examples/local-preview/det-preview-setup.php`, `det-preview-import.php`, runbook `examples/local-preview/README.md` — coordinator correction C3); the checkout-root files are the [28] one-off originals.
 
 **Storefront evidence (pure-local render of `https://slaunchpad.thanhaloha.io.vn/?___store=det_preview`):**
 - Scoped DOM checks: `body.det-preview cms-det-home-preview` + theme CSS served + 12 rows / 1 banner / 25 columns / 9 column-lines / 9 buttons containers / 10 button-items / 25 text WYSIWYGs / 30 image elements — all 30 images **loaded** (live-DOM `naturalWidth`), banner background applied from `data-background-images`, poster overlay `min-height: 880px` **computed** through the keyed style block (the #25 correction mechanism verified end-to-end on a full page), Merriweather/Open Sans applied via the scoped stylesheet.
@@ -94,33 +95,36 @@ php det_g28_preview_setup.php rollback        # deletes scoped config + block 32
 7. **MOCK content flags** — product card names/categories/prices are the design's own placeholder copy; commerce-action labels ("Add to Bag", "Subscribe") are presentation-only; links without a derivable route are explicit `#` MOCK targets; the rights-placeholder note ("PLACEHOLDER — RIGHTS UNVERIFIED") is carried verbatim. No commerce BE exists or is implied anywhere.
 8. **Google-Fonts import** in the preview CSS is a preview convenience; production ports self-host fonts.
 
-## 7. Reusable run (another developer / another run)
+## 7. Reusable run (another developer / another run) — ONE command
 
-Committed, reviewable inputs make the same root conversion reproducible offline (no agent, no Figma access):
+The coordinator correction C1 replaces the manual three-command flow with a validated one-shot orchestrator over the SAME shipped commands:
 
 ```bash
 npm ci && npm run build
-REG=$(mktemp -d); node bin/det.js inspect  --profile tests/fixtures/g28-home-design-source/profile-g28-home-fixture.json \
-  --project tests/fixtures/g3-magento-like --out $REG
-node bin/det.js extract --profile tests/fixtures/g28-home-design-source/profile-g28-home-fixture.json \
-  --project tests/fixtures/g28-home-design-source --design-file design-tree-home-desktop.fixture.json --design-node 245:2 \
-  --registry $REG/capability-registry.json --bindings tests/fixtures/g28-home-design-source/g28-component-bindings.fixture.json --out $REG
-node bin/det.js compose --profile tests/fixtures/g28-home-design-source/profile-g28-home-fixture.json \
-  --registry $REG/capability-registry.json --bindings tests/fixtures/g28-home-design-source/g28-component-bindings.fixture.json \
-  --content tests/fixtures/g28-home-design-source/g28-home-content.fixture.json \
-  --input $REG/page-structure.json --nodeir $REG/node-ir.json \
-  --projection tests/fixtures/g28-home-design-source/g28-home-projection.fixture.json --out $REG
-# $REG/native-content.html equals the committed example (placeholder media); the same run with a
-# local manifest carrying real assets produced the imported preview page.
+node bin/det.js build --config examples/build/project.example.json --out out/build-sample
+# bundle: out/build-sample/{01-capability-probe,02-extraction,03-composition}/ + build-manifest.json
 ```
 
-The **semantic projection** (`g28-home-projection.fixture.json`, 130 recorded decisions) is the stable, reviewable cache of approved semantic decisions the issue allows; the content manifest is the swappable content layer. A future revision-pinned live-source adapter replaces only the transport (tree document), per the #18/#21 seam — the projection/manifest/ledger flow is unchanged.
+- The config (`examples/build/project.example.json` — the shipped offline sample project) is the caller's declarative input; paths resolve relative to the config file itself, so a real project config is portable. **No engine defaults exist** — a config without the caller's own paths fails its contract; a `live` design-source mode is not representable and fails closed (`BUILD_LIVE_SOURCE_UNSUPPORTED` / schema const), never approximated.
+- The bundle's **`build-manifest.json`** (`schemas/cli/build-manifest.schema.json`, correction C2) is the explicit versioned inventory: per-FILE-BYTE sha256 over every generated artifact (native content, reports, NodeIR/PageStructure/SourceReview, tool-run envelopes) and every consumed input, exact stage provenance, and the honest gap list — including `PREVIEW_INSTALL_OPERATOR_GATED` / `PREVIEW_ASSETS_NOT_GENERATED`: the offline build never installs a theme or imports CMS content, and says so.
+- `--dry-run` validates the config and byte-hashes the declared inputs while running NO stage (the chained stages consume on-disk stage outputs — a truthful dry run executes nothing and states it).
+- Packaging: no npm publish, no GUI/cloud — `npm link` at a toolkit checkout (or `npm pack` tarball) exposes the `det` bin; `npm ci && npm run build` prepares `dist/`.
+- **Preview installation** is the explicitly operator-gated runbook committed under [`examples/local-preview/README.md`](../../examples/local-preview/README.md) with the guarded, content-protected scripts (correction C3): theme install → isolated store view → scoped setup/import → verify → rollback, never touching a client theme or live Homepage.
+- The **semantic projection** (130 recorded decisions) remains the stable reviewable cache of approved semantic decisions; the content manifest is the swappable content layer. A future revision-pinned live-source adapter replaces only the transport, per the #18/#21 seam — config/projection/manifest/ledger flow unchanged.
 
-## 8. Verification performed
+## 7b. Verification added by the corrections (build suite, T32a–f)
 
-- `npm test` **117/117** — G28-T31a..g: buttons/button-item probe (declaration proof), full-root extraction (253 nodes, exact disposition/class counts, 12 sections in document order, instance-override subtrees inventoried, chrome excluded with reason), full-page compose (12/12 sections, per-shape structural invariants, keyed style blocks with unique deterministic keys, no inline styles on structural elements, no `data-content-type="html"`, no invented form input, honest gaps ≥19, zero skipped), determinism + no-write/dry-run truth, 3 pin negatives fail closed, committed-example parity (volatile fields stripped) + fixture contract validation, neutrality scan with the documented observed-copyright exception. G3/G4 committed examples remain byte-identical through the modified adapter (parity checks inside the same gate).
-- Local: import integrity (sha256 equality), 31/31 media HTTP 200, scoped CSS served, live-DOM structural checks (counts above + computed min-height + background application), edit→restore round-trip, baseline isolation checks after each write.
+`tests/build-suite.mjs`: one-shot offline build over the committed sample (three stages completed, bundle + on-disk manifest validation, **every output byte-hash verified against the actual files**, composed native content byte-equal to the committed example); compose envelope now carries the `native-content` artifact hashed over exact file bytes + the tool-run schema role/command enums in parity (C2 drift closed); fail-closed set (live-source config, missing `--config`, probe+registry ambiguity, stdout-only build); truthful dry run (zero writes, inputs inventoried); failed-stage propagation (bad caller root → failed stage recorded, no composition claimed, manifest still truthful); neutrality over the new committed surfaces.
 
-## 9. Non-goals honored / integration notes
 
-No commerce BE (catalog/cart/pricing logic) anywhere — native PB structures + presentation only; no customer-theme modification (the preview theme is toolkit-owned and only *assigned* to the disposable store view); no Figma writes; no production writes; no merges (Draft PR); PRs #20/#21/#22 untouched. Base: `main` @ `9495f43`. Adapter `magento-pagebuilder-compose` 1.1.1 → 1.2.0; `schemas/cli` semantic-projection 1.4.0 + content-manifest 1.1 (additive); the closed 21-code converter diagnostic registry unchanged. Decisions: `ADR-028-001..006` in [DECISIONS.md](DECISIONS.md).
+## 10. Coordinator correction round (2026-11-09) — C1/C2/C3 implemented on this branch
+
+Coordinator independent review of PR #34 @ `cd634ab`: direction approved; three bounded corrections, all implemented here (no new engine, no second compiler, no #29/SQLite scope, no merge):
+
+| | Correction | Implementation |
+|---|---|---|
+| C1 | One-shot standalone `det build --config` | `det build` (new CLI verb, `src/core/cli/commands/build.ts`): thin validated orchestrator over the shipped `inspect → extract → compose` — same contracts, same adapters, no new engine; schema'd config (`schemas/cli/build-config.schema.json`) with config-relative paths and **no defaults**; **offline snapshot only** (live mode not representable → `BUILD_LIVE_SOURCE_UNSUPPORTED`, fails closed); no hardcoded 245:2/Slaunchpad anywhere in the engine; documented `npm link`/tarball packaging; example config `examples/build/` runs the committed sample fully offline (suite-proven, no Claude/MCP). |
+| C2 | Portable build bundle/manifest | `tool-run` schema 1.4.0 additive: `compose-report` role (run-envelope drift **closed**), `native-content` role (compose now emits the artifact hashed over its **exact file bytes** — documented as a distinct notion from the canonical payload `contentHash`), `build` command; new `build-manifest.schema.json` + the build command's `build-manifest.json`: explicit versioned bundle inventory — every generated artifact + consumed input with per-file-byte sha256, stage provenance, honest gaps (`COMPOSITION_GAPS_PRESENT` with counts, `PREVIEW_INSTALL_OPERATOR_GATED`, `PREVIEW_ASSETS_NOT_GENERATED`); the caller-supplied content-manifest is NOT conflated with the artifact manifest; downstream verification is suite-tested (every recorded hash re-verified against on-disk bytes). |
+| C3 | Preview reproducibility / source autonomy | The guarded local-preview scripts are **committed** (`examples/local-preview/det-preview-setup.php`, `det-preview-import.php`, runbook `README.md`) — the same proven [28] scripts, CONFIG-block parameterized per checkout, all guards intact (collision aborts, content-guarded rollback, scoped writes only); `det build`'s manifest **explicitly gates** preview installation as `OPERATOR_GATED` instead of claiming a portable end-to-end preview; the [28] fixture flow stays as the regression suite; no fake revision pins/assets/mappings — unsupported roles remain GAP/NEEDS_REVIEW from the actual IR. |
+
+**Owner verification gate (unchanged, operator-gated):** literal Admin UI click-through on CMS 42 (edit → Save → Reload → storefront on `det_preview`) — code work does not block on it.
