@@ -50,7 +50,7 @@ export interface KbDiagnosticEntry {
   sourceRef?: KbSourceRef;
 }
 
-// ---- KB-1 (platform capability / data-provider) ---------------------------------------------
+// ---- KB-1 (platform capability / data-provider / module inventory) --------------------------
 export interface KbEnablement {
   state: "enabled" | "disabled" | "not-registered" | "unknown";
   source: "declaration" | "config-scan" | "runtime-check";
@@ -58,7 +58,7 @@ export interface KbEnablement {
 
 export interface KbCapabilityRecord {
   schemaVersion: 1;
-  recordType: "capability" | "data-provider";
+  recordType: "capability" | "data-provider" | "module";
   id: string;
   nativeId?: string;
   namespace?: string;
@@ -199,19 +199,65 @@ export interface StoreDescriptor {
 }
 
 // ---- ingest manifest ---------------------------------------------------------------------------
+// M4 (issue #19): lanes are optional (at least one input required) and `platformRecords` was
+// added for KB-1 records emitted by read-only source extracts. Existing manifests that supply
+// all four original lanes remain valid — additive evolution within major 1.
 export interface KbIngestManifest {
   schemaVersion: 1;
   manifestId: string;
   platform: { id: string; version?: string };
   visibilityPolicy?: "example-only" | "any";
   inputs: {
-    capabilityRegistry: ManifestInput;
-    uiInventory: ManifestInput;
-    projectRecords: ManifestInput[];
-    relations: ManifestInput;
+    capabilityRegistry?: ManifestInput;
+    platformRecords?: ManifestInput;
+    uiInventory?: ManifestInput;
+    projectRecords?: ManifestInput[];
+    relations?: ManifestInput;
   };
   denyGlobs?: string[];
   notes?: string;
+}
+
+// ---- extract manifest + source scan payload (issue #19 M4) --------------------------------------
+export interface KbExtractManifest {
+  schemaVersion: 1;
+  extractId: string;
+  platform: { id: string; version?: string };
+  rootAliases: Record<string, { description: string }>;
+  scans: {
+    scanId: string;
+    kind: KbScanKind;
+    rootAlias: string;
+    subPath?: string;
+    options?: Record<string, string | number | boolean>;
+    denyGlobs?: string[];
+  }[];
+  output: {
+    platformRecords: string | null;
+    uiRecords: string | null;
+    relations: string | null;
+    report: string | null;
+  };
+  denyGlobs?: string[];
+  notes?: string;
+}
+
+export type KbScanKind = "magento-platform" | "pagebuilder-native" | "secomm-uiwidget" | "hyva-ui";
+
+export interface KbSourceScanPayload {
+  schemaVersion: 1;
+  adapterId: "magento-kb-source";
+  scanId: string;
+  kind: KbScanKind;
+  rootAlias: string;
+  platform: { id: string; version?: string };
+  capabilities: unknown[];
+  uiComponents: unknown[];
+  relations: unknown[];
+  digests: Record<string, string>;
+  scanMetadata: { scannedAt: string; fileCount: number; deniedCount: number; unknownShapes: number };
+  diagnostics: KbDiagnosticEntry[];
+  counts: { capabilities: number; modules: number; uiComponents: number; relations: number };
 }
 
 export interface ManifestInput {

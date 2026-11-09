@@ -53,6 +53,57 @@
         "diagnostics": { "type": "array", "items": { "type": "object", "required": ["code", "severity", "message"], "additionalProperties": false, "properties": { "code": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" }, "severity": { "enum": ["info", "warning", "error"] }, "message": { "type": "string" }, "subject": { "type": "object", "required": ["type", "id"], "additionalProperties": false, "properties": { "type": { "type": "string" }, "id": { "type": "string" } } } } } },
         "scanned": { "type": "integer", "minimum": 0 }
       }
+    },
+    {
+      "$comment": "extract report (det kb extract, issue #19 M4): plan identity, per-scan read evidence (file/deny/unknown-shape counts + digest count), written outputs and diagnostics. Every emitted record was re-validated against the KB record schemas and the shared record-safety gate before any file was written; a run with an error-severity diagnostic writes nothing.",
+      "required": ["extract", "scans", "outputs", "diagnostics"],
+      "additionalProperties": false,
+      "properties": {
+        "extract": { "type": "object", "required": ["extractId", "manifest"], "additionalProperties": false, "properties": { "extractId": { "type": "string" }, "manifest": { "type": "string" } } },
+        "scans": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["scanId", "kind", "rootAlias", "fileCount", "deniedCount", "unknownShapes", "digestCount", "counts"],
+            "additionalProperties": false,
+            "properties": {
+              "scanId": { "type": "string" },
+              "kind": { "type": "string", "enum": ["magento-platform", "pagebuilder-native", "secomm-uiwidget", "hyva-ui"] },
+              "rootAlias": { "type": "string" },
+              "fileCount": { "type": "integer", "minimum": 0 },
+              "deniedCount": { "type": "integer", "minimum": 0 },
+              "unknownShapes": { "type": "integer", "minimum": 0 },
+              "digestCount": { "type": "integer", "minimum": 0 },
+              "counts": { "type": "object", "required": ["capabilities", "modules", "uiComponents", "relations"], "additionalProperties": false, "properties": { "capabilities": { "type": "integer", "minimum": 0 }, "modules": { "type": "integer", "minimum": 0 }, "uiComponents": { "type": "integer", "minimum": 0 }, "relations": { "type": "integer", "minimum": 0 } } }
+            }
+          }
+        },
+        "outputs": {
+          "type": "object",
+          "required": ["platformRecords", "uiRecords", "relations", "report"],
+          "additionalProperties": false,
+          "properties": {
+            "platformRecords": { "$ref": "#/$defs/writtenOutput" },
+            "uiRecords": { "$ref": "#/$defs/writtenOutput" },
+            "relations": { "$ref": "#/$defs/writtenOutput" },
+            "report": { "$ref": "#/$defs/writtenOutput" }
+          }
+        },
+        "diagnostics": { "type": "array", "items": { "type": "object", "required": ["code", "severity", "message"], "additionalProperties": false, "properties": { "code": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" }, "severity": { "enum": ["info", "warning", "error"] }, "message": { "type": "string" }, "subject": { "type": "object", "required": ["type", "id"], "additionalProperties": false, "properties": { "type": { "type": "string" }, "id": { "type": "string" } } } } } }
+      }
     }
-  ]
+  ],
+  "$defs": {
+    "writtenOutput": {
+      "type": ["object", "null"],
+      "required": ["path", "count"],
+      "additionalProperties": false,
+      "properties": {
+        "path": { "type": "string", "pattern": "^(?!/)(?!.*(^|/)\\.\\.(/|$))" },
+        "count": { "type": "integer", "minimum": 0 }
+      },
+      "$comment": "null = this artifact was not written (report-only run or null target in the extract manifest output)."
+    }
+  }
 }

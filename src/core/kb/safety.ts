@@ -7,8 +7,10 @@ import { scanForSecrets, scanForOversizedStrings } from "./path-gateway.js";
 import type { KbRecord, KbUiComponentRecord } from "./types.js";
 
 // Pick the contract a record validates against; unknown record types are refused.
+// 'module' (issue #19 M4) is an installed-module inventory record and validates as KB-1
+// (kb-capability carries the recordType enum extension).
 export function schemaNameForRecord(recordType: string): string | null {
-  if (recordType === "capability" || recordType === "data-provider") return "kb-capability";
+  if (recordType === "capability" || recordType === "data-provider" || recordType === "module") return "kb-capability";
   if (recordType === "ui-component") return "kb-ui-component";
   if (recordType === "relation") return "kb-relations";
   if (["requirement", "ux-intent", "composition", "decision", "approval", "risk", "open-question", "constraint", "source-document"].includes(recordType)) return "kb-project-record";

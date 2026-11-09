@@ -12,13 +12,14 @@ import { runIngest } from "../../kb/ingest.js";
 import { runSync } from "../../kb/sync.js";
 import { runQuery, type KbQueryKb, type KbQuerySpec } from "../../kb/query.js";
 import { runValidate } from "../../kb/validate.js";
+import { runExtract } from "../../kb/extract.js";
 import { readDescriptor, readStore, serializeDescriptor, projectFile, STORE_FILES } from "../../kb/store.js";
 import type { KbStoreData, StoreDescriptor } from "../../kb/types.js";
 import { serializeJson, type CommandIO } from "../io.js";
 import { requireValue } from "../args.js";
 import { emit } from "./emit.js";
 
-const KB_VERBS = new Set(["ingest", "sync", "query", "validate"]);
+const KB_VERBS = new Set(["ingest", "sync", "query", "validate", "extract"]);
 const KB_NAMES = new Set(["platform", "ui", "project", "relations", "all"]);
 const PROOF_LEVELS = new Set(["DETECTED", "ASSUMED", "TESTED", "UNKNOWN"]);
 
@@ -91,6 +92,8 @@ export async function commandKb(flags: Record<string, string | boolean | string[
       return kbQuery(flags, io, { asJson });
     case "validate":
       return kbValidate(flags, io, { asJson });
+    case "extract":
+      return kbExtract(flags, io, { outDir, dryRun, asJson, roots: roots.roots });
     default:
       io.err(`det: unknown kb verb '${String(verb)}'`);
       return 2;
@@ -207,6 +210,64 @@ async function kbSync(flags: Record<string, string | boolean | string[]>, io: Co
     dryRun: opts.dryRun,
     asJson: opts.asJson,
     extraOutput: opts.asJson ? { sync: result.report } : undefined,
+    summaryLines,
+  }, io);
+}
+
+// ---- det kb extract (issue #19, M4) -----------------------------------------------------------
+// Plan-driven read-only source extraction: runs the manifest's declared scans through the
+// out-of-process KB source-scanner adapter (discovered by its kb-source-scan output contract),
+// re-validates every emitted record against the KB record contracts + the shared record-safety
+// gate, and only then emits KB-record JSON arrays for a later `det kb ingest`. Reads only under
+// declared root aliases (same three-lane gateway as ingest/sync) and writes ONLY into --out —
+// never inside a source root, never the KB store. Fail closed: any error-severity diagnostic
+// (adapter runtime, payload contract, record gate, counts/digests) writes nothing. Without
+// --out (or with --dry-run): report only. Exit 3 is the adapter-runtime failure family.
+async function kbExtract(flags: Record<string, string | boolean | string[]>, io: CommandIO, opts: { outDir: string | null; dryRun: boolean; asJson: boolean; roots: Record<string, string> }): Promise<0 | 1 | 2 | 3> {
+  const manifestPath = requireValue(flags, "manifest");
+  if (!manifestPath) {
+    io.err("det: kb extract requires --manifest <file> (the extract plan declares what may be scanned).");
+    return 2;
+  }
+  if (!fs.existsSync(manifestPath)) {
+    io.err(`det: manifest '${manifestPath}' does not exist (unreadable inputs are usage errors).`);
+    return 2;
+  }
+  const result = await runExtract({
+    manifestPath,
+    out: opts.outDir,
+    roots: opts.roots,
+    env: io.env,
+    dryRun: opts.dryRun,
+    scannedAt: new Date().toISOString(),
+  });
+
+  // Adapter-runtime failures map to exit 3; every other error severity is the blocking exit 1.
+  const exitCode: 0 | 1 | 2 | 3 = result.adapterFailure ? 3 : result.blocked ? 1 : 0;
+
+  // Honesty (KB-27 pattern): the report artifact is attached only when its payload validates
+  // against kb-engine-output (the frozen tool-run role vocabulary has no extract-specific role;
+  // the kb-records role's schemaRef is the kb-engine-output envelope, which the extract report
+  // is a branch of — so the reference stays truthful). On a pre-scan failure the report carries
+  // scans: [] and cannot validate; the run diagnostics are the receipt.
+  const artifacts = result.reportSchemaValid ? [kbArtifact("kb-records", result.report)] : [];
+
+  const summaryLines = [
+    `extract: ${result.extractId} — platform ${result.records.platform.length}, ui ${result.records.ui.length}, relations ${result.records.relations.length}`,
+    ...(result.blocked ? ["extract BLOCKED: nothing was written (error diagnostics above; record content withheld)."] : []),
+  ];
+  return emit({
+    command: "kb",
+    exitCode,
+    platformId: safePlatformId(manifestPath),
+    converterDiagnostics: [],
+    runDiagnostics: result.diagnostics,
+    artifacts,
+    files: result.files,
+    outDir: opts.outDir,
+    dryRun: opts.dryRun,
+    asJson: opts.asJson,
+    extraOutput: opts.asJson ? { extract: result.report } : undefined,
     summaryLines,
   }, io);
 }

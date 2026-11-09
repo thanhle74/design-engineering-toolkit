@@ -24,6 +24,9 @@
     "kb-project-record": "schemas/kb/kb-project-record.schema.json",
     "kb-relations": "schemas/kb/kb-relations.schema.json",
     "kb-ingest-manifest": "schemas/kb/kb-ingest-manifest.schema.json",
+    "kb-extract-manifest": "schemas/kb/kb-extract-manifest.schema.json",
+    "kb-source-scan": "schemas/kb/kb-source-scan.schema.json",
+    "kb-source-scan-request": "schemas/kb/kb-source-scan-request.schema.json",
     "kb-store": "schemas/kb/kb-store.schema.json",
     "kb-engine-output": "schemas/kb/kb-engine-output.schema.json"
   }

@@ -1,0 +1,35 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-source-scan-request.schema.json",
+ "$comment": "Knowledge Engine family — KB source scan request (issue #19 M4). Major version 1. Per-run stdin transport contract from det kb extract to the out-of-process KB source-scanner adapter (discovered by its declared outputContract). Registered on main-integration (issue #44): the request shape was already pinned by src/core/kb/extract.ts KbScanRequest and defensively hand-validated by the scanner; this schema materializes that wire format as a declared contract so the adapter descriptor can name its input transport like every other shipped adapter. The scanner's own defensive validation stays authoritative at runtime; denyGlobs is the FULL merged additive glob list (structural baseline + manifest + per-scan), evaluated by the adapter BEFORE any read.",
+ "title": "Design Engineering Toolkit — KB Source Scan Request (transport)",
+ "type": "object",
+ "required": ["schemaVersion", "scan", "platform"],
+ "additionalProperties": false,
+ "properties": {
+  "schemaVersion": {"const": 1},
+  "scan": {
+   "type": "object",
+   "required": ["scanId", "kind", "rootAlias", "root", "denyGlobs"],
+   "additionalProperties": false,
+   "properties": {
+    "scanId": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$", "description": "Caller-assigned scan identity; echoed verbatim in the payload."},
+    "kind": {"enum": ["magento-platform", "pagebuilder-native", "secomm-uiwidget", "hyva-ui"], "description": "One scan kind per payload. Values are contract VALUES (adapter-declared kinds), not core coupling: src/core/kb stays platform-neutral."},
+    "rootAlias": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$", "description": "Echoed root-alias NAME; the payload's digest table is keyed '<rootAlias>:<aliasRelativePath>' and depends on it."},
+    "root": {"type": "string", "minLength": 1, "description": "Caller gateway-resolved absolute scan root. Runtime transport only — never persisted into a contract payload."},
+    "subPath": {"type": "string", "description": "Optional alias-relative subdirectory bound for this scan."},
+    "options": {"type": "object", "additionalProperties": {"type": ["string", "number", "boolean"]}, "description": "Bounded scalar options. The declared options set is empty for adapter 1.x — any option key is a scan-error payload (UNKNOWN_SCAN_OPTION), never silently ignored."},
+    "denyGlobs": {"type": "array", "items": {"type": "string", "minLength": 1}, "description": "Full merged deny-glob list (case-insensitive, full path AND basename, additive over the structural baseline). Additive per scan — never a replacement of the baseline."}
+   }
+  },
+  "platform": {
+   "type": "object",
+   "required": ["id"],
+   "additionalProperties": false,
+   "properties": {
+    "id": {"type": "string", "minLength": 1, "description": "The extract manifest's declared platform expectation; platform ids appear only as VALUES."},
+    "version": {"type": "string", "description": "Optional declared platform version expectation."}
+   }
+  }
+ }
+}
