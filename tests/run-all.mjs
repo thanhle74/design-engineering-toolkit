@@ -316,6 +316,10 @@ await registerG28Suite(checkAsync);
 // ---- Issue #28 one-shot build orchestrator suite (async) ------------------------------------
 const { default: registerBuildSuite } = await import("./build-suite.mjs");
 await registerBuildSuite(checkAsync);
+
+// ---- Issue #41 schema registry SSOT suite (async) --------------------------------------------
+const { default: registerRegistrySuite } = await import("./registry-suite.mjs");
+await registerRegistrySuite(checkAsync);
 for (const { id, name, fn } of asyncChecks) {
   try {
     const detail = await fn();

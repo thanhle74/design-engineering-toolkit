@@ -24,15 +24,16 @@ import { validateRegistry } from "../../semantic.js";
 import { validateBindingMap } from "../../resolver.js";
 import { bindingMapPinHash } from "../../design-source/extract.js";
 import { artifact } from "../../run-envelope.js";
-import { validateContract, REPO_ROOT } from "../../schema-registry.js";
+import { validateContract, REPO_ROOT, contractId } from "../../schema-registry.js";
 import { readJsonFile, serializeJson, type CommandIO } from "../io.js";
 import { requireValue } from "../args.js";
 import { emit } from "./emit.js";
 import { isBlocking, loadProfile } from "./shared.js";
 import type { BindingMap, CapabilityRegistry, ConverterProfile, Diagnostic, NodeIR, PageStructure } from "../../types.js";
 
-// The compose-capable adapters are identified by their declared output contract ($id).
-export const COMPOSE_OUTPUT_CONTRACT = "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/compose-output.schema.json";
+// The compose-capable adapters are identified by their declared output contract ($id),
+// resolved from schemas/registry.json + the schema file's own $id (issue #41).
+export const COMPOSE_OUTPUT_CONTRACT = contractId("compose-output");
 
 // Shared structural types for the G3 compose family (schemas/cli/{content-manifest,compose-output}, major 1).
 export interface ContentManifestEntry {
