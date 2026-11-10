@@ -27,13 +27,14 @@
 import "server-only";
 
 import { createHash } from "node:crypto";
-import { readdir, realpath, stat, mkdir, chmod, writeFile } from "node:fs/promises";
+import { copyFile, readdir, realpath, stat, mkdir, chmod, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import { DetRunReaderError } from "@/src/shared/contracts";
 
 import {
   BUILD_MANIFEST_FILE,
+  HEX64_PATTERN,
   echoId,
   parseJsonRecord,
 } from "../det-payload-parsing";
@@ -44,9 +45,18 @@ import {
   type GuardedBuildManifest,
 } from "../build-bundle-reader";
 import { readContainedBytes } from "../contained-read";
-import { RUN_ID_PATTERN } from "../artifact-access";
-import { migrateCatalogDatabase } from "./migrations";
-import { CATALOG_BACKUP_MANIFEST_FILE, CATALOG_BACKUP_DB_FILE, openCatalogDatabase, type CatalogDatabase, type OpenCatalogOptions } from "./sqlite-driver";
+import { RUN_ID_PATTERN, isInsideDir, isSafeRelativeArtifactPath } from "../artifact-access";
+import { CATALOG_MIGRATIONS, migrateCatalogDatabase } from "./migrations";
+import {
+  CATALOG_BACKUP_DB_FILE,
+  CATALOG_BACKUP_FILES_DIR,
+  CATALOG_BACKUP_MANIFEST_FILE,
+  CATALOG_DB_FILE,
+  openCatalogDatabase,
+  openExistingDatabase,
+  type CatalogDatabase,
+  type OpenCatalogOptions,
+} from "./sqlite-driver";
 
 export const STUDIO_DATA_DIR_ENV = "STUDIO_DATA_DIR";
 
@@ -114,8 +124,16 @@ export interface CatalogBackupSummary {
   backupDir: string;
   dbFile: string;
   manifestFile: string;
+  filesRoot: string;
   runCount: number;
   fileCount: number;
+}
+
+export interface CatalogRestoreSummary {
+  runsRestored: number;
+  filesRestored: number;
+  dataDir: string;
+  runsRoot: string;
 }
 
 /** Runner hints recorded with an indexed bundle (job timing provenance). */
@@ -574,38 +592,392 @@ export class StudioCatalog {
   /* --------------------------- backup / recovery --------------------------- */
 
   /**
-   * Consistent backup of the DB (`VACUUM INTO` snapshot — no backup API on
-   * the node:sqlite lines, see the spike doc) PLUS a manifest of every
-   * referenced artifact file (relative path + sha256 + bytes per run), so a
-   * restore can detect missing/corrupt referenced files. Backup targets are
-   * created 0700/0600; nothing here is exposed through any Studio route.
+   * [50/R1-C1] RECOVERABLE backup of the database AND every referenced
+   * bundle file: a `VACUUM INTO` snapshot of the DB (no backup API on the
+   * node:sqlite lines — see the spike doc) plus, for each catalogued bundle,
+   * its root `build-manifest.json` trust anchor and every manifest-declared
+   * output, copied under `files/<runId>/…` with their manifest-declared
+   * sha256/bytes identities preserved in `files-manifest.json`.
+   *
+   * Fail-closed: every copied byte is read contained/size-bounded and
+   * re-verified against BOTH the guard (manifest) and the DB rows before it
+   * is written; any missing/mismatched bytes, guard failure, symlink escape
+   * (readContainedBytes containment), or DB/manifest disagreement aborts the
+   * whole backup and removes exactly the files this call wrote — a partial
+   * snapshot is never presented as success. Restoring when the original runs
+   * root is gone therefore works: the backup holds every needed byte.
+   *
+   * Backup layout (relative paths only; nothing is exposed via any route):
+   *   <backupDir>/studio.backup.sqlite
+   *   <backupDir>/files-manifest.json
+   *   <backupDir>/files/<runId>/build-manifest.json
+   *   <backupDir>/files/<runId>/<manifest-declared outputs…>
    */
-  async backupCatalog(backupDir: string): Promise<CatalogBackupSummary> {
+  async backupCatalog(backupDir: string, runsRoot: string): Promise<CatalogBackupSummary> {
     await mkdir(backupDir, { recursive: true, mode: 0o700 });
+    // mkdir mode alone is umask-filtered; enforce operator-private modes.
+    await chmod(backupDir, 0o700).catch(() => {});
     const dbFile = path.join(backupDir, CATALOG_BACKUP_DB_FILE);
-    // VACUUM INTO refuses an existing target, which keeps every backup a
-    // complete fresh snapshot (callers choose a fresh directory).
-    this.db.exec(`VACUUM INTO '${dbFile.replace(/'/g, "''")}'`);
-    const runs = this.listRuns();
-    const files = runs
-      .filter((run) => run.bundlePresent)
-      .map((run) => ({ runId: run.id, files: this.listArtifacts(run.id).map(({ path: p, sha256, bytes }) => ({ path: p, sha256, bytes })) }));
-    const manifest = {
-      backupSchemaVersion: 1,
-      generatedAt: nowIso(),
-      fileCount: files.reduce((sum, run) => sum + run.files.length, 0),
-      runs: files,
-    };
     const manifestFile = path.join(backupDir, CATALOG_BACKUP_MANIFEST_FILE);
-    await writeFile(manifestFile, `${JSON.stringify(manifest, null, 2)}\n`, { encoding: "utf8", mode: 0o600 });
-    await chmod(dbFile, 0o600).catch(() => {});
-    return {
-      backupDir,
-      dbFile,
-      manifestFile,
-      runCount: runs.length,
-      fileCount: manifest.fileCount,
+    const filesRoot = path.join(backupDir, CATALOG_BACKUP_FILES_DIR);
+    const written: string[] = [];
+    try {
+      // VACUUM INTO refuses an existing target, which keeps every backup a
+      // complete fresh snapshot (callers choose a fresh directory).
+      this.db.exec(`VACUUM INTO '${dbFile.replace(/'/g, "''")}'`);
+      written.push(dbFile);
+      await chmod(dbFile, 0o600).catch(() => {});
+      await mkdir(filesRoot, { recursive: true, mode: 0o700 });
+      await chmod(filesRoot, 0o700).catch(() => {});
+      written.push(filesRoot);
+
+      const entries: Array<{
+        runId: string;
+        manifest: { path: string; sha256: string; bytes: number };
+        files: Array<{ path: string; sha256: string; bytes: number }>;
+      }> = [];
+      for (const run of this.listRuns()) {
+        if (!run.bundlePresent) continue;
+        if (run.manifestSha256 === null) {
+          throw new DetRunReaderError(
+            "invalid-payload",
+            `Backup refused: run "${echoId(run.id)}" has no recorded manifest hash; re-index the runs root before backing up.`
+          );
+        }
+        const sourceRunDir = await this.resolveRunDirFor(runsRoot, run.id);
+        const manifestBytes = await this.readVerifiedBundleFile(sourceRunDir, BUILD_MANIFEST_FILE, run.manifestSha256);
+        const guarded = guardBuildManifest(parseJsonRecord(manifestBytes, BUILD_MANIFEST_FILE));
+
+        // DB ↔ manifest consistency: the artifact rows must match the guard,
+        // otherwise the catalogue is stale and no consistent snapshot exists.
+        const rows = this.listArtifacts(run.id);
+        if (rows.length !== guarded.outputOrder.length) {
+          throw new DetRunReaderError(
+            "invalid-payload",
+            `Backup refused: catalogue rows for run "${echoId(run.id)}" disagree with its build manifest. Re-index the runs root before backing up.`
+          );
+        }
+        for (const filePath of guarded.outputOrder) {
+          const output = guarded.outputs.get(filePath)!;
+          const row = rows.find((r) => r.path === filePath);
+          if (row === undefined || row.sha256 !== output.sha256 || row.bytes !== output.bytes) {
+            throw new DetRunReaderError(
+              "invalid-payload",
+              `Backup refused: catalogue row for "${echoId(filePath)}" in run "${echoId(run.id)}" disagrees with its build manifest. Re-index the runs root before backing up.`
+            );
+          }
+        }
+
+        const runFilesDir = path.join(filesRoot, run.id);
+        await mkdir(runFilesDir, { recursive: true, mode: 0o700 });
+        await chmod(runFilesDir, 0o700).catch(() => {});
+        written.push(runFilesDir);
+        await this.writeBackupFile(runFilesDir, BUILD_MANIFEST_FILE, manifestBytes);
+        // files[] lists the declared OUTPUTS; the root manifest trust anchor
+        // is the separate `manifest` entry (never double-listed).
+        const files: Array<{ path: string; sha256: string; bytes: number }> = [];
+        for (const filePath of guarded.outputOrder) {
+          const output = guarded.outputs.get(filePath)!;
+          const bytes = await this.readVerifiedBundleFile(sourceRunDir, filePath, output.sha256, output.bytes);
+          await this.writeBackupFile(runFilesDir, filePath, bytes);
+          files.push({ path: filePath, sha256: output.sha256, bytes: output.bytes });
+        }
+        entries.push({
+          runId: run.id,
+          manifest: { path: BUILD_MANIFEST_FILE, sha256: run.manifestSha256!, bytes: manifestBytes.byteLength },
+          files,
+        });
+      }
+
+      const manifest = {
+        backupSchemaVersion: 1,
+        generatedAt: nowIso(),
+        dbFile: CATALOG_BACKUP_DB_FILE,
+        filesRoot: CATALOG_BACKUP_FILES_DIR,
+        runCount: entries.length,
+        fileCount: entries.reduce((sum, entry) => sum + entry.files.length + 1, 0),
+        runs: entries,
+      };
+      await writeFile(manifestFile, `${JSON.stringify(manifest, null, 2)}\n`, { encoding: "utf8", mode: 0o600 });
+      written.push(manifestFile);
+      return {
+        backupDir,
+        dbFile,
+        manifestFile,
+        filesRoot,
+        runCount: entries.length,
+        fileCount: manifest.fileCount,
+      };
+    } catch (error) {
+      // Fail closed: remove exactly what THIS call wrote (never sweep the
+      // operator's pre-existing backupDir content). Directories go down
+      // recursively — a run's files dir lives inside files/ and must not
+      // survive a refused snapshot.
+      await Promise.all(
+        [...written].reverse().map((p) => rm(p, { recursive: true, force: true }))
+      ).catch(() => {});
+      throw error instanceof DetRunReaderError
+        ? error
+        : new DetRunReaderError("invalid-payload", `Backup failed before completing a consistent snapshot: ${error instanceof Error ? error.message.slice(0, 160) : "unknown"}`);
+    }
+  }
+
+  /**
+   * [50/R1-C1] Restore a backup produced by backupCatalog into FRESH target
+   * directories: verify the backup set is complete and internally consistent
+   * (DB ↔ files-manifest ↔ copied bytes) BEFORE writing anything, then copy
+   * the DB as the target's studio.sqlite and each run's files under the
+   * target runs root. Refuses partial/corrupt sets, existing targets (no
+   * silent overwrite of live runs), and any sha256/bytes disagreement —
+   * all-or-nothing on the verification side; file copies happen only after
+   * the whole set checked out.
+   */
+  static async restoreBackup(
+    backupDir: string,
+    targets: { dataDir: string; runsRoot: string }
+  ): Promise<CatalogRestoreSummary> {
+    const dbFile = path.join(backupDir, CATALOG_BACKUP_DB_FILE);
+    const manifestFile = path.join(backupDir, CATALOG_BACKUP_MANIFEST_FILE);
+    const filesRoot = path.join(backupDir, CATALOG_BACKUP_FILES_DIR);
+    const filesRootReal = await realpath(filesRoot).catch(() => null);
+    if (filesRootReal === null) {
+      throw new DetRunReaderError("invalid-payload", "Restore refused: the backup's files/ directory is missing; the backup set is incomplete.");
+    }
+
+    // 1. Parse the files manifest and validate every listed path shape.
+    const rawManifest = await readFile(manifestFile, "utf8").catch(() => null);
+    if (rawManifest === null) {
+      throw new DetRunReaderError("invalid-payload", "Restore refused: files-manifest.json is missing; the backup set is incomplete.");
+    }
+    let parsedManifest: unknown;
+    try {
+      parsedManifest = JSON.parse(rawManifest);
+    } catch {
+      throw new DetRunReaderError("invalid-payload", "Restore refused: files-manifest.json is not valid JSON.");
+    }
+    if (typeof parsedManifest !== "object" || parsedManifest === null || !Array.isArray((parsedManifest as { runs?: unknown }).runs)) {
+      throw new DetRunReaderError("invalid-payload", "Restore refused: files-manifest.json has an unexpected shape.");
+    }
+    const manifest = parsedManifest as {
+      backupSchemaVersion: number;
+      runs: Array<{ runId: unknown; manifest?: unknown; files?: unknown }>;
     };
+    if (manifest.backupSchemaVersion !== 1) {
+      throw new DetRunReaderError("invalid-payload", `Restore refused: unsupported backup schema version (${String(manifest.backupSchemaVersion).slice(0, 20)}).`);
+    }
+
+    interface ListedFile {
+      runId: string;
+      path: string;
+      sha256: string;
+      bytes: number;
+      isManifestAnchor: boolean;
+    }
+    const listed: ListedFile[] = [];
+    for (const entry of manifest.runs) {
+      const runId = entry.runId;
+      if (typeof runId !== "string" || !RUN_ID_PATTERN.test(runId)) {
+        throw new DetRunReaderError("invalid-payload", "Restore refused: files-manifest.json names an invalid run id.");
+      }
+      const anchor = entry.manifest as { path?: unknown; sha256?: unknown; bytes?: unknown } | undefined;
+      if (
+        anchor === undefined ||
+        typeof anchor.path !== "string" ||
+        !isSafeRelativeArtifactPath(anchor.path) ||
+        typeof anchor.sha256 !== "string" ||
+        !HEX64_PATTERN.test(anchor.sha256) ||
+        typeof anchor.bytes !== "number" ||
+        !Number.isInteger(anchor.bytes) ||
+        anchor.bytes < 1
+      ) {
+        throw new DetRunReaderError("invalid-payload", `Restore refused: run "${echoId(runId)}" has an invalid manifest anchor entry.`);
+      }
+      listed.push({ runId, path: anchor.path, sha256: anchor.sha256, bytes: anchor.bytes, isManifestAnchor: true });
+      if (!Array.isArray(entry.files)) {
+        throw new DetRunReaderError("invalid-payload", `Restore refused: run "${echoId(runId)}" has no file list.`);
+      }
+      for (const file of entry.files) {
+        const f = file as { path?: unknown; sha256?: unknown; bytes?: unknown };
+        if (
+          typeof f?.path !== "string" ||
+          !isSafeRelativeArtifactPath(f.path) ||
+          typeof f.sha256 !== "string" ||
+          !HEX64_PATTERN.test(f.sha256) ||
+          typeof f.bytes !== "number" ||
+          !Number.isInteger(f.bytes) ||
+          f.bytes < 1
+        ) {
+          throw new DetRunReaderError("invalid-payload", `Restore refused: run "${echoId(runId)}" has an invalid file entry.`);
+        }
+        listed.push({ runId, path: f.path, sha256: f.sha256, bytes: f.bytes, isManifestAnchor: false });
+      }
+    }
+
+    // 2. Verify every listed file inside the BACKUP: contained read, sha256 + bytes.
+    for (const file of listed) {
+      const abs = path.join(filesRootReal, file.runId, file.path);
+      const real = await realpath(abs).catch(() => null);
+      if (real === null || !isInsideDir(real, filesRootReal)) {
+        throw new DetRunReaderError("invalid-payload", `Restore refused: backup file for run "${echoId(file.runId)}" escapes the backup set.`);
+      }
+      const bytes = await readFile(real).catch(() => null);
+      if (bytes === null) {
+        throw new DetRunReaderError("invalid-payload", `Restore refused: a backup file of run "${echoId(file.runId)}" is missing; the set is incomplete.`);
+      }
+      const diskSha256 = createHash("sha256").update(bytes).digest("hex");
+      if (diskSha256 !== file.sha256 || bytes.byteLength !== file.bytes) {
+        throw new DetRunReaderError("invalid-payload", `Restore refused: a backup file of run "${echoId(file.runId)}" does not match its recorded sha256/bytes (corrupt backup).`);
+      }
+    }
+
+    // 3. Verify the backup DB against the files manifest BEFORE any target write.
+    const backupDb = await openExistingDatabase(dbFile);
+    try {
+      const versionRow = backupDb.prepare("SELECT MAX(number) AS v FROM catalog_migrations").get() as { v: number | null };
+      const backupVersion = versionRow.v === null ? 0 : Number(versionRow.v);
+      if (backupVersion !== CATALOG_MIGRATIONS.length) {
+        throw new DetRunReaderError(
+          "invalid-payload",
+          `Restore refused: the backup DB schema version (${backupVersion}) is not supported by this Studio (expected ${CATALOG_MIGRATIONS.length}); restore with a matching Studio version.`
+        );
+      }
+      const bundleRows = backupDb.prepare(`SELECT id, manifest_sha256 FROM runs WHERE bundle_present = 1`).all() as Array<{ id: string; manifest_sha256: string | null }>;
+      if (bundleRows.length !== manifest.runs.length) {
+        throw new DetRunReaderError("invalid-payload", "Restore refused: the backup DB and its files manifest disagree about the catalogued bundle runs.");
+      }
+      for (const row of bundleRows) {
+        const entry = manifest.runs.find((r) => r.runId === row.id);
+        const anchor = entry?.manifest as { sha256?: unknown } | undefined;
+        if (entry === undefined || typeof anchor?.sha256 !== "string" || anchor.sha256 !== row.manifest_sha256) {
+          throw new DetRunReaderError("invalid-payload", `Restore refused: the backup DB and its files manifest disagree for run "${echoId(row.id)}".`);
+        }
+        const dbFiles = backupDb.prepare(`SELECT path, sha256, bytes FROM artifacts WHERE run_id = ? ORDER BY path`).all(row.id) as Array<{ path: string; sha256: string; bytes: number }>;
+        const listedFiles = listed.filter((l) => l.runId === row.id && !l.isManifestAnchor);
+        if (dbFiles.length !== listedFiles.length) {
+          throw new DetRunReaderError("invalid-payload", `Restore refused: the backup DB and its files manifest disagree on artifact count for run "${echoId(row.id)}".`);
+        }
+        for (const dbFile of dbFiles) {
+          const match = listedFiles.find((l) => l.path === dbFile.path);
+          if (match === undefined || match.sha256 !== dbFile.sha256 || match.bytes !== Number(dbFile.bytes)) {
+            throw new DetRunReaderError("invalid-payload", `Restore refused: the backup DB and its files manifest disagree on "${echoId(dbFile.path)}" of run "${echoId(row.id)}".`);
+          }
+        }
+      }
+    } finally {
+      backupDb.close();
+    }
+
+    // 4. Targets must be fresh — no silent overwrite of live runs or a DB.
+    await mkdir(targets.dataDir, { recursive: true, mode: 0o700 });
+    await chmod(targets.dataDir, 0o700).catch(() => {});
+    const targetDb = path.join(targets.dataDir, CATALOG_DB_FILE);
+    if (await stat(targetDb).then(() => true).catch(() => false)) {
+      throw new DetRunReaderError(
+        "path-refused",
+        "Restore refused: the target data directory already holds a catalogue database; choose an empty directory (no silent overwrite)."
+      );
+    }
+    await mkdir(targets.runsRoot, { recursive: true, mode: 0o700 }).catch(async () => {
+      const info = await stat(targets.runsRoot).catch(() => null);
+      if (info === null || !info.isDirectory()) {
+        throw new DetRunReaderError("path-refused", "Restore refused: the target runs root is not a usable directory.");
+      }
+    });
+    const runsRootReal = await realpath(targets.runsRoot);
+    for (const entry of manifest.runs) {
+      const runId = entry.runId as string;
+      if (await stat(path.join(runsRootReal, runId)).then(() => true).catch(() => false)) {
+        throw new DetRunReaderError(
+          "path-refused",
+          `Restore refused: a run directory "${echoId(runId)}" already exists in the target runs root (no silent overwrite of live runs).`
+        );
+      }
+    }
+
+    // 5. Verified set + fresh targets: copy DB then files.
+    await copyFile(dbFile, targetDb);
+    await chmod(targetDb, 0o600).catch(() => {});
+    let filesRestored = 0;
+    for (const file of listed) {
+      const sourceReal = await realpath(path.join(filesRootReal, file.runId, file.path));
+      const targetRunDir = path.join(runsRootReal, file.runId);
+      await mkdir(targetRunDir, { recursive: true, mode: 0o700 });
+      await chmod(targetRunDir, 0o700).catch(() => {});
+      const segments = file.path.split("/");
+      const dirPath = path.join(targetRunDir, ...segments.slice(0, -1));
+      if (segments.length > 1) {
+        await mkdir(dirPath, { recursive: true, mode: 0o700 });
+      }
+      const targetFile = path.join(targetRunDir, ...segments);
+      await copyFile(sourceReal, targetFile);
+      await chmod(targetFile, 0o600).catch(() => {});
+      filesRestored += 1;
+    }
+    return { runsRestored: manifest.runs.length, filesRestored, dataDir: targets.dataDir, runsRoot: runsRootReal };
+  }
+
+  /* ------------------------------ backup internals ------------------------------ */
+
+  /**
+   * Contained, size-bounded read of one bundle file whose bytes MUST hash to
+   * `expectedSha256` (and optionally match `expectedBytes`) — the fail-closed
+   * core of both backup verification and the DB-consistency probe.
+   */
+  private async readVerifiedBundleFile(
+    runDir: string,
+    relativePath: string,
+    expectedSha256: string,
+    expectedBytes?: number
+  ): Promise<Buffer> {
+    if (!isSafeRelativeArtifactPath(relativePath)) {
+      throw new DetRunReaderError("path-refused", `Backup refused: "${echoId(relativePath)}" is not a safe bundle-relative path.`);
+    }
+    const bytes = await readContainedBytes(runDir, relativePath, "invalid-payload").catch(() => null);
+    if (bytes === null) {
+      throw new DetRunReaderError(
+        "invalid-payload",
+        `Backup refused: "${echoId(relativePath)}" is missing from its bundle; a complete snapshot cannot be taken. Re-index or rebuild the bundle first.`
+      );
+    }
+    const diskSha256 = createHash("sha256").update(bytes).digest("hex");
+    if (diskSha256 !== expectedSha256 || (expectedBytes !== undefined && bytes.byteLength !== expectedBytes)) {
+      throw new DetRunReaderError(
+        "invalid-payload",
+        `Backup refused: the on-disk bytes of "${echoId(relativePath)}" do not match their recorded sha256/bytes; a complete snapshot cannot be taken. Re-index or rebuild the bundle first.`
+      );
+    }
+    return Buffer.from(bytes);
+  }
+
+  /** Write one file into the backup set (0600, safe relative path inside it). */
+  private async writeBackupFile(runFilesDir: string, relativePath: string, bytes: Buffer): Promise<void> {
+    const segments = relativePath.split("/");
+    if (segments.length > 1) {
+      const dirPath = path.join(runFilesDir, ...segments.slice(0, -1));
+      await mkdir(dirPath, { recursive: true, mode: 0o700 });
+      await chmod(dirPath, 0o700).catch(() => {});
+    }
+    const target = path.join(runFilesDir, ...segments);
+    await writeFile(target, bytes, { mode: 0o600 });
+    await chmod(target, 0o600).catch(() => {});
+  }
+
+  /**
+   * The source directory of one catalogued bundle run: `<runsRoot>/<runId>`,
+   * realpath-contained. The runs root is a caller parameter (the catalogue
+   * stores relative paths only — never absolute server paths).
+   */
+  private async resolveRunDirFor(runsRoot: string, runId: string): Promise<string> {
+    const rootReal = await realpath(runsRoot).catch(() => null);
+    if (rootReal === null) {
+      throw new DetRunReaderError("not-configured", "Backup refused: the configured runs root is not readable.");
+    }
+    const runDir = path.join(rootReal, runId);
+    const runReal = await realpath(runDir).catch(() => null);
+    if (runReal === null || !isInsideDir(runReal, rootReal)) {
+      throw new DetRunReaderError("invalid-payload", `Backup refused: the bundle directory of run "${echoId(runId)}" is missing or escapes the runs root.`);
+    }
+    return runReal;
   }
 
   /**

@@ -30,6 +30,7 @@ import { DetRunReaderError } from "@/src/shared/contracts";
 export const CATALOG_DB_FILE = "studio.sqlite";
 export const CATALOG_BACKUP_DB_FILE = "studio.backup.sqlite";
 export const CATALOG_BACKUP_MANIFEST_FILE = "files-manifest.json";
+export const CATALOG_BACKUP_FILES_DIR = "files";
 export const CATALOG_DIR_MODE = 0o700;
 export const CATALOG_FILE_MODE = 0o600;
 export const CATALOG_BUSY_TIMEOUT_MS = 5000;
@@ -75,6 +76,42 @@ function driverUnavailableError(reason: string): DetRunReaderError {
 export interface OpenCatalogOptions {
   /** Test seam: replaces the dynamic `import("node:sqlite")`. */
   importImpl?: SqliteImport;
+}
+
+/**
+ * Open an EXISTING catalogue DB file directly (restore verification path:
+ * the backup snapshot is inspected before any target directory is written).
+ * Same pragmas as the catalogue; no dir creation, no permission changes.
+ */
+export async function openExistingDatabase(file: string, opts: OpenCatalogOptions = {}): Promise<CatalogDatabase> {
+  let driver: NodeSqliteModule;
+  try {
+    driver = await (opts.importImpl ?? defaultImport)();
+  } catch {
+    throw driverUnavailableError("the built-in node:sqlite module is unavailable.");
+  }
+  if (typeof driver?.DatabaseSync !== "function") {
+    throw driverUnavailableError("the built-in node:sqlite module did not provide DatabaseSync.");
+  }
+  const info = await stat(file).catch(() => null);
+  if (info === null || !info.isFile()) {
+    throw new DetRunReaderError(
+      "invalid-payload",
+      "The backup database file is missing or is not a regular file; the backup set is incomplete."
+    );
+  }
+  let db: CatalogDatabase;
+  try {
+    db = new driver.DatabaseSync(file);
+    db.exec(`PRAGMA busy_timeout = ${CATALOG_BUSY_TIMEOUT_MS};`);
+    db.exec("PRAGMA foreign_keys = ON;");
+  } catch {
+    throw new DetRunReaderError(
+      "invalid-payload",
+      "The backup database file could not be opened as a SQLite catalogue; the backup set is corrupt."
+    );
+  }
+  return db;
 }
 
 /**

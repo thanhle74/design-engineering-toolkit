@@ -19,7 +19,7 @@
  */
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { spawnSync } from "node:child_process";
-import { copyFile, cp, mkdtemp, mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
+import { cp, mkdtemp, mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
@@ -31,7 +31,13 @@ import { BuildBundleReader } from "../build-bundle-reader";
 import { runExampleBuild } from "../test-helpers/det-cli";
 
 import { migrateCatalogDatabase, type CatalogMigration } from "./migrations";
-import { CATALOG_DB_FILE, openCatalogDatabase } from "./sqlite-driver";
+import {
+  CATALOG_BACKUP_DB_FILE,
+  CATALOG_BACKUP_FILES_DIR,
+  CATALOG_BACKUP_MANIFEST_FILE,
+  CATALOG_DB_FILE,
+  openCatalogDatabase,
+} from "./sqlite-driver";
 import {
   getStudioCatalog,
   STUDIO_DATA_DIR_ENV,
@@ -67,9 +73,9 @@ afterAll(async () => {
   await rm(root, { recursive: true, force: true });
 });
 
-/** Run the REAL accepted example build into runsRoot/<runId> (exit 0, verified bundle). */
-async function makeRealBundle(runId: string): Promise<string> {
-  const runDir = path.join(runsRoot, runId);
+/** Run the REAL accepted example build into <runsDir>/<runId> (exit 0, verified bundle). */
+async function makeRealBundle(runId: string, runsDir: string = runsRoot): Promise<string> {
+  const runDir = path.join(runsDir, runId);
   const exitCode = runExampleBuild(runDir);
   if (exitCode !== 0) {
     throw new Error(`example build failed with exit ${exitCode}`);
@@ -486,48 +492,148 @@ describe("concurrency / busy handling", () => {
   });
 });
 
-describe("backup + restore of DB and referenced files", () => {
-  it("backs up the DB plus a files manifest, restores rows, detects missing/corrupt files", async () => {
+describe("backup + restore of DB AND referenced files (R1-C1 recovery proof)", () => {
+  it("detects missing/corrupt referenced files against a live runs root", async () => {
+    const dir = path.join(root, "verify-files-data");
+    const catalog = await openTestCatalog(dir);
+    const runId = "build-verify-files";
+    const runDir = await makeRealBundle(runId);
+    await catalog.indexBundleDir(runDir, runId);
+    expect(await catalog.verifyReferencedFiles(runsRoot)).toEqual([]);
+    const missingRel = catalog.listArtifacts(runId)[0].path;
+    const corruptRel = catalog.listArtifacts(runId)[1].path;
+    await rm(path.join(runDir, missingRel));
+    const flipped = Buffer.from(await readFile(path.join(runDir, corruptRel)));
+    flipped[0] = flipped[0] ^ 0xff;
+    await writeFile(path.join(runDir, corruptRel), flipped);
+    const problems = await catalog.verifyReferencedFiles(runsRoot);
+    expect(problems).toContainEqual({ runId, path: missingRel, problem: "missing" });
+    expect(problems).toContainEqual({ runId, path: corruptRel, problem: "corrupted" });
+  });
+
+  it("refuses a backup when a referenced bundle file is missing or tampered (fail-closed snapshot)", async () => {
+    const dir = path.join(root, "backup-refusal-data");
+    const refusalRuns = path.join(root, "backup-refusal-runs");
+    await mkdir(refusalRuns, { recursive: true });
+    const catalog = await openTestCatalog(dir);
+    const runId = "build-backup-refuse";
+    // A REAL bundle with one output byte-flipped afterwards: indexing still
+    // records engine truth, but the snapshot must refuse (its bytes are not
+    // verifiable against the manifest, so no complete snapshot can exist).
+    const runDir = await makeRealBundle(runId, refusalRuns);
+    const manifestPath = path.join(runDir, "build-manifest.json");
+    const outputs = (JSON.parse(await readFile(manifestPath, "utf8")) as { outputs: Array<{ path: string }> }).outputs;
+    const victimAbs = path.join(runDir, outputs[0].path);
+    const flipped = Buffer.from(await readFile(victimAbs));
+    flipped[0] = flipped[0] ^ 0xff;
+    await writeFile(victimAbs, flipped);
+    await catalog.indexBundleDir(runDir, runId);
+    expect(catalog.getRun(runId)!.integrity).toBe("tampered");
+
+    const backupDir = path.join(root, "backup-refusal-out");
+    await expect(catalog.backupCatalog(backupDir, refusalRuns)).rejects.toSatisfy((error: unknown) => {
+      expect(error).toBeInstanceOf(DetRunReaderError);
+      expect((error as DetRunReaderError).code).toBe("invalid-payload");
+      expect((error as DetRunReaderError).message).toContain("do not match their recorded sha256/bytes");
+      return true;
+    });
+    // Fail-closed cleanup: no partial snapshot survives (only the empty dir shell).
+    await expect(stat(path.join(backupDir, CATALOG_BACKUP_DB_FILE))).rejects.toThrow();
+    await expect(stat(path.join(backupDir, CATALOG_BACKUP_MANIFEST_FILE))).rejects.toThrow();
+    await expect(stat(path.join(backupDir, CATALOG_BACKUP_FILES_DIR))).rejects.toThrow();
+  });
+
+  // Runs LAST: the disaster proof destroys the shared runs root.
+  it("snapshots the DB plus EVERY referenced bundle byte, recovers after the runs root is DESTROYED, and fails closed on a corrupt/incomplete backup", async () => {
     const dir = path.join(root, "backup-data");
     const catalog = await openTestCatalog(dir);
     const runId = "build-backup-a";
     const runDir = await makeRealBundle(runId);
     await catalog.indexBundleDir(runDir, runId);
-
-    const backupDir = path.join(root, "backup-out");
-    const summary = await catalog.backupCatalog(backupDir);
     const expectedArtifacts = catalog.listArtifacts(runId);
-    expect(summary.fileCount).toBe(expectedArtifacts.length);
+
+    // --- Full DB+files snapshot ---
+    const backupDir = path.join(root, "backup-out");
+    const summary = await catalog.backupCatalog(backupDir, runsRoot);
     expect(summary.runCount).toBe(1);
+    // Every declared output + the root manifest trust anchor.
+    expect(summary.fileCount).toBe(expectedArtifacts.length + 1);
     expect((await stat(summary.dbFile)).mode & 0o777).toBe(0o600);
+    expect((await stat(summary.filesRoot)).mode & 0o777).toBe(0o700);
     const manifest = JSON.parse(await readFile(summary.manifestFile, "utf8")) as {
-      runs: Array<{ runId: string; files: Array<{ path: string; sha256: string; bytes: number }> }>;
+      backupSchemaVersion: number;
+      runs: Array<{
+        runId: string;
+        manifest: { path: string; sha256: string; bytes: number };
+        files: Array<{ path: string; sha256: string; bytes: number }>;
+      }>;
     };
+    expect(manifest.backupSchemaVersion).toBe(1);
     expect(manifest.runs[0].runId).toBe(runId);
-    expect(manifest.runs[0].files.map((f) => f.path)).toEqual(expectedArtifacts.map((a) => a.path));
+    expect(manifest.runs[0].manifest.path).toBe("build-manifest.json");
+    // files[] lists the declared outputs; the anchor is the separate entry.
+    expect(manifest.runs[0].files.map((f) => f.path).sort()).toEqual(expectedArtifacts.map((a) => a.path).sort());
+    // The backup physically holds the bytes (independent of the original tree).
+    const backedUpAnchor = await readFile(path.join(summary.filesRoot, runId, "build-manifest.json"));
+    expect(backedUpAnchor.byteLength).toBe(manifest.runs[0].manifest.bytes);
+    const backedUpOutput = await readFile(path.join(summary.filesRoot, runId, expectedArtifacts[0].path));
+    expect(backedUpOutput.byteLength).toBe(expectedArtifacts[0].bytes);
     catalog.close();
 
-    // Restore = put the backed-up DB back in place and reopen it.
-    const restoreDir = path.join(root, "restore-data");
-    await mkdir(restoreDir, { recursive: true });
-    await copyFile(summary.dbFile, path.join(restoreDir, CATALOG_DB_FILE));
-    const restored = await openTestCatalog(restoreDir);
+    // --- DISASTER: the entire original runs root is destroyed ---
+    await rm(runsRoot, { recursive: true, force: true });
+    await expect(stat(runsRoot)).rejects.toThrow();
+
+    // --- Restore into fresh directories from the backup alone ---
+    const restoreData = path.join(root, "restore-data");
+    const restoreRuns = path.join(root, "restore-runs");
+    const restoredSummary = await StudioCatalog.restoreBackup(backupDir, { dataDir: restoreData, runsRoot: restoreRuns });
+    expect(restoredSummary.runsRestored).toBe(1);
+    expect(restoredSummary.filesRestored).toBe(expectedArtifacts.length + 1);
+
+    // Independent verification of the RESTORED tree: catalog rows, referenced
+    // files, and the reader's own guard + per-file byte verification.
+    const restored = await openTestCatalog(restoreData);
     expect(restored.getRun(runId)!.status).toBe("SUCCEEDED");
+    expect(restored.getRun(runId)!.integrity).toBe("verified");
     expect(restored.listArtifacts(runId)).toEqual(expectedArtifacts);
+    expect(await restored.verifyReferencedFiles(restoreRuns)).toEqual([]);
+    const reader = new BuildBundleReader();
+    const view = await reader.getRun(path.join(restoreRuns, runId), runId);
+    expect(view.build?.manifestVerified).toBe(true);
+    const download = await reader.readArtifact(path.join(restoreRuns, runId), runId, expectedArtifacts[0].path);
+    expect(download.bytes.byteLength).toBe(expectedArtifacts[0].bytes);
 
-    // Referenced-file detection against the live runs root.
-    expect(await restored.verifyReferencedFiles(runsRoot)).toEqual([]);
-    const missingRel = expectedArtifacts[0].path;
-    const corruptRel = expectedArtifacts[1].path;
-    await rm(path.join(runDir, missingRel));
-    const corruptAbs = path.join(runDir, corruptRel);
-    const flipped = Buffer.from(await readFile(corruptAbs));
+    // --- No silent overwrite: a second restore into the same targets refuses ---
+    await expect(StudioCatalog.restoreBackup(backupDir, { dataDir: restoreData, runsRoot: restoreRuns })).rejects.toMatchObject({
+      code: "path-refused",
+    });
+    restored.close();
+
+    // --- Fail closed: corrupt ONE file inside the BACKUP -> restore refuses ---
+    const corruptData = path.join(root, "restore-data-corrupt");
+    const corruptRuns = path.join(root, "restore-runs-corrupt");
+    const corruptTarget = path.join(backupDir, CATALOG_BACKUP_FILES_DIR, runId, expectedArtifacts[0].path);
+    const flipped = Buffer.from(await readFile(corruptTarget));
     flipped[0] = flipped[0] ^ 0xff;
-    await writeFile(corruptAbs, flipped);
-
-    const problems = await restored.verifyReferencedFiles(runsRoot);
-    expect(problems).toContainEqual({ runId, path: missingRel, problem: "missing" });
-    expect(problems).toContainEqual({ runId, path: corruptRel, problem: "corrupted" });
+    await writeFile(corruptTarget, flipped);
+    await expect(StudioCatalog.restoreBackup(backupDir, { dataDir: corruptData, runsRoot: corruptRuns })).rejects.toMatchObject({
+      code: "invalid-payload",
+    });
+    // Nothing was written to the fresh targets.
+    await expect(stat(path.join(corruptData, CATALOG_DB_FILE))).rejects.toThrow();
+    // --- Fail closed: remove ONE backup file -> restore refuses ---
+    await rm(corruptTarget);
+    await expect(StudioCatalog.restoreBackup(backupDir, { dataDir: corruptData, runsRoot: corruptRuns })).rejects.toMatchObject({
+      code: "invalid-payload",
+    });
+    await expect(stat(path.join(corruptData, CATALOG_DB_FILE))).rejects.toThrow();
+    // --- Fail closed: remove the files/ dir entirely -> restore refuses ---
+    await rm(path.join(backupDir, CATALOG_BACKUP_FILES_DIR), { recursive: true, force: true });
+    await expect(StudioCatalog.restoreBackup(backupDir, { dataDir: corruptData, runsRoot: corruptRuns })).rejects.toMatchObject({
+      code: "invalid-payload",
+    });
+    await expect(stat(path.join(corruptData, CATALOG_DB_FILE))).rejects.toThrow();
   });
 });
 

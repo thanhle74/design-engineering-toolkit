@@ -93,18 +93,38 @@ remain the truth, and the single-slot/early-error guarantees are untouched.
   recursive (path,size,mtime) signature makes unchanged trees a no-op; any
   change triggers a full idempotent re-index; vanished catalogued bundles are
   flagged `missing`.
-- Backup: `StudioCatalog.backupCatalog(dir)` writes `studio.backup.sqlite`
-  (`VACUUM INTO` — consistent snapshot; node:sqlite has no backup API, see
-  the spike doc) plus `files-manifest.json` listing every referenced artifact
-  (relative path + sha256 + bytes). Restore = copy the DB back as
-  `studio.sqlite` and reopen; `verifyReferencedFiles(runsRoot)` then reports
-  any missing/corrupt referenced file. Backup targets are private local files
-  (0600/0700) and never exposed through any Studio route.
+- Backup/restore (R1-C1): `StudioCatalog.backupCatalog(backupDir, runsRoot)`
+  writes a **recoverable snapshot of the database AND every referenced bundle
+  byte**: `studio.backup.sqlite` (`VACUUM INTO` — consistent snapshot;
+  node:sqlite has no backup API, see the spike doc), `files-manifest.json`
+  (per run: the root `build-manifest.json` trust anchor + every
+  manifest-declared output with sha256/bytes; relative paths only), and
+  `files/<runId>/…` holding the actual bytes. Every copied file is read
+  contained/size-bounded and re-verified against BOTH the guard and the DB
+  rows before it is written — any missing/mismatched bytes, guard failure,
+  DB/manifest disagreement, or symlink escape aborts the whole backup and
+  removes exactly what the call wrote (fail closed; a partial snapshot is
+  never presented as success). Before this correction the snapshot was
+  metadata-only (DB + file manifest) and NOT disaster-recoverable.
+  `StudioCatalog.restoreBackup(backupDir, { dataDir, runsRoot })` restores
+  into FRESH directories: it verifies the backup set (every listed file's
+  sha256/bytes, DB ↔ manifest ↔ bytes consistency, supported schema version)
+  BEFORE writing anything, refuses existing targets (no silent overwrite of
+  live runs), then copies the DB as `studio.sqlite` and each run's files.
+  The R1-C1 regression proves the disaster case: real bundle → snapshot →
+  the entire runs root destroyed → restore from the backup alone →
+  independent guard/byte/row verification passes — and corrupt/missing
+  backup bytes make restore refuse. `verifyReferencedFiles(runsRoot)`
+  remains the live-tree drift detector. Backup/restore targets are private
+  local files (0600/0700) and never exposed through any Studio route. Note
+  the recoverable scope: what the catalogue indexes (bundle bundles) — KB
+  JSON/JSONL sources, if any, are NOT catalogued today and stay separately
+  backed up.
 
 ## Where things live
 
 - `src/server/catalog/sqlite-driver.ts` — the one `node:sqlite` seam (swap point).
 - `src/server/catalog/migrations.ts` — ordered SQL migrations (append-only).
-- `src/server/catalog/studio-catalog.ts` — catalogue + indexer + sweep + backup.
+- `src/server/catalog/studio-catalog.ts` — catalogue + indexer + sweep + recoverable backup/restore.
 - `app/api/catalog/route.ts` — `mode: "off" | "on"`, `?runId=` detail query.
 - `app/catalog/page.tsx` — operator history view (off state is explicit).
