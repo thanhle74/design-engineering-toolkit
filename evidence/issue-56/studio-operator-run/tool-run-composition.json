@@ -1,0 +1,290 @@
+{
+  "schemaVersion": 1,
+  "tool": {
+    "name": "det",
+    "toolVersion": "0.1.0"
+  },
+  "command": "compose",
+  "exitCode": 0,
+  "generatedAt": "2026-11-10T10:07:26.248Z",
+  "profileId": "slaunchpad-fashion",
+  "platformId": "magento-pagebuilder",
+  "adapter": {
+    "id": "magento-pagebuilder-compose",
+    "version": "1.2.0"
+  },
+  "artifacts": [
+    {
+      "role": "adapter-descriptor",
+      "schemaRef": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/adapter-descriptor.schema.json",
+      "contentHash": "a35e0dc3fe13a8e3d66b91abe91b9e6b0e0e35561685241829995326624767b5",
+      "volatileContentHash": "a35e0dc3fe13a8e3d66b91abe91b9e6b0e0e35561685241829995326624767b5"
+    },
+    {
+      "role": "compose-report",
+      "schemaRef": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/compose-output.schema.json",
+      "contentHash": "e5b4a10619d76f61b9f5b844eaf2b70698b895aef83653bdd9dd184c16e2a700",
+      "volatileContentHash": "f839f0fad03e4973b2438a0a5056d692165b8d75b6ad7ee0c8a534fafaa1591e",
+      "file": "compose-report.json"
+    },
+    {
+      "role": "native-content",
+      "schemaRef": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/compose-output.schema.json#native-content",
+      "contentHash": "6362c6a943e061dcadacaf4f12597b460a1f425e11c123c7492458b692893bdf",
+      "volatileContentHash": "6362c6a943e061dcadacaf4f12597b460a1f425e11c123c7492458b692893bdf",
+      "file": "native-content.html"
+    }
+  ],
+  "converterDiagnostics": [
+    {
+      "code": "EVIDENCE_MISSING",
+      "severity": "warning",
+      "message": "No content-manifest text entry for 'Title' (design://figma-home-desktop/299:347); the heading field is left empty — no text is invented.",
+      "subject": {
+        "type": "node",
+        "id": "n-163864cf1358"
+      }
+    },
+    {
+      "code": "EVIDENCE_MISSING",
+      "severity": "warning",
+      "message": "No content-manifest text entry for 'Overline' (design://figma-home-desktop/299:346); the content-lead field is left empty — no text is invented.",
+      "subject": {
+        "type": "node",
+        "id": "n-18601b1c6170"
+      }
+    },
+    {
+      "code": "EVIDENCE_MISSING",
+      "severity": "warning",
+      "message": "No content-manifest text entry for 'Body' (design://figma-home-desktop/299:348); the body field is left empty — no text is invented.",
+      "subject": {
+        "type": "node",
+        "id": "n-a141b1429fa2"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Node 'Label' (kind 'text', role 'none') is outside this slice's composition table; not composed.",
+      "subject": {
+        "type": "node",
+        "id": "n-069615e32dda"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Section 'SECTION/FeaturedCollections' does not carry the hero shape this slice composes (needs a background-media node and role-resolved overlaid text — via explicit projection or SLOT naming hints); skipped — nothing invented.",
+      "subject": {
+        "type": "node",
+        "id": "n-09e39d9b5ae8"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Decoration 'DECOR/ScrollIndicator' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
+      "subject": {
+        "type": "node",
+        "id": "n-19c686552981"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Decoration 'Rectangle' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
+      "subject": {
+        "type": "node",
+        "id": "n-30716ead45a9"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Section 'SECTION/Lookbook' does not carry the hero shape this slice composes (needs a background-media node and role-resolved overlaid text — via explicit projection or SLOT naming hints); skipped — nothing invented.",
+      "subject": {
+        "type": "node",
+        "id": "n-4604a314e990"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Decoration 'Overlay' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
+      "subject": {
+        "type": "node",
+        "id": "n-4f7536ff4932"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Decoration 'Vector' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
+      "subject": {
+        "type": "node",
+        "id": "n-501cea090fbe"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Section 'SECTION/Hero/Secondary' does not carry the hero shape this slice composes (needs a background-media node and role-resolved overlaid text — via explicit projection or SLOT naming hints); skipped — nothing invented.",
+      "subject": {
+        "type": "node",
+        "id": "n-7255f8eed0ee"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Section 'SECTION/Newsletter' does not carry the hero shape this slice composes (needs a background-media node and role-resolved overlaid text — via explicit projection or SLOT naming hints); skipped — nothing invented.",
+      "subject": {
+        "type": "node",
+        "id": "n-76db1dc93c55"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Decoration 'Vector' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
+      "subject": {
+        "type": "node",
+        "id": "n-8bba713cd582"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Node 'SCROLL' (kind 'text', role 'none') is outside this slice's composition table; not composed.",
+      "subject": {
+        "type": "node",
+        "id": "n-8e0199f5ce01"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Node 'Frame' (kind 'container', role 'none') is outside this slice's composition table; not composed.",
+      "subject": {
+        "type": "node",
+        "id": "n-8f2e27640e34"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Section 'SECTION/EditorialMosaic' does not carry the hero shape this slice composes (needs a background-media node and role-resolved overlaid text — via explicit projection or SLOT naming hints); skipped — nothing invented.",
+      "subject": {
+        "type": "node",
+        "id": "n-8fec2ddef48c"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Section 'SECTION/FeaturedProducts' does not carry the hero shape this slice composes (needs a background-media node and role-resolved overlaid text — via explicit projection or SLOT naming hints); skipped — nothing invented.",
+      "subject": {
+        "type": "node",
+        "id": "n-9caec5a9c33f"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Section 'SECTION/ProductSpotlight' does not carry the hero shape this slice composes (needs a background-media node and role-resolved overlaid text — via explicit projection or SLOT naming hints); skipped — nothing invented.",
+      "subject": {
+        "type": "node",
+        "id": "n-a871434262b9"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Section 'SECTION/ThePeople' does not carry the hero shape this slice composes (needs a background-media node and role-resolved overlaid text — via explicit projection or SLOT naming hints); skipped — nothing invented.",
+      "subject": {
+        "type": "node",
+        "id": "n-c5a2d284b49a"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Node 'Proto / Button/Primary' (kind 'component', role 'none') is outside this slice's composition table; not composed.",
+      "subject": {
+        "type": "node",
+        "id": "n-d0f613010b51"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Section 'SECTION/CampaignEditorial' does not carry the hero shape this slice composes (needs a background-media node and role-resolved overlaid text — via explicit projection or SLOT naming hints); skipped — nothing invented.",
+      "subject": {
+        "type": "node",
+        "id": "n-d55b3385999e"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Section 'SECTION/Hero/Primary' carries no fixed height constraint; banner min-height not composed (Admin default applies).",
+      "subject": {
+        "type": "node",
+        "id": "n-d6420d8409b4"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Observed media aspect ratios in 'SECTION/Craftsmanship' are not enforced by the native image element (natural aspect at column width; no native aspect/crop field); the section's fixed height persists only as the row min-height.",
+      "subject": {
+        "type": "node",
+        "id": "n-d855a3667d4a"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "secondary column of 'SECTION/Craftsmanship' carries 2 observed media slots; they compose as stacked native image elements — the observed side-by-side arrangement is not declaration-backed (a column-group nested inside a column violates the pinned parents/children policies). Recorded as a fidelity gap, never custom CSS.",
+      "subject": {
+        "type": "node",
+        "id": "n-d855a3667d4a"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Section 'SECTION/Craftsmanship' carries no fixed height constraint; row min-height not composed (Admin default applies).",
+      "subject": {
+        "type": "node",
+        "id": "n-d855a3667d4a"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Section 'SECTION/Craftsmanship' column slots carry no fixed-width constraints; widths fall back to the platform's own equal-column default (50/50) — recorded, not inferred.",
+      "subject": {
+        "type": "node",
+        "id": "n-d855a3667d4a"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Section 'SECTION/BrandStatement' does not carry the hero shape this slice composes (needs a background-media node and role-resolved overlaid text — via explicit projection or SLOT naming hints); skipped — nothing invented.",
+      "subject": {
+        "type": "node",
+        "id": "n-f08fdf072e3e"
+      }
+    }
+  ],
+  "runDiagnostics": [],
+  "counts": {
+    "errors": 0,
+    "warnings": 27,
+    "infos": 0
+  },
+  "wroteFiles": true
+}

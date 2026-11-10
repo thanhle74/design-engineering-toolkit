@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "profileId": "slaunchpad-fashion",
+  "sourceRevisionId": "2417494580183108397",
+  "entries": [
+    {
+      "valueRef": "design://figma-home-desktop/254:43",
+      "kind": "text",
+      "text": "CHAPTER 01 / AW 2026",
+      "note": "Observed as the design layer name at the pinned revision (text layers named by literal content per the naming contract)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/254:44",
+      "kind": "text",
+      "text": "The Quiet Grandeur",
+      "note": "Observed as the design layer name at the pinned revision."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/254:45",
+      "kind": "text",
+      "text": "Refined tailoring, knitwear and leather for the season.",
+      "note": "Observed as the design layer name at the pinned revision."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/254:40",
+      "kind": "media",
+      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/hero-bg-placeholder.jpg}}",
+      "assetLabel": "labeled offline placeholder (operator-supplied local asset required before any CMS write)",
+      "note": "Hero background slot frame; no asset bytes exist in the committed evidence."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/299:344",
+      "kind": "media",
+      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/craft-media-placeholder.jpg}}",
+      "assetLabel": "labeled offline placeholder (operator-supplied local asset required before any CMS write)"
+    },
+    {
+      "valueRef": "design://figma-home-desktop/299:349",
+      "kind": "media",
+      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/detail-stitch-placeholder.jpg}}",
+      "assetLabel": "labeled offline placeholder (operator-supplied local asset required before any CMS write)"
+    },
+    {
+      "valueRef": "design://figma-home-desktop/299:350",
+      "kind": "media",
+      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/detail-fabric-placeholder.jpg}}",
+      "assetLabel": "labeled offline placeholder (operator-supplied local asset required before any CMS write)"
+    }
+  ]
+}

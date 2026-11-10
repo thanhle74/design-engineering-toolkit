@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "profileId": "slaunchpad-fashion",
+  "profile": "profile.json",
+  "designSource": {
+    "mode": "snapshot",
+    "project": "snapshot-project",
+    "designFile": "figma-home-desktop.245-2.tree.json",
+    "designNode": "245:2"
+  },
+  "registry": "capability-registry.json",
+  "bindings": "component-bindings.json",
+  "content": "content-manifest.json",
+  "projection": "semantic-projection.json"
+}

@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "profileId": "slaunchpad-fashion",
+  "sourceRevisionId": "2417494580183108397",
+  "notes": "Bounded to the two investigated candidate sections (SECTION/Hero/Primary hero shape; SECTION/Craftsmanship two-column shape). Roles follow the observed slot naming and layout evidence; copy the extraction does not carry (Craftsmanship display text, CTA label) is deliberately not supplied \u2014 those stay explicit gaps. No CTA is projected: the button instance label/link copy is absent from the committed evidence.",
+  "assignments": [
+    {
+      "sourceLocator": "design://figma-home-desktop/254:40",
+      "role": "background-media",
+      "reason": "Full-bleed media slot frame observed behind the overlaid hero content column (SLOT/HeroMedia, first child of SECTION/Hero/Primary)."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/254:43",
+      "role": "content-lead",
+      "reason": "Overline text ('CHAPTER 01 / AW 2026') first in the hero content column, above the display heading."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/254:44",
+      "role": "heading",
+      "reason": "Hero display heading ('The Quiet Grandeur'), the second text in the hero content column."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/254:45",
+      "role": "body",
+      "reason": "Supporting copy ('Refined tailoring, knitwear and leather for the season.') under the heading."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/299:344",
+      "role": "column-primary",
+      "reason": "Left media slot frame (SLOT/CraftMedia) of SECTION/Craftsmanship; observed first column slot."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/299:345",
+      "role": "column-secondary",
+      "reason": "Right content slot frame (SLOT/CraftContent) of SECTION/Craftsmanship; observed second column slot."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/299:346",
+      "role": "content-lead",
+      "reason": "Text layer role-named 'Overline' inside SLOT/CraftContent; the display copy is not carried by the extraction, so no manifest text entry exists (explicit gap)."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/299:347",
+      "role": "heading",
+      "reason": "Text layer role-named 'Title' inside SLOT/CraftContent; copy not carried by the extraction (explicit gap)."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/299:348",
+      "role": "body",
+      "reason": "Text layer role-named 'Body' inside SLOT/CraftContent; copy not carried by the extraction (explicit gap)."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/299:349",
+      "role": "inline-media",
+      "reason": "Detail media slot frame (SLOT/DetailStitch) inside the secondary column; composes as a native image element."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/299:350",
+      "role": "inline-media",
+      "reason": "Detail media slot frame (SLOT/DetailFabric) inside the secondary column; composes as a native image element."
+    }
+  ]
+}

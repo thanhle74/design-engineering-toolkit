@@ -321,6 +321,12 @@ await registerBuildSuite(checkAsync);
 const { default: registerRegistrySuite } = await import("./registry-suite.mjs");
 await registerRegistrySuite(checkAsync);
 
+// [56] the first real-source Studio build project: provenance + honesty locks over
+// examples/build/slaunchpad-home-real-derived (depends on build-suite's committed example
+// checks having registered; runs its own bundles in isolated temp dirs).
+const { default: registerRealDerivedSuite } = await import("./real-derived-suite.mjs");
+await registerRealDerivedSuite(checkAsync);
+
 // ---- Issue #19 M4 real-source KB gate suites (async) -----------------------------------------
 const { default: registerKbM4LicenseSuite } = await import("./kb-m4-license-suite.mjs");
 await registerKbM4LicenseSuite(checkAsync);
