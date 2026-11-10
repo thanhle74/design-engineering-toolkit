@@ -1,5 +1,13 @@
 # ACTIVE CHATGPT COORDINATOR HANDOFF — Design Engineering Toolkit
 
+## CURRENT CHECKPOINT — 2026-11-10 — #18 LIVE PROOF PASS; PR #21 READY FOR COORDINATOR RE-REVIEW
+
+- **#18 live read-only proof EXECUTED and PASSED** on PR #21 branch `task/18-figma-live-readonly-pilot` (reconciled with `main` @ `1cc90b5`, gate **179/179**): bounded single-GET extract of Desktop root `245:2` (file `vNPtfBRpYM3PsExirVqhmt`) under the recorded Owner GO — revision pinned `2417494580183108397`, **337/337 nodes accounted** (92 SITE chrome excluded with reason, 168 MAPPED into **12 planned sections**, 28 instances honest custom-required NEEDS_REVIEW, 49 decoration-merged), two runs byte-stable (`volatileContentHash` equal). Gate status **`LIVE_FIGMA_READ_ONLY_VERIFIED`** (receipt §8); sanitized evidence committed — no token, no raw provider dump.
+- **Boundaries:** no Figma writes, no `245:16`, no CMS/DB/storefront writes; stop at plan; G3/CMS remains separately gated.
+- **Known pre-existing defect (on `main`, not this PR):** `examples/converter/capability-registry.magento-pagebuilder.example.json` fails `validateRegistry` (61× registered-without-config-declaration-evidence) — live `det plan` resolution deferred until that registry is repaired; the extract→plan chain is proven offline (G2-T31f).
+- **NEXT:** Coordinator/Owner re-review the actual live evidence on PR #21 → merge decision. Refresh live GitHub before acting on older dated checkpoints below.
+
+
 ## MERGED INTEGRATION CHECKPOINT — 2026-11-09 — [23] + [25]
 
 - **Owner explicitly approved merge**. Integration [PR #27](https://github.com/thanhle74/design-engineering-toolkit/pull/27) **MERGED to `main`** (merge commit `d256682450e10419fe94a2999f82495e957769d2`). It includes **[23] G3 Hero / PR #24** (`837a1fe`), **[25] G4 Craftsmanship / PR #26** (`5057b5e`) and **docs PR #20**. GitHub also marked source PRs **#20, #24, #26 merged** because their exact commits are in the integration ancestry. DO NOT re-merge them, re-run their POCs or overwrite the integrated source with older branches.

@@ -1,7 +1,7 @@
 # RECEIPT — Issue #18: G2 Live Figma read-only extraction pilot (245:2)
 
 **Date:** 2026-11-06 · **Branch:** `task/18-figma-live-readonly-pilot` · **Base:** `main` @ `185d91c`
-**Gate status:** `BLOCKED_WITH_REASON: FIGMA_TOKEN_EXPIRED` (re-attempt 2026-11-10, §7) — **NOT** `LIVE_FIGMA_READ_ONLY_VERIFIED`
+**Gate status:** `LIVE_FIGMA_READ_ONLY_VERIFIED` (2026-11-10, §8) — supersedes the blocked attempts recorded in §3/§7
 **Authorization:** Owner GO `OWNER_GO_RECEIVED / READ_ONLY_EXECUTION_AUTHORIZED` (issue #18 comment, 2026-11-04): read-only access to the selected Desktop root `245:2` of file `vNPtfBRpYM3PsExirVqhmt` only; no edits, no mobile `245:16`, no CMS/DB writes, one workspace/one PR, stop at plan.
 
 ---
@@ -82,3 +82,24 @@ Sanitized run envelope (no paths, no credentials, no source data): [`evidence/is
 **Status: `BLOCKED_WITH_REASON: FIGMA_TOKEN_EXPIRED` — `LIVE_FIGMA_READ_ONLY_VERIFIED` NOT claimed** (same issue rule as §4: credentials/revision unavailable → fail closed and report the exact blocker). One design-source read attempt was made (the bounded single GET); the identity-endpoint check was token health only; no other page/frame/node was accessed; no writes anywhere.
 
 **Unblock action unchanged (Owner):** provision a **currently valid** read-only token (expiry in the future; file-read scope only) and re-run the §3 command unchanged. Everything else in §4's success expectation applies as written.
+
+## 8. LIVE PROOF — `LIVE_FIGMA_READ_ONLY_VERIFIED` (2026-11-10)
+
+The Owner provisioned a currently valid read-only provider token (identity check HTTP 200; loaded locally into the CLI process environment, never argv/profile/receipt/committed). The §3 command was executed unchanged on the Owner-GOed scope (file `vNPtfBRpYM3PsExirVqhmt`, Desktop root `245:2` + descendants only), on the PR branch reconciled with `main` @ `1cc90b5` (merge `075a6ca`).
+
+**Result: exit 0, every §4 success expectation met.**
+
+- **Revision pin:** provider version token `2417494580183108397` on every node's source evidence.
+- **Full subtree:** **337/337 nodes inventoried** under root `PAGE/Home/Desktop` — this authoritative full REST read supersedes the earlier 162-entry metadata probe (which the §0 probe receipt itself flagged as partial). Zero unaccounted nodes.
+- **Accountability (source-review):** `MAPPED 168 · EXCLUDED_WITH_REASON 92 (all SITE_CHROME, theme-owned) · DECORATION_MERGED 49 · NEEDS_REVIEW 28 (external/unbound instances, honest custom-required) · REFERENCE_ONLY 0`; classes `SITE_CHROME 92 / EDITORIAL_SECTION 168 / SHARED_COMPONENT 28 / PRESENTATIONAL 49 / UNKNOWN 0`.
+- **Plan:** **12 sections** planned (Hero/Primary, BrandStatement, Hero/Secondary, FeaturedCollections, FeaturedProducts, CampaignEditorial, Lookbook, EditorialMosaic, Craftsmanship, ThePeople, ProductSpotlight, Newsletter) — exactly the 12 SECTION frames of the Owner GO metadata probe; `SITE/` chrome inventoried but excluded from the plan with container evidence. PageStructure carries honest zero capability bindings.
+- **Honest diagnostics:** `NOT_VERIFIED` warnings present for unaudited fields — reported, not smoothed.
+- **Determinism:** two independent live runs → identical `volatileContentHash` per artifact role, identical revision, identical 337-node order.
+- **Gate:** `npm test` = **179/179** (172 on merged main + the 7 #18 live-adapter offline checks); CI `contracts` SUCCESS on the pushed tip.
+
+**Committed evidence (sanitized — no token, no raw provider response, no assets; file key/node/revision pins only):**
+`evidence/issue-18/live-read-verified/{node-ir,page-structure,source-review}.json` + [`evidence/issue-18/live-read-verified.tool-run.json`](../../evidence/issue-18/live-read-verified.tool-run.json).
+
+**Known follow-up gap (pre-existing on `main`, not introduced here, not required by this gate):** `examples/converter/capability-registry.magento-pagebuilder.example.json` (the #9 registry) fails `validateRegistry` — 61× `EVIDENCE_MISSING` (`proofLevel: registered` without `config-declaration` evidence kind). Live `det plan` resolution against a repaired real registry is therefore deferred; the extract→plan chain itself is proven offline (G2-T31f, part of the 179 checks), and the live-derived `PageStructure` is plan-ready with honest zero bindings.
+
+**Boundaries honored:** read-only one bounded GET per run (adapter has no write path); no layer rename/edit; no mobile `245:16`; no CMS/DB/storefront writes; nothing written without `--out`; **stop at plan** — Page Builder serialization, CMS creation and Admin Edit→Save→Reload remain separately Owner-gated G3/G4.
