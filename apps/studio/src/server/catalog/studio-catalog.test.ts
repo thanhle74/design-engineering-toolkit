@@ -493,6 +493,22 @@ describe("concurrency / busy handling", () => {
 });
 
 describe("backup + restore of DB AND referenced files (R1-C1 recovery proof)", () => {
+  it("refuses a nonempty backup target without changing or deleting the operator's existing files", async () => {
+    const dir = path.join(root, "backup-nonempty-data");
+    const catalog = await openTestCatalog(dir);
+    const backupDir = path.join(root, "backup-nonempty-out");
+    const existingFilesDir = path.join(backupDir, CATALOG_BACKUP_FILES_DIR);
+    await mkdir(existingFilesDir, { recursive: true });
+    const sentinel = path.join(existingFilesDir, "existing-operator-file.txt");
+    await writeFile(sentinel, "must remain untouched", "utf8");
+    await expect(catalog.backupCatalog(backupDir, runsRoot)).rejects.toMatchObject({
+      code: "path-refused",
+    });
+    expect(await readFile(sentinel, "utf8")).toBe("must remain untouched");
+    await expect(stat(path.join(backupDir, CATALOG_BACKUP_DB_FILE))).rejects.toThrow();
+    catalog.close();
+  });
+
   it("detects missing/corrupt referenced files against a live runs root", async () => {
     const dir = path.join(root, "verify-files-data");
     const catalog = await openTestCatalog(dir);
