@@ -18,6 +18,13 @@ const geistMono = Geist_Mono({
 export const metadata = studioMetadata;
 
 /**
+ * [52] Dark-only theme: `dark` is a static server-rendered class, so the very
+ * first paint is dark (no client swap, no flash of light UI, no OS switch).
+ * The dark palette lives on `:root` in globals.css; the class also keeps the
+ * `dark:`-prefixed utilities inside the shadcn primitives active.
+ */
+
+/**
  * Explicit props — do NOT use Next's generated ambient `LayoutProps` here:
  * it only exists after `next typegen`/build artifacts (`.next/types`), so a
  * fresh checkout running `tsc --noEmit` before any build fails with TS2304
@@ -27,7 +34,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", inter.variable)}
+      className={cn(
+        "h-full",
+        "antialiased",
+        "dark",
+        geistSans.variable,
+        geistMono.variable,
+        "font-sans",
+        inter.variable
+      )}
     >
       <body className="min-h-full flex flex-col">
         <StudioShell>{children}</StudioShell>

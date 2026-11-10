@@ -152,13 +152,16 @@ export default async function CatalogPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-8">
       <section aria-labelledby="catalog-heading">
-        <h1 id="catalog-heading" className="flex items-center gap-2 text-lg font-semibold">
-          <Database className="size-4 text-muted-foreground" aria-hidden="true" />
+        <h1
+          id="catalog-heading"
+          className="flex items-center gap-2.5 text-xl font-semibold tracking-tight md:text-2xl"
+        >
+          <Database className="size-5 text-muted-foreground" aria-hidden="true" />
           Project / Run Catalog
         </h1>
-        <p className="mt-1 max-w-3xl text-sm text-muted-foreground">
+        <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
           Durable, inspectable metadata about known projects, builds and their verified artifacts,
           persisted across Studio restarts. Files remain the truth: the catalogue indexes what the
           build manifest declared and what the on-disk bytes verified — it never makes a missing or
@@ -180,7 +183,7 @@ export default async function CatalogPage() {
         </Alert>
       ) : (
         <>
-          <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm text-muted-foreground">
+          <div className="flex flex-wrap gap-x-8 gap-y-2 text-sm text-muted-foreground">
             <span>
               <span className="font-medium text-foreground">{stats?.projects ?? 0}</span> projects
             </span>

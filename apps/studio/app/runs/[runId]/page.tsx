@@ -31,7 +31,7 @@ function ReaderProblemState({
 }) {
   return (
     <div className="flex flex-col gap-4">
-      <Button asChild variant="ghost" size="sm" className="w-fit">
+      <Button asChild variant="ghost" className="w-fit">
         <Link href="/">
           <ArrowLeft className="size-4" aria-hidden="true" />
           Overview
@@ -88,16 +88,16 @@ export default async function RunPage({ params }: RunPageProps) {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <Button asChild variant="ghost" size="sm" className="w-fit self-start">
+    <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-3">
+        <Button asChild variant="ghost" className="w-fit self-start">
           <Link href="/">
             <ArrowLeft className="size-4" aria-hidden="true" />
             Overview
           </Link>
         </Button>
-        <div className="flex flex-wrap items-center gap-2">
-          <h1 className="text-lg font-semibold">{run.label}</h1>
+        <div className="flex flex-wrap items-center gap-2.5">
+          <h1 className="text-xl font-semibold tracking-tight md:text-2xl">{run.label}</h1>
           <RunModeBadge mode={run.mode} />
         </div>
         <p className="font-mono text-xs text-muted-foreground">{run.runId}</p>
@@ -109,7 +109,7 @@ export default async function RunPage({ params }: RunPageProps) {
 
       <MappingReview run={run} />
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-8 lg:grid-cols-2">
         <PreviewPanel preview={run.preview} mode={run.mode} label={run.label} />
         <ClientArtifactManifest runId={run.runId} artifacts={run.artifacts} />
       </div>
