@@ -107,9 +107,45 @@ export interface GuardedBuildManifest {
   outputOrder: string[];
 }
 
-interface VerifiedOutput {
+export interface BundleOutputVerification {
   ok: boolean;
   reason?: string;
+}
+
+/**
+ * [40]/[50] Verify EVERY manifest-declared output: contained read, byte-size
+ * match, per-FILE-BYTE sha256 match. Over-cap files cannot be verified within
+ * the reader's 8 MiB bound and honestly fail verification (and downloads).
+ * Shared by the bundle reader's download gating AND the [50] catalogue
+ * indexer, so the DB can never record metadata the reader would refuse.
+ */
+export async function verifyBundleOutputs(
+  runDir: string,
+  guarded: GuardedBuildManifest
+): Promise<Map<string, BundleOutputVerification>> {
+  const verification = new Map<string, BundleOutputVerification>();
+  for (const filePath of guarded.outputOrder) {
+    const output = guarded.outputs.get(filePath)!;
+    try {
+      const bytes = await readContainedBytes(runDir, filePath, "invalid-payload");
+      if (bytes === null) {
+        verification.set(filePath, { ok: false, reason: "declared output is missing from the bundle" });
+        continue;
+      }
+      const diskSha256 = createHash("sha256").update(bytes).digest("hex");
+      if (diskSha256 !== output.sha256 || bytes.byteLength !== output.bytes) {
+        verification.set(filePath, { ok: false, reason: "on-disk bytes do not match the manifest sha256/bytes" });
+        continue;
+      }
+      verification.set(filePath, { ok: true });
+    } catch (error) {
+      verification.set(filePath, {
+        ok: false,
+        reason: error instanceof DetRunReaderError ? error.message : "verification read failed",
+      });
+    }
+  }
+  return verification;
 }
 
 /**
@@ -204,8 +240,8 @@ export function guardBuildManifest(manifest: JsonRecord): GuardedBuildManifest {
   return { profileId, platformId, sourceId, revisionId, configContentHash, stages, gaps, outputs, outputOrder };
 }
 
-/** Overall engine exit code derived from the persisted stage table (engine semantics). */
-function deriveExitCode(stages: StudioBuildStageView[]): number {
+/** Overall engine exit code derived from the persisted stage table (engine semantics). [50] shared with the catalogue indexer. */
+export function deriveBundleExitCode(stages: StudioBuildStageView[]): number {
   const failed = stages.filter((s) => s.status === "failed");
   if (failed.length === 0) return 0;
   return failed[failed.length - 1].exitCode;
@@ -243,7 +279,7 @@ export class BuildBundleReader {
     const guarded = guardBuildManifest(manifest);
 
     // Verification pass over EVERY declared output (also backs the download flags).
-    const verification = await this.verifyOutputs(runDir, guarded);
+    const verification = await verifyBundleOutputs(runDir, guarded);
     const manifestVerified = guarded.outputOrder.every((p) => verification.get(p)?.ok === true);
 
     const { runOriginDiagnostics, stageCounts, schemaRefByRole } = await this.readStageEnvelopes(
@@ -271,7 +307,7 @@ export class BuildBundleReader {
         profileId: guarded.profileId,
         platformId: guarded.platformId,
         generatedAt: null,
-        exitCode: deriveExitCode(guarded.stages),
+        exitCode: deriveBundleExitCode(guarded.stages),
         source: requireConsistentSource(
           { sourceId: guarded.sourceId, revisionId: guarded.revisionId },
           pageStructure?.source,
@@ -435,39 +471,5 @@ export class BuildBundleReader {
       }
     }
     return { runOriginDiagnostics, stageCounts, schemaRefByRole };
-  }
-
-  /**
-   * Verify EVERY manifest-declared output: contained read, byte-size match,
-   * per-FILE-BYTE sha256 match. Over-cap files cannot be verified within the
-   * reader's 8 MiB bound and honestly fail verification (and downloads).
-   */
-  private async verifyOutputs(
-    runDir: string,
-    guarded: GuardedBuildManifest
-  ): Promise<Map<string, VerifiedOutput>> {
-    const verification = new Map<string, VerifiedOutput>();
-    for (const filePath of guarded.outputOrder) {
-      const output = guarded.outputs.get(filePath)!;
-      try {
-        const bytes = await readContainedBytes(runDir, filePath, "invalid-payload");
-        if (bytes === null) {
-          verification.set(filePath, { ok: false, reason: "declared output is missing from the bundle" });
-          continue;
-        }
-        const diskSha256 = createHash("sha256").update(bytes).digest("hex");
-        if (diskSha256 !== output.sha256 || bytes.byteLength !== output.bytes) {
-          verification.set(filePath, { ok: false, reason: "on-disk bytes do not match the manifest sha256/bytes" });
-          continue;
-        }
-        verification.set(filePath, { ok: true });
-      } catch (error) {
-        verification.set(filePath, {
-          ok: false,
-          reason: error instanceof DetRunReaderError ? error.message : "verification read failed",
-        });
-      }
-    }
-    return verification;
   }
 }

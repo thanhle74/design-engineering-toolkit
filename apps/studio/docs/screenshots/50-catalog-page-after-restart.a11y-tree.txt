@@ -1,0 +1,65 @@
+page: 28f3d3bd-37fe-443a-806a-c2feabcf4807
+Catalog · DET Studio — http://localhost:3000/catalog
+- banner
+  - link "DET Studio" [ref=e1]
+  - navigation "Studio" [ref=e2]
+    - link "Overview" [ref=e4]
+    - link "Build" [ref=e5]
+    - link "Catalog" [ref=e6]
+- main
+  - region "Project / Run Catalog" [ref=e3]
+    - heading "Project / Run Catalog" [level=1, ref=e7]
+      - StaticText "Project / Run Catalog"
+    - paragraph
+      - StaticText "Durable, inspectable metadata about known projects, builds and their verified artifacts, persisted across Studio restarts. Files remain the truth: the catalogue indexes what the build manifest declared and what the on-disk bytes verified — it never makes a missing or tampered artifact downloadable."
+  - StaticText "1"
+  - StaticText " projects"
+  - StaticText "1"
+  - StaticText " runs ("
+  - StaticText "1 succeeded · 0 partial · 0 failed · 0 interrupted"
+  - StaticText ")"
+  - StaticText "9"
+  - StaticText " catalogued artifacts"
+  - StaticText "Projects"
+  - StaticText "Identity comes from the validated build manifests (profile id = project id). The config hash is the last observed validated value; every historical hash stays in the per-run pins and the config history."
+  - table
+    - rowgroup
+      - row
+        - columnheader "Project" [ref=e23]
+        - columnheader "Platform" [ref=e24]
+        - columnheader "Config hash (last observed)" [ref=e25]
+        - columnheader "Config history" [ref=e26]
+        - columnheader "Runs" [ref=e27]
+        - columnheader "First seen" [ref=e28]
+    - row
+      - cell "g28-home-preview" [ref=e8]
+      - cell "magento-pagebuilder" [ref=e9]
+      - cell "sha256:8…c1f3ee15" [ref=e10]
+      - cell "1" [ref=e11]
+      - cell "1" [ref=e12]
+      - cell "2026-11-10T05:21:21.643Z" [ref=e13]
+  - StaticText "Runs"
+  - StaticText "Build jobs and indexed bundles with their frozen pins (config hash, source identity) and the last index's integrity verdict. Bundle runs open in the normal run view — downloads there are re-verified against the manifest bytes, exactly as without the catalogue."
+  - table
+    - rowgroup
+      - row
+        - columnheader "Run" [ref=e29]
+        - columnheader "Status" [ref=e30]
+        - columnheader "Integrity (last index)" [ref=e31]
+        - columnheader "Project" [ref=e32]
+        - columnheader "Source" [ref=e33]
+        - columnheader "Revision" [ref=e34]
+        - columnheader "Config pin" [ref=e35]
+        - columnheader "Artifacts" [ref=e36]
+        - columnheader "Timing" [ref=e37]
+    - row
+      - cell "build-1794288080875" [ref=e14]
+        - link "build-1794288080875" [ref=e38]
+      - cell "SUCCEEDED" [ref=e15]
+      - cell "verified" [ref=e16]
+      - cell "g28-home-preview" [ref=e17]
+      - cell "g28-home-fixture-source" [ref=e18]
+      - cell "mcp-observed-unpinned-2026-11-09" [ref=e19]
+      - cell "sha256:8…c1f3ee15" [ref=e20]
+      - cell "9" [ref=e21]
+      - cell "2026-11-10T05:21:20.875Z → 2026-11-10T05:21:21.640Z" [ref=e22]
