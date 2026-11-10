@@ -1,0 +1,713 @@
+{
+  "schemaVersion": 1,
+  "profileId": "slaunchpad-fashion",
+  "generatedAt": "2026-11-10T07:54:51.264Z",
+  "source": {
+    "sourceId": "figma-home-desktop",
+    "revisionId": "2417494580183108397",
+    "accessedAt": "2026-11-10T07:54:51.251Z"
+  },
+  "inputs": {
+    "nodeIrContentHash": "63854986b88057f0c412c9ce40e937200fa3151f40b7fd3cafb8cf4940ea17ba"
+  },
+  "sections": [
+    {
+      "sectionId": "s-df13cd3ab58d",
+      "order": 0,
+      "name": "SECTION/Hero/Primary",
+      "role": "SECTION",
+      "layout": {
+        "direction": "absolute",
+        "positioning": "static",
+        "constraints": [
+          {
+            "axis": "x",
+            "type": "LEFT",
+            "value": "constraint"
+          },
+          {
+            "axis": "y",
+            "type": "TOP",
+            "value": "constraint"
+          }
+        ],
+        "relativeSizes": [
+          {
+            "target": "parent-width",
+            "ratio": 1
+          }
+        ],
+        "overflow": "hidden"
+      },
+      "elements": [
+        {
+          "elementId": "n-8fe6bad893e2",
+          "childrenElementIds": [],
+          "resolution": {
+            "status": "unmapped",
+            "mappingConfidence": "low",
+            "diagnostics": []
+          }
+        },
+        {
+          "elementId": "n-8cbe9fda6d83",
+          "contentSlots": [
+            {
+              "slotId": "chapter-01-aw-2026",
+              "contentType": "text",
+              "valueRef": "design://figma-home-desktop/254:43"
+            },
+            {
+              "slotId": "refined-tailoring-knitwear-and-leather-for-the-season",
+              "contentType": "text",
+              "valueRef": "design://figma-home-desktop/254:45"
+            },
+            {
+              "slotId": "the-quiet-grandeur",
+              "contentType": "text",
+              "valueRef": "design://figma-home-desktop/254:44"
+            }
+          ],
+          "childrenElementIds": [
+            "n-1e764dddf28c"
+          ],
+          "resolution": {
+            "status": "unmapped",
+            "mappingConfidence": "low",
+            "diagnostics": []
+          }
+        }
+      ],
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-fab8f6bff27d",
+          "kind": "document",
+          "locator": "design://figma-home-desktop/245:5",
+          "retrievedAt": "2026-11-10T07:54:51.251Z",
+          "sourceRevisionId": "2417494580183108397",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "sectionId": "s-812c04890b36",
+      "order": 1,
+      "name": "SECTION/BrandStatement",
+      "role": "SECTION",
+      "layout": {
+        "direction": "column",
+        "positioning": "static",
+        "constraints": [
+          {
+            "axis": "x",
+            "type": "LEFT",
+            "value": "constraint"
+          },
+          {
+            "axis": "y",
+            "type": "TOP",
+            "value": "constraint"
+          }
+        ],
+        "relativeSizes": [
+          {
+            "target": "parent-width",
+            "ratio": 1
+          }
+        ],
+        "overflow": "hidden"
+      },
+      "elements": [],
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-dc5951b7a755",
+          "kind": "document",
+          "locator": "design://figma-home-desktop/245:6",
+          "retrievedAt": "2026-11-10T07:54:51.251Z",
+          "sourceRevisionId": "2417494580183108397",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "sectionId": "s-3ca9401bcf2c",
+      "order": 2,
+      "name": "SECTION/Hero/Secondary",
+      "role": "SECTION",
+      "layout": {
+        "direction": "absolute",
+        "positioning": "static",
+        "constraints": [
+          {
+            "axis": "x",
+            "type": "LEFT",
+            "value": "constraint"
+          },
+          {
+            "axis": "y",
+            "type": "TOP",
+            "value": "constraint"
+          }
+        ],
+        "relativeSizes": [],
+        "overflow": "hidden"
+      },
+      "elements": [
+        {
+          "elementId": "n-cf1f5f71570d",
+          "childrenElementIds": [],
+          "resolution": {
+            "status": "unmapped",
+            "mappingConfidence": "low",
+            "diagnostics": []
+          }
+        }
+      ],
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-e5f45ddd487e",
+          "kind": "document",
+          "locator": "design://figma-home-desktop/394:386",
+          "retrievedAt": "2026-11-10T07:54:51.251Z",
+          "sourceRevisionId": "2417494580183108397",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "sectionId": "s-63f4f98ec020",
+      "order": 3,
+      "name": "SECTION/FeaturedCollections",
+      "role": "SECTION",
+      "layout": {
+        "direction": "column",
+        "positioning": "static",
+        "constraints": [
+          {
+            "axis": "x",
+            "type": "LEFT",
+            "value": "constraint"
+          },
+          {
+            "axis": "y",
+            "type": "TOP",
+            "value": "constraint"
+          }
+        ],
+        "relativeSizes": [
+          {
+            "target": "parent-width",
+            "ratio": 1
+          }
+        ],
+        "overflow": "hidden"
+      },
+      "elements": [
+        {
+          "elementId": "n-263fd5b8ac94",
+          "childrenElementIds": [
+            "n-5da41eaba48f"
+          ],
+          "resolution": {
+            "status": "unmapped",
+            "mappingConfidence": "low",
+            "diagnostics": []
+          }
+        }
+      ],
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-4ef723d15a2b",
+          "kind": "document",
+          "locator": "design://figma-home-desktop/245:9",
+          "retrievedAt": "2026-11-10T07:54:51.251Z",
+          "sourceRevisionId": "2417494580183108397",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "sectionId": "s-9e92039d0743",
+      "order": 4,
+      "name": "SECTION/FeaturedProducts",
+      "role": "SECTION",
+      "layout": {
+        "direction": "column",
+        "positioning": "static",
+        "constraints": [
+          {
+            "axis": "x",
+            "type": "LEFT",
+            "value": "constraint"
+          },
+          {
+            "axis": "y",
+            "type": "TOP",
+            "value": "constraint"
+          }
+        ],
+        "relativeSizes": [
+          {
+            "target": "parent-width",
+            "ratio": 1
+          }
+        ],
+        "overflow": "hidden"
+      },
+      "elements": [
+        {
+          "elementId": "n-8c476f5e021f",
+          "childrenElementIds": [],
+          "resolution": {
+            "status": "unmapped",
+            "mappingConfidence": "low",
+            "diagnostics": []
+          }
+        }
+      ],
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-55aa89c97c6a",
+          "kind": "document",
+          "locator": "design://figma-home-desktop/245:7",
+          "retrievedAt": "2026-11-10T07:54:51.251Z",
+          "sourceRevisionId": "2417494580183108397",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "sectionId": "s-322a0d65ee53",
+      "order": 5,
+      "name": "SECTION/CampaignEditorial",
+      "role": "SECTION",
+      "layout": {
+        "direction": "absolute",
+        "positioning": "static",
+        "constraints": [
+          {
+            "axis": "x",
+            "type": "LEFT",
+            "value": "constraint"
+          },
+          {
+            "axis": "y",
+            "type": "TOP",
+            "value": "constraint"
+          }
+        ],
+        "relativeSizes": [],
+        "overflow": "hidden"
+      },
+      "elements": [
+        {
+          "elementId": "n-68e74e3ed742",
+          "childrenElementIds": [],
+          "resolution": {
+            "status": "unmapped",
+            "mappingConfidence": "low",
+            "diagnostics": []
+          }
+        },
+        {
+          "elementId": "n-f6aa9399b404",
+          "childrenElementIds": [],
+          "resolution": {
+            "status": "unmapped",
+            "mappingConfidence": "low",
+            "diagnostics": []
+          }
+        }
+      ],
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-388272ef76d8",
+          "kind": "document",
+          "locator": "design://figma-home-desktop/299:300",
+          "retrievedAt": "2026-11-10T07:54:51.251Z",
+          "sourceRevisionId": "2417494580183108397",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "sectionId": "s-fe254aac1209",
+      "order": 6,
+      "name": "SECTION/Lookbook",
+      "role": "SECTION",
+      "layout": {
+        "direction": "absolute",
+        "positioning": "static",
+        "constraints": [
+          {
+            "axis": "x",
+            "type": "LEFT",
+            "value": "constraint"
+          },
+          {
+            "axis": "y",
+            "type": "TOP",
+            "value": "constraint"
+          }
+        ],
+        "relativeSizes": [],
+        "overflow": "hidden"
+      },
+      "elements": [
+        {
+          "elementId": "n-c89e2fc95ac3",
+          "childrenElementIds": [
+            "n-187a96303843",
+            "n-6b1a3795ef47",
+            "n-b14dd19aa328"
+          ],
+          "resolution": {
+            "status": "unmapped",
+            "mappingConfidence": "low",
+            "diagnostics": []
+          }
+        }
+      ],
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-156b58bdf90f",
+          "kind": "document",
+          "locator": "design://figma-home-desktop/299:311",
+          "retrievedAt": "2026-11-10T07:54:51.251Z",
+          "sourceRevisionId": "2417494580183108397",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "sectionId": "s-08e578513c2d",
+      "order": 7,
+      "name": "SECTION/EditorialMosaic",
+      "role": "SECTION",
+      "layout": {
+        "direction": "column",
+        "positioning": "static",
+        "constraints": [
+          {
+            "axis": "x",
+            "type": "LEFT",
+            "value": "constraint"
+          },
+          {
+            "axis": "y",
+            "type": "TOP",
+            "value": "constraint"
+          }
+        ],
+        "relativeSizes": [
+          {
+            "target": "parent-width",
+            "ratio": 1
+          }
+        ],
+        "overflow": "hidden"
+      },
+      "elements": [
+        {
+          "elementId": "n-eae639ffd2e6",
+          "childrenElementIds": [
+            "n-0a2a7ac31212",
+            "n-f6c51f48d892",
+            "n-62e358862fd9",
+            "n-eecb3f577a42"
+          ],
+          "resolution": {
+            "status": "unmapped",
+            "mappingConfidence": "low",
+            "diagnostics": []
+          }
+        }
+      ],
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-40f1b8dbc7a1",
+          "kind": "document",
+          "locator": "design://figma-home-desktop/245:10",
+          "retrievedAt": "2026-11-10T07:54:51.251Z",
+          "sourceRevisionId": "2417494580183108397",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "sectionId": "s-1f0a2498ae66",
+      "order": 8,
+      "name": "SECTION/Craftsmanship",
+      "role": "SECTION",
+      "layout": {
+        "direction": "absolute",
+        "positioning": "static",
+        "constraints": [
+          {
+            "axis": "x",
+            "type": "LEFT",
+            "value": "constraint"
+          },
+          {
+            "axis": "y",
+            "type": "TOP",
+            "value": "constraint"
+          }
+        ],
+        "relativeSizes": [],
+        "overflow": "hidden"
+      },
+      "elements": [
+        {
+          "elementId": "n-f7fdb3800b45",
+          "childrenElementIds": [],
+          "resolution": {
+            "status": "unmapped",
+            "mappingConfidence": "low",
+            "diagnostics": []
+          }
+        },
+        {
+          "elementId": "n-40b044ec302f",
+          "contentSlots": [
+            {
+              "slotId": "body",
+              "contentType": "text",
+              "valueRef": "design://figma-home-desktop/299:348"
+            },
+            {
+              "slotId": "overline",
+              "contentType": "text",
+              "valueRef": "design://figma-home-desktop/299:346"
+            },
+            {
+              "slotId": "title",
+              "contentType": "text",
+              "valueRef": "design://figma-home-desktop/299:347"
+            }
+          ],
+          "childrenElementIds": [
+            "n-3c41ed25fdd0",
+            "n-14c929658e1b"
+          ],
+          "resolution": {
+            "status": "unmapped",
+            "mappingConfidence": "low",
+            "diagnostics": []
+          }
+        }
+      ],
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-075ae6cf0819",
+          "kind": "document",
+          "locator": "design://figma-home-desktop/299:343",
+          "retrievedAt": "2026-11-10T07:54:51.251Z",
+          "sourceRevisionId": "2417494580183108397",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "sectionId": "s-bef01391dbd2",
+      "order": 9,
+      "name": "SECTION/ThePeople",
+      "role": "SECTION",
+      "layout": {
+        "direction": "absolute",
+        "positioning": "static",
+        "constraints": [
+          {
+            "axis": "x",
+            "type": "LEFT",
+            "value": "constraint"
+          },
+          {
+            "axis": "y",
+            "type": "TOP",
+            "value": "constraint"
+          }
+        ],
+        "relativeSizes": [],
+        "overflow": "hidden"
+      },
+      "elements": [
+        {
+          "elementId": "n-f29c9d88ca11",
+          "childrenElementIds": [],
+          "resolution": {
+            "status": "unmapped",
+            "mappingConfidence": "low",
+            "diagnostics": []
+          }
+        },
+        {
+          "elementId": "n-757b6d413c8b",
+          "childrenElementIds": [],
+          "resolution": {
+            "status": "unmapped",
+            "mappingConfidence": "low",
+            "diagnostics": []
+          }
+        },
+        {
+          "elementId": "n-81d2b44d9c1c",
+          "childrenElementIds": [],
+          "resolution": {
+            "status": "unmapped",
+            "mappingConfidence": "low",
+            "diagnostics": []
+          }
+        },
+        {
+          "elementId": "n-080f9b340992",
+          "childrenElementIds": [],
+          "resolution": {
+            "status": "unmapped",
+            "mappingConfidence": "low",
+            "diagnostics": []
+          }
+        }
+      ],
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-0815d6bc0e47",
+          "kind": "document",
+          "locator": "design://figma-home-desktop/522:542",
+          "retrievedAt": "2026-11-10T07:54:51.251Z",
+          "sourceRevisionId": "2417494580183108397",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "sectionId": "s-a0cca2d0b670",
+      "order": 10,
+      "name": "SECTION/ProductSpotlight",
+      "role": "SECTION",
+      "layout": {
+        "direction": "absolute",
+        "positioning": "static",
+        "constraints": [
+          {
+            "axis": "x",
+            "type": "LEFT",
+            "value": "constraint"
+          },
+          {
+            "axis": "y",
+            "type": "TOP",
+            "value": "constraint"
+          }
+        ],
+        "relativeSizes": [
+          {
+            "target": "parent-width",
+            "ratio": 1
+          }
+        ],
+        "overflow": "hidden"
+      },
+      "elements": [
+        {
+          "elementId": "n-7febca8cae89",
+          "childrenElementIds": [],
+          "resolution": {
+            "status": "unmapped",
+            "mappingConfidence": "low",
+            "diagnostics": []
+          }
+        },
+        {
+          "elementId": "n-d496a05ea77a",
+          "contentSlots": [
+            {
+              "slotId": "relaxed-tailoring-in-warm-neutrals-the-defining-layer-of-the-season",
+              "contentType": "text",
+              "valueRef": "design://figma-home-desktop/257:129"
+            },
+            {
+              "slotId": "signature-outerwear",
+              "contentType": "text",
+              "valueRef": "design://figma-home-desktop/257:126"
+            },
+            {
+              "slotId": "the-signature-trench",
+              "contentType": "text",
+              "valueRef": "design://figma-home-desktop/257:127"
+            }
+          ],
+          "childrenElementIds": [
+            "n-6156f075634b"
+          ],
+          "resolution": {
+            "status": "unmapped",
+            "mappingConfidence": "low",
+            "diagnostics": []
+          }
+        }
+      ],
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-33c6fb2256c9",
+          "kind": "document",
+          "locator": "design://figma-home-desktop/245:12",
+          "retrievedAt": "2026-11-10T07:54:51.251Z",
+          "sourceRevisionId": "2417494580183108397",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "sectionId": "s-09383274911f",
+      "order": 11,
+      "name": "SECTION/Newsletter",
+      "role": "SECTION",
+      "layout": {
+        "direction": "column",
+        "positioning": "static",
+        "constraints": [
+          {
+            "axis": "x",
+            "type": "LEFT",
+            "value": "constraint"
+          },
+          {
+            "axis": "y",
+            "type": "TOP",
+            "value": "constraint"
+          }
+        ],
+        "relativeSizes": [
+          {
+            "target": "parent-width",
+            "ratio": 1
+          }
+        ],
+        "overflow": "hidden"
+      },
+      "elements": [
+        {
+          "elementId": "n-2bedcf5216a2",
+          "childrenElementIds": [],
+          "resolution": {
+            "status": "unmapped",
+            "mappingConfidence": "low",
+            "diagnostics": []
+          }
+        }
+      ],
+      "sourceEvidence": [
+        {
+          "evidenceId": "e-e1b979fe5441",
+          "kind": "document",
+          "locator": "design://figma-home-desktop/245:14",
+          "retrievedAt": "2026-11-10T07:54:51.251Z",
+          "sourceRevisionId": "2417494580183108397",
+          "method": "design-source-adapter"
+        }
+      ]
+    }
+  ],
+  "diagnostics": []
+}

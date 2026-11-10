@@ -1,5 +1,13 @@
 # ACTIVE CHATGPT COORDINATOR HANDOFF — Design Engineering Toolkit
 
+## CURRENT CHECKPOINT — 2026-11-10 — #18 LIVE PROOF PASS; PR #21 READY FOR COORDINATOR RE-REVIEW
+
+- **#18 live read-only proof EXECUTED and PASSED** on PR #21 branch `task/18-figma-live-readonly-pilot` (reconciled with `main` @ `1cc90b5`, gate **179/179**): bounded single-GET extract of Desktop root `245:2` (file `vNPtfBRpYM3PsExirVqhmt`) under the recorded Owner GO — revision pinned `2417494580183108397`, **337/337 nodes accounted** (92 SITE chrome excluded with reason, 168 MAPPED into **12 planned sections**, 28 instances honest custom-required NEEDS_REVIEW, 49 decoration-merged), two runs byte-stable (`volatileContentHash` equal). Gate status **`LIVE_FIGMA_READ_ONLY_VERIFIED`** (receipt §8); sanitized evidence committed — no token, no raw provider dump.
+- **Boundaries:** no Figma writes, no `245:16`, no CMS/DB/storefront writes; stop at plan; G3/CMS remains separately gated.
+- **Known pre-existing defect (on `main`, not this PR):** `examples/converter/capability-registry.magento-pagebuilder.example.json` fails `validateRegistry` (61× registered-without-config-declaration-evidence) — live `det plan` resolution deferred until that registry is repaired; the extract→plan chain is proven offline (G2-T31f).
+- **NEXT:** Coordinator/Owner re-review the actual live evidence on PR #21 → merge decision. Refresh live GitHub before acting on older dated checkpoints below.
+
+
 ## MERGED INTEGRATION CHECKPOINT — 2026-11-09 — [23] + [25]
 
 - **Owner explicitly approved merge**. Integration [PR #27](https://github.com/thanhle74/design-engineering-toolkit/pull/27) **MERGED to `main`** (merge commit `d256682450e10419fe94a2999f82495e957769d2`). It includes **[23] G3 Hero / PR #24** (`837a1fe`), **[25] G4 Craftsmanship / PR #26** (`5057b5e`) and **docs PR #20**. GitHub also marked source PRs **#20, #24, #26 merged** because their exact commits are in the integration ancestry. DO NOT re-merge them, re-run their POCs or overwrite the integrated source with older branches.
@@ -25,6 +33,17 @@
 **GitHub actual state observed 2026-11-09 (refresh live before action):** `[23]` G3 Hero / Draft PR **#24** (unmerged) needs a bounded native `data-pb-style` fix for hero min-height persistence on Admin resave; follow-up documented in [Issue #23](https://github.com/thanhle74/design-engineering-toolkit/issues/23). `[25]` G4 Craftsmanship / Draft PR **#26** tip `5057b5e` (unmerged) corrected Admin `NaN/12` by native style-block keys, **CI SUCCESS ×2**; Owner screenshot verified Admin shows **6/12 + 6/12**. Owner-specific edit→Save→Reload content persistence is not separately proved by that screenshot. New disposable local CMS page **40** is the corrected sample; page 39 is the old shape. Draft PR **#20** holds lean product-spec updates, **#21** REST Figma adapter and **#22** local knowledge input are unmerged; #21 PAT/live REST proof not required for the MCP-observed structural POCs. **No PR merge or new issue implied by this handoff.** After finishing [23] correction and [25] final smoke confirmation, review exact tips and propose dependency-aware integration **#20 → #24 → #26** for Owner merge GO. Do not launch another framework/audit loop.
 
 **Coordinator/worker communication:** issue, PR and Orca task names must start with **`[<real GitHub issue number>]`** (e.g. `[23]`, `[25]`), not `#`-less phase names; the Owner prefers **short Vietnamese** and one concrete next action. Read LIVE GitHub latest issue comments/PR head/CI; older dated checkpoints below are HISTORICAL and must not be mistaken for current prohibitions or work status. A local Orca worker does not start just because a GitHub comment exists.
+
+---
+
+## HISTORICAL CHECKPOINT — 2026-11-06 — #18 LIVE ADAPTER IMPLEMENTED (superseded by live proof on the PR)
+
+## CURRENT CHECKPOINT — 2026-11-06 — #18 LIVE ADAPTER IMPLEMENTED; LIVE READ `BLOCKED_WITH_REASON: FIGMA_TOKEN_UNSET`
+
+- **#18 [live pilot](https://github.com/thanhle74/design-engineering-toolkit/issues/18):** the bounded read-only live design-source adapter `design-source-figma-live` is implemented on branch `task/18-figma-live-readonly-pilot` (Draft PR, one workspace). It sits behind the unchanged #14 `DesignSourcePort`/snapshot seam (no core/schema changes): provider token only from env `FIGMA_TOKEN` (fail closed when missing), profile `scopes.include` gates the approvable roots at the transport, revision pin required from the provider version token (else fail closed), 32 MiB response cap, 100 000-node budget, redirects never followed, no asset bytes or text content copied. Gate **102/102** (was 95 on merged main; +7 offline G2 checks T31a–T31g over a stubbed provider API — no network, no credentials, no committed provider identifiers).
+- **Live read of `245:2` NOT executed:** the single attempt failed closed exactly as designed — exit 3, zero artifacts, terminal-only stderr naming `FIGMA_TOKEN_UNSET`; sanitized envelope at `evidence/issue-18/live-read-blocked.tool-run.json`. Per the Owner's rule this is **`BLOCKED_WITH_REASON`, not `LIVE_FIGMA_READ_ONLY_VERIFIED`**. Receipt: `docs/converter/RECEIPT-ISSUE18-G2-LIVE.md` (ADR-018-001..006 + the exact re-run command).
+- **Single unblock action (Owner):** provision a read-only provider token as `FIGMA_TOKEN` in the execution environment, then re-run the receipt §3 command; on success the revision-pinned `NodeIR/PageStructure/SourceReview` + sanitized mapping inventory complete the proof on the same branch/PR. No token ever enters the repo.
+- **Boundaries unchanged:** no Figma writes, no `245:16`, no CMS/DB writes, stop at plan; G3 remains separately gated. #19 stays `BLOCKED_LOCAL_SOURCE_NOT_MOUNTED` (untouched here).
 
 ---
 

@@ -45,7 +45,7 @@ node bin/det.js compose --profile <profile.json> --registry out/capability-regis
 # Structural composition evidence ONLY — never an Admin-round-trip or visual claim; a local
 # isolated CMS write requires a separate explicit operator-selected target.
 
-# 5. One-shot validated build (issue #28 C1) — thin orchestrator over the shipped commands:
+# 6. One-shot validated build (issue #28 C1) — thin orchestrator over the shipped commands:
 node bin/det.js build --config <build-config.json> [--out <dir>] [--dry-run] [--json]
 # Config paths resolve relative to the config file itself; major 1 builds run from OFFLINE
 # snapshot/tree documents only (a live design-source mode is not representable and fails
@@ -57,10 +57,14 @@ node bin/det.js build --config <build-config.json> [--out <dir>] [--dry-run] [--
 
 # 4. Read-only design-source extraction (G2, SYNTHETIC fixtures only — see gate note)
 node bin/det.js extract --profile profiles/your-profile.json --project /path/to/design-source \
+  --adapter design-source-fixture \
   --design-file <tree-document> --design-node <root-locator> \
   [--registry <capability-registry.json> --bindings <binding-map.json>] [--out out/] [--dry-run]
 # Emits node-ir.json (full inventory), page-structure.json (editorial-only plan),
 # source-review.json (every-node accountability: class + disposition + reason).
+# Live provider reads (issue #18): same command with --adapter design-source-figma-live —
+# each live read stays bound to its issue's explicit Owner GO scope. The token comes only
+# from the caller's FIGMA_TOKEN environment; without it the adapter fails closed (exit 3).
 ```
 
 ## Rules for agents
@@ -68,7 +72,7 @@ node bin/det.js extract --profile profiles/your-profile.json --project /path/to/
 1. **Exit codes are the contract:** `0` ok · `1` blocking diagnostics · `2` usage error · `3` adapter runtime failure. Never guess an outcome the exit code already states.
 2. Parse `--json` output (`{"run": <tool-run envelope>, "output": <registry|report>}`), not the human summary. Diagnostics carry structured codes (`PROJECT_SOURCE_NOT_CONFIGURED`, `ADAPTER_NOT_APPLICABLE`, `VARIANT_NOT_MAPPED`, `NOT_VERIFIED`, `LOCATOR_OUT_OF_SCOPE`, …) — act on codes, not message text.
 3. **Proof discipline:** registry proof levels never exceed what pinned evidence justifies (`registered` = declaration evidence + enabled; never treat installed/enabled/declared as runtime-proven or Admin-verified). `NOT_VERIFIED` diagnostics mark unaudited fields — report them, don't smooth them over.
-4. **Boundaries:** the CLI never writes to CMS/DB/storefront/design sources; adapters are read-only by schema contract. `det extract` is authorized for SYNTHETIC design-source fixtures only in this gate — a live design-tool read (e.g. the approved Figma subtree) requires a separate explicit Owner GO and a live source adapter; never point `extract` at a provider before that GO, never rename any layer, never attempt CMS import, Admin round-trips or visual QA under this skill. The selected root comes ONLY from `--design-file`/`--design-node`; never guess or hardcode one.
+4. **Boundaries:** the CLI never writes to CMS/DB/storefront/design sources; adapters are read-only by schema contract. `det extract` over the live adapter (`design-source-figma-live`) requires a per-issue explicit Owner GO covering the exact file + root, and the read-only provider token from `FIGMA_TOKEN` (never argv/profile; missing token = fail closed exit 3 with the exact blocker). The profile's `scopes.include` selectors are the only approvable roots — any other root is a scope escape. Never rename any layer, never attempt CMS import, Admin round-trips or visual QA under this skill. The selected root comes ONLY from `--design-file`/`--design-node`; never guess or hardcode one.
 5. **Paths:** supply the project root per run (`--project` > `DET_PROJECT_SOURCE` env > gitignored `profiles/*.local.json`). Never commit a real owner path; never read `env.php`/`auth.json` yourself — the adapter deny-lists them.
 6. Determinism: same inputs + same tool version ⇒ identical `contentHash`/`volatileContentHash` in `tool-run.json`. If hashes drift, stop and investigate — do not re-run until it passes.
 

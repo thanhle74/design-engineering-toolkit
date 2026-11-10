@@ -1,0 +1,92 @@
+{
+  "name": "G2 Live Adapter Fixture File",
+  "lastModified": "2026-01-01T00:00:00Z",
+  "version": "9001-fixture-rev",
+  "error": null,
+  "nodes": {
+    "1000:1": {
+      "document": {
+        "id": "1000:1",
+        "name": "PAGE/Home/Desktop",
+        "type": "FRAME",
+        "visible": true,
+        "absoluteBoundingBox": { "x": 0, "y": 0, "width": 1440, "height": 9000 },
+        "clipsContent": true,
+        "constraints": { "vertical": "TOP", "horizontal": "LEFT" },
+        "children": [
+          {
+            "id": "1001:1",
+            "name": "SITE/Header",
+            "type": "FRAME",
+            "absoluteBoundingBox": { "x": 0, "y": 0, "width": 1440, "height": 80 },
+            "clipsContent": true,
+            "children": [{ "id": "1001:2", "name": "SLOT/NavLabel", "type": "TEXT" }]
+          },
+          {
+            "id": "1002:1",
+            "name": "SECTION/Hero/Primary",
+            "type": "FRAME",
+            "layoutMode": "HORIZONTAL",
+            "itemSpacing": 0,
+            "absoluteBoundingBox": { "x": 0, "y": 100, "width": 1440, "height": 600 },
+            "children": [
+              {
+                "id": "1002:2",
+                "name": "SLOT/Headline",
+                "type": "FRAME",
+                "layoutSizingHorizontal": "FILL",
+                "absoluteBoundingBox": { "x": 0, "y": 100, "width": 576, "height": 600 },
+                "children": [{ "id": "1002:3", "name": "SLOT/Title", "type": "TEXT" }]
+              },
+              {
+                "id": "1002:4",
+                "name": "SLOT/Media",
+                "type": "FRAME",
+                "layoutSizingHorizontal": "FILL",
+                "absoluteBoundingBox": { "x": 576, "y": 100, "width": 864, "height": 600 },
+                "children": [
+                  {
+                    "id": "1002:5",
+                    "name": "SLOT/CampaignVisual",
+                    "type": "RECTANGLE",
+                    "absoluteBoundingBox": { "x": 576, "y": 100, "width": 864, "height": 600 },
+                    "fills": [{ "type": "IMAGE" }]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "1003:1",
+            "name": "COMPONENT/ProductCard",
+            "type": "INSTANCE",
+            "componentId": "999:9",
+            "componentProperties": { "layout": { "type": "VARIANT", "value": "stacked" } }
+          },
+          {
+            "id": "1004:1",
+            "name": "COMPONENT/Badge",
+            "type": "COMPONENT",
+            "children": [{ "id": "1004:2", "name": "SLOT/Label", "type": "TEXT" }]
+          },
+          { "id": "1005:1", "name": "COMPONENT/Badge Instance", "type": "INSTANCE", "componentId": "1004:1" },
+          {
+            "id": "1006:1",
+            "name": "SECTION/DraftBanner",
+            "type": "FRAME",
+            "visible": false,
+            "children": [{ "id": "1006:2", "name": "SLOT/DraftNote", "type": "TEXT", "visible": false }]
+          },
+          {
+            "id": "1007:1",
+            "name": "SECTION/EditorialMosaic",
+            "type": "SECTION",
+            "children": [{ "id": "1007:2", "name": "SLOT/Caption", "type": "TEXT" }]
+          },
+          { "id": "1008:1", "name": "DECOR/Rule", "type": "LINE" },
+          { "id": "1009:1", "name": "", "type": "TEXT" }
+        ]
+      }
+    }
+  }
+}
