@@ -46,12 +46,23 @@ export interface CatalogDatabase {
   open: boolean;
 }
 
+/**
+ * The builtin specifier, computed at runtime: Node 22's `module.builtinModules`
+ * lists `sqlite` WITHOUT the `node:` prefix (Node 24 lists both), so Vite's
+ * resolver treats a literal "node:sqlite" as bundleable and fails the whole
+ * suite ("Cannot bundle Node.js built-in"). A computed dynamic import is left
+ * to the runtime loader by Vite (@vite-ignore) and Turbopack alike, and Node
+ * resolves it identically on 22 and 24.
+ */
+const SQLITE_MODULE_SPECIFIER = ["node", "sqlite"].join(":") as "node:sqlite";
+
 type NodeSqliteModule = { DatabaseSync: new (path: string, options?: { open?: boolean }) => CatalogDatabase };
 
 export type SqliteImport = () => Promise<NodeSqliteModule>;
 
 /** Production import; tests may inject a failure to prove the honest error path. */
-const defaultImport: SqliteImport = async () => (await import("node:sqlite")) as unknown as NodeSqliteModule;
+const defaultImport: SqliteImport = async () =>
+  (await import(/* @vite-ignore */ SQLITE_MODULE_SPECIFIER)) as unknown as NodeSqliteModule;
 
 function driverUnavailableError(reason: string): DetRunReaderError {
   return new DetRunReaderError(
