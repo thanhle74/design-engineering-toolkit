@@ -1,11 +1,19 @@
 # ACTIVE CHATGPT COORDINATOR HANDOFF — Design Engineering Toolkit
 
-## CURRENT CHECKPOINT — 2026-11-10 — #18 LIVE PROOF PASS; PR #21 READY FOR COORDINATOR RE-REVIEW
+## CURRENT CHECKPOINT — 2026-11-10 — [54] REGISTRY EVIDENCE GATE REPAIRED; REAL-SOURCE `det plan` PASS (HONEST ZERO BINDINGS); DRAFT PR AWAITING COORDINATOR REVIEW
+
+- **The #18 follow-up blocker is repaired** (receipt: [RECEIPT-ISSUE54-PLAN-EVIDENCE-GATE.md](../docs/converter/RECEIPT-ISSUE54-PLAN-EVIDENCE-GATE.md)): the #9 example registry now passes `validateRegistry` with **0 errors** — 55 native/widget entries carry **verified `config-declaration` evidence** (registration-surface scans by the shipped `det inspect` adapter: per-file `content_type/*.xml`, `Secomm\UiWidget\Model\Component\Registry` DI items, `rootContainerConfig` in `adminhtml/di.xml`), and the 6 theme-chrome entries are **honestly demoted to `discovered`** (theme layout is not a platform registration surface). Nothing invented, nothing deleted; the registry's `66aff1e` source pin and all original evidence are untouched; every grafted record's verification chain is in its `note` field.
+- **Real-derived `det plan` now passes** on the committed revision-pinned #18 `PageStructure` (root `245:2`, provider revision `2417494580183108397`) with the repaired registry: **exit 0, 12/12 sections, `coverage.total = 0`, 0 diagnostics, byte-identical across runs** — every section honestly `unmapped`; no auto-binding was fabricated. Committed sanitized evidence: `evidence/issue-54/live-plan-verified/` (+ tool-run).
+- **Gate:** `npm test` **180/180** (179 + new REG-09 which re-runs this exact acceptance in CI); Studio 216 tests / typecheck / lint / production build green.
+- **Boundaries honored:** read-only Magento inspections only; no Figma reads/writes; no CMS/DB writes; no mapping/editability/visual claim — the remaining gaps (zero proven bindings, unaudited prop types, chrome discovered-only) are listed explicitly in the receipt §6.
+- **NEXT:** Coordinator/Owner review the Draft PR (repair diff + receipt + evidence; rerun commands in receipt §10) → merge decision. The next product step after merge is separately scoped **structural mapping/binding work for the 12 live sections**; G3/CMS remains gated as before. Refresh live GitHub before acting on older dated checkpoints below.
+
+## HISTORICAL CHECKPOINT — 2026-11-10 — #18 LIVE PROOF PASS; PR #21 MERGED AS `8aaaf2e` (superseded by [54] checkpoint above)
 
 - **#18 live read-only proof EXECUTED and PASSED** on PR #21 branch `task/18-figma-live-readonly-pilot` (reconciled with `main` @ `1cc90b5`, gate **179/179**): bounded single-GET extract of Desktop root `245:2` (file `vNPtfBRpYM3PsExirVqhmt`) under the recorded Owner GO — revision pinned `2417494580183108397`, **337/337 nodes accounted** (92 SITE chrome excluded with reason, 168 MAPPED into **12 planned sections**, 28 instances honest custom-required NEEDS_REVIEW, 49 decoration-merged), two runs byte-stable (`volatileContentHash` equal). Gate status **`LIVE_FIGMA_READ_ONLY_VERIFIED`** (receipt §8); sanitized evidence committed — no token, no raw provider dump.
 - **Boundaries:** no Figma writes, no `245:16`, no CMS/DB/storefront writes; stop at plan; G3/CMS remains separately gated.
 - **Known pre-existing defect (on `main`, not this PR):** `examples/converter/capability-registry.magento-pagebuilder.example.json` fails `validateRegistry` (61× registered-without-config-declaration-evidence) — live `det plan` resolution deferred until that registry is repaired; the extract→plan chain is proven offline (G2-T31f).
-- **NEXT:** Coordinator/Owner re-review the actual live evidence on PR #21 → merge decision. Refresh live GitHub before acting on older dated checkpoints below.
+- **NEXT (completed 2026-11-10):** PR #21 merged to `main` as `8aaaf2e015462a5f7154d3c00999428bcbbedec6`; the registry-evidence follow-up is handled by [54] (checkpoint above).
 
 
 ## MERGED INTEGRATION CHECKPOINT — 2026-11-09 — [23] + [25]

@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "profileId": "slaunchpad-fashion",
+  "platformId": "magento-pagebuilder",
+  "generatedAt": "1970-01-01T00:00:00Z",
+  "inputs": {
+    "registryRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+    "bindingMapContentHash": "d82f3d1a49b9045767a247f27e9bb7d8fe187a0c72c6b473c321ae126ce74831",
+    "pageStructureContentHash": "b54bfb623083ec9c234f4873aad9bee2ee72eea10c8b98dbae0d04d9f0e6038f"
+  },
+  "sections": [
+    {
+      "sectionId": "s-df13cd3ab58d",
+      "order": 0,
+      "name": "SECTION/Hero/Primary",
+      "status": "unmapped",
+      "candidates": [],
+      "selected": null,
+      "unsupportedReasons": [],
+      "mappingConfidence": "low",
+      "proofLevel": "registered",
+      "evidence": []
+    },
+    {
+      "sectionId": "s-812c04890b36",
+      "order": 1,
+      "name": "SECTION/BrandStatement",
+      "status": "unmapped",
+      "candidates": [],
+      "selected": null,
+      "unsupportedReasons": [],
+      "mappingConfidence": "low",
+      "proofLevel": "registered",
+      "evidence": []
+    },
+    {
+      "sectionId": "s-3ca9401bcf2c",
+      "order": 2,
+      "name": "SECTION/Hero/Secondary",
+      "status": "unmapped",
+      "candidates": [],
+      "selected": null,
+      "unsupportedReasons": [],
+      "mappingConfidence": "low",
+      "proofLevel": "registered",
+      "evidence": []
+    },
+    {
+      "sectionId": "s-63f4f98ec020",
+      "order": 3,
+      "name": "SECTION/FeaturedCollections",
+      "status": "unmapped",
+      "candidates": [],
+      "selected": null,
+      "unsupportedReasons": [],
+      "mappingConfidence": "low",
+      "proofLevel": "registered",
+      "evidence": []
+    },
+    {
+      "sectionId": "s-9e92039d0743",
+      "order": 4,
+      "name": "SECTION/FeaturedProducts",
+      "status": "unmapped",
+      "candidates": [],
+      "selected": null,
+      "unsupportedReasons": [],
+      "mappingConfidence": "low",
+      "proofLevel": "registered",
+      "evidence": []
+    },
+    {
+      "sectionId": "s-322a0d65ee53",
+      "order": 5,
+      "name": "SECTION/CampaignEditorial",
+      "status": "unmapped",
+      "candidates": [],
+      "selected": null,
+      "unsupportedReasons": [],
+      "mappingConfidence": "low",
+      "proofLevel": "registered",
+      "evidence": []
+    },
+    {
+      "sectionId": "s-fe254aac1209",
+      "order": 6,
+      "name": "SECTION/Lookbook",
+      "status": "unmapped",
+      "candidates": [],
+      "selected": null,
+      "unsupportedReasons": [],
+      "mappingConfidence": "low",
+      "proofLevel": "registered",
+      "evidence": []
+    },
+    {
+      "sectionId": "s-08e578513c2d",
+      "order": 7,
+      "name": "SECTION/EditorialMosaic",
+      "status": "unmapped",
+      "candidates": [],
+      "selected": null,
+      "unsupportedReasons": [],
+      "mappingConfidence": "low",
+      "proofLevel": "registered",
+      "evidence": []
+    },
+    {
+      "sectionId": "s-1f0a2498ae66",
+      "order": 8,
+      "name": "SECTION/Craftsmanship",
+      "status": "unmapped",
+      "candidates": [],
+      "selected": null,
+      "unsupportedReasons": [],
+      "mappingConfidence": "low",
+      "proofLevel": "registered",
+      "evidence": []
+    },
+    {
+      "sectionId": "s-bef01391dbd2",
+      "order": 9,
+      "name": "SECTION/ThePeople",
+      "status": "unmapped",
+      "candidates": [],
+      "selected": null,
+      "unsupportedReasons": [],
+      "mappingConfidence": "low",
+      "proofLevel": "registered",
+      "evidence": []
+    },
+    {
+      "sectionId": "s-a0cca2d0b670",
+      "order": 10,
+      "name": "SECTION/ProductSpotlight",
+      "status": "unmapped",
+      "candidates": [],
+      "selected": null,
+      "unsupportedReasons": [],
+      "mappingConfidence": "low",
+      "proofLevel": "registered",
+      "evidence": []
+    },
+    {
+      "sectionId": "s-09383274911f",
+      "order": 11,
+      "name": "SECTION/Newsletter",
+      "status": "unmapped",
+      "candidates": [],
+      "selected": null,
+      "unsupportedReasons": [],
+      "mappingConfidence": "low",
+      "proofLevel": "registered",
+      "evidence": []
+    }
+  ],
+  "coverage": {
+    "native": 0,
+    "widget": 0,
+    "chrome": 0,
+    "custom-required": 0,
+    "unsupported": 0,
+    "total": 0
+  },
+  "counts": {
+    "errors": 0,
+    "warnings": 0,
+    "infos": 0
+  },
+  "proofStatus": {
+    "maxClaimedProofLevel": "registered",
+    "maxJustifiedProofLevel": "registered"
+  },
+  "diagnostics": []
+}

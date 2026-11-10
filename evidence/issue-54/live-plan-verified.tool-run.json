@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "tool": {
+    "name": "det",
+    "toolVersion": "0.1.0"
+  },
+  "command": "plan",
+  "exitCode": 0,
+  "generatedAt": "2026-11-10T08:32:04.793Z",
+  "profileId": "slaunchpad-fashion",
+  "platformId": "magento-pagebuilder",
+  "artifacts": [
+    {
+      "role": "resolution-report",
+      "schemaRef": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/resolution-report.schema.json",
+      "contentHash": "25e0c2f15ce3e338ff9ec2d180134350f4a9a8af7e4c8a8c731d3393b1320b62",
+      "volatileContentHash": "25e0c2f15ce3e338ff9ec2d180134350f4a9a8af7e4c8a8c731d3393b1320b62",
+      "file": "resolution-report.json"
+    }
+  ],
+  "converterDiagnostics": [],
+  "runDiagnostics": [],
+  "counts": {
+    "errors": 0,
+    "warnings": 0,
+    "infos": 0
+  },
+  "wroteFiles": true
+}
