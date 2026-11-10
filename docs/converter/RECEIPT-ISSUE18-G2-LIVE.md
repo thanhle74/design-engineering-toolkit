@@ -1,7 +1,7 @@
 # RECEIPT — Issue #18: G2 Live Figma read-only extraction pilot (245:2)
 
 **Date:** 2026-11-06 · **Branch:** `task/18-figma-live-readonly-pilot` · **Base:** `main` @ `185d91c`
-**Gate status:** `BLOCKED_WITH_REASON: FIGMA_TOKEN_UNSET` — **NOT** `LIVE_FIGMA_READ_ONLY_VERIFIED`
+**Gate status:** `BLOCKED_WITH_REASON: FIGMA_TOKEN_EXPIRED` (re-attempt 2026-11-10, §7) — **NOT** `LIVE_FIGMA_READ_ONLY_VERIFIED`
 **Authorization:** Owner GO `OWNER_GO_RECEIVED / READ_ONLY_EXECUTION_AUTHORIZED` (issue #18 comment, 2026-11-04): read-only access to the selected Desktop root `245:2` of file `vNPtfBRpYM3PsExirVqhmt` only; no edits, no mobile `245:16`, no CMS/DB writes, one workspace/one PR, stop at plan.
 
 ---
@@ -70,3 +70,15 @@ The Owner's own contract on issue #18: *"if API credentials/provider revision ar
 ## 6. Boundaries honored
 
 No Figma read/write beyond the single fail-closed attempt above; no `245:16`; no design mutations; no CMS/DB/storefront writes; nothing written by the CLI without `--out`; **stop at plan** — Page Builder serialization, CMS creation and Admin Edit→Save→Reload remain separately Owner-gated G3/G4. No claim of `LIVE_FIGMA_READ_ONLY_VERIFIED` is made.
+
+## 7. Re-attempt 2026-11-10 — provisioned token is EXPIRED (still BLOCKED)
+
+Following the §4 unblock action, the Owner provisioned a provider token into the execution environment. The §3 command was re-run unchanged on this branch (`7c4ccc2` lineage), scope `scopes.include = ["245:2"]`, with `FIGMA_TOKEN` present in the CLI process environment (loaded locally, never argv/profile/receipt).
+
+**Result: exit 3, zero design artifacts, fail closed.** Terminal-only adapter stderr named the exact blocker: `provider rejected the read (HTTP 403) — token missing scope, expired, or not valid for this file; failing closed.` Read-only operator diagnosis via the provider identity endpoint (`GET /v1/me`, no design file touched): **HTTP 401 with provider reason `Token has expired`** — the provisioned token is expired, not missing and not mis-scoped.
+
+Sanitized run envelope (no paths, no credentials, no source data): [`evidence/issue-18/live-read-blocked-2026-11-10.tool-run.json`](../../evidence/issue-18/live-read-blocked-2026-11-10.tool-run.json).
+
+**Status: `BLOCKED_WITH_REASON: FIGMA_TOKEN_EXPIRED` — `LIVE_FIGMA_READ_ONLY_VERIFIED` NOT claimed** (same issue rule as §4: credentials/revision unavailable → fail closed and report the exact blocker). One design-source read attempt was made (the bounded single GET); the identity-endpoint check was token health only; no other page/frame/node was accessed; no writes anywhere.
+
+**Unblock action unchanged (Owner):** provision a **currently valid** read-only token (expiry in the future; file-read scope only) and re-run the §3 command unchanged. Everything else in §4's success expectation applies as written.
