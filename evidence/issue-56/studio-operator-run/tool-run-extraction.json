@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "tool": {
+    "name": "det",
+    "toolVersion": "0.1.0"
+  },
+  "command": "extract",
+  "exitCode": 0,
+  "generatedAt": "2026-11-10T10:07:26.018Z",
+  "profileId": "slaunchpad-fashion",
+  "platformId": "magento-pagebuilder",
+  "adapter": {
+    "id": "design-source-fixture",
+    "version": "1.0.0"
+  },
+  "artifacts": [
+    {
+      "role": "node-ir",
+      "schemaRef": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/node-ir.schema.json",
+      "contentHash": "a9cc81f070e350e7bbcc536dfd7bf7ac86a655b74245086029cbf1d49a5b5cd4",
+      "volatileContentHash": "63854986b88057f0c412c9ce40e937200fa3151f40b7fd3cafb8cf4940ea17ba",
+      "file": "node-ir.json"
+    },
+    {
+      "role": "page-structure",
+      "schemaRef": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/page-structure.schema.json",
+      "contentHash": "d2ab02509d849b70ae490e6227038c902c483a73e4b1c19d48aa549dd2b4d246",
+      "volatileContentHash": "b58c4583d1b145195a3d2e89cfbacd0fd1409584a35e9eb42ccae8ff513931b9",
+      "file": "page-structure.json"
+    },
+    {
+      "role": "source-review",
+      "schemaRef": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/source-review.schema.json",
+      "contentHash": "c80839e36be28f091aeab65da54bebce95f471fae6c6c3a20df240985a3c2d1f",
+      "volatileContentHash": "0bee1a42fbd4ad202b9bf8891ac98ed415539816d61b8637e70c068f69482288",
+      "file": "source-review.json"
+    }
+  ],
+  "converterDiagnostics": [
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "28 source component(s) have no proven target capability (custom-required pending); no CMS content may be generated from them without review.",
+      "subject": {
+        "type": "profile",
+        "id": "slaunchpad-fashion"
+      }
+    }
+  ],
+  "runDiagnostics": [],
+  "counts": {
+    "errors": 0,
+    "warnings": 1,
+    "infos": 0
+  },
+  "wroteFiles": true
+}

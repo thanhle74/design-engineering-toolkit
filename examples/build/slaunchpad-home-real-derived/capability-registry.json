@@ -1,0 +1,2960 @@
+{
+  "schemaVersion": 1,
+  "platformId": "magento-pagebuilder",
+  "platformVersion": "2.4.8-p5",
+  "profileId": "slaunchpad-fashion",
+  "generatedAt": "2026-11-10T09:51:57.931Z",
+  "source": {
+    "sourceId": "slaunch-checkout",
+    "revisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+    "accessedAt": "2026-11-10T09:51:57.931Z"
+  },
+  "generator": {
+    "tool": "det-adapter:magento-pagebuilder",
+    "toolVersion": "1.0.0"
+  },
+  "capabilities": [
+    {
+      "id": "launchpad_catalog/widget/catalog_recently_viewed",
+      "appearanceId": "default",
+      "provider": "Launchpad_Catalog",
+      "category": "widget",
+      "displayName": "catalog_recently_viewed",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": true,
+        "dataSources": [],
+        "notes": "Runtime catalog data implied by the type's declaration; data sources not audited."
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-318680e5ff10",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Launchpad/Catalog/etc/widget.xml#widget=catalog_recently_viewed",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "widget-xml-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Magento widget registration (etc/widget.xml)."
+    },
+    {
+      "id": "launchpad_cmscontent/widget/launchpad_flash_sale_products",
+      "appearanceId": "default",
+      "provider": "Launchpad_CmsContent",
+      "category": "widget",
+      "displayName": "launchpad_flash_sale_products",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": true,
+        "dataSources": [],
+        "notes": "Runtime catalog data implied by the type's declaration; data sources not audited."
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-92a19835cceb",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Launchpad/CmsContent/etc/widget.xml#widget=launchpad_flash_sale_products",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "widget-xml-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Magento widget registration (etc/widget.xml)."
+    },
+    {
+      "id": "magefan_blog/widget/blog_author_link",
+      "appearanceId": "default",
+      "provider": "Magefan_Blog",
+      "category": "widget",
+      "displayName": "blog_author_link",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-58c647474046",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Magefan/Blog/etc/widget.xml#widget=blog_author_link",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "widget-xml-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Magento widget registration (etc/widget.xml)."
+    },
+    {
+      "id": "magefan_blog/widget/blog_category_link",
+      "appearanceId": "default",
+      "provider": "Magefan_Blog",
+      "category": "widget",
+      "displayName": "blog_category_link",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-d90c3bcf5a4d",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Magefan/Blog/etc/widget.xml#widget=blog_category_link",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "widget-xml-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Magento widget registration (etc/widget.xml)."
+    },
+    {
+      "id": "magefan_blog/widget/blog_post_link",
+      "appearanceId": "default",
+      "provider": "Magefan_Blog",
+      "category": "widget",
+      "displayName": "blog_post_link",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-49c1e7087313",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Magefan/Blog/etc/widget.xml#widget=blog_post_link",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "widget-xml-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Magento widget registration (etc/widget.xml)."
+    },
+    {
+      "id": "magefan_blog/widget/blog_tag_link",
+      "appearanceId": "default",
+      "provider": "Magefan_Blog",
+      "category": "widget",
+      "displayName": "blog_tag_link",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-9d74c13b94f5",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Magefan/Blog/etc/widget.xml#widget=blog_tag_link",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "widget-xml-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Magento widget registration (etc/widget.xml)."
+    },
+    {
+      "id": "magefan_blog/widget/magefan_blog_featured",
+      "appearanceId": "default",
+      "provider": "Magefan_Blog",
+      "category": "widget",
+      "displayName": "magefan_blog_featured",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-1226ba4bf259",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Magefan/Blog/etc/widget.xml#widget=magefan_blog_featured",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "widget-xml-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Magento widget registration (etc/widget.xml)."
+    },
+    {
+      "id": "magefan_blog/widget/magefan_blog_recent",
+      "appearanceId": "default",
+      "provider": "Magefan_Blog",
+      "category": "widget",
+      "displayName": "magefan_blog_recent",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-8d4199553145",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Magefan/Blog/etc/widget.xml#widget=magefan_blog_recent",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "widget-xml-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Magento widget registration (etc/widget.xml)."
+    },
+    {
+      "id": "magento_pagebuilder/banner",
+      "appearanceId": "collage-centered",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "banner",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-b0c80777f28b",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/banner.xml#type=banner/appearance=collage-centered",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'banner' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/banner",
+      "appearanceId": "collage-left",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "banner",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-d61550bdba93",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/banner.xml#type=banner/appearance=collage-left",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'banner' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/banner",
+      "appearanceId": "collage-right",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "banner",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-cb69816d8e58",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/banner.xml#type=banner/appearance=collage-right",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'banner' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/banner",
+      "appearanceId": "poster",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "banner",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-5cfb1fe86627",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/banner.xml#type=banner/appearance=poster",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'banner' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/block",
+      "appearanceId": "default",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "block",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-55a3d7e56b0e",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/block.xml#type=block",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'block' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/button-item",
+      "appearanceId": "default",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "button-item",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-c69e02758ad5",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/button_item.xml#type=button-item",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'button-item' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/buttons",
+      "appearanceId": "inline",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "buttons",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-39d2791c9294",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/buttons.xml#type=buttons/appearance=inline",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'buttons' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/buttons",
+      "appearanceId": "stacked",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "buttons",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-a82f986c6aef",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/buttons.xml#type=buttons/appearance=stacked",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'buttons' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/column-group",
+      "appearanceId": "default",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "column-group",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-01f0122f297d",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/column_group.xml#type=column-group",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'column-group' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/column-line",
+      "appearanceId": "default",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "column-line",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-2f990acec3ec",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/column-line.xml#type=column-line",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'column-line' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/column",
+      "appearanceId": "align-bottom",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "column",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-94df4e538cb1",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/column.xml#type=column/appearance=align-bottom",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'column' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/column",
+      "appearanceId": "align-center",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "column",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-5877e654cf2e",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/column.xml#type=column/appearance=align-center",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'column' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/column",
+      "appearanceId": "align-top",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "column",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-1b05bf3d0304",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/column.xml#type=column/appearance=align-top",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'column' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/column",
+      "appearanceId": "full-height",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "column",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-8368467cef44",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/column.xml#type=column/appearance=full-height",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'column' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/divider",
+      "appearanceId": "default",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "divider",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-64afd5990b1b",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/divider.xml#type=divider",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'divider' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/heading",
+      "appearanceId": "default",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "heading",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-5027fb6d65b4",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/heading.xml#type=heading",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'heading' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/html",
+      "appearanceId": "default",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "html",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-f7ed9625835a",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/html.xml#type=html",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'html' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/image",
+      "appearanceId": "full-width",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "image",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-54a78769803c",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/image.xml#type=image/appearance=full-width",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'image' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/map",
+      "appearanceId": "default",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "map",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-a6640c622e2b",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/map.xml#type=map",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'map' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/products",
+      "appearanceId": "carousel",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "products",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": true,
+        "dataSources": [],
+        "notes": "Runtime catalog data implied by the type's declaration; data sources not audited."
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-ab9cc30069f4",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/products.xml#type=products/appearance=carousel",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'products' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/products",
+      "appearanceId": "grid",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "products",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": true,
+        "dataSources": [],
+        "notes": "Runtime catalog data implied by the type's declaration; data sources not audited."
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-6a1dcc64e766",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/products.xml#type=products/appearance=grid",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'products' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/row",
+      "appearanceId": "contained",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "row",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-bf2c83a578f2",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/row.xml#type=row/appearance=contained",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'row' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/row",
+      "appearanceId": "full-bleed",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "row",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-98f58e1fcaa3",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/row.xml#type=row/appearance=full-bleed",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'row' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/row",
+      "appearanceId": "full-width",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "row",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-bf5015af8879",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/row.xml#type=row/appearance=full-width",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'row' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/slider",
+      "appearanceId": "default",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "slider",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-b43275de0f1f",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/slider.xml#type=slider",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'slider' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/slide",
+      "appearanceId": "collage-centered",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "slide",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-c91222134909",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/slide.xml#type=slide/appearance=collage-centered",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'slide' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/slide",
+      "appearanceId": "collage-left",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "slide",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-6b3704441b0c",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/slide.xml#type=slide/appearance=collage-left",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'slide' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/slide",
+      "appearanceId": "collage-right",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "slide",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-1f625e87877c",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/slide.xml#type=slide/appearance=collage-right",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'slide' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/slide",
+      "appearanceId": "poster",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "slide",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-14551f5ec4ec",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/slide.xml#type=slide/appearance=poster",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'slide' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/tab-item",
+      "appearanceId": "default",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "tab-item",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-62ed1bd573a8",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/tab_item.xml#type=tab-item",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'tab-item' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/tabs",
+      "appearanceId": "default",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "tabs",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-1b8dc8c9d2f0",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/tabs.xml#type=tabs",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'tabs' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/text",
+      "appearanceId": "default",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "text",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-1eca41c09458",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/text.xml#type=text",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'text' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilder/video",
+      "appearanceId": "default",
+      "provider": "Magento_PageBuilder",
+      "category": "native",
+      "displayName": "video",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-78dc151ec32c",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/video.xml#type=video",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'video' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "magento_pagebuilderimageattribute/image",
+      "appearanceId": "full-width",
+      "provider": "Magento_PageBuilderImageAttribute",
+      "category": "native",
+      "displayName": "image",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-633d2764eb9e",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder-image-attribute/view/adminhtml/pagebuilder/content_type/image.xml#type=image/appearance=full-width",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'image' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "mageplaza_lookbook/widget/mageplaza_lookbook_slider_widget",
+      "appearanceId": "default",
+      "provider": "Mageplaza_Lookbook",
+      "category": "widget",
+      "displayName": "mageplaza_lookbook_slider_widget",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-63c15e090386",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Mageplaza/Lookbook/etc/widget.xml#widget=mageplaza_lookbook_slider_widget",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "widget-xml-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Magento widget registration (etc/widget.xml)."
+    },
+    {
+      "id": "mageplaza_lookbook/widget/mageplaza_lookbook_widget",
+      "appearanceId": "default",
+      "provider": "Mageplaza_Lookbook",
+      "category": "widget",
+      "displayName": "mageplaza_lookbook_widget",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-938928dc94d2",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Mageplaza/Lookbook/etc/widget.xml#widget=mageplaza_lookbook_widget",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "widget-xml-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Magento widget registration (etc/widget.xml)."
+    },
+    {
+      "id": "mirasvit_seocontent/widget/mirasvit_seo_description_widget",
+      "appearanceId": "default",
+      "provider": "Mirasvit_SeoContent",
+      "category": "widget",
+      "displayName": "mirasvit_seo_description_widget",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-3f7a7120187d",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Mirasvit/SeoContent/etc/widget.xml#widget=mirasvit_seo_description_widget",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "widget-xml-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Magento widget registration (etc/widget.xml)."
+    },
+    {
+      "id": "secomm_communitylookbookproduct/lookbook",
+      "appearanceId": "default",
+      "provider": "Secomm_CommunityLookbookProduct",
+      "category": "widget",
+      "displayName": "lookbook",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-cf1251a4570d",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/CommunityLookbookProduct/view/adminhtml/pagebuilder/content_type/lookbook.xml#type=lookbook",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "xml-content-type-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Page Builder content type 'lookbook' declared per-file (Magento_PageBuilder module 2.2.6-p5 on this checkout)."
+    },
+    {
+      "id": "secomm_communitylookbookproduct/widget/secomm_lookbook",
+      "appearanceId": "default",
+      "provider": "Secomm_CommunityLookbookProduct",
+      "category": "widget",
+      "displayName": "secomm_lookbook",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": true,
+        "dataSources": [],
+        "notes": "Runtime catalog data implied by the type's declaration; data sources not audited."
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-b8887e170740",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/CommunityLookbookProduct/etc/widget.xml#widget=secomm_lookbook",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "widget-xml-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Magento widget registration (etc/widget.xml)."
+    },
+    {
+      "id": "secomm_flashsale/component/flash_sale",
+      "appearanceId": "default",
+      "provider": "Secomm_FlashSale",
+      "category": "chrome",
+      "displayName": "flash_sale",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-3c5c54fe91cb",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/FlashSale/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=flash_sale",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered component in Secomm\\UiWidget\\Model\\Component\\Registry (registry-in-di.xml) — out of CMS-page scope (module declares no UI surface); metadata-only discovery."
+    },
+    {
+      "id": "secomm_notificationemail/component/customer_account_confirmation_requested_email",
+      "appearanceId": "default",
+      "provider": "Secomm_NotificationEmail",
+      "category": "chrome",
+      "displayName": "customer_account_confirmation_requested_email",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-babc6a583dfa",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/NotificationEmail/etc/di.xml#type=Secomm\\Notification\\Model\\ChannelEvent\\Registry/item=customer_account_confirmation_requested_email",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered component in Secomm\\Notification\\Model\\ChannelEvent\\Registry (registry-in-di.xml) — out of CMS-page scope (module declares no UI surface); metadata-only discovery."
+    },
+    {
+      "id": "secomm_notificationemail/component/customer_account_confirmed_email",
+      "appearanceId": "default",
+      "provider": "Secomm_NotificationEmail",
+      "category": "chrome",
+      "displayName": "customer_account_confirmed_email",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-d457662e37f4",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/NotificationEmail/etc/di.xml#type=Secomm\\Notification\\Model\\ChannelEvent\\Registry/item=customer_account_confirmed_email",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered component in Secomm\\Notification\\Model\\ChannelEvent\\Registry (registry-in-di.xml) — out of CMS-page scope (module declares no UI surface); metadata-only discovery."
+    },
+    {
+      "id": "secomm_notificationemail/component/customer_email_and_password_changed_email",
+      "appearanceId": "default",
+      "provider": "Secomm_NotificationEmail",
+      "category": "chrome",
+      "displayName": "customer_email_and_password_changed_email",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-fdd5e5399de7",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/NotificationEmail/etc/di.xml#type=Secomm\\Notification\\Model\\ChannelEvent\\Registry/item=customer_email_and_password_changed_email",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered component in Secomm\\Notification\\Model\\ChannelEvent\\Registry (registry-in-di.xml) — out of CMS-page scope (module declares no UI surface); metadata-only discovery."
+    },
+    {
+      "id": "secomm_notificationemail/component/customer_email_change_confirmation_requested_email",
+      "appearanceId": "default",
+      "provider": "Secomm_NotificationEmail",
+      "category": "chrome",
+      "displayName": "customer_email_change_confirmation_requested_email",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-cec64d41ed38",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/NotificationEmail/etc/di.xml#type=Secomm\\Notification\\Model\\ChannelEvent\\Registry/item=customer_email_change_confirmation_requested_email",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered component in Secomm\\Notification\\Model\\ChannelEvent\\Registry (registry-in-di.xml) — out of CMS-page scope (module declares no UI surface); metadata-only discovery."
+    },
+    {
+      "id": "secomm_notificationemail/component/customer_email_changed_email",
+      "appearanceId": "default",
+      "provider": "Secomm_NotificationEmail",
+      "category": "chrome",
+      "displayName": "customer_email_changed_email",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-cd4ca51ecf0c",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/NotificationEmail/etc/di.xml#type=Secomm\\Notification\\Model\\ChannelEvent\\Registry/item=customer_email_changed_email",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered component in Secomm\\Notification\\Model\\ChannelEvent\\Registry (registry-in-di.xml) — out of CMS-page scope (module declares no UI surface); metadata-only discovery."
+    },
+    {
+      "id": "secomm_notificationemail/component/customer_password_changed_email",
+      "appearanceId": "default",
+      "provider": "Secomm_NotificationEmail",
+      "category": "chrome",
+      "displayName": "customer_password_changed_email",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-21dde96b419a",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/NotificationEmail/etc/di.xml#type=Secomm\\Notification\\Model\\ChannelEvent\\Registry/item=customer_password_changed_email",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered component in Secomm\\Notification\\Model\\ChannelEvent\\Registry (registry-in-di.xml) — out of CMS-page scope (module declares no UI surface); metadata-only discovery."
+    },
+    {
+      "id": "secomm_notificationemail/component/customer_password_reset_completed_email",
+      "appearanceId": "default",
+      "provider": "Secomm_NotificationEmail",
+      "category": "chrome",
+      "displayName": "customer_password_reset_completed_email",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-309dde238c77",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/NotificationEmail/etc/di.xml#type=Secomm\\Notification\\Model\\ChannelEvent\\Registry/item=customer_password_reset_completed_email",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered component in Secomm\\Notification\\Model\\ChannelEvent\\Registry (registry-in-di.xml) — out of CMS-page scope (module declares no UI surface); metadata-only discovery."
+    },
+    {
+      "id": "secomm_notificationemail/component/customer_password_reset_requested_email",
+      "appearanceId": "default",
+      "provider": "Secomm_NotificationEmail",
+      "category": "chrome",
+      "displayName": "customer_password_reset_requested_email",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-e23c93fff8f5",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/NotificationEmail/etc/di.xml#type=Secomm\\Notification\\Model\\ChannelEvent\\Registry/item=customer_password_reset_requested_email",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered component in Secomm\\Notification\\Model\\ChannelEvent\\Registry (registry-in-di.xml) — out of CMS-page scope (module declares no UI surface); metadata-only discovery."
+    },
+    {
+      "id": "secomm_notificationemail/component/customer_registered_email",
+      "appearanceId": "default",
+      "provider": "Secomm_NotificationEmail",
+      "category": "chrome",
+      "displayName": "customer_registered_email",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-62d5b31edd33",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/NotificationEmail/etc/di.xml#type=Secomm\\Notification\\Model\\ChannelEvent\\Registry/item=customer_registered_email",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered component in Secomm\\Notification\\Model\\ChannelEvent\\Registry (registry-in-di.xml) — out of CMS-page scope (module declares no UI surface); metadata-only discovery."
+    },
+    {
+      "id": "secomm_notificationemail/component/customer_registered_without_password_email",
+      "appearanceId": "default",
+      "provider": "Secomm_NotificationEmail",
+      "category": "chrome",
+      "displayName": "customer_registered_without_password_email",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-fe4efc6bb970",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/NotificationEmail/etc/di.xml#type=Secomm\\Notification\\Model\\ChannelEvent\\Registry/item=customer_registered_without_password_email",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered component in Secomm\\Notification\\Model\\ChannelEvent\\Registry (registry-in-di.xml) — out of CMS-page scope (module declares no UI surface); metadata-only discovery."
+    },
+    {
+      "id": "secomm_uiwidget/component/accordion_a",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "displayName": "accordion_a",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-48436eef013e",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=accordion_a",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered UI component in Secomm\\UiWidget\\Model\\Component\\Registry (registry-in-di.xml) — metadata only; behavior not audited."
+    },
+    {
+      "id": "secomm_uiwidget/component/banner_a",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "displayName": "banner_a",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-d2ee13c0d443",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=banner_a",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered UI component in Secomm\\UiWidget\\Model\\Component\\Registry (registry-in-di.xml) — metadata only; behavior not audited."
+    },
+    {
+      "id": "secomm_uiwidget/component/banner_b",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "displayName": "banner_b",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-24a0be517e96",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=banner_b",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered UI component in Secomm\\UiWidget\\Model\\Component\\Registry (registry-in-di.xml) — metadata only; behavior not audited."
+    },
+    {
+      "id": "secomm_uiwidget/component/banner_c",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "displayName": "banner_c",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-3a0a80c107e1",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=banner_c",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered UI component in Secomm\\UiWidget\\Model\\Component\\Registry (registry-in-di.xml) — metadata only; behavior not audited."
+    },
+    {
+      "id": "secomm_uiwidget/component/card_a",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "displayName": "card_a",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-55de926ad137",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=card_a",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered UI component in Secomm\\UiWidget\\Model\\Component\\Registry (registry-in-di.xml) — metadata only; behavior not audited."
+    },
+    {
+      "id": "secomm_uiwidget/component/card_b",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "displayName": "card_b",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-7f381512c8f2",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=card_b",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered UI component in Secomm\\UiWidget\\Model\\Component\\Registry (registry-in-di.xml) — metadata only; behavior not audited."
+    },
+    {
+      "id": "secomm_uiwidget/component/categories_a",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "displayName": "categories_a",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-ba4bfc2e475e",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=categories_a",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered UI component in Secomm\\UiWidget\\Model\\Component\\Registry (registry-in-di.xml) — metadata only; behavior not audited."
+    },
+    {
+      "id": "secomm_uiwidget/component/categories_b",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "displayName": "categories_b",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-14f909f052dd",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=categories_b",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered UI component in Secomm\\UiWidget\\Model\\Component\\Registry (registry-in-di.xml) — metadata only; behavior not audited."
+    },
+    {
+      "id": "secomm_uiwidget/component/embed_a",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "displayName": "embed_a",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-e773953f54d5",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=embed_a",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered UI component in Secomm\\UiWidget\\Model\\Component\\Registry (registry-in-di.xml) — metadata only; behavior not audited."
+    },
+    {
+      "id": "secomm_uiwidget/component/generic_content_a",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "displayName": "generic_content_a",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-d7a2a4476261",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=generic_content_a",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered UI component in Secomm\\UiWidget\\Model\\Component\\Registry (registry-in-di.xml) — metadata only; behavior not audited."
+    },
+    {
+      "id": "secomm_uiwidget/component/generic_content_b",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "displayName": "generic_content_b",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-51d3f43a3bc6",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=generic_content_b",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered UI component in Secomm\\UiWidget\\Model\\Component\\Registry (registry-in-di.xml) — metadata only; behavior not audited."
+    },
+    {
+      "id": "secomm_uiwidget/component/modal_a",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "displayName": "modal_a",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-0d2088bbea8a",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=modal_a",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered UI component in Secomm\\UiWidget\\Model\\Component\\Registry (registry-in-di.xml) — metadata only; behavior not audited."
+    },
+    {
+      "id": "secomm_uiwidget/component/product_highlights_c",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "displayName": "product_highlights_c",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-802cab64dd85",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=product_highlights_c",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered UI component in Secomm\\UiWidget\\Model\\Component\\Registry (registry-in-di.xml) — metadata only; behavior not audited."
+    },
+    {
+      "id": "secomm_uiwidget/component/shortcuts_a",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "displayName": "shortcuts_a",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-9f9f4b58c826",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=shortcuts_a",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered UI component in Secomm\\UiWidget\\Model\\Component\\Registry (registry-in-di.xml) — metadata only; behavior not audited."
+    },
+    {
+      "id": "secomm_uiwidget/component/slider_a",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "displayName": "slider_a",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-57bb11a390d2",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=slider_a",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered UI component in Secomm\\UiWidget\\Model\\Component\\Registry (registry-in-di.xml) — metadata only; behavior not audited."
+    },
+    {
+      "id": "secomm_uiwidget/component/slider_b",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "displayName": "slider_b",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-70c4e4a6b422",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=slider_b",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered UI component in Secomm\\UiWidget\\Model\\Component\\Registry (registry-in-di.xml) — metadata only; behavior not audited."
+    },
+    {
+      "id": "secomm_uiwidget/component/testimonial_a",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "displayName": "testimonial_a",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-8b6c54236415",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=testimonial_a",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered UI component in Secomm\\UiWidget\\Model\\Component\\Registry (registry-in-di.xml) — metadata only; behavior not audited."
+    },
+    {
+      "id": "secomm_uiwidget/component/testimonial_b",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "displayName": "testimonial_b",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-40fb4f7308b0",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=testimonial_b",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered UI component in Secomm\\UiWidget\\Model\\Component\\Registry (registry-in-di.xml) — metadata only; behavior not audited."
+    },
+    {
+      "id": "secomm_uiwidget/component/usp_a",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "displayName": "usp_a",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-41ba0daa8b43",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=usp_a",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered UI component in Secomm\\UiWidget\\Model\\Component\\Registry (registry-in-di.xml) — metadata only; behavior not audited."
+    },
+    {
+      "id": "secomm_uiwidget/component/usp_b",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "displayName": "usp_b",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-678e18cc4ec4",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=usp_b",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered UI component in Secomm\\UiWidget\\Model\\Component\\Registry (registry-in-di.xml) — metadata only; behavior not audited."
+    },
+    {
+      "id": "secomm_uiwidget/component/usp_c",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "displayName": "usp_c",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-4a1b14418f16",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=usp_c",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "di-registry-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "DI-registered UI component in Secomm\\UiWidget\\Model\\Component\\Registry (registry-in-di.xml) — metadata only; behavior not audited."
+    },
+    {
+      "id": "secomm_uiwidget/widget/secomm_ui",
+      "appearanceId": "default",
+      "provider": "Secomm_UiWidget",
+      "category": "widget",
+      "displayName": "secomm_ui",
+      "availability": "enabled",
+      "acceptedProps": [],
+      "allowedChildren": [],
+      "responsiveDeterministic": false,
+      "dataContext": {
+        "requiresRuntimeData": false
+      },
+      "editorEditingMode": "unknown",
+      "evidence": [
+        {
+          "evidenceId": "e-81b7607857f3",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/widget.xml#widget=secomm_ui",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:51:57.931Z",
+          "method": "widget-xml-declaration-scan"
+        }
+      ],
+      "proofLevel": "registered",
+      "description": "Magento widget registration (etc/widget.xml)."
+    }
+  ],
+  "summary": {
+    "byCategory": {
+      "native": 34,
+      "widget": 35,
+      "chrome": 11,
+      "custom-required": 0,
+      "unsupported": 0
+    },
+    "byProofLevel": {
+      "not-verified": 0,
+      "discovered": 0,
+      "registered": 80,
+      "structurally-mapped": 0,
+      "admin-roundtrip-verified": 0,
+      "visually-verified": 0
+    },
+    "byAvailability": {
+      "enabled": 80,
+      "disabled": 0,
+      "deprecated": 0,
+      "unknown": 0
+    }
+  },
+  "diagnostics": [
+    {
+      "code": "LOCATOR_OUT_OF_SCOPE",
+      "severity": "info",
+      "message": "18 candidate path(s) were skipped: outside profile include scopes.",
+      "subject": {
+        "type": "source",
+        "id": "slaunch-checkout"
+      }
+    },
+    {
+      "code": "LOCATOR_OUT_OF_SCOPE",
+      "severity": "info",
+      "message": "Sensitive surface 'app/etc/env.php' exists and is deny-listed — never read by this probe.",
+      "subject": {
+        "type": "source",
+        "id": "slaunch-checkout"
+      }
+    },
+    {
+      "code": "LOCATOR_OUT_OF_SCOPE",
+      "severity": "info",
+      "message": "Sensitive surface 'auth.json' exists and is deny-listed — never read by this probe.",
+      "subject": {
+        "type": "source",
+        "id": "slaunch-checkout"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'launchpad_catalog/widget/catalog_recently_viewed#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "launchpad_catalog/widget/catalog_recently_viewed#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'launchpad_cmscontent/widget/launchpad_flash_sale_products#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "launchpad_cmscontent/widget/launchpad_flash_sale_products#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magefan_blog/widget/blog_author_link#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magefan_blog/widget/blog_author_link#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magefan_blog/widget/blog_category_link#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magefan_blog/widget/blog_category_link#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magefan_blog/widget/blog_post_link#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magefan_blog/widget/blog_post_link#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magefan_blog/widget/blog_tag_link#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magefan_blog/widget/blog_tag_link#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magefan_blog/widget/magefan_blog_featured#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magefan_blog/widget/magefan_blog_featured#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magefan_blog/widget/magefan_blog_recent#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magefan_blog/widget/magefan_blog_recent#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/banner#collage-centered' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/banner#collage-centered"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/banner#collage-left' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/banner#collage-left"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/banner#collage-right' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/banner#collage-right"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/banner#poster' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/banner#poster"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/block#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/block#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/button-item#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/button-item#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/buttons#inline' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/buttons#inline"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/buttons#stacked' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/buttons#stacked"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/column-group#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/column-group#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/column-line#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/column-line#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/column#align-bottom' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/column#align-bottom"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/column#align-center' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/column#align-center"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/column#align-top' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/column#align-top"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/column#full-height' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/column#full-height"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/divider#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/divider#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/heading#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/heading#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/html#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/html#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/image#full-width' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/image#full-width"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/map#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/map#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/products#carousel' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/products#carousel"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/products#grid' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/products#grid"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/row#contained' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/row#contained"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/row#full-bleed' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/row#full-bleed"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/row#full-width' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/row#full-width"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/slide#collage-centered' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/slide#collage-centered"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/slide#collage-left' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/slide#collage-left"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/slide#collage-right' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/slide#collage-right"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/slide#poster' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/slide#poster"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/slider#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/slider#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/tab-item#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/tab-item#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/tabs#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/tabs#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/text#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/text#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilder/video#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilder/video#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'magento_pagebuilderimageattribute/image#full-width' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "magento_pagebuilderimageattribute/image#full-width"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'mageplaza_lookbook/widget/mageplaza_lookbook_slider_widget#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "mageplaza_lookbook/widget/mageplaza_lookbook_slider_widget#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'mageplaza_lookbook/widget/mageplaza_lookbook_widget#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "mageplaza_lookbook/widget/mageplaza_lookbook_widget#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'mirasvit_seocontent/widget/mirasvit_seo_description_widget#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "mirasvit_seocontent/widget/mirasvit_seo_description_widget#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_communitylookbookproduct/lookbook#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_communitylookbookproduct/lookbook#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_communitylookbookproduct/widget/secomm_lookbook#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_communitylookbookproduct/widget/secomm_lookbook#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_flashsale/component/flash_sale#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_flashsale/component/flash_sale#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_notificationemail/component/customer_account_confirmation_requested_email#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_notificationemail/component/customer_account_confirmation_requested_email#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_notificationemail/component/customer_account_confirmed_email#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_notificationemail/component/customer_account_confirmed_email#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_notificationemail/component/customer_email_and_password_changed_email#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_notificationemail/component/customer_email_and_password_changed_email#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_notificationemail/component/customer_email_change_confirmation_requested_email#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_notificationemail/component/customer_email_change_confirmation_requested_email#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_notificationemail/component/customer_email_changed_email#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_notificationemail/component/customer_email_changed_email#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_notificationemail/component/customer_password_changed_email#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_notificationemail/component/customer_password_changed_email#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_notificationemail/component/customer_password_reset_completed_email#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_notificationemail/component/customer_password_reset_completed_email#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_notificationemail/component/customer_password_reset_requested_email#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_notificationemail/component/customer_password_reset_requested_email#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_notificationemail/component/customer_registered_email#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_notificationemail/component/customer_registered_email#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_notificationemail/component/customer_registered_without_password_email#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_notificationemail/component/customer_registered_without_password_email#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_uiwidget/component/accordion_a#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_uiwidget/component/accordion_a#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_uiwidget/component/banner_a#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_uiwidget/component/banner_a#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_uiwidget/component/banner_b#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_uiwidget/component/banner_b#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_uiwidget/component/banner_c#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_uiwidget/component/banner_c#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_uiwidget/component/card_a#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_uiwidget/component/card_a#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_uiwidget/component/card_b#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_uiwidget/component/card_b#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_uiwidget/component/categories_a#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_uiwidget/component/categories_a#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_uiwidget/component/categories_b#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_uiwidget/component/categories_b#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_uiwidget/component/embed_a#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_uiwidget/component/embed_a#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_uiwidget/component/generic_content_a#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_uiwidget/component/generic_content_a#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_uiwidget/component/generic_content_b#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_uiwidget/component/generic_content_b#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_uiwidget/component/modal_a#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_uiwidget/component/modal_a#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_uiwidget/component/product_highlights_c#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_uiwidget/component/product_highlights_c#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_uiwidget/component/shortcuts_a#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_uiwidget/component/shortcuts_a#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_uiwidget/component/slider_a#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_uiwidget/component/slider_a#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_uiwidget/component/slider_b#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_uiwidget/component/slider_b#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_uiwidget/component/testimonial_a#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_uiwidget/component/testimonial_a#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_uiwidget/component/testimonial_b#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_uiwidget/component/testimonial_b#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_uiwidget/component/usp_a#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_uiwidget/component/usp_a#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_uiwidget/component/usp_b#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_uiwidget/component/usp_b#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_uiwidget/component/usp_c#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_uiwidget/component/usp_c#default"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Capability 'secomm_uiwidget/widget/secomm_ui#default' is declaration-evidence only: props, nesting, editor semantics and responsive behavior were NOT audited — do not treat as runtime-proven.",
+      "subject": {
+        "type": "capability",
+        "id": "secomm_uiwidget/widget/secomm_ui#default"
+      }
+    }
+  ]
+}

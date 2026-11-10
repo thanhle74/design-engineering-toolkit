@@ -109,6 +109,13 @@ Notes on honesty and scope (also enforced in code and tests):
 - Native Page Builder HTML is offered as **source/download only**. No Magento
   storefront or Admin preview is claimed anywhere; installing the output into
   a Magento checkout remains an operator step (a recorded manifest gap).
+- A committed **real-derived** example — the issue [#18] live Figma read
+  (revision-pinned) materialized as a portable offline build project — can be
+  copied into `STUDIO_BUILD_PROJECTS_DIR` and run exactly like the fixture
+  demo, and stays clearly labeled apart from it. See
+  `examples/build/slaunchpad-home-real-derived/` and the operator runbook
+  `docs/runbook-real-derived-studio-build.md` ([56] receipt:
+  `docs/converter/RECEIPT-ISSUE56-REAL-DERIVED-STUDIO-BUILD.md`).
 
 ## Theme ([52])
 

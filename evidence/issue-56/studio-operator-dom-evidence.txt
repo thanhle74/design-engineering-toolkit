@@ -1,0 +1,62 @@
+[56] Studio operator workflow — scoped DOM / HTTP evidence (2026-11-10)
+
+Environment: Orca embedded browser (accessibility snapshot, refs elided below), driving the
+production Studio build of THIS checkout (`apps/studio`, next start, PORT=3100) with
+STUDIO_DET_RUNS_DIR / STUDIO_BUILD_PROJECTS_DIR pointing at this worktree's out/ directory.
+The detached issue-50 smoke server occupied :3000 (env /tmp/det50-smoke); this run used
+:3100 so nothing from that process is reflected here.
+
+1. /build catalog lists BOTH projects, clearly labeled
+   - heading "Build Control"; caption "Build configs"
+   - entry "g28-example" — label "G28 example (fixture demo)" — profile g28-home-preview —
+     design node 245:2 — capability probe — [Build]
+   - entry "slaunchpad-home-real-derived" — label "Slaunchpad Homepage — real-derived
+     (Figma rev 2417494580183108397)" — profile slaunchpad-fashion — design node 245:2 —
+     pinned registry — [Build]
+   - provenance paths are rendered as declared (config-relative), e.g.
+     "profile: profile.json", "registry: capability-registry.json"
+
+2. Fixture demo still works as documented (pre-existing product state at base commit)
+   - click [Build] on g28-example → status "Build completed (exit 0)",
+     started/finished timestamps shown
+   - link "Open the bundle run" → /runs/build-1794305170609
+   - run page: "Manifest verified: every declared output matches its recorded SHA-256 and
+     byte size."; stage table completed×3 (probe via probe); 12 sections · 188 mappings;
+     artifacts table (10 artifacts, per-role download buttons)
+
+3. Real-derived project builds through the SAME UI flow
+   - click [Build] on slaunchpad-home-real-derived → "Build completed (exit 0)"
+   - /runs/build-1794305245531: "Manifest verified: every declared output matches its
+     recorded SHA-256 and byte size."
+   - stage table: capability-probe=reused(exit 0), extraction=completed(exit 0),
+     composition=completed(exit 0)
+   - "Gaps and boundaries": COMPOSITION_SKIPS_PRESENT · count 10 ("10 planned section(s)
+     skipped by the composition table — measured partial coverage, never claimed complete");
+     COMPOSITION_GAPS_PRESENT · count 12; PREVIEW_INSTALL_OPERATOR_GATED;
+     PREVIEW_ASSETS_NOT_GENERATED
+   - "Source design tree — 12 sections · 34 mappings": per-node rows carry Compose + Review
+     columns, e.g. SECTION/Hero/Primary: "Refined tailoring, knitwear and leather for the
+     season." text → Compose=mapped, Review=MAPPED; "DECOR/ScrollIndicator" → gap /
+     DECORATION_MERGED; the two projected shapes map; the other 10 sections carry explicit
+     skipped records with reasons
+   - Preview section: "PREVIEW_UNAVAILABLE" — "No verified DET Preview Theme render is bound
+     to this run… Studio never renders a mock screenshot as Magento proof." (identical state
+     on the fixture demo run — accurate current-product limitation, not a regression)
+
+4. Byte-verified artifact download (HTTP, same run id)
+   GET /api/runs/build-1794305245531/artifacts/03-composition%2Fnative-content.html
+   → 200, 3288 bytes, body starts
+   `<div data-content-type="row" data-appearance="contained" data-element="main">…`
+   `<div data-content-type="banner" data-appearance="poster" data-show-button="never"…`
+   (URL-encoding note: the artifact id is the manifest path; the download route is
+   /api/runs/[runId]/artifacts/[artifactId].)
+
+Screenshots (docs/screenshots/):
+- 56-build-catalog-real-derived.png — /build with both labeled entries
+- 56-g28-fixture-run-page.png — fixture demo run page (base product behavior)
+- 56-real-derived-run-page.png — real-derived run page: stage table + gap list visible
+
+Committed run artifacts (evidence/issue-56/studio-operator-run/): build-manifest.json,
+compose-report.json, native-content.html, tool-run-extraction.json,
+tool-run-composition.json — the exact bundle the UI run produced; manifest inputs are all
+config-relative (no absolute local paths).
