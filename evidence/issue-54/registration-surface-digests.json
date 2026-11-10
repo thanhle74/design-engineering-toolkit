@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-10T09:25:00Z",
+  "purpose": "[54] sanitized digest manifest of the Magento Page Builder registration surfaces observed in the composer-installed vendor tree. Relative paths and sha256 digests only — no source bytes, no absolute paths.",
+  "checkout": {
+    "gitHeadAtRead": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+    "vendorTracked": false
+  },
+  "installedPackages": [
+    {
+      "name": "magento/module-page-builder",
+      "version": "2.2.6-p5"
+    },
+    {
+      "name": "magento/module-page-builder-image-attribute",
+      "version": "1.7.5"
+    }
+  ],
+  "installedMetadata": {
+    "path": "vendor/composer/installed.json",
+    "sha256": "45dd602fc26508576d2d0eefb6460c47807f92f34c59e012584653b5b77e0bae"
+  },
+  "files": [
+    {
+      "path": "vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/banner.xml",
+      "sha256": "0efcb278917d2aa754080f0839f3513d78f96d9d6aeb317782fc78878d62a03c"
+    },
+    {
+      "path": "vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/block.xml",
+      "sha256": "e9abffb0aab26fea157bb58fa68bc93858009cc930ed5c242f6006ab19c78148"
+    },
+    {
+      "path": "vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/button_item.xml",
+      "sha256": "3f362a380acc7c3cfa86ee5d1255754a68a4a1d07a322350614455d1b7454458"
+    },
+    {
+      "path": "vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/buttons.xml",
+      "sha256": "0af25f051760c2964e7bc83624d56495409f2cc569722a06c955f2a89d4d9a50"
+    },
+    {
+      "path": "vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/column-line.xml",
+      "sha256": "14ff8175620cc46a9d749920b30cd03d041272e666b1b571d8aea642350a519a"
+    },
+    {
+      "path": "vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/column.xml",
+      "sha256": "ed4e0e058a985fd0b83699603a9f9ca7468d4ef2e9a523c83a01f7d18e204c10"
+    },
+    {
+      "path": "vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/column_group.xml",
+      "sha256": "a38d4544aa339bbd7bdee7cfb3b6a187a27c1a2c3ea9b2430fff606c4a0cd6f8"
+    },
+    {
+      "path": "vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/divider.xml",
+      "sha256": "d9f0b6f1cea2bd4ad8a1890fffaf3cda4976cbe7fd315763c7f9fc9bf34fbf41"
+    },
+    {
+      "path": "vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/heading.xml",
+      "sha256": "617207cfd0a4fa0c445f643ecf53ef0e85f22b9316d792ba5348f7820f696ff6"
+    },
+    {
+      "path": "vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/html.xml",
+      "sha256": "e936060b34d3d781ba217ece54e7de3592384f43411a256ae38f6b6d6bbf7b76"
+    },
+    {
+      "path": "vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/image.xml",
+      "sha256": "8548951444826b3e259c12f97958209fbb2a52ac57639e48b799ad05c10c2058"
+    },
+    {
+      "path": "vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/map.xml",
+      "sha256": "dda642f97d38b57db8020bcae7ae2a8adcdc474ce0359e29093ee20550eb423f"
+    },
+    {
+      "path": "vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/products.xml",
+      "sha256": "0b65fb3b1a4f2a804d085616d4e76d5b1f58280df060dbc66048a564dba49a3e"
+    },
+    {
+      "path": "vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/row.xml",
+      "sha256": "c6dc1543f4267d3900a139dabbfcf784c4299c204506f51037c4944e7320522d"
+    },
+    {
+      "path": "vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/slide.xml",
+      "sha256": "935193d878633f4e899ca357256190f719a694193c99dcb6f71ff0e3ba8a21dc"
+    },
+    {
+      "path": "vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/slider.xml",
+      "sha256": "84f4c0a34093ee252667c02d4a0ae875455c74a95b911eeaf690c3f7a97757d5"
+    },
+    {
+      "path": "vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/tab_item.xml",
+      "sha256": "a98a8fc58ec1b32dc999da4540203173280e58b89a1009b72bedd99b5c1236ce"
+    },
+    {
+      "path": "vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/tabs.xml",
+      "sha256": "ee56685fe3e90e9e8a7673568756f5994791487e6e31e41635eccaf39f8cf3da"
+    },
+    {
+      "path": "vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/text.xml",
+      "sha256": "580d26a817333efee4793253770c9c6520d9dada5a340abefcf6444f6928845c"
+    },
+    {
+      "path": "vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/video.xml",
+      "sha256": "2a62b6c11d22511e95e92817cf94b4193ab7c5677539712bb8d34e32321f51dc"
+    },
+    {
+      "path": "vendor/magento/module-page-builder/etc/adminhtml/di.xml",
+      "sha256": "b6d08f00a1a68317b6d86c68e22053e67f4da7dd67fd203a373a46bc832367eb"
+    }
+  ],
+  "verification": {
+    "method": "read-only sha256 over file bytes; package identity/version from vendor/composer/installed.json (composer installed-time record, independent of composer.lock intent)",
+    "checkoutNeverWritten": true
+  }
+}

@@ -3,15 +3,15 @@
   "platformId": "magento-pagebuilder",
   "platformVersion": "2.4.8-p5",
   "profileId": "slaunchpad-fashion",
-  "generatedAt": "2026-11-03T02:23:54Z",
+  "generatedAt": "2026-11-10T08:29:07.038Z",
   "source": {
     "sourceId": "slaunch-checkout",
     "revisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
     "accessedAt": "2026-11-03T02:23:54Z"
   },
   "generator": {
-    "tool": "read-only source probe ([5] W-B capability audit)",
-    "toolVersion": "issue-5-2026-11-03"
+    "tool": "read-only source probe ([5] W-B capability audit); [54] config-declaration verification pass via det inspect registration-surface scans (content_type xml / di Registry / di config argument)",
+    "toolVersion": "issue-54-2026-11-10"
   },
   "capabilities": [
     {
@@ -43,7 +43,7 @@
           "note": "theme layout handle declaration"
         }
       ],
-      "proofLevel": "registered",
+      "proofLevel": "discovered",
       "description": "Absolute footer scripts container. Out of CMS-page scope."
     },
     {
@@ -75,7 +75,7 @@
           "note": "theme layout handle declaration"
         }
       ],
-      "proofLevel": "registered",
+      "proofLevel": "discovered",
       "description": "Breadcrumbs and back-to-top theme templates. Out of CMS-page scope."
     },
     {
@@ -116,7 +116,7 @@
           "note": "theme layout handle declaration"
         }
       ],
-      "proofLevel": "registered",
+      "proofLevel": "discovered",
       "description": "Cart drawer / minicart incl. coupon form and promo CMS block; checkout owned by a third-party module. Out of CMS-page scope."
     },
     {
@@ -160,7 +160,7 @@
           "note": "theme layout handle declaration"
         }
       ],
-      "proofLevel": "registered",
+      "proofLevel": "discovered",
       "description": "Footer composed of chrome-owned CMS blocks (newsletter, links, social, trust/payments). Out of CMS-page scope."
     },
     {
@@ -201,7 +201,7 @@
           "note": "theme layout handle declaration"
         }
       ],
-      "proofLevel": "registered",
+      "proofLevel": "discovered",
       "description": "Header container: logo, search, compare, topmenu desktop+mobile, store languages, wishlist. Theme layout handle — out of CMS-page scope."
     },
     {
@@ -233,7 +233,7 @@
           "note": "theme layout handle declaration"
         }
       ],
-      "proofLevel": "registered",
+      "proofLevel": "discovered",
       "description": "Menu drawer + third-party navigation module structure. Out of CMS-page scope."
     },
     {
@@ -314,6 +314,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "appearance collage-centered"
+        },
+        {
+          "evidenceId": "e-b0c80777f28b",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/banner.xml#type=banner/appearance=collage-centered",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -397,6 +406,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "appearance collage-left"
+        },
+        {
+          "evidenceId": "e-d61550bdba93",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/banner.xml#type=banner/appearance=collage-left",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -480,6 +498,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "appearance collage-right"
+        },
+        {
+          "evidenceId": "e-cb69816d8e58",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/banner.xml#type=banner/appearance=collage-right",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -601,6 +628,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "master renderer binds data.main.attributes"
+        },
+        {
+          "evidenceId": "e-5cfb1fe86627",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/banner.xml#type=banner/appearance=poster",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -679,6 +715,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "hyva JIT amendment"
+        },
+        {
+          "evidenceId": "e-55a3d7e56b0e",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/block.xml#type=block",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -761,6 +806,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "7 fields"
+        },
+        {
+          "evidenceId": "e-c69e02758ad5",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/button_item.xml#type=button-item",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -804,6 +858,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "children button-item; appearance inline default"
+        },
+        {
+          "evidenceId": "e-39d2791c9294",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/buttons.xml#type=buttons/appearance=inline",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -847,6 +910,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "appearance stacked"
+        },
+        {
+          "evidenceId": "e-a82f986c6aef",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/buttons.xml#type=buttons/appearance=stacked",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -926,6 +998,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "5 fields"
+        },
+        {
+          "evidenceId": "e-01f0122f297d",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/column_group.xml#type=column-group",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -969,6 +1050,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "parents column-group; children column"
+        },
+        {
+          "evidenceId": "e-2f990acec3ec",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/column-line.xml#type=column-line",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -1045,6 +1135,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "reuses full-height templates"
+        },
+        {
+          "evidenceId": "e-94df4e538cb1",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/column.xml#type=column/appearance=align-bottom",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -1121,6 +1220,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "reuses full-height templates"
+        },
+        {
+          "evidenceId": "e-5877e654cf2e",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/column.xml#type=column/appearance=align-center",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -1197,6 +1305,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "reuses full-height preview/master templates"
+        },
+        {
+          "evidenceId": "e-1b05bf3d0304",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/column.xml#type=column/appearance=align-top",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -1292,6 +1409,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "4 fields + mobile width"
+        },
+        {
+          "evidenceId": "e-8368467cef44",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/column.xml#type=column/appearance=full-height",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -1354,6 +1480,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "4 fields"
+        },
+        {
+          "evidenceId": "e-64afd5990b1b",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/divider.xml#type=divider",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -1416,6 +1551,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "3 fields"
+        },
+        {
+          "evidenceId": "e-5027fb6d65b4",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/heading.xml#type=heading",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -1487,6 +1631,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "hyva amendment"
+        },
+        {
+          "evidenceId": "e-f7ed9625835a",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/html.xml#type=html",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -1573,6 +1726,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "image-attribute module amendment"
+        },
+        {
+          "evidenceId": "e-54a78769803c",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/image.xml#type=image/appearance=full-width",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -1677,6 +1839,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "10 fields + map_location_form 11 fields"
+        },
+        {
+          "evidenceId": "e-a6640c622e2b",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/map.xml#type=map",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -1767,6 +1938,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "9 fields"
+        },
+        {
+          "evidenceId": "e-ab9cc30069f4",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/products.xml#type=products/appearance=carousel",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -1847,6 +2027,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "7 fields"
+        },
+        {
+          "evidenceId": "e-6a1dcc64e766",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/products.xml#type=products/appearance=grid",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -1889,6 +2078,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "drag-drop matrix: allowed_parents=[] => droppable only into the stage root container"
+        },
+        {
+          "evidenceId": "e-5b1a812da66a",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/etc/adminhtml/di.xml#type=Magento\\PageBuilder\\Model\\Stage\\Config/argument=rootContainerConfig",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "di-config-argument-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -2003,6 +2201,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "master renderer"
+        },
+        {
+          "evidenceId": "e-bf2c83a578f2",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/row.xml#type=row/appearance=contained",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -2083,6 +2290,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "master renderer"
+        },
+        {
+          "evidenceId": "e-98f58e1fcaa3",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/row.xml#type=row/appearance=full-bleed",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -2163,6 +2379,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "master renderer"
+        },
+        {
+          "evidenceId": "e-bf5015af8879",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/row.xml#type=row/appearance=full-width",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -2265,6 +2490,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "8 fields"
+        },
+        {
+          "evidenceId": "e-b43275de0f1f",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/slider.xml#type=slider",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -2343,6 +2577,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "appearance collage-centered"
+        },
+        {
+          "evidenceId": "e-c91222134909",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/slide.xml#type=slide/appearance=collage-centered",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -2421,6 +2664,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "appearance collage-left"
+        },
+        {
+          "evidenceId": "e-6b3704441b0c",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/slide.xml#type=slide/appearance=collage-left",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -2499,6 +2751,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "appearance collage-right"
+        },
+        {
+          "evidenceId": "e-1f625e87877c",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/slide.xml#type=slide/appearance=collage-right",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -2625,6 +2886,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "master renderer"
+        },
+        {
+          "evidenceId": "e-14551f5ec4ec",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/slide.xml#type=slide/appearance=poster",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -2702,6 +2972,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "parents tabs; children allow-all except row,tabs"
+        },
+        {
+          "evidenceId": "e-62ed1bd573a8",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/tab_item.xml#type=tab-item",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -2790,6 +3069,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "5 fields"
+        },
+        {
+          "evidenceId": "e-1b8dc8c9d2f0",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/tabs.xml#type=tabs",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -2878,6 +3166,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "wysiwygConfig additional data"
+        },
+        {
+          "evidenceId": "e-1eca41c09458",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/text.xml#type=text",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -2940,6 +3237,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "4 fields"
+        },
+        {
+          "evidenceId": "e-78dc151ec32c",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/video.xml#type=video",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
+          "method": "xml-content-type-declaration-scan",
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -3008,6 +3314,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "widget id secomm_ui"
+        },
+        {
+          "evidenceId": "e-5fbdedc9ac06",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=accordion_a",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "method": "di-registry-scan",
+          "note": "[54] Registration-surface verification 2026-11-10: tracked file verified byte-identical between source revision 66aff1e and the verification read (git diff 66aff1e..933b36e empty; worktree clean)."
         }
       ],
       "proofLevel": "registered",
@@ -3117,6 +3432,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "registry injection"
+        },
+        {
+          "evidenceId": "e-1d49ddfc15e3",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=banner_a",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "method": "di-registry-scan",
+          "note": "[54] Registration-surface verification 2026-11-10: tracked file verified byte-identical between source revision 66aff1e and the verification read (git diff 66aff1e..933b36e empty; worktree clean)."
         }
       ],
       "proofLevel": "registered",
@@ -3191,6 +3515,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "registry injection"
+        },
+        {
+          "evidenceId": "e-afeda042c601",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=banner_b",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "method": "di-registry-scan",
+          "note": "[54] Registration-surface verification 2026-11-10: tracked file verified byte-identical between source revision 66aff1e and the verification read (git diff 66aff1e..933b36e empty; worktree clean)."
         }
       ],
       "proofLevel": "registered",
@@ -3260,6 +3593,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "registry injection"
+        },
+        {
+          "evidenceId": "e-359c39319d1b",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=banner_c",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "method": "di-registry-scan",
+          "note": "[54] Registration-surface verification 2026-11-10: tracked file verified byte-identical between source revision 66aff1e and the verification read (git diff 66aff1e..933b36e empty; worktree clean)."
         }
       ],
       "proofLevel": "registered",
@@ -3334,6 +3676,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "registry injection"
+        },
+        {
+          "evidenceId": "e-ebee3b6fa168",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=card_a",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "method": "di-registry-scan",
+          "note": "[54] Registration-surface verification 2026-11-10: tracked file verified byte-identical between source revision 66aff1e and the verification read (git diff 66aff1e..933b36e empty; worktree clean)."
         }
       ],
       "proofLevel": "registered",
@@ -3403,6 +3754,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "registry injection"
+        },
+        {
+          "evidenceId": "e-6391f4f83339",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=card_b",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "method": "di-registry-scan",
+          "note": "[54] Registration-surface verification 2026-11-10: tracked file verified byte-identical between source revision 66aff1e and the verification read (git diff 66aff1e..933b36e empty; worktree clean)."
         }
       ],
       "proofLevel": "registered",
@@ -3467,6 +3827,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "theme override"
+        },
+        {
+          "evidenceId": "e-5aec980fe049",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=categories_a",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "method": "di-registry-scan",
+          "note": "[54] Registration-surface verification 2026-11-10: tracked file verified byte-identical between source revision 66aff1e and the verification read (git diff 66aff1e..933b36e empty; worktree clean)."
         }
       ],
       "proofLevel": "registered",
@@ -3526,6 +3895,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "registry injection"
+        },
+        {
+          "evidenceId": "e-e085c91be495",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=categories_b",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "method": "di-registry-scan",
+          "note": "[54] Registration-surface verification 2026-11-10: tracked file verified byte-identical between source revision 66aff1e and the verification read (git diff 66aff1e..933b36e empty; worktree clean)."
         }
       ],
       "proofLevel": "registered",
@@ -3595,6 +3973,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "registry injection"
+        },
+        {
+          "evidenceId": "e-bdeb48ef48e9",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=embed_a",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "method": "di-registry-scan",
+          "note": "[54] Registration-surface verification 2026-11-10: tracked file verified byte-identical between source revision 66aff1e and the verification read (git diff 66aff1e..933b36e empty; worktree clean)."
         }
       ],
       "proofLevel": "registered",
@@ -3659,6 +4046,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "renderTrustedHtml"
+        },
+        {
+          "evidenceId": "e-638feb05283f",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=generic_content_a",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "method": "di-registry-scan",
+          "note": "[54] Registration-surface verification 2026-11-10: tracked file verified byte-identical between source revision 66aff1e and the verification read (git diff 66aff1e..933b36e empty; worktree clean)."
         }
       ],
       "proofLevel": "registered",
@@ -3728,6 +4124,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "registry injection"
+        },
+        {
+          "evidenceId": "e-624dd56c18ee",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=generic_content_b",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "method": "di-registry-scan",
+          "note": "[54] Registration-surface verification 2026-11-10: tracked file verified byte-identical between source revision 66aff1e and the verification read (git diff 66aff1e..933b36e empty; worktree clean)."
         }
       ],
       "proofLevel": "registered",
@@ -3792,6 +4197,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "instanceId uniqueness"
+        },
+        {
+          "evidenceId": "e-34c2a1a837bc",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=modal_a",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "method": "di-registry-scan",
+          "note": "[54] Registration-surface verification 2026-11-10: tracked file verified byte-identical between source revision 66aff1e and the verification read (git diff 66aff1e..933b36e empty; worktree clean)."
         }
       ],
       "proofLevel": "registered",
@@ -3851,6 +4265,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "registry injection"
+        },
+        {
+          "evidenceId": "e-99ead1067368",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=product_highlights_c",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "method": "di-registry-scan",
+          "note": "[54] Registration-surface verification 2026-11-10: tracked file verified byte-identical between source revision 66aff1e and the verification read (git diff 66aff1e..933b36e empty; worktree clean)."
         }
       ],
       "proofLevel": "registered",
@@ -3910,6 +4333,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "registry injection"
+        },
+        {
+          "evidenceId": "e-e91212b70c26",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=shortcuts_a",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "method": "di-registry-scan",
+          "note": "[54] Registration-surface verification 2026-11-10: tracked file verified byte-identical between source revision 66aff1e and the verification read (git diff 66aff1e..933b36e empty; worktree clean)."
         }
       ],
       "proofLevel": "registered",
@@ -3984,6 +4416,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "registry injection"
+        },
+        {
+          "evidenceId": "e-53a8bc552c84",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=slider_a",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "method": "di-registry-scan",
+          "note": "[54] Registration-surface verification 2026-11-10: tracked file verified byte-identical between source revision 66aff1e and the verification read (git diff 66aff1e..933b36e empty; worktree clean)."
         }
       ],
       "proofLevel": "registered",
@@ -4053,6 +4494,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "registry injection"
+        },
+        {
+          "evidenceId": "e-ee240973134e",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=slider_b",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "method": "di-registry-scan",
+          "note": "[54] Registration-surface verification 2026-11-10: tracked file verified byte-identical between source revision 66aff1e and the verification read (git diff 66aff1e..933b36e empty; worktree clean)."
         }
       ],
       "proofLevel": "registered",
@@ -4122,6 +4572,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "registry injection"
+        },
+        {
+          "evidenceId": "e-c9e1db60e252",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=testimonial_a",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "method": "di-registry-scan",
+          "note": "[54] Registration-surface verification 2026-11-10: tracked file verified byte-identical between source revision 66aff1e and the verification read (git diff 66aff1e..933b36e empty; worktree clean)."
         }
       ],
       "proofLevel": "registered",
@@ -4191,6 +4650,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "registry injection"
+        },
+        {
+          "evidenceId": "e-46cc35de19ab",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=testimonial_b",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "method": "di-registry-scan",
+          "note": "[54] Registration-surface verification 2026-11-10: tracked file verified byte-identical between source revision 66aff1e and the verification read (git diff 66aff1e..933b36e empty; worktree clean)."
         }
       ],
       "proofLevel": "registered",
@@ -4255,6 +4723,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "registry injection"
+        },
+        {
+          "evidenceId": "e-5d528cbbec14",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=usp_a",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "method": "di-registry-scan",
+          "note": "[54] Registration-surface verification 2026-11-10: tracked file verified byte-identical between source revision 66aff1e and the verification read (git diff 66aff1e..933b36e empty; worktree clean)."
         }
       ],
       "proofLevel": "registered",
@@ -4319,6 +4796,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "registry injection"
+        },
+        {
+          "evidenceId": "e-c27a6630528e",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=usp_b",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "method": "di-registry-scan",
+          "note": "[54] Registration-surface verification 2026-11-10: tracked file verified byte-identical between source revision 66aff1e and the verification read (git diff 66aff1e..933b36e empty; worktree clean)."
         }
       ],
       "proofLevel": "registered",
@@ -4373,6 +4859,15 @@
           "retrievedAt": "2026-11-03T02:23:54Z",
           "method": "read-only source inspection ([5] W-B capability audit)",
           "note": "registry injection"
+        },
+        {
+          "evidenceId": "e-22702357417e",
+          "kind": "config-declaration",
+          "locator": "source://slaunch-checkout/app/code/Secomm/UiWidget/etc/di.xml#type=Secomm\\UiWidget\\Model\\Component\\Registry/item=usp_c",
+          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
+          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "method": "di-registry-scan",
+          "note": "[54] Registration-surface verification 2026-11-10: tracked file verified byte-identical between source revision 66aff1e and the verification read (git diff 66aff1e..933b36e empty; worktree clean)."
         }
       ],
       "proofLevel": "registered",
@@ -4389,8 +4884,8 @@
     },
     "byProofLevel": {
       "not-verified": 0,
-      "discovered": 0,
-      "registered": 61,
+      "discovered": 6,
+      "registered": 55,
       "structurally-mapped": 0,
       "admin-roundtrip-verified": 0,
       "visually-verified": 0
@@ -4415,7 +4910,7 @@
     {
       "code": "NOT_VERIFIED",
       "severity": "warning",
-      "message": "Admin Edit-Save-Reload round-trip was not executed (architecture-only gate); every proofLevel stays at 'registered' and widget placement rules are unverified.",
+      "message": "Admin Edit-Save-Reload round-trip was not executed; proof stays at declaration level (55 registered with verified config-declaration evidence, 6 chrome discovered), widget placement rules unverified.",
       "subject": {
         "type": "source",
         "id": "slaunch-checkout"
@@ -4428,6 +4923,15 @@
       "subject": {
         "type": "capability",
         "id": "magento-pagebuilder/map"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "[54] repair: 6 chrome entries demoted to 'discovered' — theme layout declarations are not a platform registration surface. 21 widget entries carry config-declaration evidence pinned to git revision 66aff1e (tracked app/code/Secomm/UiWidget/etc/di.xml verified byte-identical across revisions and in the worktree). 34 native entries carry config-declaration evidence pinned to checkout state 933b36e (read 2026-11-10 from the composer-installed, untracked vendor tree: install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; per-file sha256 in evidence/issue-54/registration-surface-digests.json; git history does not pin untracked vendor bytes). acceptedProps types and editor semantics remain NOT_VERIFIED (declaration-only).",
+      "subject": {
+        "type": "source",
+        "id": "slaunch-checkout"
       }
     }
   ]

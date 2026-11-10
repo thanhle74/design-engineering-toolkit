@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "profileId": "slaunchpad-fashion",
+  "platformId": "magento-pagebuilder",
+  "generatedAt": "2026-11-10T08:40:00Z",
+  "registry": {
+    "platformId": "magento-pagebuilder",
+    "registryRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88"
+  },
+  "bindings": [],
+  "diagnostics": []
+}

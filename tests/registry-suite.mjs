@@ -13,6 +13,7 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { getAjv, contractId, contractAliases, REPO_ROOT } from "../dist/src/core/schema-registry.js";
 import { schemaRefFor } from "../dist/src/core/run-envelope.js";
+import { validateRegistry } from "../dist/src/core/semantic.js";
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
 const registry = JSON.parse(fs.readFileSync(path.join(ROOT, "schemas", "registry.json"), "utf8"));
@@ -165,5 +166,48 @@ process.stdout.write(contractId("build-manifest"));`;
     assert.throws(() => contractId("no-such-alias"), /Unknown contract alias 'no-such-alias' \(schemas\/registry\.json\)/);
     assert.throws(() => schemaRefFor("no-such-role"), /Unknown contract alias/);
     return "missing alias fails loudly at resolution";
+  });
+
+  // Issue #54 evidence gate: the shipped example registry must stay contract-valid (every
+  // 'registered' entry carries config-declaration evidence from the platform's registration
+  // surface; theme chrome honestly demoted to 'discovered') AND the exact committed plan inputs
+  // must resolve the revision-pinned live-derived #18 PageStructure offline — coverage honestly
+  // zero (no proven bindings), zero errors. Re-breaking the example registry fails CI loudly.
+  checkAsync("REG-09", "example capability registry is evidence-valid and resolves the live-derived #18 PageStructure (coverage honestly 0)", async () => {
+    const regPath = path.join(ROOT, "examples/converter/capability-registry.magento-pagebuilder.example.json");
+    const registryJson = JSON.parse(fs.readFileSync(regPath, "utf8"));
+    const verdict = validateRegistry(registryJson);
+    assert.equal(verdict.valid, true, "example registry must pass validateRegistry: " + JSON.stringify(verdict.diagnostics.filter((d) => d.severity === "error").slice(0, 3)));
+    assert.equal(verdict.diagnostics.filter((d) => d.severity === "error").length, 0, "zero error diagnostics expected");
+    const registered = registryJson.capabilities.filter((c) => c.proofLevel === "registered");
+    assert.equal(registered.length, 55, "55 native/widget entries stay registered on config-declaration evidence");
+    assert.ok(registered.every((c) => c.evidence.some((e) => e.kind === "config-declaration")), "every registered entry carries config-declaration evidence");
+    const chrome = registryJson.capabilities.filter((c) => c.category === "chrome");
+    assert.ok(chrome.length > 0 && chrome.every((c) => c.proofLevel === "discovered"), "theme chrome stays honestly demoted to discovered");
+    const outDir = fs.mkdtempSync(path.join(os.tmpdir(), "det-54-plan-"));
+    const plan = execFileSync(
+      process.execPath,
+      [
+        "bin/det.js",
+        "plan",
+        "--profile", path.join(ROOT, "profiles/slaunchpad-fashion.example.json"),
+        "--registry", regPath,
+        "--bindings", path.join(ROOT, "examples/converter/component-binding-map.slaunchpad-fashion.example.json"),
+        "--input", path.join(ROOT, "evidence/issue-18/live-read-verified/page-structure.json"),
+        "--out", outDir,
+        "--json",
+      ],
+      { cwd: ROOT, encoding: "utf8" }
+    );
+    const parsed = JSON.parse(plan.slice(plan.indexOf("{")));
+    assert.equal(parsed.run.exitCode, 0, "plan exit 0 expected");
+    assert.equal(parsed.run.converterDiagnostics.length, 0, "no converter diagnostics expected");
+    const report = JSON.parse(fs.readFileSync(path.join(outDir, "resolution-report.json"), "utf8"));
+    assert.equal(report.sections.length, 12, "all 12 live-derived sections enter the report");
+    assert.equal(report.coverage.total, 0, "coverage stays honestly 0 — no proven capability bindings exist");
+    assert.equal(report.counts.errors, 0, "zero blocking diagnostics in the report");
+    assert.ok(report.sections.every((s) => s.status === "unmapped"), "every section honestly reports unmapped");
+    assert.equal(report.inputs.registryRevisionId, "66aff1ebd4cda9152a5e70635766b8030b10ff88", "report pins the registry revision");
+    return "registry evidence-valid; live-derived plan resolves: 12 sections, coverage 0, 0 errors";
   });
 }
