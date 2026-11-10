@@ -36,6 +36,7 @@ import { RUN_ID_PATTERN } from "./artifact-access";
 import { guardBuildManifest } from "./build-bundle-reader";
 import { readJsonRecordIfPresent } from "./contained-read";
 import { STUDIO_DET_RUNS_DIR_ENV } from "./det-run-reader-factory";
+import { getStudioCatalog, type StudioCatalog } from "./catalog/studio-catalog";
 
 export const STUDIO_DET_CLI_ENV = "STUDIO_DET_CLI";
 export const STUDIO_BUILD_TIMEOUT_MS_ENV = "STUDIO_BUILD_TIMEOUT_MS";
@@ -132,6 +133,13 @@ function sanitizeSpawnError(error: NodeJS.ErrnoException): string {
 export class BuildRunner {
   private readonly runsRoot: string;
   private readonly spawnImpl: typeof spawn;
+  /**
+   * [50] OPTIONAL catalogue (null when `STUDIO_DATA_DIR` is unset, or when it
+   * failed to open — the bundle/journal on disk remain the truth either way).
+   * Purely additive best-effort hooks: they never gate spawn, never change a
+   * job state, and never touch the single-slot/early-error guarantees.
+   */
+  private readonly catalog: StudioCatalog | null;
   private active: ActiveJob | null = null;
   /**
    * Strict journal-write ordering (C2): the async `error` event can fire
@@ -141,17 +149,19 @@ export class BuildRunner {
    */
   private journalQueue: Promise<unknown> = Promise.resolve();
 
-  private constructor(runsRoot: string, spawnImpl: typeof spawn) {
+  private constructor(runsRoot: string, spawnImpl: typeof spawn, catalog: StudioCatalog | null) {
     this.runsRoot = runsRoot;
     this.spawnImpl = spawnImpl;
+    this.catalog = catalog;
   }
 
   /** Validate + realpath the runs root exactly once. */
   static async open(
     configuredRunsRoot: string,
-    // Test seam ONLY: lets tests hold the job slot with a controlled child;
-    // production always uses the real child_process.spawn.
-    opts: { spawnImpl?: typeof spawn } = {}
+    // Test seam ONLY: lets tests hold the job slot with a controlled child and
+    // inject an optional [50] catalogue; production always uses the real
+    // child_process.spawn and the factory-resolved catalogue.
+    opts: { spawnImpl?: typeof spawn; catalog?: StudioCatalog | null } = {}
   ): Promise<BuildRunner> {
     if (typeof configuredRunsRoot !== "string" || configuredRunsRoot.trim() === "") {
       throw new DetRunReaderError(
@@ -175,7 +185,7 @@ export class BuildRunner {
         "Build control requires STUDIO_DET_RUNS_DIR to point at a directory."
       );
     }
-    return new BuildRunner(resolved, opts.spawnImpl ?? spawn);
+    return new BuildRunner(resolved, opts.spawnImpl ?? spawn, opts.catalog ?? null);
   }
 
   /* ------------------------------ journal ----------------------------- */
@@ -306,6 +316,21 @@ export class BuildRunner {
 
     try {
       await this.finalizeRunId(snapshot);
+      // [50] Best-effort catalogue record of the RUNNING job. A catalogue
+      // failure never blocks a build (files/journal stay the truth); the
+      // stale-RUNNING sweep and the scanner reconcile history later.
+      if (this.catalog !== null) {
+        try {
+          this.catalog.recordRunnerStart({
+            runId: snapshot.runId,
+            configId,
+            pid: null,
+            startedAt: snapshot.startedAt ?? new Date().toISOString(),
+          });
+        } catch {
+          /* catalogue is best-effort provenance */
+        }
+      }
       const absOut = path.join(this.runsRoot, snapshot.runId);
       snapshot.command = [
         process.execPath,
@@ -369,6 +394,32 @@ export class BuildRunner {
         // child's stdout is diagnostics only (kept as a bounded tail).
         void (async () => {
           snapshot.manifestSummary = await readManifestSummary(this.runsRoot, snapshot.runId).catch(() => null);
+          // [50] Best-effort catalogue update AFTER the manifest is known:
+          // a verifiable bundle is indexed from disk truth (status derived
+          // from the stage table, outputs byte-verified); a job without one
+          // records its truthful terminal state (FAILED / INTERRUPTED).
+          if (this.catalog !== null) {
+            try {
+              if (snapshot.manifestSummary !== null) {
+                await this.catalog.indexBundleDir(path.join(this.runsRoot, snapshot.runId), snapshot.runId, {
+                  startedAt: snapshot.startedAt,
+                  finishedAt: snapshot.finishedAt,
+                  exitCode: snapshot.exitCode,
+                  signal: snapshot.signal,
+                });
+              } else {
+                this.catalog.recordRunnerTerminal({
+                  runId: snapshot.runId,
+                  exitCode: snapshot.exitCode,
+                  signal: snapshot.signal,
+                  failureKind: snapshot.timedOut ? "timeout" : snapshot.state === "spawn-failed" ? "spawn-failed" : null,
+                  finishedAt: snapshot.finishedAt,
+                });
+              }
+            } catch {
+              /* catalogue is best-effort provenance */
+            }
+          }
           // Serialized journal write; free the slot only AFTER the journal
           // reflects the terminal state, so a concurrent status read can
           // never fall through to a stale state and misread the job.
@@ -399,6 +450,15 @@ export class BuildRunner {
       // can never reorder ahead of (and overwrite) a terminal state.
       snapshot.pid = child.pid ?? null;
       snapshot.state = "running";
+      // [50] The catalogue's stale-RUNNING sweep keys on the live pid, so it
+      // is recorded as soon as spawn() reveals it (best-effort).
+      if (this.catalog !== null && snapshot.pid !== null) {
+        try {
+          this.catalog.recordRunnerPid(snapshot.runId, snapshot.pid);
+        } catch {
+          /* catalogue is best-effort provenance */
+        }
+      }
       await this.queueJournal(snapshot).catch(() => {});
 
       return { ...snapshot };
@@ -506,7 +566,11 @@ export async function getBuildRunner(): Promise<BuildRunner> {
           "Build control requires STUDIO_DET_RUNS_DIR to be set (builds write real bundles there). Unset it to browse the DEMO fixture instead — a build-control UI must never look like it built something it did not."
         );
       }
-      return BuildRunner.open(configuredRoot);
+      // [50] Optional catalogue: builds keep working (files/journal are the
+      // truth) even when STUDIO_DATA_DIR is unset or cannot be opened; the
+      // /catalog surface reports catalogue problems honestly on its own.
+      const catalog = await getStudioCatalog().catch(() => null);
+      return BuildRunner.open(configuredRoot, { catalog });
     })().catch((error) => {
       globalForRunner.__detStudioBuildRunner = undefined;
       throw error;

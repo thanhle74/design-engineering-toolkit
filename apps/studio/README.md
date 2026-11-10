@@ -31,6 +31,18 @@ Other commands: `npm run build` · `npm start` (serve the production build) ·
   enforces realpath containment / extension / size limits, and only serves
   manifest-declared files for download. No CLI invocation, no Figma API, no
   CMS writes — ever — from Studio.
+- **Catalogue mode ([50], opt-in).** Set `STUDIO_DATA_DIR` to a local
+  directory to persist project/run metadata in `<dir>/studio.sqlite` (Node
+  ≥ 22.13 built-in `node:sqlite`; see
+  `docs/sqlite-driver-spike.md`). The `/catalog` page and `/api/catalog`
+  then survive restarts: indexed build bundles, frozen config/source pins,
+  truthful run states and per-artifact integrity. Unset → no DB anywhere and
+  the modes above behave byte-for-byte as before. Files stay the truth: the
+  catalogue indexes metadata verified against the build manifest's per-file
+  sha256/bytes, and downloads are still re-verified live on every read — a
+  DB row never makes a missing/tampered file downloadable. See
+  `docs/catalog-data-model.md` for the schema, backup/restore and recovery
+  behavior.
 
 ## Local build control setup ([40])
 
@@ -92,6 +104,8 @@ Notes on honesty and scope (also enforced in code and tests):
   stage table and gap list from the manifest; **every** artifact download is
   re-checked against the manifest's per-FILE-BYTE sha256 + byte size first —
   a mismatch (tampered/stale bundle) is a hard refusal.
+- With `STUDIO_DATA_DIR` set, the runner also records job/run metadata in the
+  local catalogue (best-effort; a catalogue problem never blocks a build).
 - Native Page Builder HTML is offered as **source/download only**. No Magento
   storefront or Admin preview is claimed anywhere; installing the output into
   a Magento checkout remains an operator step (a recorded manifest gap).
