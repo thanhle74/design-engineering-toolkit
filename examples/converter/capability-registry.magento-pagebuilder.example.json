@@ -316,13 +316,13 @@
           "note": "appearance collage-centered"
         },
         {
-          "evidenceId": "e-89c102f83e19",
+          "evidenceId": "e-b0c80777f28b",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/banner.xml#type=banner/appearance=collage-centered",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -408,13 +408,13 @@
           "note": "appearance collage-left"
         },
         {
-          "evidenceId": "e-3666ffe3fcb6",
+          "evidenceId": "e-d61550bdba93",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/banner.xml#type=banner/appearance=collage-left",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -500,13 +500,13 @@
           "note": "appearance collage-right"
         },
         {
-          "evidenceId": "e-122bed3a02db",
+          "evidenceId": "e-cb69816d8e58",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/banner.xml#type=banner/appearance=collage-right",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -630,13 +630,13 @@
           "note": "master renderer binds data.main.attributes"
         },
         {
-          "evidenceId": "e-b36f167ee563",
+          "evidenceId": "e-5cfb1fe86627",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/banner.xml#type=banner/appearance=poster",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -717,13 +717,13 @@
           "note": "hyva JIT amendment"
         },
         {
-          "evidenceId": "e-f258586c1c5f",
+          "evidenceId": "e-55a3d7e56b0e",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/block.xml#type=block",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -808,13 +808,13 @@
           "note": "7 fields"
         },
         {
-          "evidenceId": "e-91e1abcbafc7",
+          "evidenceId": "e-c69e02758ad5",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/button_item.xml#type=button-item",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -860,13 +860,13 @@
           "note": "children button-item; appearance inline default"
         },
         {
-          "evidenceId": "e-60d9407788f4",
+          "evidenceId": "e-39d2791c9294",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/buttons.xml#type=buttons/appearance=inline",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -912,13 +912,13 @@
           "note": "appearance stacked"
         },
         {
-          "evidenceId": "e-790f3c4f2bd3",
+          "evidenceId": "e-a82f986c6aef",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/buttons.xml#type=buttons/appearance=stacked",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -1000,13 +1000,13 @@
           "note": "5 fields"
         },
         {
-          "evidenceId": "e-f2b99c078fbb",
+          "evidenceId": "e-01f0122f297d",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/column_group.xml#type=column-group",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -1052,13 +1052,13 @@
           "note": "parents column-group; children column"
         },
         {
-          "evidenceId": "e-befa85ce37fd",
+          "evidenceId": "e-2f990acec3ec",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/column-line.xml#type=column-line",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -1137,13 +1137,13 @@
           "note": "reuses full-height templates"
         },
         {
-          "evidenceId": "e-fef71ac8b332",
+          "evidenceId": "e-94df4e538cb1",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/column.xml#type=column/appearance=align-bottom",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -1222,13 +1222,13 @@
           "note": "reuses full-height templates"
         },
         {
-          "evidenceId": "e-1454a991c143",
+          "evidenceId": "e-5877e654cf2e",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/column.xml#type=column/appearance=align-center",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -1307,13 +1307,13 @@
           "note": "reuses full-height preview/master templates"
         },
         {
-          "evidenceId": "e-bcedbefb05e7",
+          "evidenceId": "e-1b05bf3d0304",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/column.xml#type=column/appearance=align-top",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -1411,13 +1411,13 @@
           "note": "4 fields + mobile width"
         },
         {
-          "evidenceId": "e-8124f2c38be2",
+          "evidenceId": "e-8368467cef44",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/column.xml#type=column/appearance=full-height",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -1482,13 +1482,13 @@
           "note": "4 fields"
         },
         {
-          "evidenceId": "e-69dc0a78c0f1",
+          "evidenceId": "e-64afd5990b1b",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/divider.xml#type=divider",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -1553,13 +1553,13 @@
           "note": "3 fields"
         },
         {
-          "evidenceId": "e-fc019eea68e6",
+          "evidenceId": "e-5027fb6d65b4",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/heading.xml#type=heading",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -1633,13 +1633,13 @@
           "note": "hyva amendment"
         },
         {
-          "evidenceId": "e-278511791dcf",
+          "evidenceId": "e-f7ed9625835a",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/html.xml#type=html",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -1728,13 +1728,13 @@
           "note": "image-attribute module amendment"
         },
         {
-          "evidenceId": "e-b8db9c9b69b0",
+          "evidenceId": "e-54a78769803c",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/image.xml#type=image/appearance=full-width",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -1841,13 +1841,13 @@
           "note": "10 fields + map_location_form 11 fields"
         },
         {
-          "evidenceId": "e-e035ff00eab9",
+          "evidenceId": "e-a6640c622e2b",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/map.xml#type=map",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -1940,13 +1940,13 @@
           "note": "9 fields"
         },
         {
-          "evidenceId": "e-20735557395f",
+          "evidenceId": "e-ab9cc30069f4",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/products.xml#type=products/appearance=carousel",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -2029,13 +2029,13 @@
           "note": "7 fields"
         },
         {
-          "evidenceId": "e-3dfc42ca23dd",
+          "evidenceId": "e-6a1dcc64e766",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/products.xml#type=products/appearance=grid",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -2080,13 +2080,13 @@
           "note": "drag-drop matrix: allowed_parents=[] => droppable only into the stage root container"
         },
         {
-          "evidenceId": "e-b1446900f988",
+          "evidenceId": "e-5b1a812da66a",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/etc/adminhtml/di.xml#type=Magento\\PageBuilder\\Model\\Stage\\Config/argument=rootContainerConfig",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "di-config-argument-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -2203,13 +2203,13 @@
           "note": "master renderer"
         },
         {
-          "evidenceId": "e-d76b8575156a",
+          "evidenceId": "e-bf2c83a578f2",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/row.xml#type=row/appearance=contained",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -2292,13 +2292,13 @@
           "note": "master renderer"
         },
         {
-          "evidenceId": "e-6c0be5bc101a",
+          "evidenceId": "e-98f58e1fcaa3",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/row.xml#type=row/appearance=full-bleed",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -2381,13 +2381,13 @@
           "note": "master renderer"
         },
         {
-          "evidenceId": "e-100efbe72779",
+          "evidenceId": "e-bf5015af8879",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/row.xml#type=row/appearance=full-width",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -2492,13 +2492,13 @@
           "note": "8 fields"
         },
         {
-          "evidenceId": "e-210c6a4b0940",
+          "evidenceId": "e-b43275de0f1f",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/slider.xml#type=slider",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -2579,13 +2579,13 @@
           "note": "appearance collage-centered"
         },
         {
-          "evidenceId": "e-7ffdf363060a",
+          "evidenceId": "e-c91222134909",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/slide.xml#type=slide/appearance=collage-centered",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -2666,13 +2666,13 @@
           "note": "appearance collage-left"
         },
         {
-          "evidenceId": "e-0f400aca5074",
+          "evidenceId": "e-6b3704441b0c",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/slide.xml#type=slide/appearance=collage-left",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -2753,13 +2753,13 @@
           "note": "appearance collage-right"
         },
         {
-          "evidenceId": "e-d82bbe073f6a",
+          "evidenceId": "e-1f625e87877c",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/slide.xml#type=slide/appearance=collage-right",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -2888,13 +2888,13 @@
           "note": "master renderer"
         },
         {
-          "evidenceId": "e-a70ee5156313",
+          "evidenceId": "e-14551f5ec4ec",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/slide.xml#type=slide/appearance=poster",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -2974,13 +2974,13 @@
           "note": "parents tabs; children allow-all except row,tabs"
         },
         {
-          "evidenceId": "e-91837c9b224f",
+          "evidenceId": "e-62ed1bd573a8",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/tab_item.xml#type=tab-item",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -3071,13 +3071,13 @@
           "note": "5 fields"
         },
         {
-          "evidenceId": "e-0b2ee96fbdff",
+          "evidenceId": "e-1b8dc8c9d2f0",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/tabs.xml#type=tabs",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -3168,13 +3168,13 @@
           "note": "wysiwygConfig additional data"
         },
         {
-          "evidenceId": "e-ffab7c0326be",
+          "evidenceId": "e-1eca41c09458",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/text.xml#type=text",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -3239,13 +3239,13 @@
           "note": "4 fields"
         },
         {
-          "evidenceId": "e-444e72978bab",
+          "evidenceId": "e-78dc151ec32c",
           "kind": "config-declaration",
           "locator": "source://slaunch-checkout/vendor/magento/module-page-builder/view/adminhtml/pagebuilder/content_type/video.xml#type=video",
-          "sourceRevisionId": "66aff1ebd4cda9152a5e70635766b8030b10ff88",
-          "retrievedAt": "2026-11-10T08:29:07.038Z",
+          "sourceRevisionId": "933b36e78211e571e4fab9a78866a02dc1b5e054",
+          "retrievedAt": "2026-11-10T09:25:00Z",
           "method": "xml-content-type-declaration-scan",
-          "note": "[54] Registration-surface verification 2026-11-10: vendor/ is composer-installed and untracked; content pinned by tracked composer.lock (byte-identical between source revision 66aff1e and the verification read; magento/module-page-builder 2.2.6-p5 locked = installed)."
+          "note": "[54] Read 2026-11-10 from the composer-installed vendor tree (untracked — git history does not pin vendor bytes). Install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; this file's sha256 is pinned in evidence/issue-54/registration-surface-digests.json at checkout state 933b36e."
         }
       ],
       "proofLevel": "registered",
@@ -4928,7 +4928,7 @@
     {
       "code": "NOT_VERIFIED",
       "severity": "warning",
-      "message": "[54] repair: 6 chrome entries demoted to 'discovered' — theme layout declarations are not a platform registration surface; 55 native/widget entries carry verified config-declaration evidence (registration-surface scans; revision identity via tracked-file/composer.lock equality). acceptedProps types and editor semantics remain NOT_VERIFIED (declaration-only).",
+      "message": "[54] repair: 6 chrome entries demoted to 'discovered' — theme layout declarations are not a platform registration surface. 21 widget entries carry config-declaration evidence pinned to git revision 66aff1e (tracked app/code/Secomm/UiWidget/etc/di.xml verified byte-identical across revisions and in the worktree). 34 native entries carry config-declaration evidence pinned to checkout state 933b36e (read 2026-11-10 from the composer-installed, untracked vendor tree: install identity magento/module-page-builder 2.2.6-p5 per vendor/composer/installed.json; per-file sha256 in evidence/issue-54/registration-surface-digests.json; git history does not pin untracked vendor bytes). acceptedProps types and editor semantics remain NOT_VERIFIED (declaration-only).",
       "subject": {
         "type": "source",
         "id": "slaunch-checkout"
