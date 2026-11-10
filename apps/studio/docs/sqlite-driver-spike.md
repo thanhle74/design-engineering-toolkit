@@ -21,6 +21,14 @@ Additional measured behavior on both runtimes:
 - There is **no `DatabaseSync.prototype.backup()`** on either line → online backup uses
   `VACUUM INTO '<path>'` (SQLite ≥ 3.27, present in both bundled versions), which produces a
   consistent snapshot of the whole DB (WAL included).
+- **Bundler boundary (measured the hard way in CI):** Node 22's
+  `module.builtinModules` lists `sqlite` **without** the `node:` prefix (Node 24 lists both),
+  so Vite's resolver classifies a literal `"node:sqlite"` dynamic import as bundleable and
+  fails the whole suite ("Cannot bundle Node.js built-in") on Node 22 while passing on Node
+  24. The driver therefore computes the specifier at runtime
+  (`["node", "sqlite"].join(":")`) with a `@vite-ignore` dynamic import — Vite and Turbopack
+  both leave it to the Node loader, which resolves it identically on both lines. Verified
+  under BOTH runtimes (studio suite 213/213 on Node 24; catalog suites 29/29 on Node 22).
 
 ## Decision: `node:sqlite` (built-in), behind one thin driver module
 
