@@ -1,7 +1,8 @@
 // Tiny deterministic argument parser for det (no third-party CLI dependency — decision recorded
 // in docs/converter/DECISIONS.md). Unknown flags and duplicate value flags are usage errors.
-// Issue #15 (additive): the `kb` command takes a verb position (det kb ingest|sync|query|validate)
-// and a small set of repeatable value flags (--root, --where, --include-lifecycle) which collect
+// Issue #15 (additive): the `kb` command takes a verb position (det kb ingest|sync|query|validate,
+// plus the #19 M4 extract verb), and a small set of repeatable value flags
+// (--root, --where, --include-lifecycle) which collect
 // into arrays; every other value flag still rejects duplicates.
 export interface ParsedArgs {
   command: string | null;
@@ -10,10 +11,10 @@ export interface ParsedArgs {
 }
 
 const BOOL_FLAGS = new Set(["help", "h", "version", "json", "dry-run", "quiet"]);
-const VALUE_FLAGS = new Set(["profile", "adapter", "project", "out", "input", "registry", "bindings", "design-file", "design-node", "manifest", "store", "root", "where", "text", "kb", "edge-type", "related-to", "include-lifecycle", "require-proof"]);
+const VALUE_FLAGS = new Set(["profile", "adapter", "project", "out", "input", "registry", "bindings", "design-file", "design-node", "manifest", "store", "root", "where", "text", "kb", "edge-type", "related-to", "include-lifecycle", "require-proof", "nodeir", "content", "projection", "config"]);
 const REPEATABLE_FLAGS = new Set(["root", "where", "include-lifecycle"]);
-const COMMANDS = new Set(["validate", "inspect", "plan", "extract", "kb"]);
-const KB_VERBS = new Set(["ingest", "sync", "query", "validate"]);
+const COMMANDS = new Set(["validate", "inspect", "plan", "extract", "kb", "compose", "build"]);
+const KB_VERBS = new Set(["ingest", "sync", "query", "validate", "extract"]);
 
 function storeFlag(out: ParsedArgs, name: string, value: string): void {
   if (REPEATABLE_FLAGS.has(name)) {
@@ -67,7 +68,7 @@ export function parseArgs(argv: string[]): ParsedArgs {
     }
     if (out.command === null) {
       if (COMMANDS.has(tok)) out.command = tok;
-      else out.errors.push(`unknown command '${tok}' (expected validate|inspect|plan|extract|kb)`);
+      else out.errors.push(`unknown command '${tok}' (expected validate|inspect|plan|extract|kb|compose|build)`);
     } else if (out.command === "kb" && out.flags["kb-verb"] === undefined) {
       if (KB_VERBS.has(tok)) out.flags["kb-verb"] = tok;
       else out.errors.push(`unknown kb verb '${tok}' (expected ingest|sync|query|validate)`);
@@ -92,6 +93,8 @@ const COMMAND_VALUE_FLAGS: Record<string, Set<string>> = {
   plan: new Set(["profile", "registry", "bindings", "input", "out"]),
   extract: new Set(["profile", "adapter", "project", "out", "design-file", "design-node", "registry", "bindings"]),
   kb: new Set(["manifest", "store", "out", "root", "where", "text", "kb", "edge-type", "related-to", "include-lifecycle", "require-proof", "project"]),
+  compose: new Set(["profile", "registry", "bindings", "input", "nodeir", "content", "projection", "adapter", "out"]),
+  build: new Set(["config", "out"]),
 };
 
 export function unexpectedFlagsForCommand(command: string, flags: Record<string, string | boolean | string[]>): string[] {

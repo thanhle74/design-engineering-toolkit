@@ -1,0 +1,47 @@
+[52] Dark-only theme + spacious layout — DOM/CSS evidence (exact tip of this branch)
+
+Captured against the production build (`next build` + `next start`), fixture
+mode (no env vars set), 2026-11-10. Screenshots: `52-*-desktop.dark.png` /
+`52-*-mobile.dark.png` in this directory (headless Chrome, in-process render —
+no Wayland portal involved). Before reference: `01-overview-desktop.png`
+(committed on main, light theme, h-12 header, h-9/36px primary button).
+
+1. Deterministic dark, server-rendered on every route (no client swap, no
+   OS dependency):
+
+   <html lang="en" class="h-full antialiased dark …">
+
+   present on /, /build, /catalog, /runs/demo-run-245-2 (curl of served HTML).
+   Compiled CSS chunk: `oklch(1 0 0)` (old light background) occurrences: 0;
+   `prefers-color-scheme` occurrences: 0 (no OS theme switching); the dark
+   token set is carried by `:root` directly (`color-scheme: dark`, background
+   oklch(0.165 0.008 260) → minified #0c0e12). No `.dark{…}` token block is
+   emitted anymore; the `dark` class on <html> only drives the `dark:`-prefixed
+   utilities inside the shadcn primitives.
+
+2. Shared-surface sizing actually served (class lists from server HTML):
+
+   - Header:  `flex h-16 max-w-6xl items-center gap-5 px-4 sm:px-6 lg:px-8`
+     (was `h-12 … px-4`), brand `whitespace-nowrap` so the mobile header stays
+     one line.
+   - Nav links: `inline-flex min-h-11 items-center … px-3 sm:px-3.5`
+     (≥44px click targets; was `px-2 py-1` ≈ 28px text pills).
+   - Main: `mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 md:py-10 lg:px-8`
+     (was `px-4 py-6`).
+   - Button default size: `h-11 gap-2 px-5 …` (44px; was `h-9 … px-2.5` = 36px);
+     lg `h-12 px-6` (48px); compact sizes kept where function demands them
+     (sm `h-8` for in-table download actions, `icon-sm` for the dialog close).
+   - Input `h-11 … px-3.5` (was `h-9 … px-2.5`); select trigger default
+     `data-[size=default]:h-11` (was h-9).
+   - Table: `th` `h-12 px-3 md:px-4` (was `h-10 px-2`), `td`
+     `px-3 py-3 md:px-4` (was `p-2`) — comfortable row heights on the run
+     page mapping tables.
+   - Card spacing: default `--card-spacing: --spacing(8)` (32px), sm 5 (20px);
+     page roots `gap-8`; page h1s `text-xl md:text-2xl`.
+
+3. Functionality preserved: 216 vitest tests / 25 files pass (incl. the
+   real-det-CLI build-control E2E), `tsc --noEmit`, `eslint`, and
+   `next build` all clean on this exact tree. Truthful states intact in the
+   screenshots: DEMO labeling on the fixture run, "Catalogue off" /
+   "Build catalog not configured" not-connected states, gap/decoration-merged
+   dispositions on the mapping tables.

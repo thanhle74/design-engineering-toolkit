@@ -21,10 +21,11 @@
     "visibilityPolicy": { "enum": ["example-only", "any"], "default": "example-only", "$comment": "example-only (default): KB-3 records with visibility != example are rejected — private material cannot enter the store this manifest feeds. 'any' is for local protected stores outside the public repository." },
     "inputs": {
       "type": "object",
-      "required": ["capabilityRegistry", "uiInventory", "projectRecords", "relations"],
+      "minProperties": 1,
       "additionalProperties": false,
       "properties": {
         "capabilityRegistry": { "$ref": "#/$defs/input", "$comment": "A det inspect CapabilityRegistry payload (issue #9 contract) bridged read-only into KB-1 records. The registry file is the sole ingest input — the bridge never opens the platform tree." },
+        "platformRecords": { "$ref": "#/$defs/input", "$comment": "M4 (issue #19): a KB-1 platform-records file (JSON array or JSONL of kb-capability records, including recordType 'module' inventory records) emitted by a read-only source extract. Manifest-driven: ingest never opens the platform tree itself." },
         "uiInventory": { "$ref": "#/$defs/input", "$comment": "A KB-2 metadata-only component inventory (array of kb-ui-component records). Manifest-driven: no source-tree parsing, no licensed package reads." },
         "projectRecords": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/input" }, "$comment": "One or more KB-3 record files (JSON array or JSONL), one file per project partition." },
         "relations": { "$ref": "#/$defs/input", "$comment": "A relation-records file (JSON array or JSONL) validated against the store-wide endpoint graph." }

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "profileId": "g3-hero-vertical-slice",
+  "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+  "entries": [
+    {
+      "valueRef": "design://g3-hero-fixture-source/254:40",
+      "kind": "media",
+      "mediaUrl": "{{media url=wysiwyg/g3-hero/hero-1440x880-placeholder.jpg}}",
+      "assetLabel": "labeled offline placeholder (operator-supplied local asset required before any CMS write)",
+      "note": "Explicit operator input; not derived from the design source."
+    },
+    { "valueRef": "design://g3-hero-fixture-source/254:43", "kind": "text", "text": "CHAPTER 01 / AW 2026" },
+    { "valueRef": "design://g3-hero-fixture-source/254:44", "kind": "text", "text": "The Quiet Grandeur" },
+    { "valueRef": "design://g3-hero-fixture-source/254:45", "kind": "text", "text": "Refined tailoring, knitwear and leather for the season." },
+    { "valueRef": "design://g3-hero-fixture-source/254:47", "kind": "text", "text": "Explore the Collection" },
+    { "valueRef": "design://g3-hero-fixture-source/254:47", "kind": "link", "linkUrl": "/collections", "note": "Placeholder target for the offline proof; the operator selects the real target before any CMS write." }
+  ]
+}

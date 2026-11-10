@@ -7,6 +7,37 @@
 
 > **Current delivery priority:** implement the **Figma → editable Magento Page Builder** path for CMS pages **FIRST**. Everything else below is explicitly longer-term architecture, not a requirement to implement now. #5 and #7 are running independently; do not interrupt or silently expand their current work.
 
+## Owner decision — 2026-11-09: two DISTINCT deliverables (Page Builder vs Hyvä PHTML UI-only)
+
+> **Approved PRODUCT/ACCEPTANCE CONTRACT; not automatic authorization to implement a new pipeline, merge code, write to production or change Figma.** This newer decision governs the PHTML output scope; earlier descriptions of a full generated Magento theme/backend are long-term context, **not** acceptance requirements for PHTML. Finish existing Page Builder proof/integration first.
+
+| Deliverable | Scope / ownership | Definition of success |
+|---|---|---|
+| **Native Magento Page Builder** (CMS/landing/editorial) | Compile design into supported **native, merchant-editable Page Builder** structure; preserve/diagnose unsupported layouts. Use local disposable CMS pages for Admin Edit → Save → Reload and storefront checks. | Native content survives Magento Admin round-trip without losing mapped structure or content; no arbitrary HTML posing as editable widgets. |
+| **Hyvä PHTML frontend-only** (PLP/category listing, PDP/product detail, other theme-owned UI such as headers) | Generate **presentation templates and only necessary tiny supporting files**, using the target project's **actual installed Hyvä UI components, Tailwind CSS, and CSP-compatible Alpine.js**. A minimal single `.phtml` or a few focused files is preferable to splitting every element into components. Do not implement backend/domain logic. | Page/section **renders in an actual Hyvä storefront/theme preview**, visually resembles approved desktop/mobile designs, is responsive, has working *presentation-level* Alpine interactions, semantic/accessibility basics, and reuses available Hyvä UI patterns. |
+
+**PHTML output is a developer-handoff frontend scaffold, NOT a fully functional Magento commerce page.** Specifically:
+
+- Use sample/mock product/category data and images only in a clearly labeled **preview/test fixture**. Keep a simple explicit **data contract** (required keys and types for title, media, price display, variant/options, product list, pagination/filter state, links etc., as applicable) and identify integration placeholders. Do not present mocked prices, availability, discounts, cart or checkout actions as live business functionality.
+- **Developer owns backend integration:** actual Magento blocks/view models/data providers, product queries, pricing/tax, inventory, configurable options, add-to-cart/wishlist, search/filter/pagination backend, authorization, GraphQL/API and business rules. AI-generated frontend may expose minimal data/interaction hooks for the developer to wire up later but must **not** build those backend layers, PHP repositories, new Magento modules, DB changes or domain services.
+- **Smallest useful file set**: generate only the `.phtml` templates (plus an asset/component/mock-data artifact only when needed to render/test); no invented theme/module scaffolding, layout XML, ViewModels or many micro-components by default. Existing working Hyvä UI components are preferred; respect licensing and never copy proprietary upstream library sources into shared toolkit artifacts.
+- **Acceptance must be honest**: UI render/visual/responsive/Alpine checks may PASS independently; **commerce/data behavior remains `INTEGRATION_PENDING` / `MOCK_ONLY`**, not FUNCTIONAL_PASS. A beautiful static PDP/PLP is not a claim that Magento product data or checkout works.
+- **Execution priority**: finish and integrate the two Page Builder POCs (#23 Hero / #25 Craftsmanship) first; **PLP is the proposed first PHTML frontend-only POC, PDP second**, each only under a separately scoped implementation task/Owner GO. Do **not** mix PHTML acceptance gates with Page Builder Admin editability gates.
+
+### Owner correction — 2026-11-09: DET-owned independent preview theme (NOT the customer's child theme)
+
+**The converter MUST NOT target, edit, build into, or depend on the customer's current Hyvä child theme.** Instead, use **one reusable, isolated `DET Preview Theme`** as the development/rendering target. “Independent” means independent of *client themes*, **not** independent of Magento/Hyvä itself: it may inherit the installed official Hyvä base theme and use the licensed Hyvä UI available in an authorized local preview checkout. Do not create a brand-new theme for each conversion.
+
+**Page Builder path:** Figma → native Magento Page Builder master-format CMS content **plus optional separately packaged, `det-*`-scoped presentation styles** (Tailwind source/custom theme CSS as appropriate) → render and visually QA in the DET Preview Theme. Native Page Builder editable fields, structural sizing/column widths and `data-pb-style` master-format values MUST remain in native content; theme CSS handles only the extra visual layer (typography, decorative effects, spacing and responsive polish when native fields cannot express them), not hacks that break Admin editability. Build Tailwind from that isolated preview theme and produce a portable **handoff bundle**: native CMS HTML + scoped Tailwind/CSS sources (and compiled preview CSS when useful) + permitted media/assets + small manifest/integration notes. The developer decides what to carry into the actual project's theme. No automatic application to client themes or live store views.
+
+**PHTML path:** Use the SAME isolated DET Preview Theme for frontend-only PLP/PDP/other UI proof, with minimal `.phtml` templates, installed Hyvä UI components, Tailwind and CSP-safe Alpine.js, clear mock-data/data contracts and UI-only acceptance. Developers later transfer the templates and wire Magento BE/domain data themselves. This preview package is the **shared test harness**, not a generated customer theme or a requirement to ship a full theme for every section.
+
+**Theme selection / portability:** the toolkit's design outputs must not rely on a specific customer theme path, vendor namespace or configuration. Target Hyvä/Tailwind version, tokens and available components are explicit **preview-profile inputs**. Report unsupported/missing licensed UI dependencies instead of embedding or distributing proprietary Hyvä UI source. A source CSS file from preview may require adjustments to the receiving theme's Tailwind version/configuration; do not claim zero-touch drop-in compatibility without testing. Do not change the running Slaunchpad storefront's configured theme as a side effect of conversion; any future preview-store activation is a separately controlled local setup.
+
+**Status:** normative design/export boundary, **NOT a request to implement a preview theme today**. Keep existing [23]/[25] Page Builder Admin proof and integration ahead of any PHTML/preview-theme engineering.
+
+**Naming reminder:** GitHub issue titles and Orca workspace/task names start with the real issue number in brackets: `[25] ...`, never a phase-only prefix.
+
 ## 1. Product purpose and end-to-end roadmap
 
 Create a portable, reusable design-engineering tool that **does not invent missing UI/business capability**. It should know what a customer's platform and licensed UI packages actually provide, help plan/reuse those capabilities for UX/design, and eventually compile approved designs to maintainable, editable implementations.
@@ -87,6 +118,22 @@ Approved Figma [read-only, later gate]
 4. **Visual Fidelity:** typography, colors, images/crop, spacing, hover, animation, desktop/mobile parity, Hyvä/Tailwind/Alpine and accessibility/performance. Do not use CSS hacks to mask incorrect structural mapping.
 
 **Component selection:** reuse the closest *supported semantic component* first, then custom appearance/component only for an evidenced gap. `HTML Code` is not an acceptable silent shortcut to claim merchant editability. No new `content_type.xml` per page. Header/footer/nav/search/cart are `THEME_CHROME` and excluded from Page Builder page content. Reuse existing Slaunchpad research #32 and #42; unresolved Admin round-trip remains a verification gate until a real receipt exists.
+
+
+### Owner decision — 2026-11-06: lean internal tool, native Page Builder first
+
+**Product priority: save developers time.** This is an **internal productivity CLI**, not a commercial platform or compliance/security project. Choose the **simplest useful implementation** that is faster than manually building the same layout. Prefer existing `det` CLI, NodeIR/PageStructure and the native Magento Page Builder over new abstraction layers, custom engines, databases, services, dashboards, or elaborate governance. If an automation requires more effort than it saves, **stop and simplify**.
+
+**First deliverable:** for **one or two selected Figma CMS sections**, generate the **correct editable native Page Builder structure**: Row, Columns, Banner, Text and Image (only add other content types when actually needed and available). No FigmaToCode, Tailwind, Hyvä UI integration, custom CSS, animation or pixel-perfect styling in the initial iteration.
+
+**Practical sequence and minimal DONE checks:**
+
+1. **Understand the source:** check meaningful Figma node names and the actual section/column hierarchy; reuse the already normalized Desktop names, do not rename everything. Keep node IDs for traceability, mark ambiguous cases briefly. No new Figma writes without separate Owner approval.
+2. **Map the layout:** reuse existing NodeIR/PageStructure and capability information. Output native Row/Column/Banner/Text/Image in the correct order and nesting; preserve key proportions such as 40/60 rather than silently changing them to 50/50. Unsupported pieces get one concise warning, not a new research project.
+3. **Verify on a local CMS page (future G3, separate GO):** create an isolated test page, open it in Admin, edit, save and reload. **PASS = structure stays intact and merchants can edit native blocks.** One representative end-to-end smoke test and focused automated regressions are enough for the first iteration.
+4. **Polish later:** after editable layout works, optionally improve visual detail, CSS/Tailwind, Hyvä reuse and more complex sections as separate incremental work.
+
+**Engineering discipline, kept proportionate:** implement one vertical slice, run the smallest relevant tests, fix confirmed defects, and move on. Avoid duplicate audits, speculative adapters, large universal abstractions, verbose evidence ceremonies and extensive negative-case suites unrelated to the current change. Retain simple essentials: don't commit credentials/licensed sources, don't alter production or active merchant content, and don't misreport a mock/preview as a working Magento page. Existing read-only contracts for running [#18](https://github.com/thanhle74/design-engineering-toolkit/issues/18) and [#19](https://github.com/thanhle74/design-engineering-toolkit/issues/19) remain unchanged; this decision adds **no new task or execution authorization**.
 
 ## 5. Installation, import and runtime safety
 

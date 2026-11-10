@@ -14,14 +14,16 @@ import { validateBindingMap } from "../../resolver.js";
 import { extractStructures } from "../../design-source/extract.js";
 import { SnapshotDesignSourcePort } from "../../design-source/port.js";
 import { artifact } from "../../run-envelope.js";
-import { validateContract, REPO_ROOT } from "../../schema-registry.js";
+import { validateContract, REPO_ROOT, contractId } from "../../schema-registry.js";
 import { readJsonFile, serializeJson, type CommandIO } from "../io.js";
 import { requireValue } from "../args.js";
 import { emit } from "./emit.js";
 import { isBlocking, loadProfile, resolveSource } from "./shared.js";
 import type { BindingMap, CapabilityRegistry, ConverterProfile, DesignSourceSnapshot, Diagnostic } from "../../types.js";
 
-const SNAPSHOT_CONTRACT = "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/design-source-snapshot.schema.json";
+// Snapshot-emitting adapters are identified by their declared output contract ($id),
+// resolved from schemas/registry.json + the schema file's own $id (issue #41).
+const SNAPSHOT_CONTRACT = contractId("design-source-snapshot");
 
 export async function commandExtract(flags: Record<string, string | boolean>, io: CommandIO): Promise<0 | 1 | 2 | 3> {
   const adapterFlag = requireValue(flags, "adapter");

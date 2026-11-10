@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "profileId": "g4-craftsmanship-two-column",
+  "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+  "entries": [
+    {
+      "valueRef": "design://g4-craftsmanship-fixture-source/299:344",
+      "kind": "media",
+      "mediaUrl": "{{media url=wysiwyg/g4-craftsmanship/craft-media-620x620-placeholder.jpg}}",
+      "assetLabel": "labeled offline placeholder (operator-supplied local asset required before any CMS write)",
+      "note": "Explicit operator input; not derived from the design source."
+    },
+    {
+      "valueRef": "design://g4-craftsmanship-fixture-source/299:349",
+      "kind": "media",
+      "mediaUrl": "{{media url=wysiwyg/g4-craftsmanship/detail-stitch-292x254-placeholder.jpg}}",
+      "assetLabel": "labeled offline placeholder (operator-supplied local asset required before any CMS write)",
+      "note": "Explicit operator input; not derived from the design source."
+    },
+    {
+      "valueRef": "design://g4-craftsmanship-fixture-source/299:350",
+      "kind": "media",
+      "mediaUrl": "{{media url=wysiwyg/g4-craftsmanship/detail-fabric-292x253-placeholder.jpg}}",
+      "assetLabel": "labeled offline placeholder (operator-supplied local asset required before any CMS write)",
+      "note": "Explicit operator input; not derived from the design source."
+    },
+    { "valueRef": "design://g4-craftsmanship-fixture-source/299:346", "kind": "text", "text": "CRAFTSMANSHIP" },
+    { "valueRef": "design://g4-craftsmanship-fixture-source/299:347", "kind": "text", "text": "Materials, considered" },
+    { "valueRef": "design://g4-craftsmanship-fixture-source/299:348", "kind": "text", "text": "Fabric, stitch and finish — considered at every step of the making." }
+  ]
+}

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+  G3 fixture (issue #23): TRIMMED from the real Magento_PageBuilder banner declaration
+  (view/adminhtml/pagebuilder/content_type/banner.xml) to the minimum the read-only probe
+  reads: the type name and its appearance names. Appearance names and the default appearance
+  mirror the real declaration exactly; element/form detail is deliberately absent (the probe
+  reads none of it — acceptedProps stay honestly empty).
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_PageBuilder:etc/content_type.xsd">
+    <type name="banner" label="Banner" form="pagebuilder_banner_form" menu_section="media">
+        <children default_policy="deny"/>
+        <appearances>
+            <appearance name="collage-left"/>
+            <appearance name="collage-centered"/>
+            <appearance name="collage-right"/>
+            <appearance default="true" name="poster"/>
+        </appearances>
+    </type>
+</config>

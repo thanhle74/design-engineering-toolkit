@@ -2,11 +2,9 @@
 
 A **multi-project, platform-neutral** foundation for design-system contracts, semantic structure, capability resolution and evidence-led conversion. Magento Page Builder + Hyvä is the **first adapter**, not a required core dependency.
 
-## Current work — [5] converter architecture
+## Current work — Modular Monolith CLI engine (`det`)
 
-**[Issue #5](https://github.com/thanhle74/design-engineering-toolkit/issues/5)** is architecture-first: **Capability Registry → Structural Mapping → Functional Round-trip → Visual Fidelity**.
-
-**Current gate (G1):** source-backed capability inventory, neutral contracts/schema decisions, reusable skills/agents and evidence-based repo hygiene. **No Figma access, no CMS import, no CSS pixel-perfect, no production writes.** Later G2–G4 require separate decisions.
+The reviewed [Issue #5](https://github.com/thanhle74/design-engineering-toolkit/issues/5) architecture is **integrated and executable**: **Capability Registry → Structural Mapping → Functional Round-trip → Visual Fidelity** ship as gated CLI stages with per-gate receipts (G1 #5 · G2 #14 · KB #15 · G3 #23 · G4 #25). These are structural/contract gates — Magento Admin UI round-trip persistence and visual pixel fidelity carry separate operator gates and are proved only inside the per-gate receipts, never by this ladder. Active work runs as issue-numbered tasks (`[N]`); live status lives on GitHub ([issues](https://github.com/thanhle74/design-engineering-toolkit/issues), [pull requests](https://github.com/thanhle74/design-engineering-toolkit/pulls)) and the [Coordinator handoff](specs/CHATGPT-COORDINATOR-HANDOFF.md) — not in this README.
 
 ## Executable CLI — `det` (Issue #9, first implementation gate)
 
@@ -19,18 +17,18 @@ node bin/det.js inspect  --profile profiles/magento-pagebuilder.example.json --p
 node bin/det.js plan     --profile <p> --registry out/capability-registry.json --bindings <map.json> --input <structure.json> --out out/
 ```
 
-- **Commands:** `validate` (profile contract + source preflight) · `inspect` (read-only capability probe via an out-of-process adapter; proof ceiling `registered`, `env.php`/`auth.json` deny-listed) · `plan` (deterministic structural mapping → ResolutionReport; pure computation).
+- **Commands:** `validate` (profile contract + source preflight) · `inspect` (read-only capability probe via an out-of-process adapter; proof ceiling `registered`, `env.php`/`auth.json` deny-listed) · `plan` (deterministic structural mapping → ResolutionReport; pure computation) · plus later gated stages: `extract` ([#14](https://github.com/thanhle74/design-engineering-toolkit/issues/14)), `kb` ([#15](https://github.com/thanhle74/design-engineering-toolkit/issues/15)), `compose` ([#23](https://github.com/thanhle74/design-engineering-toolkit/issues/23), [#25](https://github.com/thanhle74/design-engineering-toolkit/issues/25)).
 - **Deterministic:** machine-readable `--json`, `tool-run.json` envelopes with content hashes, exit codes `0` ok / `1` blocking diagnostics / `2` usage / `3` adapter failure; no-write default (`--out` writes, `--dry-run` never does). Source paths come from `--project` > `DET_PROJECT_SOURCE` > gitignored `profiles/*.local.json` — never a default.
 - **Boundaries:** no Figma, no CMS/DB writes, no Admin round-trip in this gate. Agents should use the [`det-cli` skill](.claude/skills/det-cli/SKILL.md) instead of reimplementing logic as prompts; the `magento-specs` MCP is optional and never a runtime dependency. Evidence: [docs/converter/RECEIPT-ISSUE9-CLI.md](docs/converter/RECEIPT-ISSUE9-CLI.md).
 
 Start here:
-- [Current architecture/spec](specs/ISSUE-5-converter-architecture.md) — INTEGRATED_FOR_G1_REVIEW (2026-11-03); integrator receipt: [docs/converter/RECEIPT-ISSUE5-G1.md](docs/converter/RECEIPT-ISSUE5-G1.md)
+- [Issue #5 architecture spec](specs/ISSUE-5-converter-architecture.md) — **historical G1 record** (integrated; living specs are the product/modular specs below); integrator receipt: [docs/converter/RECEIPT-ISSUE5-G1.md](docs/converter/RECEIPT-ISSUE5-G1.md)
 - [Converter contracts](schemas/converter/) (materialized schemas) + [contract reference incl. deferred NodeIR/PageStructure](docs/converter/CONTRACTS.md)
 - [Capability matrix — Magento PB + UiWidget + Hyvä](docs/converter/CAPABILITY-MATRIX.md) (proof ceiling REGISTERED; machine-readable sample in `examples/converter/`)
 - [Accepted/proposed decisions](docs/converter/DECISIONS.md) (ADR-005-001..016)
 - [OSS source selection](docs/research/oss-adoption-for-pagebuilder.md) · [Agent skills selection](docs/research/agent-skills-adoption.md) — verified live against sources
 - [Repo hygiene baseline](docs/converter/REPO-HYGIENE-BASELINE.md) (incl. [5] TIP audit addendum)
-- **Test gate:** `npm test` — 80 checks (build + schema validation for the V1/converter/CLI/KB families, the T-01..T-22 negative/CLI plan, the KB-01..KB-29 knowledge-engine plan, determinism, neutrality + deny-list scans). Also runs in CI (`.github/workflows/validate.yml`).
+- **Test gate:** `npm test` — 131 checks (build + schema validation for the V1/converter/CLI/KB families, the T-01..T-22 negative/CLI plan, the KB-01..KB-29 knowledge-engine plan, the G2/G3/G4 converter-gate suites, the #41 schema-registry SSOT suite, determinism, neutrality + deny-list scans). Also runs in CI (`.github/workflows/validate.yml`).
 - [Agent rules](AGENTS.md), [Claude Code entry](CLAUDE.md), `.claude/skills/` and `.claude/agents/`
 
 **Task naming:** `[<issue number>] <task title>`; `[5]` is this task's GitHub issue number, **not a version**.

@@ -253,11 +253,26 @@ export function buildRegistry(input: AdapterInput, root: string): CapabilityRegi
   }
   const modules = config.modules;
 
-  // 3. Revision token: git HEAD when available (read-only query), else deterministic content hash.
+  // 3. Revision token: the project's OWN git HEAD when the project root IS a repository
+  //    toplevel (read-only query); else deterministic content hash. A checkout nested inside
+  //    another repository (e.g. a fixture tree inside a toolkit repo) must NOT inherit the
+  //    enclosing repo's HEAD — that would pin evidence to an unrelated moving revision.
   let revisionId = "";
+  let ownRepo = false;
   try {
-    revisionId = execFileSync("git", ["-C", rootReal, "rev-parse", "HEAD"], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
+    const toplevel = execFileSync("git", ["-C", rootReal, "rev-parse", "--show-toplevel"], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
+    ownRepo = path.resolve(toplevel) === path.resolve(rootReal);
   } catch {
+    ownRepo = false;
+  }
+  if (ownRepo) {
+    try {
+      revisionId = execFileSync("git", ["-C", rootReal, "rev-parse", "HEAD"], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
+    } catch {
+      ownRepo = false;
+    }
+  }
+  if (!ownRepo || revisionId === "") {
     const composerText = readMetadata("composer.lock") ?? readMetadata("composer.json") ?? "";
     revisionId = "content:" + createHash("sha256").update(composerText).digest("hex").slice(0, 16);
   }

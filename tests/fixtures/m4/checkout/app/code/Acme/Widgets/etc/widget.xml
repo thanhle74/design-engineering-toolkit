@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Acme_Widgets:etc/widget.xsd">
+    <widget id="acme_hero_like_a" class="Acme\Widgets\Block\Widget\HeroLike">
+        <label translate="true">Hero Like A (fixture widget label — never emit)</label>
+    </widget>
+</widgets>

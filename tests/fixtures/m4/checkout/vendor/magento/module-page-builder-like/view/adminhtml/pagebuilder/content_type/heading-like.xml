@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="heading-like">
+    <label translate="true">Heading Like (fixture)</label>
+    <appearances>
+        <appearance default="true" name="inline-like"/>
+    </appearances>
+</type>

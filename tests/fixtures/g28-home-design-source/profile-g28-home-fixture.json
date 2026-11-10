@@ -1,0 +1,31 @@
+{
+ "schemaVersion": 1,
+ "profile": {
+  "id": "g28-home-preview",
+  "name": "[28] full-root homepage preview (fixture)",
+  "description": "Fixture profile for the [28] full-root 245:2 conversion: the same profile shape drives the read-only capability probe (project = a Magento-shaped fixture checkout), the bounded design-source extraction (project = the fixture tree directory) and native content composition. The path below is a deliberate placeholder: resolve it per run with --project, DET_PROJECT_SOURCE, or a gitignored profiles/*.local.json. Never commit a real owner path.",
+  "platformId": "magento-pagebuilder",
+  "projectSources": [
+   {
+    "sourceId": "g28-home-fixture-source",
+    "kind": "fixture-tree",
+    "path": "/path/to/design-source",
+    "notes": "Placeholder sentinel — resolved per run via CLI/env/local override only."
+   }
+  ],
+  "scopes": [
+   {
+    "sourceId": "g28-home-fixture-source",
+    "include": [],
+    "exclude": []
+   }
+  ],
+  "gates": {
+   "responsiveDeterministicRequired": false
+  },
+  "safety": {
+   "approvedWriteTargets": [],
+   "notes": "Composition is read-only computation; no design-source or CMS writes are representable by this profile. The isolated local preview (DET Preview Theme + disposable CMS page + preview store view) is a separate, operator-selected step outside the CLI."
+  }
+ }
+}

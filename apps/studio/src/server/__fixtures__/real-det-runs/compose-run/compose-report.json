@@ -1,0 +1,173 @@
+{
+  "schemaVersion": 1,
+  "platformId": "magento-pagebuilder",
+  "source": {
+    "sourceId": "g3-hero-fixture-source",
+    "revisionId": "mcp-observed-unpinned-2026-11-06",
+    "accessedAt": "2026-11-09T04:55:43.162Z"
+  },
+  "inputs": {
+    "nodeIrContentHash": "4827b6c32e6ded1b1ab12de245a4eaac02b279f0ef33074aba1d3df9cd8d4fcd",
+    "pageStructureContentHash": "f30c35fbcdcbe12010f99736b7debc831967536226e456fa8f34189286e46b43",
+    "contentManifestContentHash": "a690d9dab58df0fa70345117960ce82a1f451e9d003e26d04a478ec29e9bc430",
+    "projectionContentHash": "eb533a5d296b0d03c5f7f410f82e13fee146bbb0331829a9a4745445aeb2fbad",
+    "registryRevisionId": "content:9ee428e468bbaf7e",
+    "bindingMapContentHash": "adfa88369beacbf91d7604d5fc863957c805bfc8f4a079362189c716938d8117"
+  },
+  "content": "<style>#html-body [data-pb-style=P655B4F]{min-height:880px}</style><div data-content-type=\"row\" data-appearance=\"contained\" data-element=\"main\"><div data-enable-parallax=\"0\" data-parallax-speed=\"0.5\" data-background-images=\"{}\" data-background-type=\"image\" data-video-loop=\"true\" data-video-play-only-visible=\"true\" data-video-lazy-load=\"true\" data-video-fallback-src=\"\" data-element=\"inner\"><div data-content-type=\"banner\" data-appearance=\"poster\" data-show-button=\"always\" data-show-overlay=\"never\" data-element=\"main\"><a href=\"/collections\" data-element=\"link\"><div class=\"pagebuilder-banner-wrapper\" data-background-images=\"{&quot;desktop_image&quot;:&quot;{{media url=wysiwyg/g3-hero/hero-1440x880-placeholder.jpg}}&quot;}\" data-background-type=\"image\" data-video-loop=\"true\" data-video-play-only-visible=\"true\" data-video-lazy-load=\"true\" data-video-fallback-src=\"\" data-element=\"wrapper\"><div class=\"pagebuilder-overlay pagebuilder-poster-overlay\" data-overlay-color=\"\" aria-label=\"\" title=\"\" data-element=\"overlay\" data-pb-style=\"P655B4F\"><div class=\"pagebuilder-poster-content\"><div data-element=\"content\"><p>CHAPTER 01 / AW 2026</p><h2>The Quiet Grandeur</h2><p>Refined tailoring, knitwear and leather for the season.</p></div><button type=\"button\" class=\"pagebuilder-banner-button\" data-element=\"button\" style=\"opacity: 1; visibility: visible;\">Explore the Collection</button></div></div></div></a></div></div></div>",
+  "contentHash": "sha256:a9f6ed95c475b9934f0ab1b18f33163fdabe674a3af2ff104629ea6445efcedb",
+  "mapping": [
+    {
+      "sourceNodeId": "n-0216280216bf",
+      "sourceName": "Overlay",
+      "sourceLocator": "design://g3-hero-fixture-source/254:41",
+      "disposition": "gap",
+      "note": "Explicitly projected decoration without a native equivalent; excluded (not silently dropped)."
+    },
+    {
+      "sourceNodeId": "n-09cb7cd19b5b",
+      "sourceName": "The Quiet Grandeur",
+      "sourceLocator": "design://g3-hero-fixture-source/254:44",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/banner",
+        "appearanceId": "poster",
+        "nativeElement": "content",
+        "nativeField": "message"
+      },
+      "note": "Explicitly projected text folded into the banner content WYSIWYG field as <h2>; standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-0fe39f75af97",
+      "sourceName": "SCROLL",
+      "sourceLocator": "design://g3-hero-fixture-source/254:59",
+      "disposition": "excluded",
+      "note": "Inside a subtree explicitly projected as decoration; recorded, never silently dropped."
+    },
+    {
+      "sourceNodeId": "n-10ad9a6e3d9e",
+      "sourceName": "SLOT/HeroContent",
+      "sourceLocator": "design://g3-hero-fixture-source/254:42",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/banner",
+        "appearanceId": "poster",
+        "nativeElement": "content",
+        "nativeField": "message"
+      },
+      "note": "Structural container folded into the banner content WYSIWYG; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-1ba6a2c44dc1",
+      "sourceName": "SLOT/HeroMedia",
+      "sourceLocator": "design://g3-hero-fixture-source/254:40",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/banner",
+        "appearanceId": "poster",
+        "nativeElement": "wrapper",
+        "nativeField": "background_image"
+      },
+      "note": "Desktop background image (labeled offline placeholder (operator-supplied local asset required before any CMS write)); mobile breakpoint not composed."
+    },
+    {
+      "sourceNodeId": "n-28a895e0e2ab",
+      "sourceName": "CHAPTER 01 / AW 2026",
+      "sourceLocator": "design://g3-hero-fixture-source/254:43",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/banner",
+        "appearanceId": "poster",
+        "nativeElement": "content",
+        "nativeField": "message"
+      },
+      "note": "Explicitly projected text folded into the banner content WYSIWYG field as <p>; standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-53bd7af6795b",
+      "sourceName": "SLOT/HeroActions",
+      "sourceLocator": "design://g3-hero-fixture-source/254:46",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/banner",
+        "appearanceId": "poster",
+        "nativeElement": "button",
+        "nativeField": "button_text"
+      },
+      "note": "Structural container folded into the banner button area; no separate native container."
+    },
+    {
+      "sourceNodeId": "n-b58a32ef1573",
+      "sourceName": "Proto / Button/Primary",
+      "sourceLocator": "design://g3-hero-fixture-source/254:47",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/banner",
+        "appearanceId": "poster",
+        "nativeElement": "button",
+        "nativeField": "button_text"
+      },
+      "note": "Explicitly projected CTA (Proto / Button/Primary) — label text + link target from the manifest."
+    },
+    {
+      "sourceNodeId": "n-ba03acaef964",
+      "sourceName": "DECOR/ScrollIndicator",
+      "sourceLocator": "design://g3-hero-fixture-source/254:57",
+      "disposition": "gap",
+      "note": "Explicitly projected decoration without a native equivalent; excluded (not silently dropped)."
+    },
+    {
+      "sourceNodeId": "n-f26ba3d1e8c2",
+      "sourceName": "SECTION/Hero/Primary",
+      "sourceLocator": "design://g3-hero-fixture-source/245:5",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/banner",
+        "appearanceId": "poster",
+        "nativeElement": "main",
+        "nativeField": "banner (row > banner container)"
+      },
+      "note": "Section composed as native row(contained) > banner(poster) per the pinned declarations; the row provides the platform's standard top-level container."
+    },
+    {
+      "sourceNodeId": "n-f465fcdb5e6e",
+      "sourceName": "Refined tailoring, knitwear and leather for the season.",
+      "sourceLocator": "design://g3-hero-fixture-source/254:45",
+      "disposition": "mapped",
+      "target": {
+        "capabilityId": "magento_pagebuilder/banner",
+        "appearanceId": "poster",
+        "nativeElement": "content",
+        "nativeField": "message"
+      },
+      "note": "Explicitly projected text folded into the banner content WYSIWYG field as <p>; standalone per-field styling is not preserved (single WYSIWYG field)."
+    },
+    {
+      "sourceNodeId": "n-f8ec37e53659",
+      "sourceName": "Rectangle",
+      "sourceLocator": "design://g3-hero-fixture-source/254:58",
+      "disposition": "excluded",
+      "note": "Inside a subtree explicitly projected as decoration; recorded, never silently dropped."
+    }
+  ],
+  "diagnostics": [
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Decoration 'Overlay' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
+      "subject": {
+        "type": "node",
+        "id": "n-0216280216bf"
+      }
+    },
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "Decoration 'DECOR/ScrollIndicator' has no native Page Builder equivalent in this slice's composed fields; excluded from content with an explicit record — never silently dropped, never approximated.",
+      "subject": {
+        "type": "node",
+        "id": "n-ba03acaef964"
+      }
+    }
+  ]
+}

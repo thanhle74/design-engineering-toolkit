@@ -1,0 +1,33 @@
+{
+  "$comment": "Schema registry — single source of truth for contract aliases (issue #41, Gate B Phase 2). Each stable contract alias maps to its repo/package-relative local schema file; the file's own $id is the Ajv registry key and the serialized schemaRef identity, preserved byte-for-byte (no URI migration in this task). Paths resolve from the DET install/package root (REPO_ROOT in src/core/schema-registry.ts) — never cwd, an absolute path or a network fetch; the $id URLs are Ajv identifiers, not downloads. Contract aliases only: defs-only files and the V1 profile family register through the directory scan without an alias.",
+  "version": 1,
+  "aliases": {
+    "capability-registry": "schemas/converter/capability-registry.schema.json",
+    "component-binding-map": "schemas/converter/component-binding-map.schema.json",
+    "converter-profile": "schemas/converter/converter-profile.schema.json",
+    "resolution-report": "schemas/converter/resolution-report.schema.json",
+    "adapter-descriptor": "schemas/cli/adapter-descriptor.schema.json",
+    "adapter-input": "schemas/cli/adapter-input.schema.json",
+    "tool-run": "schemas/cli/tool-run.schema.json",
+    "node-ir": "schemas/converter/node-ir.schema.json",
+    "page-structure": "schemas/converter/page-structure.schema.json",
+    "source-review": "schemas/converter/source-review.schema.json",
+    "design-source-snapshot": "schemas/cli/design-source-snapshot.schema.json",
+    "content-manifest": "schemas/cli/content-manifest.schema.json",
+    "compose-input": "schemas/cli/compose-input.schema.json",
+    "compose-output": "schemas/cli/compose-output.schema.json",
+    "semantic-projection": "schemas/cli/semantic-projection.schema.json",
+    "build-config": "schemas/cli/build-config.schema.json",
+    "build-manifest": "schemas/cli/build-manifest.schema.json",
+    "kb-capability": "schemas/kb/kb-capability.schema.json",
+    "kb-ui-component": "schemas/kb/kb-ui-component.schema.json",
+    "kb-project-record": "schemas/kb/kb-project-record.schema.json",
+    "kb-relations": "schemas/kb/kb-relations.schema.json",
+    "kb-ingest-manifest": "schemas/kb/kb-ingest-manifest.schema.json",
+    "kb-extract-manifest": "schemas/kb/kb-extract-manifest.schema.json",
+    "kb-source-scan": "schemas/kb/kb-source-scan.schema.json",
+    "kb-source-scan-request": "schemas/kb/kb-source-scan-request.schema.json",
+    "kb-store": "schemas/kb/kb-store.schema.json",
+    "kb-engine-output": "schemas/kb/kb-engine-output.schema.json"
+  }
+}

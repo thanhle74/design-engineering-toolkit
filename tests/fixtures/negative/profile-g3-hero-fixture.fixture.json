@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "profile": {
+    "id": "g3-hero-vertical-slice",
+    "name": "G3 hero vertical slice (fixture)",
+    "description": "Fixture profile for the G3 hero vertical slice (issue #23): the same profile shape drives the read-only capability probe (project = a Magento-shaped fixture checkout), the bounded design-source extraction (project = the fixture tree directory) and native content composition. The path below is a deliberate placeholder: resolve it per run with --project, DET_PROJECT_SOURCE, or a gitignored profiles/*.local.json. Never commit a real owner path.",
+    "platformId": "magento-pagebuilder",
+    "projectSources": [
+      {
+        "sourceId": "g3-hero-fixture-source",
+        "kind": "fixture-tree",
+        "path": "/path/to/design-source",
+        "notes": "Placeholder sentinel — resolved per run via CLI/env/local override only."
+      }
+    ],
+    "scopes": [
+      {
+        "sourceId": "g3-hero-fixture-source",
+        "include": [],
+        "exclude": []
+      }
+    ],
+    "gates": {
+      "responsiveDeterministicRequired": false
+    },
+    "safety": {
+      "approvedWriteTargets": [],
+      "notes": "G3 composition is read-only computation; no design-source or CMS writes are representable by this profile. Local isolated CMS smoke tests are a separate, operator-selected step outside the CLI."
+    }
+  }
+}

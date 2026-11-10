@@ -300,6 +300,38 @@ await registerG2Suite(checkAsync);
 // ---- Issue #15 Knowledge Engine MVP suite (async) ------------------------------------------
 const { default: registerKbSuite } = await import("./kb-suite.mjs");
 await registerKbSuite(checkAsync);
+
+// ---- Issue #23 G3 native content composition suite (async) ---------------------------------
+const { default: registerG3Suite } = await import("./g3-suite.mjs");
+await registerG3Suite(checkAsync);
+
+// ---- Issue #25 G4 two-column native composition suite (async) -------------------------------
+const { default: registerG4Suite } = await import("./g4-suite.mjs");
+await registerG4Suite(checkAsync);
+
+// ---- Issue #28 full-root homepage composition suite (async) ---------------------------------
+const { default: registerG28Suite } = await import("./g28-suite.mjs");
+await registerG28Suite(checkAsync);
+
+// ---- Issue #28 one-shot build orchestrator suite (async) ------------------------------------
+const { default: registerBuildSuite } = await import("./build-suite.mjs");
+await registerBuildSuite(checkAsync);
+
+// ---- Issue #41 schema registry SSOT suite (async) --------------------------------------------
+const { default: registerRegistrySuite } = await import("./registry-suite.mjs");
+await registerRegistrySuite(checkAsync);
+
+// ---- Issue #19 M4 real-source KB gate suites (async) -----------------------------------------
+const { default: registerKbM4LicenseSuite } = await import("./kb-m4-license-suite.mjs");
+await registerKbM4LicenseSuite(checkAsync);
+const { default: registerKbM4SafetySuite } = await import("./kb-m4-safety-suite.mjs");
+await registerKbM4SafetySuite(checkAsync);
+// ---- Issue #19 M4 read-only source-extract orchestrator suite (async) ------------------------
+const { default: registerM4ExtractSuite } = await import("./kb-m4-extract-suite.mjs");
+await registerM4ExtractSuite(checkAsync);
+// ---- Issue #19 M4 KB source scanner adapter suite (async) ----------------------------------
+const { default: registerM4Suite } = await import("./kb-m4-adapter-suite.mjs");
+await registerM4Suite(checkAsync);
 for (const { id, name, fn } of asyncChecks) {
   try {
     const detail = await fn();

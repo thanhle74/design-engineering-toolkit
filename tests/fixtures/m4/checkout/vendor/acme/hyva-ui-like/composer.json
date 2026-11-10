@@ -1,0 +1,6 @@
+{
+    "name": "acme/hyva-ui-like",
+    "description": "Synthetic fixture stand-in for a licensed UI component package (issue #19); metadata census only.",
+    "license": "See LICENSE.md or https://hyva-ui-like.example/license",
+    "type": "magento2-module"
+}

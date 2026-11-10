@@ -1,10 +1,10 @@
 // Knowledge Engine (issue #15) — record identity: ID grammar, deterministic slug derivation.
 // IDs are version-free `<prefix>:<scope>:<slug>` (knowledge-foundation CONTRACTS.md §1.2); the
 // upstream identifier is preserved verbatim in nativeId, never re-slugified.
-export const KB_ID_PREFIXES = ["cap", "dat", "uic", "req", "uxi", "cmp", "dec", "apr", "risk", "oq", "con", "src", "rel"] as const;
+export const KB_ID_PREFIXES = ["cap", "dat", "mod", "uic", "req", "uxi", "cmp", "dec", "apr", "risk", "oq", "con", "src", "rel"] as const;
 
 const ID_PATTERNS: { prefixes: string[]; pattern: RegExp }[] = [
-  { prefixes: ["cap", "dat"], pattern: /^(cap|dat):[a-z0-9][a-z0-9-]*:[a-z0-9][a-z0-9-]*$/ },
+  { prefixes: ["cap", "dat", "mod"], pattern: /^(cap|dat|mod):[a-z0-9][a-z0-9-]*:[a-z0-9][a-z0-9-]*$/ },
   { prefixes: ["uic"], pattern: /^uic:[a-z0-9][a-z0-9-]*:[a-z0-9][a-z0-9-]*$/ },
   { prefixes: ["req", "uxi", "cmp", "dec", "apr", "risk", "oq", "con", "src"], pattern: /^(req|uxi|cmp|dec|apr|risk|oq|con|src):[a-z0-9][a-z0-9-]*:[a-z0-9][a-z0-9-]*$/ },
   { prefixes: ["rel"], pattern: /^rel:[a-z0-9][a-z0-9-]*:[a-z0-9][a-z0-9-]*$/ },

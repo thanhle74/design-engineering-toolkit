@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/semantic-projection.schema.json",
+  "$comment": "Design Engineering Toolkit CLI family — SemanticProjection. Major version 1. Explicit, reason-carrying human decision that assigns composer roles to OBSERVED design-source locators (issue #23 coordinator fidelity correction): source documents whose layer names/child types do not carry the SLOT-role naming convention (raw text names, button component instances, unlabeled decoration) stay RAW and faithful; this document — reviewed and pinned to the same source revision — is the auditable projection from observed locators to semantic roles. It never invents nodes, content or asset URLs, and every assignment must state its observed reason. Platform-neutral: roles are generic composition vocabulary, never platform identifiers. Version 1.3.0 (issue #25) additively extends the role vocabulary with the two-column composition roles column-primary / column-secondary (which observed slot containers become the native columns, primary first) and inline-media (which observed frames inside a column become native image elements). Version 1.4.0 (issue #28) additively extends the vocabulary with the column-grid roles grid-column (an observed slot container/instance that becomes ONE native column of a multi-column grid line; lines are grouped deterministically from the observed common parent + vertical overlap bands) and grid-caption (a loose text node that composes inside the grid column geometrically containing it, recorded per assignment).",
+  "title": "Design Engineering Toolkit — Semantic Projection",
+  "type": "object",
+  "required": ["schemaVersion", "profileId", "sourceRevisionId", "assignments"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "type": "integer", "const": 1 },
+    "profileId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$", "description": "Must equal the profile id of the run that produced the pinned PageStructure." },
+    "sourceRevisionId": { "type": "string", "minLength": 1, "description": "Must equal PageStructure.source.revisionId — a projection is only valid for the observation it reviewed." },
+    "notes": { "type": "string", "description": "Free-text context for reviewers; never parsed." },
+    "assignments": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/assignment" },
+      "description": "One assignment per source locator. Duplicate locators are a caller error (INPUT_CONTRACT_VIOLATION); the composer refuses to choose."
+    }
+  },
+  "$defs": {
+    "assignment": {
+      "type": "object",
+      "required": ["sourceLocator", "role", "reason"],
+      "additionalProperties": false,
+      "properties": {
+        "sourceLocator": {
+          "type": "string",
+          "pattern": "^(design|source)://[A-Za-z0-9][A-Za-z0-9.-]*/\\S+$",
+          "description": "The design:// locator of an observed node — exactly as carried by that node's pinned NodeIR evidence."
+        },
+        "role": {
+          "enum": ["background-media", "content-lead", "heading", "body", "cta", "decoration", "column-primary", "column-secondary", "inline-media", "grid-column", "grid-caption"],
+          "description": "Generic composition role. decoration excludes the node AND its whole subtree from content (recorded, never silently dropped); cta resolves its label text from the content manifest; column-primary/column-secondary mark the two observed slot containers that become the native columns (primary first); inline-media marks an observed media frame inside a projected column that composes as a native image element; grid-column (1.4.0) marks an observed slot container/instance that becomes ONE native column of a column-grid shape; grid-caption (1.4.0) marks a loose text node that composes inside the grid column geometrically containing it."
+        },
+        "reason": { "type": "string", "minLength": 1, "description": "The observed fact this assignment rests on — a projection without a stated reason is not a reviewable decision." },
+        "note": { "type": "string", "description": "Free-text context; never parsed." }
+      }
+    }
+  }
+}

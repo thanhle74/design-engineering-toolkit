@@ -1,0 +1,5 @@
+{
+  "name": "g3/magento-like-fixture",
+  "description": "G3 fixture checkout (issue #23): a minimal Magento-shaped project root for the read-only capability probe. Declaration files are TRIMMED from the real Magento_PageBuilder module to the minimum the probe reads (type name + appearance names). Not a real checkout; never a runtime target.",
+  "license": "proprietary-fixture"
+}

@@ -1,0 +1,272 @@
+{
+  "schemaVersion": 1,
+  "profileId": "g3-hero-vertical-slice",
+  "generatedAt": "2026-11-09T04:55:42.676Z",
+  "source": {
+    "sourceId": "g3-hero-fixture-source",
+    "revisionId": "mcp-observed-unpinned-2026-11-06",
+    "accessedAt": "2026-11-09T04:55:42.665Z"
+  },
+  "inputs": {
+    "nodeIrContentHash": "4827b6c32e6ded1b1ab12de245a4eaac02b279f0ef33074aba1d3df9cd8d4fcd"
+  },
+  "counts": {
+    "total": 13,
+    "byClass": {
+      "SITE_CHROME": 0,
+      "EDITORIAL_SECTION": 9,
+      "SHARED_COMPONENT": 1,
+      "PRESENTATIONAL": 1,
+      "UNKNOWN_OR_AMBIGUOUS": 2
+    },
+    "byDisposition": {
+      "MAPPED": 9,
+      "EXCLUDED_WITH_REASON": 0,
+      "DECORATION_MERGED": 1,
+      "REFERENCE_ONLY": 0,
+      "NEEDS_REVIEW": 3
+    }
+  },
+  "entries": [
+    {
+      "nodeId": "n-0216280216bf",
+      "semanticClass": "UNKNOWN_OR_AMBIGUOUS",
+      "disposition": "NEEDS_REVIEW",
+      "reason": "Source kind 'rounded-rectangle' is outside the mapped kind table — inventoried as kind 'unknown'; human decision required.",
+      "sectionId": "s-28d5ef24ffa3",
+      "evidence": [
+        {
+          "evidenceId": "e-224d364c18e6",
+          "kind": "document",
+          "locator": "design://g3-hero-fixture-source/254:41",
+          "retrievedAt": "2026-11-09T04:55:42.665Z",
+          "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-09cb7cd19b5b",
+      "semanticClass": "EDITORIAL_SECTION",
+      "disposition": "MAPPED",
+      "reason": "Content slot 'the-quiet-grandeur' of 'SLOT/HeroContent'.",
+      "sectionId": "s-28d5ef24ffa3",
+      "evidence": [
+        {
+          "evidenceId": "e-abbc36eee649",
+          "kind": "document",
+          "locator": "design://g3-hero-fixture-source/254:44",
+          "retrievedAt": "2026-11-09T04:55:42.665Z",
+          "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-0c7b175166e5",
+      "semanticClass": "EDITORIAL_SECTION",
+      "disposition": "MAPPED",
+      "reason": "Selected page root: realized as the PageStructure plan itself (not a section).",
+      "nameHint": "PAGE",
+      "evidence": [
+        {
+          "evidenceId": "e-d3bd0e917527",
+          "kind": "document",
+          "locator": "design://g3-hero-fixture-source/245:2",
+          "retrievedAt": "2026-11-09T04:55:42.665Z",
+          "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-0fe39f75af97",
+      "semanticClass": "EDITORIAL_SECTION",
+      "disposition": "MAPPED",
+      "reason": "Content slot 'scroll' of 'DECOR/ScrollIndicator'.",
+      "sectionId": "s-28d5ef24ffa3",
+      "evidence": [
+        {
+          "evidenceId": "e-cfcb8143f662",
+          "kind": "document",
+          "locator": "design://g3-hero-fixture-source/254:59",
+          "retrievedAt": "2026-11-09T04:55:42.665Z",
+          "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-10ad9a6e3d9e",
+      "semanticClass": "EDITORIAL_SECTION",
+      "disposition": "MAPPED",
+      "reason": "Structural content within its section. Naming hint 'SLOT/' weighed as evidence, not proof.",
+      "nameHint": "SLOT",
+      "sectionId": "s-28d5ef24ffa3",
+      "evidence": [
+        {
+          "evidenceId": "e-c0092454cfe7",
+          "kind": "document",
+          "locator": "design://g3-hero-fixture-source/254:42",
+          "retrievedAt": "2026-11-09T04:55:42.665Z",
+          "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-1ba6a2c44dc1",
+      "semanticClass": "EDITORIAL_SECTION",
+      "disposition": "MAPPED",
+      "reason": "Structural content within its section. Naming hint 'SLOT/' weighed as evidence, not proof.",
+      "nameHint": "SLOT",
+      "sectionId": "s-28d5ef24ffa3",
+      "evidence": [
+        {
+          "evidenceId": "e-deb6d0b2d172",
+          "kind": "document",
+          "locator": "design://g3-hero-fixture-source/254:40",
+          "retrievedAt": "2026-11-09T04:55:42.665Z",
+          "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-28a895e0e2ab",
+      "semanticClass": "EDITORIAL_SECTION",
+      "disposition": "MAPPED",
+      "reason": "Content slot 'chapter-01-aw-2026' of 'SLOT/HeroContent'.",
+      "sectionId": "s-28d5ef24ffa3",
+      "evidence": [
+        {
+          "evidenceId": "e-56d902ab2344",
+          "kind": "document",
+          "locator": "design://g3-hero-fixture-source/254:43",
+          "retrievedAt": "2026-11-09T04:55:42.665Z",
+          "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-53bd7af6795b",
+      "semanticClass": "EDITORIAL_SECTION",
+      "disposition": "MAPPED",
+      "reason": "Structural content within its section. Naming hint 'SLOT/' weighed as evidence, not proof.",
+      "nameHint": "SLOT",
+      "sectionId": "s-28d5ef24ffa3",
+      "evidence": [
+        {
+          "evidenceId": "e-1a6efa93580d",
+          "kind": "document",
+          "locator": "design://g3-hero-fixture-source/254:46",
+          "retrievedAt": "2026-11-09T04:55:42.665Z",
+          "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-b58a32ef1573",
+      "semanticClass": "SHARED_COMPONENT",
+      "disposition": "NEEDS_REVIEW",
+      "reason": "Component reference 'Proto / Button/Primary' does not resolve to an inventoried component definition (external library or invalid).",
+      "sectionId": "s-28d5ef24ffa3",
+      "provisionalTarget": {
+        "category": "custom-required"
+      },
+      "evidence": [
+        {
+          "evidenceId": "e-b6b91f090b72",
+          "kind": "document",
+          "locator": "design://g3-hero-fixture-source/254:47",
+          "retrievedAt": "2026-11-09T04:55:42.665Z",
+          "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-ba03acaef964",
+      "semanticClass": "PRESENTATIONAL",
+      "disposition": "DECORATION_MERGED",
+      "reason": "Presentational leaf merged into its nearest mapped ancestor; never silently dropped. Naming hint 'DECOR/' weighed as evidence, not proof.",
+      "nameHint": "DECOR",
+      "sectionId": "s-28d5ef24ffa3",
+      "evidence": [
+        {
+          "evidenceId": "e-5db7f79636d6",
+          "kind": "document",
+          "locator": "design://g3-hero-fixture-source/254:57",
+          "retrievedAt": "2026-11-09T04:55:42.665Z",
+          "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-f26ba3d1e8c2",
+      "semanticClass": "EDITORIAL_SECTION",
+      "disposition": "MAPPED",
+      "reason": "Top-level editorial section (naming hint + container evidence) — planned as a PageStructure section. Naming hint 'SECTION/' weighed as evidence, not proof.",
+      "nameHint": "SECTION",
+      "sectionId": "s-28d5ef24ffa3",
+      "evidence": [
+        {
+          "evidenceId": "e-2661adc4a7f3",
+          "kind": "document",
+          "locator": "design://g3-hero-fixture-source/245:5",
+          "retrievedAt": "2026-11-09T04:55:42.665Z",
+          "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-f465fcdb5e6e",
+      "semanticClass": "EDITORIAL_SECTION",
+      "disposition": "MAPPED",
+      "reason": "Content slot 'refined-tailoring-knitwear-and-leather-for-the-season' of 'SLOT/HeroContent'.",
+      "sectionId": "s-28d5ef24ffa3",
+      "evidence": [
+        {
+          "evidenceId": "e-d96465259af0",
+          "kind": "document",
+          "locator": "design://g3-hero-fixture-source/254:45",
+          "retrievedAt": "2026-11-09T04:55:42.665Z",
+          "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+          "method": "design-source-adapter"
+        }
+      ]
+    },
+    {
+      "nodeId": "n-f8ec37e53659",
+      "semanticClass": "UNKNOWN_OR_AMBIGUOUS",
+      "disposition": "NEEDS_REVIEW",
+      "reason": "Source kind 'rounded-rectangle' is outside the mapped kind table — inventoried as kind 'unknown'; human decision required.",
+      "sectionId": "s-28d5ef24ffa3",
+      "evidence": [
+        {
+          "evidenceId": "e-add2bdf9c634",
+          "kind": "document",
+          "locator": "design://g3-hero-fixture-source/254:58",
+          "retrievedAt": "2026-11-09T04:55:42.665Z",
+          "sourceRevisionId": "mcp-observed-unpinned-2026-11-06",
+          "method": "design-source-adapter"
+        }
+      ]
+    }
+  ],
+  "diagnostics": [
+    {
+      "code": "NOT_VERIFIED",
+      "severity": "warning",
+      "message": "1 source component(s) have no proven target capability (custom-required pending); no CMS content may be generated from them without review.",
+      "subject": {
+        "type": "profile",
+        "id": "g3-hero-vertical-slice"
+      }
+    }
+  ]
+}

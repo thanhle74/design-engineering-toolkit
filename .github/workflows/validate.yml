@@ -2,8 +2,11 @@
 # runs the contract suite (T-01..T-22 #9 CLI/adapter/deny-list/determinism + G2-T23..T-28 #14
 # design-source extraction: accountability, chrome exclusion, stable ids, negative graphs,
 # scope escapes, plan-on-PageStructure, source neutrality) the KB-01..KB-29 engine tests, and the portability scans.
-# npm test = tsc build + 102 checks. The task/issue prefix is never hardcoded here (spec §8).
+# npm test = tsc build + 179 checks (incl. the #41 schema-registry SSOT suite and the #18 live-adapter offline gates). The task/issue prefix is never hardcoded here (spec §8).
 # The task/issue prefix is never hardcoded here (spec §8): this workflow is issue-agnostic.
+#
+# The second job gates the studio web app (apps/studio, its own npm lockfile):
+# full vitest suite + typecheck + lint + production build on the exact PR tip.
 name: validate-contracts
 on:
   push:
@@ -28,3 +31,38 @@ jobs:
           find schemas examples profiles projects tests/fixtures -name '*.json' -print0 | while IFS= read -r -d '' f; do
             node -e "JSON.parse(require('fs').readFileSync(process.argv[1],'utf8'))" "$f" || exit 1
           done
+
+  studio:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            apps/studio/package-lock.json
+            package-lock.json
+      - name: Install (isolated apps/studio lockfile)
+        run: npm ci
+        working-directory: apps/studio
+      # [40] the studio build-control tests drive the REAL det CLI — build
+      # core dist/ once before the studio suite (additive; no logic change).
+      - name: Install core (for the det CLI used by studio build-control E2E)
+        run: npm ci
+      - name: Build core (det CLI dist)
+        run: npm run build
+      - name: Tests (vitest suite incl. real det-output interop + real det build E2E)
+        run: npm test
+        working-directory: apps/studio
+      - name: Typecheck
+        run: npm run typecheck
+        working-directory: apps/studio
+      - name: Lint
+        run: npm run lint
+        working-directory: apps/studio
+      - name: Production build
+        run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
+        working-directory: apps/studio

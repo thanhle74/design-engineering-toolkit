@@ -1,0 +1,6 @@
+{
+  "name": "magento/module-page-builder",
+  "description": "G3 fixture stand-in for the real module package metadata (trimmed).",
+  "version": "3.1.0",
+  "license": "proprietary-fixture"
+}

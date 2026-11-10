@@ -8,7 +8,7 @@
 import fs from "node:fs";
 import crypto from "node:crypto";
 import { validateContract } from "../schema-registry.js";
-import type { KbIngestManifest, KbDiagnostic, KbProjectRecord, KbRecord, KbRelationRecord, KbStoreData, KbUiComponentRecord, ManifestInput, StoreDescriptor } from "./types.js";
+import type { KbCapabilityRecord, KbIngestManifest, KbDiagnostic, KbProjectRecord, KbRecord, KbRelationRecord, KbStoreData, KbUiComponentRecord, ManifestInput, StoreDescriptor } from "./types.js";
 import { digestKey } from "./types.js";
 import { resolveManifestInput, resolveRootAliases, ResolvedInput } from "./path-gateway.js";
 import type { CapabilityRegistry } from "../types.js";
@@ -24,6 +24,7 @@ export interface IngestOptions {
   manifestPath: string;
   roots: Record<string, string>; // explicit --root alias=path resolutions
   env: NodeJS.ProcessEnv;
+  cwd?: string; // working directory for the gitignored .toolkit/local.json root-alias lane (default process.cwd())
   scannedAt: string;
   toolVersion: string;
   existingStore?: KbStoreData; // review carry-forward + endpoint resolution context
@@ -76,6 +77,7 @@ export function parseRecordFile(raw: string): { records: unknown[]; error?: stri
 
 interface ResolvedInputs {
   registry?: ResolvedInput;
+  platformRecords?: ResolvedInput;
   uiInventory?: ResolvedInput;
   projectRecords: ResolvedInput[];
   relations?: ResolvedInput;
@@ -83,18 +85,19 @@ interface ResolvedInputs {
   deniedKeys: string[];
 }
 
-function resolveManifestInputs(manifest: KbIngestManifest, manifestDir: string, roots: Record<string, string>, env: NodeJS.ProcessEnv): ResolvedInputs {
+function resolveManifestInputs(manifest: KbIngestManifest, manifestDir: string, roots: Record<string, string>, env: NodeJS.ProcessEnv, cwd?: string): ResolvedInputs {
   const diagnostics: KbDiagnostic[] = [];
   const deniedKeys: string[] = [];
   const aliases = new Set<string>();
-  const collect = (i: ManifestInput) => {
-    if (i.rootAlias) aliases.add(i.rootAlias);
+  const collect = (i: ManifestInput | undefined) => {
+    if (i?.rootAlias) aliases.add(i.rootAlias);
   };
   collect(manifest.inputs.capabilityRegistry);
+  collect(manifest.inputs.platformRecords);
   collect(manifest.inputs.uiInventory);
-  manifest.inputs.projectRecords.forEach(collect);
+  (manifest.inputs.projectRecords ?? []).forEach(collect);
   collect(manifest.inputs.relations);
-  const { roots: resolvedRoots, diagnostics: rootDiags } = resolveRootAliases([...aliases], roots, env);
+  const { roots: resolvedRoots, diagnostics: rootDiags } = resolveRootAliases([...aliases], roots, env, cwd);
   diagnostics.push(...rootDiags);
   const extra = manifest.denyGlobs ?? [];
 
@@ -109,10 +112,11 @@ function resolveManifestInputs(manifest: KbIngestManifest, manifestDir: string, 
   };
 
   return {
-    registry: resolve(manifest.inputs.capabilityRegistry),
-    uiInventory: resolve(manifest.inputs.uiInventory),
-    projectRecords: manifest.inputs.projectRecords.map(resolve).filter((x): x is ResolvedInput => x !== undefined),
-    relations: resolve(manifest.inputs.relations),
+    registry: manifest.inputs.capabilityRegistry ? resolve(manifest.inputs.capabilityRegistry) : undefined,
+    platformRecords: manifest.inputs.platformRecords ? resolve(manifest.inputs.platformRecords) : undefined,
+    uiInventory: manifest.inputs.uiInventory ? resolve(manifest.inputs.uiInventory) : undefined,
+    projectRecords: (manifest.inputs.projectRecords ?? []).map(resolve).filter((x): x is ResolvedInput => x !== undefined),
+    relations: manifest.inputs.relations ? resolve(manifest.inputs.relations) : undefined,
     diagnostics,
     deniedKeys,
   };
@@ -217,11 +221,17 @@ export function runIngest(options: IngestOptions): IngestResult {
     return idx === -1 ? "." : p.slice(0, idx);
   })();
 
-  const resolved = resolveManifestInputs(manifest, manifestDir, options.roots, options.env);
+  const resolved = resolveManifestInputs(manifest, manifestDir, options.roots, options.env, options.cwd);
   diagnostics.push(...resolved.diagnostics);
 
-  const totalInputs = 2 + manifest.inputs.projectRecords.length + 1;
-  const resolvedCount = (resolved.registry ? 1 : 0) + (resolved.uiInventory ? 1 : 0) + resolved.projectRecords.length + (resolved.relations ? 1 : 0);
+  const presentLanes =
+    (manifest.inputs.capabilityRegistry ? 1 : 0) +
+    (manifest.inputs.platformRecords ? 1 : 0) +
+    (manifest.inputs.uiInventory ? 1 : 0) +
+    (manifest.inputs.projectRecords?.length ?? 0) +
+    (manifest.inputs.relations ? 1 : 0);
+  const totalInputs = presentLanes;
+  const resolvedCount = (resolved.registry ? 1 : 0) + (resolved.platformRecords ? 1 : 0) + (resolved.uiInventory ? 1 : 0) + resolved.projectRecords.length + (resolved.relations ? 1 : 0);
   if (resolvedCount === 0) {
     diagnostics.push({ code: "INGEST_ALL_INPUTS_DENIED", severity: "error", message: `Every manifest input was denied or unresolved (${totalInputs} inputs); fail closed — nothing was ingested.`, subject: { type: "manifest", id: manifest.manifestId } });
   } else if (resolvedCount < totalInputs) {
@@ -257,6 +267,39 @@ export function runIngest(options: IngestOptions): IngestResult {
         for (const record of bridge.records) {
           data.platform.push(carryReview(record, findExisting(options.existingStore, record.id), diagnostics));
         }
+      }
+    }
+  }
+
+  // --- KB-1 (M4): platform records emitted by a read-only source extract ----------------------
+  // Records arrive KB-record-shaped (capability / data-provider / module) from `det kb extract`;
+  // ingest re-normalizes the envelope exactly like the other lanes and every record then passes
+  // the same write-time gates (id grammar, record safety, graph semantics). Ingest itself never
+  // opens the platform tree — the extract outputs are the only input.
+  if (resolved.platformRecords) {
+    let raw: string;
+    try {
+      raw = fs.readFileSync(resolved.platformRecords.abs, "utf8");
+    } catch (e) {
+      diagnostics.push({ code: "INPUT_UNREADABLE", severity: "error", message: `Resolved input '${resolved.platformRecords.key}' could not be read: ${(e as Error).name}.`, subject: { type: "input", id: resolved.platformRecords.key } });
+      raw = "";
+    }
+    const parsed = parseRecordFile(raw);
+    if (parsed.error) {
+      diagnostics.push({ code: "INPUT_INVALID_JSON", severity: "error", message: `Platform records '${resolved.platformRecords.key}': ${parsed.error}`, subject: { type: "input", id: resolved.platformRecords.key } });
+    } else {
+      const digest = sha256File(resolved.platformRecords.abs);
+      const key = digestKey(resolved.platformRecords.input);
+      for (const rec of parsed.records) {
+        const base = rec as Partial<KbCapabilityRecord>;
+        const candidate = {
+          ...(base as KbCapabilityRecord),
+          schemaVersion: 1,
+          lifecycle: normalizeLifecycle(base.lifecycle) as KbCapabilityRecord["lifecycle"],
+          observed: { scannedAt: options.scannedAt, inputDigests: { [key]: digest } },
+        };
+        const shaped = carryReview(finishRecord(candidate as KbCapabilityRecord) as KbCapabilityRecord, findExisting(options.existingStore, (base as { id?: string }).id ?? ""), diagnostics);
+        data.platform.push(shaped);
       }
     }
   }

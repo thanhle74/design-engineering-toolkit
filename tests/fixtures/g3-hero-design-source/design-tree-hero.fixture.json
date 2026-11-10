@@ -1,0 +1,68 @@
+{
+  "$comment": "G3 hero RAW-observed fixture tree (issue #23, coordinator fidelity correction). Faithful bounded read of the observed hero target: node IDs, layer NAMES and node TYPES are exactly as observed via the connected design-tool MCP (get_metadata, 2026-11-06) — text layers are named by their content, the CTA is a button component instance ('Proto / Button/Primary', definition external to this bounded read, so componentRef records the observed component name and intentionally does not resolve in-document), the overlay is a rounded-rectangle, and the scroll indicator is a frame with two observed children. Layer types use the observed design-tool vocabulary (frame / rounded-rectangle / text / instance); 'rounded-rectangle' is deliberately NOT in the core kind table and stays NodeIR 'unknown' + NOT_VERIFIED. Geometry is the observed metadata. The subtree is bounded to the hero target by policy (sibling sections absent); the page root 245:2 is included because the selected root defines the plan. OBSERVED, NOT REVISION-PINNED (revisionId states the observation date, never a source revision); a live extraction must re-observe and pin its own revision. Semantic roles are NOT baked into this document — they are assigned by the explicit, reason-carrying projection document (hero-projection.fixture.json), which is the recorded human decision.",
+  "revisionId": "mcp-observed-unpinned-2026-11-06",
+  "nodes": [
+    {
+      "locator": "245:2",
+      "kind": "frame",
+      "name": "PAGE/Home/Desktop",
+      "properties": { "layout": { "direction": "unknown", "positioning": "static", "constraints": [], "relativeSizes": [], "overflow": "unknown" } },
+      "children": ["245:5"]
+    },
+    {
+      "locator": "245:5",
+      "kind": "frame",
+      "name": "SECTION/Hero/Primary",
+      "properties": { "layout": { "direction": "unknown", "positioning": "static", "constraints": [{ "axis": "x", "type": "fixed", "value": "0" }, { "axis": "y", "type": "fixed", "value": "120" }, { "axis": "width", "type": "fixed", "value": "1440" }, { "axis": "height", "type": "fixed", "value": "880" }], "relativeSizes": [], "overflow": "unknown" } },
+      "children": ["254:40", "254:41", "254:42", "254:57"]
+    },
+    {
+      "locator": "254:40",
+      "kind": "frame",
+      "name": "SLOT/HeroMedia",
+      "properties": { "layout": { "direction": "unknown", "positioning": "static", "constraints": [{ "axis": "x", "type": "fixed", "value": "0" }, { "axis": "y", "type": "fixed", "value": "0" }, { "axis": "width", "type": "fixed", "value": "1440" }, { "axis": "height", "type": "fixed", "value": "880" }], "relativeSizes": [], "overflow": "unknown" } },
+      "children": []
+    },
+    {
+      "locator": "254:41",
+      "kind": "rounded-rectangle",
+      "name": "Overlay",
+      "properties": { "layout": { "direction": "unknown", "positioning": "absolute", "constraints": [{ "axis": "x", "type": "fixed", "value": "0" }, { "axis": "y", "type": "fixed", "value": "0" }, { "axis": "width", "type": "fixed", "value": "1440" }, { "axis": "height", "type": "fixed", "value": "880" }], "relativeSizes": [], "overflow": "unknown" } },
+      "children": []
+    },
+    {
+      "locator": "254:42",
+      "kind": "frame",
+      "name": "SLOT/HeroContent",
+      "properties": { "layout": { "direction": "unknown", "positioning": "absolute", "constraints": [{ "axis": "x", "type": "fixed", "value": "120" }, { "axis": "y", "type": "fixed", "value": "356" }, { "axis": "width", "type": "fixed", "value": "520" }, { "axis": "height", "type": "fixed", "value": "376" }], "relativeSizes": [], "overflow": "unknown" } },
+      "children": ["254:43", "254:44", "254:45", "254:46"]
+    },
+    { "locator": "254:43", "kind": "text", "name": "CHAPTER 01 / AW 2026", "children": [] },
+    { "locator": "254:44", "kind": "text", "name": "The Quiet Grandeur", "children": [] },
+    { "locator": "254:45", "kind": "text", "name": "Refined tailoring, knitwear and leather for the season.", "children": [] },
+    {
+      "locator": "254:46",
+      "kind": "frame",
+      "name": "SLOT/HeroActions",
+      "properties": { "layout": { "direction": "unknown", "positioning": "static", "constraints": [{ "axis": "x", "type": "fixed", "value": "0" }, { "axis": "y", "type": "fixed", "value": "260" }, { "axis": "width", "type": "fixed", "value": "241" }, { "axis": "height", "type": "fixed", "value": "116" }], "relativeSizes": [], "overflow": "unknown" } },
+      "children": ["254:47"]
+    },
+    {
+      "locator": "254:47",
+      "kind": "instance",
+      "name": "Proto / Button/Primary",
+      "componentRef": "Proto / Button/Primary",
+      "properties": { "layout": { "direction": "unknown", "positioning": "static", "constraints": [{ "axis": "x", "type": "fixed", "value": "0" }, { "axis": "y", "type": "fixed", "value": "16" }, { "axis": "width", "type": "fixed", "value": "241" }, { "axis": "height", "type": "fixed", "value": "100" }], "relativeSizes": [], "overflow": "unknown" } },
+      "children": []
+    },
+    {
+      "locator": "254:57",
+      "kind": "frame",
+      "name": "DECOR/ScrollIndicator",
+      "properties": { "layout": { "direction": "unknown", "positioning": "absolute", "constraints": [{ "axis": "x", "type": "fixed", "value": "695" }, { "axis": "y", "type": "fixed", "value": "776" }, { "axis": "width", "type": "fixed", "value": "50" }, { "axis": "height", "type": "fixed", "value": "76" }], "relativeSizes": [], "overflow": "unknown" } },
+      "children": ["254:58", "254:59"]
+    },
+    { "locator": "254:58", "kind": "rounded-rectangle", "name": "Rectangle", "children": [] },
+    { "locator": "254:59", "kind": "text", "name": "SCROLL", "children": [] }
+  ]
+}

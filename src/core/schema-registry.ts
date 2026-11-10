@@ -1,6 +1,7 @@
 // Ajv schema registry for the det core: loads every committed schema family
-// (schemas/converter + schemas/cli) once and compiles validators by $id or basename.
-// The schema files on disk stay the canonical contracts; this module only registers them.
+// (schemas/converter + schemas/cli + schemas/kb + schemas root) once and compiles validators
+// by $id or basename. schemas/registry.json (issue #41) is the single source of contract
+// aliases; the schema files on disk stay the canonical contracts and carry their own $id.
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -46,44 +47,89 @@ export function getAjv(): AjvInstance {
   return ajv;
 }
 
-const ids = new Map<string, string>([
-  ["capability-registry", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/capability-registry.schema.json"],
-  ["component-binding-map", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/component-binding-map.schema.json"],
-  ["converter-profile", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/converter-profile.schema.json"],
-  ["resolution-report", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/resolution-report.schema.json"],
-  ["adapter-descriptor", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/adapter-descriptor.schema.json"],
-  ["adapter-input", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/adapter-input.schema.json"],
-  ["tool-run", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/tool-run.schema.json"],
-  ["node-ir", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/node-ir.schema.json"],
-  ["page-structure", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/page-structure.schema.json"],
-  ["source-review", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/source-review.schema.json"],
-  ["design-source-snapshot", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/design-source-snapshot.schema.json"],
-  // Knowledge Engine family (issue #15)
-  ["kb-capability", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-capability.schema.json"],
-  ["kb-ui-component", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-ui-component.schema.json"],
-  ["kb-project-record", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-project-record.schema.json"],
-  ["kb-relations", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-relations.schema.json"],
-  ["kb-ingest-manifest", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-ingest-manifest.schema.json"],
-  ["kb-store", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-store.schema.json"],
-  ["kb-engine-output", "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-engine-output.schema.json"],
-]);
+// ---- schemas/registry.json: contract alias -> relative schema path (issue #41) ----------
+// The registry JSON is the single source of contract aliases; each mapped file's own $id is
+// the Ajv registry key and the serialized schemaRef identity (byte-for-byte, no URI
+// migration). Resolution is alias -> path -> the schema file's own $id, read from the DET
+// install/package root — never cwd, an absolute path or a network fetch.
+interface RegistryDoc {
+  version: number;
+  aliases: Record<string, string>;
+}
 
-export type SchemaName = keyof typeof ids extends string ? string : never;
+const REGISTRY_FILE = path.join(REPO_ROOT, "schemas", "registry.json");
+
+let registryDoc: RegistryDoc | null = null;
+const idByAlias = new Map<string, string>();
+
+function loadRegistry(): RegistryDoc {
+  if (registryDoc) return registryDoc;
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(fs.readFileSync(REGISTRY_FILE, "utf8"));
+  } catch (e) {
+    throw new Error(`schema registry unreadable at ${REGISTRY_FILE}: ${(e as Error).message}`);
+  }
+  const doc = parsed as Partial<RegistryDoc> | null;
+  if (!doc || typeof doc !== "object" || doc.version !== 1 || typeof doc.aliases !== "object" || doc.aliases === null) {
+    throw new Error(`schema registry malformed at ${REGISTRY_FILE}: expected {"version":1,"aliases":{"<alias>":"<relative schema path>"}}`);
+  }
+  if (Object.keys(doc.aliases).length === 0) {
+    throw new Error(`schema registry at ${REGISTRY_FILE} declares no aliases`);
+  }
+  registryDoc = doc as RegistryDoc;
+  return registryDoc;
+}
+
+// List the registry's contract aliases (startup sanity and tests iterate this).
+export function contractAliases(): string[] {
+  return Object.keys(loadRegistry().aliases);
+}
+
+// Resolve a contract alias to the schema's own $id. Throws loudly (usage error via
+// assertSchemasLoad) when the alias, its file or its $id is missing or not registered.
+export function contractId(name: string): string {
+  const cached = idByAlias.get(name);
+  if (cached !== undefined) return cached;
+  const rel = loadRegistry().aliases[name];
+  if (rel === undefined) throw new Error(`Unknown contract alias '${name}' (schemas/registry.json)`);
+  if (path.isAbsolute(rel) || rel.includes("..") || /^[A-Za-z][A-Za-z0-9+.-]*:/.test(rel)) {
+    throw new Error(`registry alias '${name}' must map to a package-relative schema path, got '${rel}'`);
+  }
+  const file = path.join(REPO_ROOT, rel);
+  let schema: { $id?: unknown };
+  try {
+    schema = JSON.parse(fs.readFileSync(file, "utf8"));
+  } catch (e) {
+    throw new Error(`registry alias '${name}' -> unreadable schema file ${file}: ${(e as Error).message}`);
+  }
+  if (typeof schema.$id !== "string" || schema.$id.length === 0) {
+    throw new Error(`registry alias '${name}' -> ${file} declares no $id`);
+  }
+  if (!getAjv().getSchema(schema.$id)) {
+    throw new Error(`registry alias '${name}' -> ${file} declares $id '${schema.$id}' which is not registered in Ajv`);
+  }
+  idByAlias.set(name, schema.$id);
+  return schema.$id;
+}
+
+export type SchemaName = string;
 
 export function validateContract(name: string, payload: unknown): { valid: boolean; errors: string[] } {
   const ajv = getAjv();
-  const id = ids.get(name);
-  if (!id) throw new Error(`Unknown contract name '${name}'`);
-  const validate = ajv.getSchema(id) ?? ajv.getSchema(`${id}`);
+  const id = contractId(name);
+  const validate = ajv.getSchema(id);
   if (!validate) throw new Error(`Schema not registered for '${name}' (${id})`);
   const ok = validate(payload);
   const errors = ok ? [] : (validate.errors ?? []).map((e: { instancePath: string; message?: string }) => `${e.instancePath || "/"} ${e.message ?? ""}`.trim());
   return { valid: ok, errors };
 }
 
-// First-run sanity used by CLI startup: fail loudly (usage error) if the contract layer is broken.
+// First-run sanity used by CLI startup: fail loudly (usage error) if the contract layer is
+// broken — including a registry alias whose path or $id is missing or mismatched (issue #41).
 export function assertSchemasLoad(): void {
+  loadRegistry();
   getAjv();
-  for (const name of ids.keys()) validateContract(name, {});
+  for (const name of contractAliases()) validateContract(name, {});
   // Empty payloads are expected NOT to validate; we only require the schemas to compile.
 }

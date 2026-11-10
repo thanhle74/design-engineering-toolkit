@@ -111,7 +111,7 @@
       "additionalProperties": false,
       "properties": {
         "status": { "enum": ["confirmed", "unconfirmed", "incompatible", "not-applicable"] },
-        "regime": { "enum": ["commercial", "mit", "ofl", "apache", "proprietary", "not-applicable"] },
+        "regime": { "enum": ["commercial", "mit", "ofl", "apache", "osl", "afl", "proprietary", "not-applicable"], "$comment": "osl/afl added in M4 (issue #19) for Magento Open Software License 3.0 / AFL 3.0 platform-native components (SPDX OSL-3.0 / AFL-3.0)." },
         "licenseRef": { "type": "string", "$comment": "Pointer to the license document (path/URL) — never license text or keys." },
         "derivedArtifactPolicy": { "enum": ["metadata-only", "local-use-authorized", "redistribution-prohibited", "unknown"], "$comment": "Hyvä UI records are metadata-only: audit locally with authorized access; never vendor or publish source/templates/assets." }
       }

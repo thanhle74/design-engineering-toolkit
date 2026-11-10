@@ -14,6 +14,8 @@ import { commandInspect } from "./commands/inspect.js";
 import { commandPlan } from "./commands/plan.js";
 import { commandExtract } from "./commands/extract.js";
 import { commandKb } from "./commands/kb.js";
+import { commandCompose } from "./commands/compose.js";
+import { commandBuild } from "./commands/build.js";
 
 // This module compiles to dist/src/core/cli/main.js — four levels up to the repository root.
 export const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..", "..", "..");
@@ -65,6 +67,41 @@ Usage:
       relation graph rules (dangling endpoints, class-boundary edges, cycles), KB-3 project
       isolation and the secret/licensed-content guards.
 
+  det kb extract --manifest <file> [--root <alias>=<path>]... [--out <dir>] [--dry-run] [--json]
+      Plan-driven read-only source extraction (M4): run the manifest's declared scans through the
+      out-of-process KB source-scanner adapter (discovered by its kb-source-scan output contract)
+      and emit KB-record JSON arrays + an extract report for a later det kb ingest. Reads only
+      under declared root aliases behind the structural deny-list; writes only into --out (never
+      inside a source root, never the KB store); any error-severity diagnostic writes nothing.
+      Without --out: report only. Running against real private sources is a separately gated
+      step (explicit Owner GO, explicit roots).
+
+  det compose --profile <file> --registry <file> --bindings <file> --input <page-structure.json>
+              --nodeir <node-ir.json> --content <content-manifest.json> [--projection <file>] [--adapter <id>] [--out <dir>] [--dry-run] [--json]
+      Gated native content composition (G3): deterministically compose persisted native platform
+      content (e.g. a master-format document) from a pinned PageStructure + NodeIR + content
+      manifest against a pinned capability registry + binding map, via the platform's out-of-process
+      compose adapter. Structural containers without component identity are resolved HERE — the
+      gated platform-serializer stage the G2 contract names — never by the binding resolver, never
+      as arbitrary embeddable markup. The core validates all pins, spawns the adapter and re-verifies
+      the echoed input identities; gaps (missing content inputs, non-representable decorations) come
+      back as explicit diagnostics, never invented around. When source names do not carry the
+      SLOT-role convention, --projection supplies the reason-carrying human role assignment
+      (schema'd, revision-pinned). Composition is structural evidence only: it never claims Admin
+      round-trip or visual verification.
+
+  det build --config <build-config.json> [--out <dir>] [--dry-run] [--json]
+      One-shot validated build (issue #28 C1): a thin orchestrator over the SHIPPED commands —
+      capability probe (optional or a pre-built pinned registry), read-only design-source
+      extraction, gated native composition — driven by one schema'd build-config document whose
+      paths resolve relative to the config file itself (portable per-project configs; no engine
+      defaults, no hardcoded projects). Major 1 builds run from OFFLINE snapshot/tree documents
+      only; a live design-source mode is not representable and fails closed. The bundle lands in
+      --out (or config.outputDir) as versioned stage directories plus build-manifest.json — the
+      per-file-byte inventory (schemas/cli/build-manifest.schema.json) of every generated
+      artifact, consumed input, stage provenance and honest gap (preview installation into a
+      checkout is explicitly OPERATOR_GATED: the build never writes to any platform).
+
 Global flags:
   --json        Machine-readable JSON on stdout (the human summary is a presentation of it).
   --out <dir>   Write artifacts (capability-registry.json / resolution-report.json / store
@@ -73,7 +110,10 @@ Global flags:
   --help        This help.  --version  Print the tool version.
 
 Source resolution precedence (never a default path): --project flag > DET_PROJECT_SOURCE env >
-the profile's own projectSources[0].path; KB root aliases: --root <alias>=<path> > DET_KB_ROOT_<ALIAS>.
+the profile's own projectSources[0].path; KB root aliases (all kb verbs): --root <alias>=<path> >
+DET_KB_ROOT_<ALIAS> > the gitignored .toolkit/local.json ({"roots": {"<alias>": "<absolute path>"}})
+resolved against the working directory; a missing file is just an absent lane, an invalid one is
+a blocking LOCAL_CONFIG_INVALID.
 Placeholder paths ('/path/to/...') are reported as PROJECT_SOURCE_NOT_CONFIGURED — nothing is
 audited from a placeholder.
 
@@ -107,7 +147,7 @@ export async function main(argv: string[], env: NodeJS.ProcessEnv = process.env,
     return 2;
   }
   if (parsed.command === null) {
-    io.err("det: no command given (expected validate|inspect|plan|extract|kb). Run 'det --help' for usage.");
+    io.err("det: no command given (expected validate|inspect|plan|extract|kb|compose|build). Run 'det --help' for usage.");
     return 2;
   }
   const unexpectedFlags = unexpectedFlagsForCommand(parsed.command, parsed.flags);
@@ -138,6 +178,10 @@ export async function main(argv: string[], env: NodeJS.ProcessEnv = process.env,
       return commandExtract(flags as Record<string, string | boolean>, io);
     case "kb":
       return commandKb(flags, io);
+    case "compose":
+      return commandCompose(flags as Record<string, string | boolean>, io);
+    case "build":
+      return commandBuild(flags as Record<string, string | boolean>, io);
     default:
       io.err(`det: unknown command '${parsed.command}'`);
       return 2;
