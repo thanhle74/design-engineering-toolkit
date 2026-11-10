@@ -338,7 +338,7 @@ export function BuildLauncher({
   const busy = job !== null && !TERMINAL_STATES.has(job.state);
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-8">
       {!runnerReady ? (
         <Alert variant="destructive">
           <CircleAlert className="size-4" aria-hidden="true" />
@@ -393,7 +393,7 @@ export function BuildLauncher({
             </p>
           ) : (
             entries.map((entry) => (
-              <div key={entry.configId} className="flex flex-col gap-2 rounded-md border p-3">
+              <div key={entry.configId} className="flex flex-col gap-2.5 rounded-lg border p-4">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="text-sm font-medium">{entry.label}</span>
                   <Badge variant="outline">{entry.designSource.mode}</Badge>
@@ -451,7 +451,6 @@ export function BuildLauncher({
                 </dl>
                 <div>
                   <Button
-                    size="sm"
                     disabled={!runnerReady || busy || starting !== null}
                     onClick={() => void startBuild(entry.configId)}
                   >

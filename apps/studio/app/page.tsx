@@ -25,7 +25,7 @@ function RunRow({ run }: { run: DetRunSummary }) {
   return (
     <Link
       href={`/runs/${encodeURIComponent(run.runId)}`}
-      className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-md border px-3 py-2 text-sm transition-colors hover:bg-accent"
+      className="flex flex-wrap items-center gap-x-3 gap-y-1.5 rounded-lg border px-4 py-3 text-sm transition-colors hover:bg-accent"
     >
       <span className="font-medium">{run.label}</span>
       <RunModeBadge mode={run.mode} />
@@ -63,12 +63,15 @@ export default async function OverviewPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-8">
       <section aria-labelledby="studio-overview-heading">
-        <h1 id="studio-overview-heading" className="text-lg font-semibold">
+        <h1
+          id="studio-overview-heading"
+          className="text-xl font-semibold tracking-tight md:text-2xl"
+        >
           DET Studio
         </h1>
-        <p className="mt-1 max-w-3xl text-sm text-muted-foreground">
+        <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
           Review layer over the deterministic det CLI: inspect a conversion run,
           its mapping dispositions and diagnostics, and download validated
           artifacts. The engine owns all conversion logic — Studio never regenerates it.
@@ -90,7 +93,7 @@ export default async function OverviewPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Button asChild size="sm" variant="outline">
+          <Button asChild variant="outline" className="w-fit self-start">
             <Link href="/build">
               <Hammer className="size-4" aria-hidden="true" />
               Open Build Control
@@ -129,7 +132,7 @@ export default async function OverviewPage() {
               det output, or unset it for the DEMO fixture.
             </p>
           ) : (
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2.5">
               {runs.map((run) => (
                 <RunRow key={run.runId} run={run} />
               ))}

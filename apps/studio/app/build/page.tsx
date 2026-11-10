@@ -55,13 +55,16 @@ export default async function BuildPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-8">
       <section aria-labelledby="build-control-heading">
-        <h1 id="build-control-heading" className="flex items-center gap-2 text-lg font-semibold">
-          <Hammer className="size-4 text-muted-foreground" aria-hidden="true" />
+        <h1
+          id="build-control-heading"
+          className="flex items-center gap-2.5 text-xl font-semibold tracking-tight md:text-2xl"
+        >
+          <Hammer className="size-5 text-muted-foreground" aria-hidden="true" />
           Build Control
         </h1>
-        <p className="mt-1 max-w-3xl text-sm text-muted-foreground">
+        <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
           Trigger a real offline <span className="font-mono">det build --config</span> run through
           the thin local runner and follow it to a verified bundle. Builds run from{" "}
           <strong>offline snapshot sources only</strong> (the build config pins the design source);

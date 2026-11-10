@@ -110,6 +110,19 @@ Notes on honesty and scope (also enforced in code and tests):
   storefront or Admin preview is claimed anywhere; installing the output into
   a Magento checkout remains an operator step (a recorded manifest gap).
 
+## Theme ([52])
+
+Dark-only by owner direction — no light mode, no toggle, no OS theme
+switching. The dark palette lives on `:root` in `app/globals.css` (calm
+charcoal-slate neutrals via semantic shadcn tokens) and `<html>` carries a
+static server-rendered `dark` class so the first paint is already dark; the
+class exists to keep the `dark:`-prefixed utilities inside the shadcn
+primitives active. The layout is deliberately spacious: `h-16` header,
+≥44px nav/button targets (default button `h-11`, compact `sm`/`icon-sm`
+sizes remain for in-table and dialog-close controls), roomier table rows
+and card spacing. Evidence: `docs/screenshots/52-*.png` and
+`52-dark-only-dom-evidence.txt`.
+
 ## Layout
 
 - `app/` — App Router pages (`/`, `/build`, `/runs/[runId]`) and route handlers under `app/api/**` (composition only)

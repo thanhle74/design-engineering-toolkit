@@ -188,7 +188,7 @@ export function ConversionForm({ profiles, className }: ConversionFormProps) {
             ) : (
               <div
                 data-testid="profiles-not-configured"
-                className="rounded-md border border-dashed px-3 py-2"
+                className="rounded-md border border-dashed px-4 py-3"
               >
                 <p className="text-xs font-medium">Profile: NOT CONFIGURED</p>
                 <p className="mt-0.5 text-xs text-muted-foreground">
