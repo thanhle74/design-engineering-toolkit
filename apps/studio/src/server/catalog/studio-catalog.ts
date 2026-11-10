@@ -615,8 +615,19 @@ export class StudioCatalog {
    */
   async backupCatalog(backupDir: string, runsRoot: string): Promise<CatalogBackupSummary> {
     await mkdir(backupDir, { recursive: true, mode: 0o700 });
+    // Require a fresh, EMPTY backup target. Otherwise a failed snapshot
+    // could remove a pre-existing files/ tree during its cleanup, or a
+    // successful snapshot could overwrite another operator's files.
+    // Check BEFORE chmod, VACUUM INTO or any other backup write.
+    const existing = await readdir(backupDir);
+    if (existing.length !== 0) {
+      throw new DetRunReaderError(
+        "path-refused",
+        "Backup refused: the target directory is not empty; choose a new, empty backup directory."
+      );
+    }
     // mkdir mode alone is umask-filtered; enforce operator-private modes.
-    await chmod(backupDir, 0o700).catch(() => {});
+    await chmod(backupDir, 0o700);
     const dbFile = path.join(backupDir, CATALOG_BACKUP_DB_FILE);
     const manifestFile = path.join(backupDir, CATALOG_BACKUP_MANIFEST_FILE);
     const filesRoot = path.join(backupDir, CATALOG_BACKUP_FILES_DIR);
@@ -624,8 +635,11 @@ export class StudioCatalog {
     try {
       // VACUUM INTO refuses an existing target, which keeps every backup a
       // complete fresh snapshot (callers choose a fresh directory).
-      this.db.exec(`VACUUM INTO '${dbFile.replace(/'/g, "''")}'`);
+      // Register the target BEFORE VACUUM: if SQLite creates a partial DB
+      // and then fails, the fail-closed cleanup must remove that partial file.
+      // This is safe because the directory was proven empty above.
       written.push(dbFile);
+      this.db.exec(`VACUUM INTO '${dbFile.replace(/'/g, "''")}'`);
       await chmod(dbFile, 0o600).catch(() => {});
       await mkdir(filesRoot, { recursive: true, mode: 0o700 });
       await chmod(filesRoot, 0o700).catch(() => {});
