@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// [58] DET Studio root launcher — the ONE operator entrypoint.
+// [58] DET Studio root launcher — the ONE operator entrypoint ([63] single application).
 //
 //   npm run dev     → node scripts/studio.mjs dev    (Next dev server)
 //   npm run start   → node scripts/studio.mjs start  (next build + next start)
@@ -8,17 +8,18 @@
 // What it does, in order, all resolved from the REPOSITORY ROOT (this file's
 // own location — never the caller's accidental cwd):
 //   1. asserts Node >= 22.13 (Studio/Next 16 engine requirement);
-//   2. installs workspace dependencies once if missing (one root `npm ci`
-//      against the single root lockfile, [60] — covers @det/core + Studio);
-//   3. rebuilds the `det` dist/ when missing or stale vs src//adapters/
-//      (packages/core; the CLI that both `node bin/det.js` and the Studio
-//      build runner use);
+//   2. installs dependencies once if missing (one root `npm ci` against the
+//      single root lockfile — [63] there is exactly one package/lockfile);
+//   3. rebuilds the `det` dist/ when missing or stale vs src/core//adapters/
+//      (`npm run build:core`; the CLI that both `node bin/det.js` and the
+//      Studio build runner use);
 //   4. defaults STUDIO_DET_RUNS_DIR to <root>/out/studio-runs (created on
 //      demand) ONLY when unset — every explicit STUDIO_* env value is passed
 //      through untouched. The build-config catalogue needs no env at all:
 //      committed examples are discovered in place by the Studio server;
-//   5. runs `npm run dev|start` in apps/studio in the foreground with the
-//      merged environment (signals forwarded, exit code propagated).
+//   5. runs `npm run app:dev|app:start` at the repository root in the
+//      foreground with the merged environment (signals forwarded, exit code
+//      propagated).
 //
 // `print-env` reports the resolved layout as one JSON line on stdout without
 // installing, building or creating anything (used by tests/studio-startup-suite.mjs).
@@ -30,11 +31,10 @@ import { fileURLToPath } from "node:url";
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(SCRIPT_DIR, "..");
-const STUDIO_DIR = path.join(ROOT, "apps", "studio");
-const CORE_DIR = path.join(ROOT, "packages", "core");
-const DET_DIST_ENTRY = path.join(CORE_DIR, "dist", "src", "core", "cli", "main.js");
+const STUDIO_MODULE_DIR = path.join(ROOT, "src", "studio");
+const DET_DIST_ENTRY = path.join(ROOT, "dist", "src", "core", "cli", "main.js");
 const RUNS_DIR_DEFAULT = path.join(ROOT, "out", "studio-runs");
-// Node engines floor of apps/studio (Next 16); the root core itself needs >=20.
+// Node engines floor of the root package (Next 16); the headless core itself needs >=20.
 const MIN_NODE = [22, 13, 0];
 
 function fail(message) {
@@ -84,30 +84,25 @@ function newestMtime(dirs, pattern) {
   return newest;
 }
 
-/** packages/core/dist/ is stale when any package source .ts is newer than every dist .js. */
+/** dist/ is stale when any engine source .ts is newer than every dist .js. */
 function isCoreDistFresh() {
   if (!existsSync(DET_DIST_ENTRY)) return false;
   const srcNewest = newestMtime(
-    [path.join(CORE_DIR, "src"), path.join(CORE_DIR, "adapters")],
+    [path.join(ROOT, "src", "core"), path.join(ROOT, "adapters")],
     /\.ts$/
   );
-  const distNewest = newestMtime([path.join(CORE_DIR, "dist")], /\.js$/);
+  const distNewest = newestMtime([path.join(ROOT, "dist")], /\.js$/);
   if (srcNewest === 0) return true;
   return distNewest >= srcNewest;
 }
 
-// npm workspaces ([60]) hoist Studio deps into the ROOT node_modules; accept either
-// location so the self-install stays correct under any hoisting outcome.
-function studioDepsInstalled() {
-  return (
-    existsSync(path.join(ROOT, "node_modules", "next", "package.json")) ||
-    existsSync(path.join(STUDIO_DIR, "node_modules", "next", "package.json"))
-  );
+function depsInstalled() {
+  return existsSync(path.join(ROOT, "node_modules", "next", "package.json"));
 }
 
-function npmRun(args, cwd, label) {
-  log(`${label} (npm ${args.join(" ")} in ${path.relative(ROOT, cwd) || "."}) …`);
-  const result = spawnSync("npm", args, { cwd, stdio: "inherit" });
+function npmRun(args, label) {
+  log(`${label} (npm ${args.join(" ")} at the repository root) …`);
+  const result = spawnSync("npm", args, { cwd: ROOT, stdio: "inherit" });
   if (result.error !== undefined) {
     fail(`${label} could not start npm: ${result.error.message}`);
   }
@@ -146,10 +141,10 @@ function printEnv() {
   process.stdout.write(
     `${JSON.stringify({
       root: ROOT,
-      studioDir: STUDIO_DIR,
+      studioDir: STUDIO_MODULE_DIR,
       coreDistEntry: DET_DIST_ENTRY,
       coreDistFresh: isCoreDistFresh(),
-      studioDepsInstalled: studioDepsInstalled(),
+      studioDepsInstalled: depsInstalled(),
       env: resolved,
     })}\n`
   );
@@ -157,11 +152,11 @@ function printEnv() {
 
 function startStudio(mode) {
   assertNodeVersion();
-  if (!studioDepsInstalled()) {
-    npmRun(["ci"], ROOT, "first run: installing workspace dependencies");
+  if (!depsInstalled()) {
+    npmRun(["ci"], "first run: installing dependencies (one root lockfile)");
   }
   if (!isCoreDistFresh()) {
-    npmRun(["run", "build"], ROOT, "building the det core");
+    npmRun(["run", "build:core"], "building the det core");
   }
   const { env, resolved } = resolveEnv({ createDirs: true });
   log(`repository root: ${ROOT}`);
@@ -169,12 +164,12 @@ function startStudio(mode) {
     `runs dir: ${resolved.STUDIO_DET_RUNS_DIR.value} (${resolved.STUDIO_DET_RUNS_DIR.source === "default" ? "default — set STUDIO_DET_RUNS_DIR to override" : "from STUDIO_DET_RUNS_DIR"})`
   );
   if (mode === "start" || mode === "build") {
-    npmRun(["run", "build"], STUDIO_DIR, "building the Studio production bundle");
+    npmRun(["run", "build:app"], "building the Studio production bundle");
     if (mode === "build") return;
   }
-  log(`starting Studio (${mode}) at apps/studio — http://localhost:${env.PORT ?? 3000}${mode === "dev" ? "/build" : ""}`);
-  const child = spawn("npm", ["run", mode === "dev" ? "dev" : "start"], {
-    cwd: STUDIO_DIR,
+  log(`starting Studio (${mode}) at the repository root — http://localhost:${env.PORT ?? 3000}${mode === "dev" ? "/build" : ""}`);
+  const child = spawn("npm", ["run", mode === "dev" ? "app:dev" : "app:start"], {
+    cwd: ROOT,
     env,
     stdio: "inherit",
   });

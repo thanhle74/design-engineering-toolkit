@@ -6,9 +6,9 @@ import assert from "node:assert";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { canonicalStringify } from "../packages/core/dist/src/core/canonical.js";
-import { validateContract } from "../packages/core/dist/src/core/schema-registry.js";
-import { main } from "../packages/core/dist/src/core/cli/main.js";
+import { canonicalStringify } from "../dist/src/core/canonical.js";
+import { validateContract } from "../dist/src/core/schema-registry.js";
+import { main } from "../dist/src/core/cli/main.js";
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
 const FIX = path.join(ROOT, "tests", "fixtures");
@@ -611,7 +611,7 @@ export default async function registerKbSuite(checkAsync) {
 
   await checkAsync("KB-26", "portability scan: no owner paths, no real file keys, no secret markers in schemas/kb, examples/kb or kb/", async () => {
     const forbidden = [/\/home\/[a-z]/i, /slaunch/i, /vNPtfBRpYM3PsExirVqhmt/i, ...SECRET_MARKERS.map((m) => new RegExp(m))];
-    const dirs = [path.join(ROOT, "packages", "core", "schemas", "kb"), EX_KB, KB_STORE];
+    const dirs = [path.join(ROOT, "schemas", "kb"), EX_KB, KB_STORE];
     const hits = [];
     const scan = (dir) => {
       for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {

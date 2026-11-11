@@ -2,12 +2,13 @@
 # runs the contract suite (T-01..T-22 #9 CLI/adapter/deny-list/determinism + G2-T23..T-28 #14
 # design-source extraction: accountability, chrome exclusion, stable ids, negative graphs,
 # scope escapes, plan-on-PageStructure, source neutrality) the KB-01..KB-29 engine tests, and the portability scans.
-# npm test = tsc build + the contract suites incl. the [60] npm-pack portability smoke
-# (one root npm-workspaces lockfile; @det/core lives in packages/core).
+# npm test = tsc core build + the contract suites incl. the [63] foreign-cwd root path-resolution
+# suite (ONE root package + ONE root lockfile; src/core + adapters/ + schemas/ are root dirs —
+# the [60] packed-@det/core artifact no longer exists and is deliberately not claimed).
 # The task/issue prefix is never hardcoded here (spec §8): this workflow is issue-agnostic.
 #
-# The second job gates the studio web app (apps/studio — a workspace member since [60],
-# installed by the same single root lockfile):
+# The second job gates the Studio UI module (src/studio + app/ + components/ — internal modules
+# of the ONE root application since [63], installed by the same single root lockfile):
 # full vitest suite + typecheck + lint + production build on the exact PR tip.
 name: validate-contracts
 on:
@@ -24,13 +25,16 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - run: npm ci
+          cache-dependency-path: package-lock.json
+      # [63] one root install covers the whole single application (core + Studio module).
+      - name: Install (single root lockfile)
+        run: npm ci
       - run: npm test
       - name: CLI invocation smoke (direct terminal, no agent)
         run: node bin/det.js --version
       - name: JSON parse sanity (all committed JSON)
         run: |
-          find packages/core/schemas examples profiles projects tests/fixtures -name '*.json' -print0 | while IFS= read -r -d '' f; do
+          find schemas examples profiles projects tests/fixtures -name '*.json' -print0 | while IFS= read -r -d '' f; do
             node -e "JSON.parse(require('fs').readFileSync(process.argv[1],'utf8'))" "$f" || exit 1
           done
 
@@ -43,24 +47,18 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: package-lock.json
-      # [60] one root install covers every workspace (@det/core + apps/studio).
-      - name: Install (single root npm-workspaces lockfile)
+      # [63] single root npm ci; npm run build = build:core (det CLI dist) + build:app (Next).
+      - name: Install (single root lockfile)
         run: npm ci
-      # [40] the studio build-control tests drive the REAL det CLI — build
-      # core dist/ once before the studio suite (additive; no logic change).
-      - name: Build core (det CLI dist in packages/core)
-        run: npm run build
-      - name: Tests (vitest suite incl. real det-output interop + real det build E2E)
-        run: npm test
-        working-directory: apps/studio
-      - name: Typecheck
-        run: npm run typecheck
-        working-directory: apps/studio
-      - name: Lint
-        run: npm run lint
-        working-directory: apps/studio
-      - name: Production build
+      - name: Build (core det CLI dist + Studio production bundle)
         run: npm run build
         env:
           NEXT_TELEMETRY_DISABLED: 1
-        working-directory: apps/studio
+      # [40] the studio build-control tests drive the REAL det CLI — core dist exists after
+      # the build above; the vitest suite covers real det-output interop + real det build E2E.
+      - name: Tests (Studio vitest suite incl. real det-output interop + real det build E2E)
+        run: npm run test:studio
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Lint
+        run: npm run lint

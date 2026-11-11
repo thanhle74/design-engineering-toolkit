@@ -6,7 +6,7 @@ Pipeline (one roadmap): **Capability Registry → Structural Mapping → Functio
 
 ## 1. `DesignSourcePort` — interface only (never a schema)
 
-Read-only, scope-bounded accessor to any approved design source; the only legal way stages touch design content. It is an interface, not a payload — no JSON Schema exists or will exist for it. The typed TypeScript interface and its in-memory snapshot-backed implementation live in `packages/core/src/core/design-source/port.ts` ([60] npm-workspaces layout).
+Read-only, scope-bounded accessor to any approved design source; the only legal way stages touch design content. It is an interface, not a payload — no JSON Schema exists or will exist for it. The typed TypeScript interface and its in-memory snapshot-backed implementation live in `src/core/design-source/port.ts` ([63] single-application layout).
 
 | Member | Signature (language-neutral) | Contract |
 |---|---|---|

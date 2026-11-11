@@ -17,6 +17,13 @@ dist/
 tmp/
 .DS_Store
 
+# Next.js (Studio app at the repository root, [63])
+/.next/
+/coverage/
+next-env.d.ts
+*.tsbuildinfo
+npm-debug.log*
+
 # Per-project local notes/overrides
 projects/*/*.local.*
 

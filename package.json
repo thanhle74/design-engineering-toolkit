@@ -3,14 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Modular monolith CLI engine (det): deterministic profile validation, read-only capability inspection and structural mapping, per schemas/converter + schemas/cli contracts. Tech ADR-1: TypeScript on Node; core is platform-neutral, adapters are out-of-process. npm workspaces: @det/core (packages/core) + Studio (apps/studio) under ONE root lockfile.",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "description": "Modular monolith CLI engine (det): deterministic profile validation, read-only capability inspection and structural mapping, per schemas/converter + schemas/cli contracts. Tech ADR-1: TypeScript on Node; core is platform-neutral, adapters are out-of-process. [63] ONE Node.js/Next.js application rooted at the repository root: ONE package.json + ONE lockfile, the Next.js App Router (app/) is the Studio UI module's routing layer, and the engine (src/core), adapters (adapters/) and Studio module (src/studio) are internal modules of the same project — no npm workspaces, no apps/, no packages/.",
   "scripts": {
-    "build": "tsc -p packages/core/tsconfig.json",
-    "test": "npm run build && node tests/run-all.mjs",
+    "build": "npm run build:core && npm run build:app",
+    "build:core": "tsc -p tsconfig.core.json",
+    "build:app": "next build",
+    "app:dev": "next dev",
+    "app:start": "next start",
+    "test": "npm run build:core && node tests/run-all.mjs",
+    "test:studio": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint app components src/studio next.config.ts vitest.config.ts vitest.setup.ts eslint.config.mjs",
     "setup": "node scripts/setup.mjs",
     "dev": "node scripts/studio.mjs dev",
     "start": "node scripts/studio.mjs start",
@@ -21,5 +24,30 @@
   },
   "engines": {
     "node": ">=22.13.0"
+  },
+  "dependencies": {
+    "@ant-design/icons": "6.3.4",
+    "@ant-design/nextjs-registry": "1.3.0",
+    "ajv": "^8.20.0",
+    "antd": "6.7.0",
+    "next": "16.4.5",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.8",
+    "@types/node": "^26.6.6",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@vitejs/plugin-react-swc": "^4.3.3",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.5",
+    "jsdom": "^31.0.0",
+    "server-only": "^0.0.1",
+    "typescript": "^5.7.0",
+    "vitest": "^5.1.0"
   }
 }

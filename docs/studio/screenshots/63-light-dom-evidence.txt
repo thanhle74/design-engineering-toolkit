@@ -1,0 +1,47 @@
+[63] Single-application migration DOM evidence — Ant Design light UI preserved, captured 2026-11-11
+Server: PRODUCTION Studio (`npm run start` at the REPOSITORY ROOT = next build +
+next start, port 3100), worktree at the [63] single-application migration head.
+Method: scoped DOM checks on the served HTML (curl) + the served CSS bundle +
+headless Chrome `--screenshot --virtual-time-budget=15000`. Same method as [61].
+
+1. Root element: `<html lang="vi">` with NO classes — no dark class, no font
+   plumbing. All human-readable UI copy stays Vietnamese; machine tokens verbatim.
+
+2. The ENTIRE DET-authored stylesheet is one 211-byte production bundle
+   (/_next/static/chunks/3ncwfwyw3d3p3.css). Its complete content:
+     :root{--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light}
+     .studio-content{width:100%;max-width:1152px;margin-inline:auto;padding:24px}
+     .ant-layout{background:var(--ant-color-bg-container,#fff)}
+   — byte-identical to the C61-2 correction round: the light-only declaration,
+   the ONE geometry exception, and the white main background via Ant Design's own
+   container token variable. Zero hits for 44px, tailwind, `tw-`, #001529,
+   mapping-row, font-family. All appearance is Ant Design's own injected cssinjs
+   styles (`<style id="antd-cssinjs">`, via AntdRegistry).
+
+3. No Footer, no header tagline: `<footer>` element count = 0 AND
+   `class="ant-layout-footer…"` element count = 0 (the only `ant-layout-footer*`
+   strings are unused rules inside antd's own injected library stylesheet — same
+   situation as [61]). Shell = brand ("DET Studio" + icon) + horizontal Menu
+   (Tổng quan / Build / Dự án).
+
+4. Operator E2E on this server — the ONE root package flow:
+   `npm run dev` at the repository root → GET / = 200 → GET /api/build-configs =
+   exactly one canonical real-derived entry (`slaunchpad-home-real-derived`,
+   Figma rev 2417494580183108397) → POST /api/builds = 202
+   build-1794394206354 (dev) and build-1794394513557 (production `npm run start`)
+   → both **exit 0**, stages capability-probe=reused / extraction=completed /
+   composition=completed (all exit 0) → honest gaps: COMPOSITION_SKIPS_PRESENT
+   (10 skipped) + COMPOSITION_GAPS_PRESENT (12 composed-with-gaps) +
+   PREVIEW_INSTALL_OPERATOR_GATED + PREVIEW_ASSETS_NOT_GENERATED
+   → GET /api/runs/<id>/artifacts/03-composition/native-content.html = 3288 bytes,
+   sha256 6362c6a943e061dcadacaf4f12597b460a1f425e11c123c7492458b692893bdf ==
+   build-manifest declared sha256, identical across the dev run, the production
+   run and every earlier round (the deterministic engine survived the migration
+   byte-for-byte). The runner invoked the SAME root bin/det.js
+   (job.command[1] = <root>/bin/det.js). The committed example project was not
+   mutated (git status clean).
+
+5. Screenshots (63-*): overview / build / run-detail / catalog desktop 1440px;
+   overview / build narrow 480px; run-not-found 480px. Ant Design light,
+   Vietnamese, white main background, no footer — visually identical to the 61-*
+   round. Historical 52-* (dark) and 61-* evidence untouched.

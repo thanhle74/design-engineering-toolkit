@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 // [58] One-time setup — `npm run setup` at the repository root.
 //
-// Installs ALL workspace dependencies deterministically via ONE root `npm ci`
-// against the single committed root lockfile ([60]: @det/core + apps/studio
-// are npm workspaces; apps/studio has no lockfile of its own anymore) and
-// compiles the det core dist/. Afterwards the operator only ever needs
-// `npm run dev` (see scripts/studio.mjs, which also self-installs when
-// something is missing).
+// Installs ALL dependencies deterministically via ONE root `npm ci` against
+// the single committed root lockfile ([63]: one package, one lockfile — no
+// workspaces, no subordinate manifests) and compiles the det core dist/.
+// Afterwards the operator only ever needs `npm run dev` (see
+// scripts/studio.mjs, which also self-installs when something is missing).
 
 import { spawnSync } from "node:child_process";
 import path from "node:path";
