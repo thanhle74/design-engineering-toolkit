@@ -14,8 +14,8 @@ import assert from "node:assert";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { main } from "../dist/src/core/cli/main.js";
-import { canonicalStringify, stripVolatile } from "../dist/src/core/canonical.js";
+import { main } from "../packages/core/dist/src/core/cli/main.js";
+import { canonicalStringify, stripVolatile } from "../packages/core/dist/src/core/canonical.js";
 
 const FIX = path.join(path.dirname(new URL(import.meta.url).pathname), "fixtures");
 const G28 = path.join(FIX, "g28-home-design-source");
@@ -287,7 +287,7 @@ export default async function registerG28Suite(checkAsync) {
       const fresh = JSON.parse(out).output.report;
       const committed = JSON.parse(fs.readFileSync(path.join(FIX, "..", "..", "examples/converter/compose-output.issue28-home.example.json"), "utf8"));
       assert.equal(canonicalStringify(stripVolatile(fresh)), canonicalStringify(stripVolatile(committed)), "committed example drifts from a fresh compose");
-      const { validateContract } = await import("../dist/src/core/schema-registry.js");
+      const { validateContract } = await import("../packages/core/dist/src/core/schema-registry.js");
       const check = validateContract("compose-output", committed);
       assert.ok(check.valid, `committed example must validate: ${check.errors.slice(0, 3).join("; ")}`);
       for (const [name, file, contract] of [

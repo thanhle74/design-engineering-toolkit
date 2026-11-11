@@ -31,9 +31,9 @@ export function requireDetCli(): void {
   if (!existsSync(DET_ENTRY)) {
     throw new Error(`det CLI entry not found at ${DET_ENTRY} (expected the toolkit checkout layout).`);
   }
-  if (!existsSync(path.join(REPO_ROOT, "dist"))) {
+  if (!existsSync(path.join(REPO_ROOT, "packages", "core", "dist"))) {
     throw new Error(
-      "det CLI dist/ is missing: run `npm ci && npm run build` at the REPO ROOT before the studio test suite (see apps/studio/README.md → Local build-control setup). The [40] build-control tests drive the real CLI."
+      "det CLI dist/ is missing (expected at packages/core/dist — [60] npm-workspaces layout): run `npm ci && npm run build` at the REPO ROOT before the studio test suite (see apps/studio/README.md → Local build-control setup). The [40] build-control tests drive the real CLI."
     );
   }
 }

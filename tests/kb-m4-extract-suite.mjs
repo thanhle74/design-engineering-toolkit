@@ -9,10 +9,10 @@ import assert from "node:assert";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { validateContract } from "../dist/src/core/schema-registry.js";
-import { resolveRootAliases, expandTildePath, BASELINE_DENY_GLOBS } from "../dist/src/core/kb/path-gateway.js";
-import { runExtract, KB_SOURCE_SCAN_CONTRACT_ID } from "../dist/src/core/kb/extract.js";
-import { main } from "../dist/src/core/cli/main.js";
+import { validateContract } from "../packages/core/dist/src/core/schema-registry.js";
+import { resolveRootAliases, expandTildePath, BASELINE_DENY_GLOBS } from "../packages/core/dist/src/core/kb/path-gateway.js";
+import { runExtract, KB_SOURCE_SCAN_CONTRACT_ID } from "../packages/core/dist/src/core/kb/extract.js";
+import { main } from "../packages/core/dist/src/core/cli/main.js";
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
 const FIXED_SCANNED_AT = "2026-11-06T01:00:00.000Z";

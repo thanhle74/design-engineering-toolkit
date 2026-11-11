@@ -35,9 +35,10 @@ export const BUILD_MANIFEST_FILE = "build-manifest.json";
 /**
  * The real `det compose` writes the compose payload as `compose-report.json`,
  * declared in the tool-run manifest under role `compose-report`
- * (src/core/cli/commands/compose.ts: `artifact("compose-report", output, { file: "compose-report.json" })`).
+ * (packages/core/src/core/cli/commands/compose.ts:
+ * `artifact("compose-report", output, { file: "compose-report.json" })`).
  * Recorded drift, NOT silently hidden: that role is present in the engine's
- * type union (`src/core/run-envelope.ts`) but not yet in the closed role enum
+ * type union (`packages/core/src/core/run-envelope.ts`) but not yet in the closed role enum
  * of `schemas/cli/tool-run.schema.json` — closing it belongs to [28]'s
  * schema/versioning gate, not to Studio. Studio therefore treats roles as
  * open strings and resolves the compose payload manifest-first, falling back

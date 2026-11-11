@@ -12,7 +12,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { main } from "../dist/src/core/cli/main.js";
+import { main } from "../packages/core/dist/src/core/cli/main.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const STUDIO_SCRIPT = path.join(ROOT, "scripts", "studio.mjs");

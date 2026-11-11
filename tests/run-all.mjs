@@ -11,10 +11,10 @@ import Ajv from "ajv/dist/2020.js";
 // Issue #9: the production core graduated from tests/lib to src/core (TypeScript, compiled to
 // dist/). The harness now tests the real production modules — parity was proven by these
 // checks passing unchanged against the ported implementation.
-import { canonicalStringify, contentHash, sha256Hex } from "../dist/src/core/canonical.js";
-import { resolveProjectSource, checkAdapterApplicable } from "../dist/src/core/preflight.js";
-import { validateBindingMap, resolveStructure, canonicalReportHash } from "../dist/src/core/resolver.js";
-import { validateRegistry } from "../dist/src/core/semantic.js";
+import { canonicalStringify, contentHash, sha256Hex } from "../packages/core/dist/src/core/canonical.js";
+import { resolveProjectSource, checkAdapterApplicable } from "../packages/core/dist/src/core/preflight.js";
+import { validateBindingMap, resolveStructure, canonicalReportHash } from "../packages/core/dist/src/core/resolver.js";
+import { validateRegistry } from "../packages/core/dist/src/core/semantic.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const FIX = path.join(ROOT, "tests", "fixtures");
@@ -44,7 +44,7 @@ const ajv = new Ajv({ strict: true, allErrors: true, allowUnionTypes: true });
 // Both schema families declare "format": "date-time"; register a strict-enough checker
 // (ajv core has no built-in formats without ajv-formats, which we deliberately do not add).
 ajv.addFormat("date-time", /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$/);
-const SCHEMA_DIRS = [path.join(ROOT, "schemas", "converter"), ROOT];
+const SCHEMA_DIRS = [path.join(ROOT, "packages", "core", "schemas", "converter"), ROOT];
 const schemaFiles = SCHEMA_DIRS.flatMap((dir) =>
   readdirSync(dir).filter((f) => f.endsWith(".schema.json") || f === "common.defs.json").map((f) => path.join(dir, f))
 );
@@ -52,8 +52,8 @@ const schemaFiles = SCHEMA_DIRS.flatMap((dir) =>
 // (common.defs.json#/$defs/...) resolve against those ids once every file is registered.
 for (const f of schemaFiles) ajv.addSchema(load(f));
 const compile = (basename) =>
-  ajv.getSchema(`https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/${basename}`) ?? ajv.compile(load(path.join(ROOT, "schemas", "converter", basename)));
-const v1Compile = (basename) => ajv.getSchema(`https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/${basename}`) ?? ajv.compile(load(path.join(ROOT, "schemas", basename)));
+  ajv.getSchema(`https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/${basename}`) ?? ajv.compile(load(path.join(ROOT, "packages", "core", "schemas", "converter", basename)));
+const v1Compile = (basename) => ajv.getSchema(`https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/${basename}`) ?? ajv.compile(load(path.join(ROOT, "packages", "core", "schemas", basename)));
 
 const registry = load(`${FIX}/synthetic-flatcms/registry.fixture.json`);
 const bindings = load(`${FIX}/synthetic-flatcms/bindings.fixture.json`);
@@ -254,14 +254,14 @@ check("T-09", "neutrality guard: no platform literals/paths/figma-ids in neutral
     const m = text.match(new RegExp(re.source, "gi"));
     if (m) hits.push(`${relPath}: ${[...new Set(m)].join(",")}`);
   };
-  const convDir = path.join(ROOT, "schemas", "converter");
+  const convDir = path.join(ROOT, "packages", "core", "schemas", "converter");
   for (const f of readdirSync(convDir).filter((f) => f.endsWith(".json"))) scanFile(`schemas/converter/${f}`, readFileSync(path.join(convDir, f), "utf8"), neutralTerms);
-  const cliDir = path.join(ROOT, "schemas", "cli");
+  const cliDir = path.join(ROOT, "packages", "core", "schemas", "cli");
   for (const f of readdirSync(cliDir).filter((f) => f.endsWith(".json"))) scanFile(`schemas/cli/${f}`, readFileSync(path.join(cliDir, f), "utf8"), neutralTerms);
   const fixDir = path.join(ROOT, "tests", "fixtures", "synthetic-flatcms");
   for (const f of readdirSync(fixDir)) scanFile(`tests/fixtures/synthetic-flatcms/${f}`, readFileSync(path.join(fixDir, f), "utf8"), neutralTerms);
-  for (const f of readdirSync(path.join(ROOT, "schemas")).filter((f) => f.endsWith(".schema.json"))) {
-    scanFile(`schemas/${f}`, readFileSync(path.join(ROOT, "schemas", f), "utf8"), v1Terms);
+  for (const f of readdirSync(path.join(ROOT, "packages", "core", "schemas")).filter((f) => f.endsWith(".schema.json"))) {
+    scanFile(`schemas/${f}`, readFileSync(path.join(ROOT, "packages", "core", "schemas", f), "utf8"), v1Terms);
   }
   assert(hits.length === 0, "neutrality violations:\n" + hits.join("\n"));
   return "0 matches across schemas/** and synthetic fixtures";
@@ -331,6 +331,11 @@ await registerRealDerivedSuite(checkAsync);
 // catalogue shape, no-write guarantee for the committed example, root script wiring.
 const { default: registerStudioStartupSuite } = await import("./studio-startup-suite.mjs");
 await registerStudioStartupSuite(checkAsync);
+
+// [60] npm-pack portability: the @det/core tarball stays consumable OUTSIDE the checkout
+// (layout contract, foreign-cwd CLI smoke, package-root schema resolution, fail-closed negative).
+const { default: registerPackPortabilitySuite } = await import("./pack-portability-suite.mjs");
+await registerPackPortabilitySuite(checkAsync);
 
 // ---- Issue #19 M4 real-source KB gate suites (async) -----------------------------------------
 const { default: registerKbM4LicenseSuite } = await import("./kb-m4-license-suite.mjs");
