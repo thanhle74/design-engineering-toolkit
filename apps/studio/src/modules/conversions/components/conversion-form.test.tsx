@@ -29,9 +29,13 @@ describe("ConversionForm — project profile configuration", () => {
 
     expect(screen.queryByTestId("profiles-not-configured")).not.toBeInTheDocument();
     expect(screen.getAllByRole("combobox")).toHaveLength(2);
-    // The first profile is selected by default and visibly demo-labeled in the trigger.
+    // The first profile is selected by default and visibly demo-labeled in the
+    // trigger. antd renders the selected label in a sibling of the combobox
+    // input, so the label is asserted on the Select root (.ant-select).
     const profileTrigger = screen.getByRole("combobox", { name: "Project profile" });
-    expect(profileTrigger).toHaveTextContent("DEMO — Fashion storefront");
+    const profileRoot = profileTrigger.closest(".ant-select");
+    expect(profileRoot).not.toBeNull();
+    expect(profileRoot).toHaveTextContent("DEMO — Fashion storefront");
   });
 });
 

@@ -1,18 +1,18 @@
+"use client";
+
 /**
  * [29] Studio — provenance footer.
  *
  * Provenance is mandatory: a fixture run is always visibly labeled DEMO, and
  * unknown facts (null source id/revision/timestamps/counts) render "unknown",
  * never 0, so fixture data can never masquerade as a live conversion.
+ *
+ * [61] Ant Design light-only Card; the plain <dl> markup is kept so the
+ * provenance facts stay as plain, testable label/value pairs.
  */
 import type { ReactNode } from "react";
+import { Card, Typography } from "antd";
 import type { StudioRunView } from "@/src/shared/contracts";
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { RunModeBadge } from "./disposition-badges";
 
 const UNKNOWN = "unknown";
@@ -36,8 +36,8 @@ function ProvenanceField({
 }) {
   return (
     <div className="flex flex-col gap-0.5">
-      <dt className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-        {label}
+      <dt className="text-xs font-medium uppercase tracking-wide">
+        <Typography.Text type="secondary">{label}</Typography.Text>
       </dt>
       <dd className="text-xs" data-testid={testId}>
         {children}
@@ -48,15 +48,20 @@ function ProvenanceField({
 
 export function ProvenanceFooter({ run }: { run: StudioRunView }) {
   return (
-    <Card size="sm" data-testid="provenance-footer" className="bg-muted/30">
-      <CardHeader>
-        <CardTitle className="flex flex-wrap items-center gap-2">
+    <Card
+      size="small"
+      data-testid="provenance-footer"
+      title={
+        <div className="flex flex-wrap items-center gap-2">
           <span>Provenance</span>
           <RunModeBadge mode={run.mode} />
-        </CardTitle>
-        <CardDescription>{run.label}</CardDescription>
-      </CardHeader>
-      <dl className="grid grid-cols-2 gap-x-4 gap-y-3 px-4 pb-1 sm:grid-cols-3 lg:grid-cols-4">
+        </div>
+      }
+    >
+      <Typography.Paragraph type="secondary" className="mb-4">
+        {run.label}
+      </Typography.Paragraph>
+      <dl className="grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-3 lg:grid-cols-4">
         <ProvenanceField label="Run" testId="provenance-run">
           <span className="font-mono">{run.runId}</span>
         </ProvenanceField>

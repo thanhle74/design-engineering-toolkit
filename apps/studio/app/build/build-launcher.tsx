@@ -2,26 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { CircleAlert, Hammer, LoaderCircle, Play } from "lucide-react";
+import { CaretRightOutlined, ToolOutlined, WarningOutlined } from "@ant-design/icons";
+import { Alert, Button, Card, Table, Tag, Typography } from "antd";
+import type { TableColumnsType } from "antd";
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import type { StudioBuildStageView } from "@/src/shared/contracts";
 
 /**
@@ -94,45 +78,75 @@ interface BuildLauncherProps {
 const TERMINAL_STATES = new Set(["exited", "timeout", "spawn-failed", "interrupted"]);
 const POLL_MS = 1000;
 
-function stateBadge(state: BuildJobView["state"], exitCode: number | null) {
+type StageRow = { stage: string; status: string; exitCode: number };
+
+function stateTag(state: BuildJobView["state"], exitCode: number | null) {
   switch (state) {
     case "queued":
     case "running":
-      return <Badge variant="secondary">{state === "queued" ? "queued" : "running…"}</Badge>;
+      return <Tag color="processing">{state === "queued" ? "queued" : "running…"}</Tag>;
     case "exited":
-      return <Badge variant={exitCode === 0 ? "outline" : "destructive"}>{`exited ${exitCode ?? "?"}`}</Badge>;
+      return <Tag color={exitCode === 0 ? "success" : "error"}>{`exited ${exitCode ?? "?"}`}</Tag>;
     case "timeout":
-      return <Badge variant="destructive">timed out</Badge>;
+      return <Tag color="error">timed out</Tag>;
     case "spawn-failed":
-      return <Badge variant="destructive">spawn failed</Badge>;
+      return <Tag color="error">spawn failed</Tag>;
     case "interrupted":
-      return <Badge variant="destructive">interrupted</Badge>;
+      return <Tag color="error">interrupted</Tag>;
   }
 }
 
 function StageTable({ stages }: { stages: BuildStageLite[] | StudioBuildStageView[] }) {
+  const columns: TableColumnsType<StageRow> = [
+    {
+      title: "Stage",
+      dataIndex: "stage",
+      render: (_, record: StageRow) => <span className="font-mono">{record.stage}</span>,
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      render: (_, record: StageRow) =>
+        record.status === "failed" ? (
+          <Tag color="error">{record.status}</Tag>
+        ) : (
+          <Tag>{record.status}</Tag>
+        ),
+    },
+    {
+      title: "Exit code",
+      dataIndex: "exitCode",
+      render: (_, record: StageRow) => <span className="font-mono">{record.exitCode}</span>,
+    },
+  ];
   return (
-    <div className="overflow-hidden rounded-md border">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Stage</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Exit code</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {stages.map((stage) => (
-            <TableRow key={stage.stage}>
-              <TableCell className="font-mono">{stage.stage}</TableCell>
-              <TableCell>
-                <Badge variant={stage.status === "failed" ? "destructive" : "outline"}>{stage.status}</Badge>
-              </TableCell>
-              <TableCell className="font-mono">{stage.exitCode}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+    <Table<StageRow>
+      rowKey="stage"
+      columns={columns}
+      dataSource={stages}
+      pagination={false}
+      size="small"
+    />
+  );
+}
+
+function DeclaredPath({
+  label,
+  value,
+  className,
+}: {
+  label: string;
+  value: string;
+  className?: string;
+}) {
+  return (
+    <div className={className === undefined ? "flex gap-1" : `flex gap-1 ${className}`}>
+      <dt className="shrink-0">
+        <Typography.Text type="secondary">{label}</Typography.Text>
+      </dt>
+      <dd className="font-mono">
+        <Typography.Text type="secondary">{value}</Typography.Text>
+      </dd>
     </div>
   );
 }
@@ -142,86 +156,95 @@ function JobPanel({ job }: { job: BuildJobView }) {
   const failedButBundle =
     job.state === "exited" && job.exitCode !== 0 && job.manifestSummary !== null;
   return (
-    <Card size="sm" aria-live="polite">
-      <CardHeader>
-        <CardTitle className="flex flex-wrap items-center gap-2 text-base">
-          {stateBadge(job.state, job.exitCode)}
+    <Card
+      size="small"
+      aria-live="polite"
+      title={
+        <span className="flex flex-wrap items-center gap-2">
+          {stateTag(job.state, job.exitCode)}
           <span className="font-mono text-sm">{job.runId}</span>
-          <span className="text-sm font-normal text-muted-foreground">config {job.configId}</span>
-        </CardTitle>
-        <CardDescription>
+          <Typography.Text type="secondary">config {job.configId}</Typography.Text>
+        </span>
+      }
+    >
+      <div className="flex flex-col gap-4">
+        <Typography.Text type="secondary">
           {job.startedAt === null ? "not started" : `started ${job.startedAt}`}
           {job.finishedAt === null ? " · not finished yet" : ` · finished ${job.finishedAt}`}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4">
+        </Typography.Text>
+
         {job.state === "interrupted" ? (
-          <Alert variant="destructive">
-            <CircleAlert className="size-4" aria-hidden="true" />
-            <AlertTitle>Build interrupted</AlertTitle>
-            <AlertDescription>
-              The server restarted while this build was running; the journal recorded no
-              completion. Start a new build — no bundle for this run is trusted.
-            </AlertDescription>
-          </Alert>
+          <Alert
+            type="error"
+            showIcon
+            icon={<WarningOutlined aria-hidden="true" />}
+            message="Build interrupted"
+            description="The server restarted while this build was running; the journal recorded no completion. Start a new build — no bundle for this run is trusted."
+          />
         ) : null}
 
         {job.state === "timeout" ? (
-          <Alert variant="destructive">
-            <CircleAlert className="size-4" aria-hidden="true" />
-            <AlertTitle>Build timed out</AlertTitle>
-            <AlertDescription>
-              The runner sent SIGTERM after the configured timeout. Diagnostics below show what the
-              build reported before termination.
-            </AlertDescription>
-          </Alert>
+          <Alert
+            type="error"
+            showIcon
+            icon={<WarningOutlined aria-hidden="true" />}
+            message="Build timed out"
+            description="The runner sent SIGTERM after the configured timeout. Diagnostics below show what the build reported before termination."
+          />
         ) : null}
 
         {job.state === "spawn-failed" ? (
-          <Alert variant="destructive">
-            <CircleAlert className="size-4" aria-hidden="true" />
-            <AlertTitle>Runner error — the build never started</AlertTitle>
-            <AlertDescription>
-              {job.spawnError ?? "The det CLI could not be spawned."} This is a runner
-              configuration problem, not a build result.
-            </AlertDescription>
-          </Alert>
+          <Alert
+            type="error"
+            showIcon
+            icon={<WarningOutlined aria-hidden="true" />}
+            message="Runner error — the build never started"
+            description={`${job.spawnError ?? "The det CLI could not be spawned."} This is a runner configuration problem, not a build result.`}
+          />
         ) : null}
 
         {completed ? (
-          <Alert>
-            <Hammer className="size-4" aria-hidden="true" />
-            <AlertTitle>Build completed (exit 0)</AlertTitle>
-            <AlertDescription>
-              The bundle is written and now listed as a live run.{" "}
-              <Link className="underline" href={`/runs/${encodeURIComponent(job.runId)}`}>
-                Open the bundle run
-              </Link>{" "}
-              — artifacts are served only after byte-verification against the build manifest.
-              Native Page Builder HTML stays source/download only; no Magento storefront or Admin
-              preview is claimed.
-            </AlertDescription>
-          </Alert>
+          <Alert
+            type="success"
+            showIcon
+            icon={<ToolOutlined aria-hidden="true" />}
+            message="Build completed (exit 0)"
+            description={
+              <>
+                The bundle is written and now listed as a live run.{" "}
+                <Link className="underline" href={`/runs/${encodeURIComponent(job.runId)}`}>
+                  Open the bundle run
+                </Link>{" "}
+                — artifacts are served only after byte-verification against the build manifest.
+                Native Page Builder HTML stays source/download only; no Magento storefront or Admin
+                preview is claimed.
+              </>
+            }
+          />
         ) : null}
 
         {failedButBundle ? (
-          <Alert variant="destructive">
-            <CircleAlert className="size-4" aria-hidden="true" />
-            <AlertTitle>{`Build finished with exit ${job.exitCode} — a stage failed`}</AlertTitle>
-            <AlertDescription>
-              The engine still wrote a truthful partial manifest (see the stage table).{" "}
-              <Link className="underline" href={`/runs/${encodeURIComponent(job.runId)}`}>
-                Open the partial bundle run
-              </Link>{" "}
-              — it stays visibly failed there.
-            </AlertDescription>
-          </Alert>
+          <Alert
+            type="error"
+            showIcon
+            icon={<WarningOutlined aria-hidden="true" />}
+            message={`Build finished with exit ${job.exitCode} — a stage failed`}
+            description={
+              <>
+                The engine still wrote a truthful partial manifest (see the stage table).{" "}
+                <Link className="underline" href={`/runs/${encodeURIComponent(job.runId)}`}>
+                  Open the partial bundle run
+                </Link>{" "}
+                — it stays visibly failed there.
+              </>
+            }
+          />
         ) : null}
 
         {job.manifestSummary !== null ? (
           <div className="flex flex-col gap-2">
             <StageTable stages={job.manifestSummary.stages} />
-            <p className="text-xs text-muted-foreground">
+            <Typography.Text type="secondary" className="text-xs">
               {job.manifestSummary.gaps.length} manifest gap(s) · {job.manifestSummary.outputCount}{" "}
               declared output(s) · source{" "}
               <span className="font-mono">
@@ -229,19 +252,19 @@ function JobPanel({ job }: { job: BuildJobView }) {
               </span>{" "}
               · platform <span className="font-mono">{job.manifestSummary.platformId}</span>. Full
               gap detail and verified downloads live on the run page.
-            </p>
+            </Typography.Text>
           </div>
         ) : job.state === "exited" ? (
-          <p className="text-xs text-muted-foreground">
+          <Typography.Text type="secondary" className="text-xs">
             No bundle manifest was written (the build stopped before any stage ran — e.g. an
             invalid config). Nothing is listed as a run for this id.
-          </p>
+          </Typography.Text>
         ) : null}
 
         {job.stderrTail !== "" ? (
           <div>
             <h3 className="mb-1 text-xs font-semibold">stderr tail</h3>
-            <pre className="max-h-40 overflow-auto rounded-md border bg-muted/40 p-2 text-xs">
+            <pre className="max-h-40 overflow-auto rounded-md border p-2 text-xs">
               {job.stderrTail}
             </pre>
           </div>
@@ -249,12 +272,12 @@ function JobPanel({ job }: { job: BuildJobView }) {
         {job.stdoutTail !== "" && !completed ? (
           <div>
             <h3 className="mb-1 text-xs font-semibold">stdout tail</h3>
-            <pre className="max-h-40 overflow-auto rounded-md border bg-muted/40 p-2 text-xs">
+            <pre className="max-h-40 overflow-auto rounded-md border p-2 text-xs">
               {job.stdoutTail}
             </pre>
           </div>
         ) : null}
-      </CardContent>
+      </div>
     </Card>
   );
 }
@@ -342,32 +365,38 @@ export function BuildLauncher({
   return (
     <div className="flex flex-col gap-8">
       {!runnerReady ? (
-        <Alert variant="destructive">
-          <CircleAlert className="size-4" aria-hidden="true" />
-          <AlertTitle>Runner not ready</AlertTitle>
-          <AlertDescription>
-            {runnerReason} Start Studio with <span className="font-mono">npm run dev</span> from
-            the repository root (it defaults STUDIO_DET_RUNS_DIR to{" "}
-            <span className="font-mono">out/studio-runs</span>) or set it explicitly — optionally
-            with STUDIO_DET_CLI. See apps/studio/README.md. The catalog below stays read-only
-            until then.
-          </AlertDescription>
-        </Alert>
+        <Alert
+          type="error"
+          showIcon
+          icon={<WarningOutlined aria-hidden="true" />}
+          message="Runner not ready"
+          description={
+            <>
+              {runnerReason} Start Studio with <span className="font-mono">npm run dev</span> from
+              the repository root (it defaults STUDIO_DET_RUNS_DIR to{" "}
+              <span className="font-mono">out/studio-runs</span>) or set it explicitly — optionally
+              with STUDIO_DET_CLI. See apps/studio/README.md. The catalog below stays read-only
+              until then.
+            </>
+          }
+        />
       ) : null}
 
       {error !== null ? (
-        <p role="alert" className="text-sm text-destructive">
-          {error}
+        <p role="alert" className="text-sm">
+          <Typography.Text type="danger">{error}</Typography.Text>
         </p>
       ) : null}
 
       {job !== null ? <JobPanel job={job} /> : null}
 
       {invalid.length > 0 ? (
-        <Alert>
-          <CircleAlert className="size-4" aria-hidden="true" />
-          <AlertTitle>{`${invalid.length} catalog entr${invalid.length === 1 ? "y" : "ies"} failed the listing mirror`}</AlertTitle>
-          <AlertDescription>
+        <Alert
+          type="warning"
+          showIcon
+          icon={<WarningOutlined aria-hidden="true" />}
+          message={`${invalid.length} catalog entr${invalid.length === 1 ? "y" : "ies"} failed the listing mirror`}
+          description={
             <ul className="mt-1 flex flex-col gap-1">
               {invalid.map((entry) => (
                 <li key={entry.configId} className="text-xs">
@@ -375,112 +404,92 @@ export function BuildLauncher({
                 </li>
               ))}
             </ul>
-          </AlertDescription>
-        </Alert>
+          }
+        />
       ) : null}
 
-      <Card size="sm">
-        <CardHeader>
-          <CardTitle className="text-base">Build configs</CardTitle>
-          <CardDescription>
-            Committed repository examples (read-only, cataloged in place) plus caller-configured
-            entries from STUDIO_BUILD_PROJECTS_DIR when set. Provenance paths are shown as
-            declared in each config (config-relative); the engine resolves and validates them at
-            build time.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-3">
+      <Card
+        size="small"
+        title={<h2 className="text-base font-semibold">Build configs</h2>}
+      >
+        <Typography.Paragraph type="secondary" className="text-sm">
+          Committed repository examples (read-only, cataloged in place) plus caller-configured
+          entries from STUDIO_BUILD_PROJECTS_DIR when set. Provenance paths are shown as
+          declared in each config (config-relative); the engine resolves and validates them at
+          build time.
+        </Typography.Paragraph>
+        <div className="flex flex-col gap-3">
           {entries.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
+            <Typography.Text type="secondary">
               No build-config entries found. Add one subdirectory per entry with a
               build-config.json under STUDIO_BUILD_PROJECTS_DIR (see apps/studio/README.md and
               examples/build/project.example.json for the shape).
-            </p>
+            </Typography.Text>
           ) : (
             entries.map((entry) => (
               <div key={entry.configId} className="flex flex-col gap-2.5 rounded-lg border p-4">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="text-sm font-medium">{entry.label}</span>
                   {entry.origin === "repository" ? (
-                    <Badge variant="secondary">repository example</Badge>
+                    <Tag>repository example</Tag>
                   ) : null}
-                  <Badge variant="outline">{entry.designSource.mode}</Badge>
-                  <Badge variant="outline">
+                  <Tag>{entry.designSource.mode}</Tag>
+                  <Tag>
                     {entry.inputSource === "capability-probe" ? "capability probe" : "pinned registry"}
-                  </Badge>
-                  <span className="ml-auto font-mono text-xs text-muted-foreground">{entry.configId}</span>
+                  </Tag>
+                  <Typography.Text type="secondary" className="ml-auto font-mono text-xs">
+                    {entry.configId}
+                  </Typography.Text>
                 </div>
                 {entry.description !== undefined ? (
-                  <p className="text-sm text-muted-foreground">{entry.description}</p>
+                  <Typography.Text type="secondary">{entry.description}</Typography.Text>
                 ) : null}
-                <dl className="grid grid-cols-1 gap-x-4 gap-y-0.5 text-xs text-muted-foreground sm:grid-cols-2">
-                  <div className="flex gap-1">
-                    <dt className="shrink-0">profile:</dt>
-                    <dd className="font-mono">{entry.profileId}</dd>
-                  </div>
-                  <div className="flex gap-1">
-                    <dt className="shrink-0">design node:</dt>
-                    <dd className="font-mono">{entry.designSource.designNode}</dd>
-                  </div>
-                  <div className="flex gap-1 sm:col-span-2">
-                    <dt className="shrink-0">design file:</dt>
-                    <dd className="font-mono">{entry.designSource.designFile}</dd>
-                  </div>
-                  <div className="flex gap-1">
-                    <dt className="shrink-0">profile file:</dt>
-                    <dd className="font-mono">{entry.declaredPaths.profile}</dd>
-                  </div>
+                <dl className="grid grid-cols-1 gap-x-4 gap-y-0.5 text-xs sm:grid-cols-2">
+                  <DeclaredPath label="profile:" value={entry.profileId} />
+                  <DeclaredPath label="design node:" value={entry.designSource.designNode} />
+                  <DeclaredPath
+                    label="design file:"
+                    value={entry.designSource.designFile}
+                    className="sm:col-span-2"
+                  />
+                  <DeclaredPath label="profile file:" value={entry.declaredPaths.profile} />
                   {entry.declaredPaths.probeProject !== undefined ? (
-                    <div className="flex gap-1">
-                      <dt className="shrink-0">probe project:</dt>
-                      <dd className="font-mono">{entry.declaredPaths.probeProject}</dd>
-                    </div>
+                    <DeclaredPath label="probe project:" value={entry.declaredPaths.probeProject} />
                   ) : null}
                   {entry.declaredPaths.registry !== undefined ? (
-                    <div className="flex gap-1">
-                      <dt className="shrink-0">registry:</dt>
-                      <dd className="font-mono">{entry.declaredPaths.registry}</dd>
-                    </div>
+                    <DeclaredPath label="registry:" value={entry.declaredPaths.registry} />
                   ) : null}
-                  <div className="flex gap-1">
-                    <dt className="shrink-0">bindings:</dt>
-                    <dd className="font-mono">{entry.declaredPaths.bindings}</dd>
-                  </div>
-                  <div className="flex gap-1">
-                    <dt className="shrink-0">content:</dt>
-                    <dd className="font-mono">{entry.declaredPaths.content}</dd>
-                  </div>
+                  <DeclaredPath label="bindings:" value={entry.declaredPaths.bindings} />
+                  <DeclaredPath label="content:" value={entry.declaredPaths.content} />
                   {entry.declaredPaths.projection !== undefined ? (
-                    <div className="flex gap-1">
-                      <dt className="shrink-0">projection:</dt>
-                      <dd className="font-mono">{entry.declaredPaths.projection}</dd>
-                    </div>
+                    <DeclaredPath label="projection:" value={entry.declaredPaths.projection} />
                   ) : null}
                 </dl>
                 <div>
                   <Button
+                    type="primary"
+                    htmlType="button"
                     disabled={!runnerReady || busy || starting !== null}
+                    loading={starting === entry.configId}
+                    icon={<CaretRightOutlined aria-hidden="true" />}
                     onClick={() => void startBuild(entry.configId)}
                   >
-                    {starting === entry.configId ? (
-                      <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
-                    ) : (
-                      <Play className="size-4" aria-hidden="true" />
-                    )}
                     {starting === entry.configId ? "Starting…" : "Build"}
                   </Button>
                   {!runnerReady ? (
-                    <span className="ml-2 text-xs text-muted-foreground">runner not ready</span>
+                    <Typography.Text type="secondary" className="ml-2 text-xs">
+                      runner not ready
+                    </Typography.Text>
                   ) : busy ? (
-                    <span className="ml-2 text-xs text-muted-foreground">
+                    <Typography.Text type="secondary" className="ml-2 text-xs">
                       one build at a time — waiting for the active build
-                    </span>
+                    </Typography.Text>
                   ) : null}
                 </div>
               </div>
             ))
           )}
-        </CardContent>
+        </div>
       </Card>
     </div>
   );

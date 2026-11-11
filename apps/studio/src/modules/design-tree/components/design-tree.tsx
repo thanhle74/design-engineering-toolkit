@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * [29] Studio — source design tree (presentational; receives the run).
  *
@@ -5,10 +7,13 @@
  * rows whose mapping.sectionId points at it. Mappings without a sectionId are
  * listed under an explicit "Not in plan / unassigned" group — never dropped,
  * never silently attached to a section.
+ *
+ * [61] Ant Design light-only: the empty state is a calm info Alert, not an
+ * error banner.
  */
+import { SearchOutlined } from "@ant-design/icons";
+import { Alert, Typography } from "antd";
 import type { StudioMappingView, StudioRunView, StudioSectionView } from "@/src/shared/contracts";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { SearchX } from "lucide-react";
 import { DesignNodeTable } from "./node-table";
 import { SectionCard } from "./section-card";
 
@@ -21,13 +26,11 @@ function UnassignedGroup({ mappings }: { mappings: readonly StudioMappingView[] 
       data-testid={UNKNOWN_GROUP_ID}
       className="mt-4"
     >
-      <h3 id="studio-unassigned-heading" className="text-sm font-semibold">
-        Not in plan / unassigned
-      </h3>
-      <p className="mb-2 mt-1 text-xs text-muted-foreground">
+      <h3 className="text-sm font-semibold">Not in plan / unassigned</h3>
+      <Typography.Paragraph type="secondary" className="mb-2 mt-1 text-xs">
         Mappings the compose plan did not attach to any section. Kept visible —
         never silently dropped.
-      </p>
+      </Typography.Paragraph>
       <DesignNodeTable mappings={mappings} testId="design-tree-unassigned-nodes" />
     </section>
   );
@@ -35,17 +38,21 @@ function UnassignedGroup({ mappings }: { mappings: readonly StudioMappingView[] 
 
 function EmptySectionsAlert({ unmappedCount }: { unmappedCount: number }) {
   return (
-    <Alert className="mt-3" data-testid="design-tree-empty">
-      <SearchX aria-hidden="true" />
-      <AlertTitle>No sections extracted</AlertTitle>
-      <AlertDescription>
-        {unmappedCount === 0
+    <Alert
+      className="mt-3"
+      type="info"
+      showIcon
+      icon={<SearchOutlined aria-hidden="true" />}
+      data-testid="design-tree-empty"
+      title="No sections extracted"
+      description={
+        unmappedCount === 0
           ? "This run has no PageStructure sections and no node mappings. Nothing is hidden — there is nothing extracted to review."
           : `No PageStructure sections were extracted, but ${unmappedCount} node mapping${
               unmappedCount === 1 ? "" : "s"
-            } exist. They are listed under "Not in plan / unassigned" below — never dropped.`}
-      </AlertDescription>
-    </Alert>
+            } exist. They are listed under "Not in plan / unassigned" below — never dropped.`
+      }
+    />
   );
 }
 
@@ -79,11 +86,11 @@ export function DesignTree({ run }: { run: StudioRunView }) {
       aria-labelledby="studio-design-tree-heading"
       data-testid="design-tree"
     >
-      <h2 id="studio-design-tree-heading" className="text-base font-semibold">
+      <h2 className="text-base font-semibold">
         Source design tree
-        <span className="ml-2 text-sm font-normal text-muted-foreground">
+        <Typography.Text type="secondary" className="ml-2 text-sm font-normal">
           {summary}
-        </span>
+        </Typography.Text>
       </h2>
       {sections.length === 0 ? (
         <>

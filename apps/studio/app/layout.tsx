@@ -3,7 +3,8 @@ import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { StudioProviders } from "@/components/layout/studio-providers";
-import { StudioShell, studioMetadata } from "@/components/layout/studio-shell";
+import { studioMetadata } from "@/components/layout/studio-metadata";
+import { StudioShell } from "@/components/layout/studio-shell";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 

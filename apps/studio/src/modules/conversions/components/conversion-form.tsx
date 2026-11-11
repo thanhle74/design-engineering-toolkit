@@ -9,21 +9,17 @@
  * conversion ran, never shows progress, and stores nothing anywhere.
  *
  * There is deliberately NO Figma token field: [28]'s engine owns Figma access.
+ *
+ * [61] Ant Design light-only, deliberately WITHOUT antd Form: the plain
+ * <form onSubmit> + requestSubmit flow and the plain <p role="alert">
+ * validation error are kept (no antd Form validation machinery, no progress
+ * states). antd Selects use the `options` prop and carry the same ids the
+ * labels point at, so label association keeps working through antd's inner
+ * search input.
  */
 import * as React from "react";
-import { Unplug } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { cn } from "@/lib/utils";
+import { ApiOutlined } from "@ant-design/icons";
+import { Button, Input, Select, Typography } from "antd";
 
 import { DEFAULT_OUTPUT_TARGET, OUTPUT_TARGET_OPTIONS } from "../conversion-options";
 import { parseFigmaInput, type FigmaInputParseResult } from "../figma-input";
@@ -100,18 +96,23 @@ export function ConversionForm({ profiles, className }: ConversionFormProps) {
   }
 
   return (
-    <section aria-labelledby="new-conversion-heading" className={cn("w-full max-w-2xl", className)}>
+    <section aria-labelledby="new-conversion-heading" className={"w-full max-w-2xl " + (className ?? "")}>
       <h2 id="new-conversion-heading" className="text-base font-semibold tracking-tight">
         New conversion
       </h2>
-      <p className="mt-1 text-xs text-muted-foreground">
+      <Typography.Paragraph type="secondary" className="mt-1 text-xs">
         Point the studio at one Figma frame to convert. Studio only prepares and reviews the
         request — the det engine performs the conversion.
-      </p>
+      </Typography.Paragraph>
 
-      <form className="mt-4 space-y-5" onSubmit={handleSubmit} noValidate>
-        <div className="space-y-1.5">
-          <Label htmlFor={SOURCE_INPUT_ID}>Figma design source</Label>
+      <form className="mt-4 flex flex-col gap-5" onSubmit={handleSubmit} noValidate>
+        <div className="flex flex-col gap-1.5">
+          <label
+            htmlFor={SOURCE_INPUT_ID}
+            className="text-sm font-medium"
+          >
+            Figma design source
+          </label>
           <Input
             id={SOURCE_INPUT_ID}
             name="figmaSource"
@@ -130,87 +131,101 @@ export function ConversionForm({ profiles, className }: ConversionFormProps) {
                 event.currentTarget.form?.requestSubmit();
               }
             }}
+            status={validationError ? "error" : undefined}
             aria-invalid={validationError ? true : undefined}
             aria-describedby={validationError ? `${SOURCE_ERROR_ID} ${SOURCE_HELP_ID}` : SOURCE_HELP_ID}
-            className="font-mono text-sm"
+            className="font-mono"
           />
           {validationError ? (
-            <p id={SOURCE_ERROR_ID} role="alert" className="text-xs text-destructive">
+            <p
+              id={SOURCE_ERROR_ID}
+              role="alert"
+              className="text-xs"
+              style={{ color: "var(--ant-color-error, #ff4d4f)" }}
+            >
               {validationError.message}
             </p>
           ) : null}
-          <p id={SOURCE_HELP_ID} className="text-xs text-muted-foreground">
-            Accepted: a Figma design-file URL including node-id (…?node-id=1-2), or a bare node
-            id like 245:2. A URL without node-id is rejected — the engine needs a node to extract.
+          <p id={SOURCE_HELP_ID} className="text-xs">
+            <Typography.Text type="secondary">
+              Accepted: a Figma design-file URL including node-id (…?node-id=1-2), or a bare node
+              id like 245:2. A URL without node-id is rejected — the engine needs a node to extract.
+            </Typography.Text>
           </p>
         </div>
 
         <div className="grid gap-5 sm:grid-cols-2">
-          <div className="space-y-1.5">
-            <Label htmlFor={TARGET_SELECT_ID}>Output target</Label>
-            <Select value={target} onValueChange={(value) => setTarget(value as ConversionOutputTarget)}>
-              <SelectTrigger id={TARGET_SELECT_ID} className="w-full">
-                {/* Children keep the trigger truthful before the first open — Radix
-                    only portals item text into the trigger once items mount. */}
-                <SelectValue placeholder="Select output target">
-                  {OUTPUT_TARGET_OPTIONS.find((option) => option.value === target)?.label}
-                </SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                {OUTPUT_TARGET_OPTIONS.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor={TARGET_SELECT_ID} className="text-sm font-medium">
+              Output target
+            </label>
+            {/* antd Select keeps the id on its inner search input, so the
+                label association above still names the combobox. */}
+            <Select
+              id={TARGET_SELECT_ID}
+              className="w-full"
+              value={target}
+              onChange={(value) => setTarget(value as ConversionOutputTarget)}
+              options={OUTPUT_TARGET_OPTIONS.map((option) => ({
+                value: option.value,
+                label: option.label,
+              }))}
+            />
           </div>
 
-          <div className="space-y-1.5">
+          <div className="flex flex-col gap-1.5">
             {profilesConfigured ? (
               <>
-                <Label htmlFor={PROFILE_SELECT_ID}>Project profile</Label>
-                <Select value={selectedProfileId} onValueChange={setProfileId}>
-                  <SelectTrigger id={PROFILE_SELECT_ID} className="w-full">
-                    <SelectValue placeholder="Select project profile">
-                      {selectedProfile?.name}
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    {availableProfiles.map((profile) => (
-                      <SelectItem key={profile.id} value={profile.id}>
-                        {profile.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <label htmlFor={PROFILE_SELECT_ID} className="text-sm font-medium">
+                  Project profile
+                </label>
+                <Select
+                  id={PROFILE_SELECT_ID}
+                  className="w-full"
+                  value={selectedProfileId || undefined}
+                  onChange={(value) => setProfileId(value)}
+                  options={availableProfiles.map((profile) => ({
+                    value: profile.id,
+                    label: profile.name,
+                  }))}
+                />
               </>
             ) : (
               <div
                 data-testid="profiles-not-configured"
-                className="rounded-md border border-dashed px-4 py-3"
+                className="px-4 py-3"
+                style={{
+                  border: "1px dashed var(--ant-color-border, #d9d9d9)",
+                  borderRadius: "var(--ant-border-radius, 6px)",
+                }}
               >
                 <p className="text-xs font-medium">Profile: NOT CONFIGURED</p>
-                <p className="mt-0.5 text-xs text-muted-foreground">
+                <Typography.Paragraph type="secondary" className="mt-0.5 text-xs">
                   No project profiles configured — profiles come from local DET profile
                   configuration.
-                </p>
+                </Typography.Paragraph>
               </div>
             )}
           </div>
         </div>
 
-        <div className="space-y-1.5">
+        <div className="flex flex-col gap-1.5">
           <div className="flex flex-wrap items-center gap-3">
-            <Button type="submit">Review conversion request</Button>
-            <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Unplug className="size-3.5" aria-hidden="true" />
-              Execution not connected — issue [28] owns the engine bridge.
+            <Button type="primary" htmlType="submit">
+              Review conversion request
+            </Button>
+            <span className="inline-flex items-center gap-1.5 text-xs">
+              <ApiOutlined aria-hidden="true" />
+              <Typography.Text type="secondary">
+                Execution not connected — issue [28] owns the engine bridge.
+              </Typography.Text>
             </span>
           </div>
-          <p className="text-xs text-muted-foreground">
-            Submitting only validates this input and shows a request summary. No conversion runs
-            and nothing is stored.
+          <p className="text-xs">
+            <Typography.Text type="secondary">
+              Submitting only validates this input and shows a request summary. No conversion runs
+              and nothing is stored.
+            </Typography.Text>
           </p>
         </div>
       </form>

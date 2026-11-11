@@ -1,23 +1,10 @@
-import { CircleAlert, ShieldCheck } from "lucide-react";
+"use client";
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import type { StudioRunView } from "@/src/shared/contracts";
+import { SafetyCertificateOutlined, WarningOutlined } from "@ant-design/icons";
+import { Alert, Card, Table, Tag, Typography } from "antd";
+import type { TableColumnsType } from "antd";
+
+import type { StudioBuildStageView, StudioRunView } from "@/src/shared/contracts";
 
 /**
  * [40] Build-bundle section — rendered ONLY when the run view carries the
@@ -26,6 +13,39 @@ import type { StudioRunView } from "@/src/shared/contracts";
  * verification truth. Native Page Builder HTML stays source/download only:
  * no Magento storefront or Admin preview is claimed anywhere here.
  */
+
+type StageRow = Pick<StudioBuildStageView, "stage" | "status" | "exitCode" | "outDir">;
+
+const stageColumns: TableColumnsType<StageRow> = [
+  {
+    title: "Stage",
+    dataIndex: "stage",
+    render: (_, record: StageRow) => <span className="font-mono">{record.stage}</span>,
+  },
+  {
+    title: "Status",
+    dataIndex: "status",
+    render: (_, record: StageRow) =>
+      record.status === "failed" ? (
+        <Tag color="error">{record.status}</Tag>
+      ) : (
+        <Tag>{record.status}</Tag>
+      ),
+  },
+  {
+    title: "Exit code",
+    dataIndex: "exitCode",
+    render: (_, record: StageRow) => <span className="font-mono">{record.exitCode}</span>,
+  },
+  {
+    title: "Output dir",
+    dataIndex: "outDir",
+    render: (_, record: StageRow) => (
+      <span className="font-mono text-xs">{record.outDir ?? "—"}</span>
+    ),
+  },
+];
+
 export function BuildBundleSection({ run }: { run: StudioRunView }) {
   const build = run.build;
   if (build === undefined) return null;
@@ -33,67 +53,49 @@ export function BuildBundleSection({ run }: { run: StudioRunView }) {
   const failedStages = build.stages.filter((stage) => stage.status === "failed");
 
   return (
-    <Card size="sm">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <ShieldCheck className="size-4 text-muted-foreground" aria-hidden="true" />
+    <Card
+      size="small"
+      title={
+        <span className="flex items-center gap-2">
+          <SafetyCertificateOutlined aria-hidden="true" />
           <h2 className="text-base font-semibold">Build bundle</h2>
-        </CardTitle>
-        <CardDescription>
+        </span>
+      }
+    >
+      <div className="flex flex-col gap-4">
+        <Typography.Paragraph type="secondary" className="text-sm">
           Assembled from the build-manifest.json bundle written by{" "}
           <span className="font-mono">det build</span> (profile{" "}
           <span className="font-mono">{run.profileId ?? "unknown"}</span>, platform{" "}
           <span className="font-mono">{run.platformId ?? "unknown"}</span>). The root manifest is
           the trust anchor; every declared output is re-checked against its recorded SHA-256 and
           byte size before it is downloadable.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4">
+        </Typography.Paragraph>
+
         {build.manifestVerified ? (
-          <p className="flex items-center gap-2 text-sm text-muted-foreground">
-            <ShieldCheck className="size-4" aria-hidden="true" />
-            Manifest verified: every declared output matches its recorded SHA-256 and byte size.
+          <p className="flex items-center gap-2 text-sm">
+            <SafetyCertificateOutlined aria-hidden="true" />
+            <Typography.Text type="secondary">
+              Manifest verified: every declared output matches its recorded SHA-256 and byte size.
+            </Typography.Text>
           </p>
         ) : (
-          <Alert variant="destructive">
-            <CircleAlert className="size-4" aria-hidden="true" />
-            <AlertTitle>Manifest verification failed</AlertTitle>
-            <AlertDescription>
-              At least one declared output does not match the recorded SHA-256/bytes — the bundle
-              is tampered or stale. Downloads of manifest outputs are refused until the bundle is
-              rebuilt.
-            </AlertDescription>
-          </Alert>
+          <Alert
+            type="error"
+            showIcon
+            icon={<WarningOutlined aria-hidden="true" />}
+            message="Manifest verification failed"
+            description="At least one declared output does not match the recorded SHA-256/bytes — the bundle is tampered or stale. Downloads of manifest outputs are refused until the bundle is rebuilt."
+          />
         )}
 
-        <div className="overflow-hidden rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Stage</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Exit code</TableHead>
-                <TableHead>Output dir</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {build.stages.map((stage) => (
-                <TableRow key={stage.stage}>
-                  <TableCell className="font-mono">{stage.stage}</TableCell>
-                  <TableCell>
-                    <Badge
-                      variant={stage.status === "failed" ? "destructive" : "outline"}
-                    >
-                      {stage.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="font-mono">{stage.exitCode}</TableCell>
-                  <TableCell className="font-mono text-xs">{stage.outDir ?? "—"}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+        <Table<StageRow>
+          rowKey="stage"
+          columns={stageColumns}
+          dataSource={build.stages}
+          pagination={false}
+          size="small"
+        />
 
         <div>
           <h3 className="mb-2 text-sm font-semibold">
@@ -106,20 +108,22 @@ export function BuildBundleSection({ run }: { run: StudioRunView }) {
                   {gap.code}
                   {gap.count !== undefined ? ` · count ${gap.count}` : ""}
                 </span>
-                <span className="text-sm text-muted-foreground">{gap.message}</span>
+                <Typography.Text type="secondary" className="text-sm">
+                  {gap.message}
+                </Typography.Text>
               </li>
             ))}
           </ul>
         </div>
 
-        <p className="text-xs text-muted-foreground">
+        <Typography.Text type="secondary" className="text-xs">
           Config identity <span className="font-mono">{build.configContentHash}</span> · This bundle
           is an offline build. Native Page Builder HTML is offered as{" "}
           <strong>source/download only</strong> — installing it into a Magento instance and any
           storefront/Admin preview remain operator steps (see the manifest gaps), never claims of
           this UI.
-        </p>
-      </CardContent>
+        </Typography.Text>
+      </div>
     </Card>
   );
 }

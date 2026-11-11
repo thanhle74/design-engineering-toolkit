@@ -1,5 +1,12 @@
+"use client";
+
 /**
  * [29] Studio — mapping review table (one row per run.mappings entry).
+ *
+ * [61] Ant Design Table (`columns` prop — no dot-notation subcomponents),
+ * light-only theme. Row highlight for derived `needsReview` comes from the
+ * `.mapping-row-needs-review` rule carried in globals.css (attention amber,
+ * never destructive red).
  *
  * Data honesty rules enforced here:
  *  - node ids render verbatim (n-… / s-…);
@@ -9,16 +16,10 @@
  *    badge — it is never shown as a compose disposition;
  *  - every GAP / EXCLUDED / SKIPPED row stays in the table with its reasons.
  */
+import type { HTMLAttributes } from "react";
+import { Table, Typography } from "antd";
+import type { ColumnsType } from "antd/es/table";
 import type { StudioMappingView } from "@/src/shared/contracts";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { cn } from "@/lib/utils";
 import {
   ComposeDispositionBadge,
   KindBadge,
@@ -27,9 +28,22 @@ import {
 
 const UNKNOWN = "unknown";
 
+/**
+ * antd `onRow` prop bags accept arbitrary DOM attributes, but React's
+ * `HTMLAttributes` type has no `data-*` index signature — a narrow cast keeps
+ * the test-visible row attributes honest without loosening antd's own typing.
+ */
+function rowProps(
+  props: Record<string, string>
+): HTMLAttributes<HTMLTableRowElement> {
+  return props as unknown as HTMLAttributes<HTMLTableRowElement>;
+}
+
 /** Muted stand-in for a fact the run does not carry. Never a zero. */
 function UnknownText() {
-  return <span className="text-xs text-muted-foreground">{UNKNOWN}</span>;
+  return (
+    <Typography.Text type="secondary">{UNKNOWN}</Typography.Text>
+  );
 }
 
 function TargetCell({ mapping }: { mapping: StudioMappingView }) {
@@ -39,11 +53,13 @@ function TargetCell({ mapping }: { mapping: StudioMappingView }) {
     return (
       <div className="flex flex-col gap-0.5">
         <span className="font-mono text-xs">{capabilityId}</span>
-        <span className="text-xs text-muted-foreground">{appearanceId}</span>
+        <Typography.Text type="secondary" className="text-xs">
+          {appearanceId}
+        </Typography.Text>
         {(nativeElement || nativeField) && (
-          <span className="text-xs text-muted-foreground">
+          <Typography.Text type="secondary" className="text-xs">
             {nativeElement ?? UNKNOWN} · {nativeField ?? UNKNOWN}
-          </span>
+          </Typography.Text>
         )}
       </div>
     );
@@ -53,22 +69,26 @@ function TargetCell({ mapping }: { mapping: StudioMappingView }) {
     // missing fact as unknown instead of inventing or hiding it.
     return <UnknownText />;
   }
-  return <span className="text-xs text-muted-foreground">—</span>;
+  return <Typography.Text type="secondary">—</Typography.Text>;
 }
 
 function NotesCell({ mapping }: { mapping: StudioMappingView }) {
   const hasNote = Boolean(mapping.note);
   const hasReasons = mapping.reasons.length > 0;
   if (!hasNote && !hasReasons) {
-    return <span className="text-xs text-muted-foreground">—</span>;
+    return <Typography.Text type="secondary">—</Typography.Text>;
   }
   return (
     <div className="flex flex-col gap-1">
-      {mapping.note && <p className="text-xs text-pretty">{mapping.note}</p>}
+      {mapping.note && <p>{mapping.note}</p>}
       {hasReasons && (
-        <ul className="list-disc space-y-0.5 pl-4 text-xs text-muted-foreground">
+        <ul className="list-disc space-y-0.5 pl-4">
           {mapping.reasons.map((reason, index) => (
-            <li key={index}>{reason}</li>
+            <li key={index}>
+              <Typography.Text type="secondary" className="text-xs">
+                {reason}
+              </Typography.Text>
+            </li>
           ))}
         </ul>
       )}
@@ -76,66 +96,73 @@ function NotesCell({ mapping }: { mapping: StudioMappingView }) {
   );
 }
 
-function MappingRow({ mapping }: { mapping: StudioMappingView }) {
-  return (
-    <TableRow
-      data-testid="mapping-row"
-      data-node-id={mapping.nodeId}
-      data-needs-review={mapping.needsReview ? "true" : "false"}
-      className={cn(
-        mapping.needsReview &&
-          "bg-amber-500/10 hover:bg-amber-500/15 dark:bg-amber-500/10 dark:hover:bg-amber-500/15"
-      )}
-    >
-      <TableCell className="align-top">
-        <div className="flex flex-col gap-0.5">
-          <span className="font-mono text-xs" title={mapping.nodeId}>
-            {mapping.nodeId}
-          </span>
-          <span className="text-xs text-muted-foreground">
-            {mapping.sourceName ?? UNKNOWN}
-          </span>
-        </div>
-      </TableCell>
-      <TableCell className="align-top">
-        {mapping.sourceLocator ? (
-          <span
-            className="block max-w-48 truncate font-mono text-[11px]"
-            title={mapping.sourceLocator}
-          >
-            {mapping.sourceLocator}
-          </span>
-        ) : (
-          <UnknownText />
-        )}
-      </TableCell>
-      <TableCell className="align-top">
-        <KindBadge kind={mapping.kind} />
-      </TableCell>
-      <TableCell className="align-top">
-        <span className="font-mono text-[11px] text-muted-foreground">
-          {mapping.semanticClass ?? UNKNOWN}
+const columns: ColumnsType<StudioMappingView> = [
+  {
+    title: "Node",
+    render: (_, mapping) => (
+      <div className="flex flex-col gap-0.5">
+        <span className="font-mono text-xs" title={mapping.nodeId}>
+          {mapping.nodeId}
         </span>
-      </TableCell>
-      <TableCell className="align-top">
-        <ComposeDispositionBadge disposition={mapping.composeDisposition} />
-      </TableCell>
-      <TableCell className="align-top">
-        {mapping.reviewDisposition ? (
-          <ReviewDispositionBadge disposition={mapping.reviewDisposition} />
-        ) : (
-          <span className="text-xs text-muted-foreground">—</span>
-        )}
-      </TableCell>
-      <TableCell className="align-top">
-        <TargetCell mapping={mapping} />
-      </TableCell>
-      <TableCell className="min-w-72 whitespace-normal align-top">
-        <NotesCell mapping={mapping} />
-      </TableCell>
-    </TableRow>
-  );
-}
+        <Typography.Text type="secondary" className="text-xs">
+          {mapping.sourceName ?? UNKNOWN}
+        </Typography.Text>
+      </div>
+    ),
+  },
+  {
+    title: "Source locator",
+    render: (_, mapping) =>
+      mapping.sourceLocator ? (
+        <span
+          className="block max-w-48 truncate font-mono text-xs"
+          title={mapping.sourceLocator}
+        >
+          {mapping.sourceLocator}
+        </span>
+      ) : (
+        <UnknownText />
+      ),
+  },
+  {
+    title: "Kind",
+    render: (_, mapping) => <KindBadge kind={mapping.kind} />,
+  },
+  {
+    title: "Semantic class",
+    render: (_, mapping) => (
+      <Typography.Text
+        type="secondary"
+        className="font-mono text-xs"
+      >
+        {mapping.semanticClass ?? UNKNOWN}
+      </Typography.Text>
+    ),
+  },
+  {
+    title: "Compose",
+    render: (_, mapping) => (
+      <ComposeDispositionBadge disposition={mapping.composeDisposition} />
+    ),
+  },
+  {
+    title: "Review",
+    render: (_, mapping) =>
+      mapping.reviewDisposition ? (
+        <ReviewDispositionBadge disposition={mapping.reviewDisposition} />
+      ) : (
+        <Typography.Text type="secondary">—</Typography.Text>
+      ),
+  },
+  {
+    title: "Target",
+    render: (_, mapping) => <TargetCell mapping={mapping} />,
+  },
+  {
+    title: "Note / reasons",
+    render: (_, mapping) => <NotesCell mapping={mapping} />,
+  },
+];
 
 /** The review table proper: exactly one row per mapping, in run order. */
 export function MappingReviewTable({
@@ -145,25 +172,23 @@ export function MappingReviewTable({
 }) {
   return (
     <div data-testid="mapping-review-table">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead scope="col">Node</TableHead>
-            <TableHead scope="col">Source locator</TableHead>
-            <TableHead scope="col">Kind</TableHead>
-            <TableHead scope="col">Semantic class</TableHead>
-            <TableHead scope="col">Compose</TableHead>
-            <TableHead scope="col">Review</TableHead>
-            <TableHead scope="col">Target</TableHead>
-            <TableHead scope="col">Note / reasons</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {mappings.map((mapping) => (
-            <MappingRow key={mapping.nodeId} mapping={mapping} />
-          ))}
-        </TableBody>
-      </Table>
+      <Table<StudioMappingView>
+        rowKey="nodeId"
+        size="small"
+        columns={columns}
+        dataSource={[...mappings]}
+        pagination={false}
+        onRow={(mapping) =>
+          rowProps({
+            "data-testid": "mapping-row",
+            "data-node-id": mapping.nodeId,
+            "data-needs-review": mapping.needsReview ? "true" : "false",
+          })
+        }
+        rowClassName={(mapping) =>
+          mapping.needsReview ? "mapping-row-needs-review" : ""
+        }
+      />
     </div>
   );
 }

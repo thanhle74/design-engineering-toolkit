@@ -1,56 +1,20 @@
-import Link from "next/link";
 import { connection } from "next/server";
-import { ArrowLeft, CircleAlert, Unplug } from "lucide-react";
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
 import { DetRunReaderError, type StudioRunView } from "@/src/shared/contracts";
 import { getDetRunReader } from "@/src/server/det-run-reader-factory";
 import { DesignTree } from "@/src/modules/design-tree";
 import {
   MappingReview,
   ProvenanceFooter,
-  RunModeBadge,
 } from "@/src/modules/mapping-review";
 import { PreviewPanel } from "@/src/modules/preview";
 import { ClientArtifactManifest } from "./client-artifact-manifest";
 import { BuildBundleSection } from "./build-bundle-section";
+import { RunHeader } from "./run-header";
+import { ReaderProblemState } from "./reader-problem-state";
 
 interface RunPageProps {
   params: Promise<{ runId: string }>;
-}
-
-function ReaderProblemState({
-  title,
-  message,
-  hint,
-}: {
-  title: string;
-  message: string;
-  hint: string;
-}) {
-  return (
-    <div className="flex flex-col gap-4">
-      <Button asChild variant="ghost" className="w-fit">
-        <Link href="/">
-          <ArrowLeft className="size-4" aria-hidden="true" />
-          Overview
-        </Link>
-      </Button>
-      <Alert>
-        {title === "Run not found" ? (
-          <CircleAlert className="size-4" aria-hidden="true" />
-        ) : (
-          <Unplug className="size-4" aria-hidden="true" />
-        )}
-        <AlertTitle>{title}</AlertTitle>
-        <AlertDescription>
-          <p>{message}</p>
-          <p className="mt-2 text-muted-foreground">{hint}</p>
-        </AlertDescription>
-      </Alert>
-    </div>
-  );
 }
 
 export default async function RunPage({ params }: RunPageProps) {
@@ -89,19 +53,7 @@ export default async function RunPage({ params }: RunPageProps) {
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex flex-col gap-3">
-        <Button asChild variant="ghost" className="w-fit self-start">
-          <Link href="/">
-            <ArrowLeft className="size-4" aria-hidden="true" />
-            Overview
-          </Link>
-        </Button>
-        <div className="flex flex-wrap items-center gap-2.5">
-          <h1 className="text-xl font-semibold tracking-tight md:text-2xl">{run.label}</h1>
-          <RunModeBadge mode={run.mode} />
-        </div>
-        <p className="font-mono text-xs text-muted-foreground">{run.runId}</p>
-      </div>
+      <RunHeader label={run.label} mode={run.mode} runId={run.runId} />
 
       <BuildBundleSection run={run} />
 

@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * [29] DET Studio — W-C "Preview & Export" lane: honest resolved-preview panel.
  *
@@ -19,19 +21,15 @@
  *
  * DEMO fixture runs (`mode === "fixture"`) always carry a visible DEMO badge
  * near the preview panel so fixture data can never masquerade as live proof.
+ *
+ * [61] Ant Design light-only: antd Card + calm info Alert for the unavailable
+ * state + a success Tag for the verified badge. Icons are decorative.
  */
-import { ExternalLink, MonitorX, ShieldCheck } from "lucide-react";
-
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
 import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  ExportOutlined,
+  SafetyCertificateOutlined,
+} from "@ant-design/icons";
+import { Alert, Card, Tag, Typography } from "antd";
 import type { StudioPreviewState, StudioRunMode } from "@/src/shared/contracts";
 
 export interface PreviewPanelProps {
@@ -45,36 +43,33 @@ export interface PreviewPanelProps {
 
 export function PreviewPanel({ preview, mode, label }: PreviewPanelProps) {
   return (
-    <Card size="sm" data-testid="preview-panel">
-      <CardHeader>
-        <CardTitle>
-          <h2>Preview</h2>
-        </CardTitle>
-        <CardDescription>
-          {preview.status === "available"
-            ? "Resolved from the run's verified, isolated DET Preview Theme output."
-            : "No verified preview is bound to this run."}
-        </CardDescription>
-        {mode === "fixture" ? (
-          <CardAction>
-            <Badge
-              variant="outline"
-              data-testid="preview-demo-badge"
-              className="font-semibold tracking-wide border-dashed"
-              title="DEMO fixture run — illustrative data, not a live conversion."
-            >
-              DEMO
-            </Badge>
-          </CardAction>
-        ) : null}
-      </CardHeader>
-      <CardContent>
-        {preview.status === "unavailable" ? (
-          <PreviewUnavailableReason reason={preview.reason} />
-        ) : (
-          <PreviewAvailableSource preview={preview} label={label} />
-        )}
-      </CardContent>
+    <Card
+      size="small"
+      data-testid="preview-panel"
+      title={<h2 className="text-base font-semibold">Preview</h2>}
+      extra={
+        mode === "fixture" ? (
+          <Tag
+            data-testid="preview-demo-badge"
+            className="font-semibold tracking-wide"
+            style={{ borderStyle: "dashed" }}
+            title="DEMO fixture run — illustrative data, not a live conversion."
+          >
+            DEMO
+          </Tag>
+        ) : undefined
+      }
+    >
+      <Typography.Paragraph type="secondary" className="mb-4">
+        {preview.status === "available"
+          ? "Resolved from the run's verified, isolated DET Preview Theme output."
+          : "No verified preview is bound to this run."}
+      </Typography.Paragraph>
+      {preview.status === "unavailable" ? (
+        <PreviewUnavailableReason reason={preview.reason} />
+      ) : (
+        <PreviewAvailableSource preview={preview} label={label} />
+      )}
     </Card>
   );
 }
@@ -85,22 +80,30 @@ export function PreviewPanel({ preview, mode, label }: PreviewPanelProps) {
  */
 function PreviewUnavailableReason({ reason }: { reason: string }) {
   return (
-    <Alert className="border-border bg-muted/30">
-      <MonitorX aria-hidden="true" />
-      <AlertTitle className="flex flex-wrap items-center gap-2">
-        Preview unavailable
-        <Badge variant="secondary" className="font-mono text-[10px]">
-          PREVIEW_UNAVAILABLE
-        </Badge>
-      </AlertTitle>
-      <AlertDescription>
-        <p data-testid="preview-unavailable-reason">{reason}</p>
-        <p className="text-xs">
-          A preview appears only when [28]&rsquo;s verified DET Preview Theme
-          output is bound to this run. This is a normal state, not a failure.
-        </p>
-      </AlertDescription>
-    </Alert>
+    <Alert
+      type="info"
+      showIcon
+      title={
+        <span className="flex flex-wrap items-center gap-2">
+          Preview unavailable
+          <Tag className="font-mono" style={{ fontSize: 10 }}>
+            PREVIEW_UNAVAILABLE
+          </Tag>
+        </span>
+      }
+      description={
+        <>
+          <p data-testid="preview-unavailable-reason">{reason}</p>
+          <p className="text-xs">
+            <Typography.Text type="secondary">
+              A preview appears only when [28]&rsquo;s verified DET Preview
+              Theme output is bound to this run. This is a normal state, not a
+              failure.
+            </Typography.Text>
+          </p>
+        </>
+      }
+    />
   );
 }
 
@@ -116,14 +119,14 @@ function PreviewAvailableSource({
     <div className="flex flex-col gap-3">
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-sm font-medium">{label}</span>
-        <Badge
-          variant="secondary"
+        <Tag
+          color="success"
           data-testid="preview-verified-badge"
+          icon={<SafetyCertificateOutlined aria-hidden="true" />}
           title="Verified by the engine boundary — Studio never invents a preview URL or success."
         >
-          <ShieldCheck aria-hidden="true" />
           Verified
-        </Badge>
+        </Tag>
       </div>
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
         <a
@@ -141,15 +144,15 @@ function PreviewAvailableSource({
           data-testid="preview-new-tab-link"
           className="inline-flex items-center gap-1 text-xs underline underline-offset-4"
         >
-          <ExternalLink aria-hidden="true" />
+          <ExportOutlined aria-hidden="true" />
           Open in new tab
         </a>
       </div>
-      <p className="text-xs text-muted-foreground">
+      <Typography.Paragraph type="secondary" className="mb-0 text-xs">
         The preview is rendered by the engine&rsquo;s isolated DET Preview
         Theme, outside Studio. Studio shows the verified link only — never a
         mock screenshot as Magento proof.
-      </p>
+      </Typography.Paragraph>
     </div>
   );
 }

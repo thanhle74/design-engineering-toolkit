@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * [29] DET Studio — honest NOT CONNECTED result state (New Conversion module, lane W-A).
  *
@@ -5,12 +7,11 @@
  * execution is not connected in this MVP (issue [28] owns the engine bridge).
  * There is intentionally NO spinner, NO progress state and NO success claim —
  * no conversion has run.
+ *
+ * [61] Ant Design light-only: antd Card + dashed neutral Tag + a calm info
+ * Alert carrying the exact not-connected copy.
  */
-import { Unplug } from "lucide-react";
-
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { Alert, Card, Tag, Typography } from "antd";
 
 import { TARGET_LABELS } from "../conversion-options";
 import type { ConversionRequestSummary } from "../types";
@@ -43,51 +44,49 @@ export function NotConnectedResult({ summary, className }: NotConnectedResultPro
   ];
 
   return (
-    <section
+    <Card
+      size="small"
       data-testid="conversion-result"
       aria-label="Conversion request summary"
-      className={cn("rounded-lg border bg-card p-4", className)}
+      className={className}
+      title={
+        <div className="flex flex-wrap items-center gap-2">
+          <h3 className="text-sm font-semibold">Conversion request summary</h3>
+          <Tag style={{ borderStyle: "dashed" }}>NOT CONNECTED</Tag>
+        </div>
+      }
     >
-      <div className="flex flex-wrap items-center gap-2">
-        <h3 className="text-sm font-semibold">Conversion request summary</h3>
-        <Badge variant="outline" className="border-dashed text-xs">
-          NOT CONNECTED
-        </Badge>
-      </div>
-
-      <dl className="mt-3 grid gap-x-6 gap-y-2 sm:grid-cols-2">
+      <dl className="grid gap-x-6 gap-y-2 sm:grid-cols-2">
         {rows.map((row) => (
           <div key={row.label} className="min-w-0">
-            <dt className="text-xs text-muted-foreground">{row.label}</dt>
-            <dd
-              className={cn(
-                "truncate text-sm",
-                row.mono && "font-mono",
-                !row.mono && row.value.startsWith("Not ") && "text-muted-foreground"
+            <dt className="text-xs">
+              <Typography.Text type="secondary">{row.label}</Typography.Text>
+            </dt>
+            <dd className={"truncate text-sm " + (row.mono ? "font-mono" : "")}>
+              {!row.mono && row.value.startsWith("Not ") ? (
+                <Typography.Text type="secondary">{row.value}</Typography.Text>
+              ) : (
+                row.value
               )}
-            >
-              {row.value}
             </dd>
           </div>
         ))}
       </dl>
 
       {summary.inputKind === "bare" ? (
-        <p className="mt-3 text-xs text-muted-foreground">
+        <Typography.Paragraph type="secondary" className="mt-3 text-xs">
           Bare node id: no file key was provided. Paste the full Figma design URL (with
           ?node-id=…) to include the file the engine would read.
-        </p>
+        </Typography.Paragraph>
       ) : null}
 
-      <Alert className="mt-4">
-        <Unplug />
-        <AlertTitle>Conversion execution is not connected</AlertTitle>
-        <AlertDescription>
-          Studio cannot run conversions in this MVP: issue [28] owns the engine bridge to the
-          det CLI, and it is not connected yet. No conversion was run — this panel only
-          summarizes the request you entered.
-        </AlertDescription>
-      </Alert>
-    </section>
+      <Alert
+        className="mt-4"
+        type="info"
+        showIcon
+        title="Conversion execution is not connected"
+        description="Studio cannot run conversions in this MVP: issue [28] owns the engine bridge to the det CLI, and it is not connected yet. No conversion was run — this panel only summarizes the request you entered."
+      />
+    </Card>
   );
 }
