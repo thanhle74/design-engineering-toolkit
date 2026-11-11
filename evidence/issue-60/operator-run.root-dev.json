@@ -1,0 +1,33 @@
+{
+  "task": "[60] DET npm workspaces — one lockfile and portable packages/core",
+  "date": "2026-11-11",
+  "workspace": "Orca worktree, branch thanhle74/60-det-npm-workspaces-one-lockfile-and-portable, base main @ 11f1141 (#58 merge)",
+  "operatorFlow": {
+    "command": "npm run dev   # repository root, NO env exports, NO cd, NO copy",
+    "oneTimeSetup": "npm run setup   # once: ONE root npm ci (single npm-workspaces lockfile: @det/core + apps/studio) + npm run build",
+    "observed": [
+      "clean-clone simulation first: rm -rf node_modules -> ONE root `npm ci` -> npm test 195/195",
+      "launcher: root/studioDir/coreDistEntry resolved from the script location; coreDistEntry = <repoRoot>/packages/core/dist/src/core/cli/main.js",
+      "dev server (port 3100): GET /api/build-configs -> 200 with the single canonical entry slaunchpad-home-real-derived (origin=repository, label 'Slaunchpad Homepage — real-derived (Figma rev 2417494580183108397)'), runnerReady=true, no STUDIO_* env set",
+      "POST /api/builds {configId} -> 202 build-1794381185953; second POST while active -> 409 (single slot preserved)",
+      "run exitCode=0; journal .build-jobs/build-1794381185953.json: command[1] = <repoRoot>/bin/det.js — the root compatibility wrapper over the @det/core package CLI",
+      "byte-verified download: run-view artifact sha256 == build-manifest outputs[] sha256 == downloaded native-content.html bytes (3288 B, sha256 6362c6a9…93bdf, 3-way match)",
+      "honesty intact: source pin figma-home-desktop @ 2417494580183108397, COMPOSITION_SKIPS_PRESENT=10, COMPOSITION_GAPS_PRESENT=12, PREVIEW_INSTALL_OPERATOR_GATED",
+      "git status examples/ clean after the in-place UI build (committed project untouched)"
+    ]
+  },
+  "steps": [
+    { "step": "dev-ready", "ok": true },
+    { "step": "canonical-entry", "ok": true, "detail": { "configId": "slaunchpad-home-real-derived", "origin": "repository" } },
+    { "step": "runner-ready", "ok": true },
+    { "step": "build-accepted", "ok": true, "detail": "202 {runId: build-1794381185953, state: running}" },
+    { "step": "single-slot-409", "ok": true },
+    { "step": "build-exit-0", "ok": true },
+    { "step": "journal-cli", "ok": true, "detail": "command[1] = <repoRoot>/bin/det.js" },
+    { "step": "byte-verified-download", "ok": true, "detail": { "sha256": "6362c6a943e061dcadacaf4f12597b460a1f425e11c123c7492458b692893bdf", "bytes": 3288, "match": "run-view == build-manifest outputs == downloaded bytes" } },
+    { "step": "honesty-fields", "ok": true, "detail": { "skipsPresent": true, "gapsPresent": true, "previewOperatorGated": true } },
+    { "step": "committed-project-untouched", "ok": true }
+  ],
+  "result": "10/10 operator steps passed",
+  "noEnvSetup": "the dev server answered with runnerReady=true and the canonical entry with NO STUDIO_* env var set; studio launcher deps-check/self-install moved to the root workspace install ([60])"
+}

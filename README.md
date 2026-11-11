@@ -2,12 +2,12 @@
 
 A **multi-project, platform-neutral** foundation for design-system contracts, semantic structure, capability resolution and evidence-led conversion. Magento Page Builder + Hyvä is the **first adapter**, not a required core dependency.
 
-## Quick start — one repository, one entrypoint ([58])
+## Quick start — one repository, one entrypoint ([58], [60])
 
 Requires Node ≥ 22.13 (Fedora/Linux). From the repository root:
 
 ```bash
-npm run setup   # ONCE: installs both committed lockfiles + builds the det core
+npm run setup   # ONCE: one root npm ci (single npm-workspaces lockfile: @det/core + Studio) + builds the det core
 npm run dev     # DET Studio → http://localhost:3000/build
 ```
 
@@ -47,7 +47,7 @@ Start here:
 - [Accepted/proposed decisions](docs/converter/DECISIONS.md) (ADR-005-001..016)
 - [OSS source selection](docs/research/oss-adoption-for-pagebuilder.md) · [Agent skills selection](docs/research/agent-skills-adoption.md) — verified live against sources
 - [Repo hygiene baseline](docs/converter/REPO-HYGIENE-BASELINE.md) (incl. [5] TIP audit addendum)
-- **Test gate:** `npm test` — 131 checks (build + schema validation for the V1/converter/CLI/KB families, the T-01..T-22 negative/CLI plan, the KB-01..KB-29 knowledge-engine plan, the G2/G3/G4 converter-gate suites, the #41 schema-registry SSOT suite, determinism, neutrality + deny-list scans). Also runs in CI (`.github/workflows/validate.yml`).
+- **Test gate:** `npm test` — 195 checks (build + schema validation for the V1/converter/CLI/KB families, the T-01..T-22 negative/CLI plan, the KB-01..KB-29 knowledge-engine plan, the G2/G3/G4 converter-gate suites, the #41 schema-registry SSOT suite, determinism, neutrality + deny-list scans, and the [60] npm-pack portability smoke). Also runs in CI (`.github/workflows/validate.yml`).
 - [Agent rules](AGENTS.md), [Claude Code entry](CLAUDE.md), `.claude/skills/` and `.claude/agents/`
 
 **Task naming:** `[<issue number>] <task title>`; `[5]` is this task's GitHub issue number, **not a version**.

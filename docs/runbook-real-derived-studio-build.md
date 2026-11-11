@@ -11,7 +11,7 @@ project is listed in place by the Studio catalogue.
 ## 1. One-time setup, then start Studio
 
 ```bash
-npm run setup    # ONCE: installs both lockfiles (root + apps/studio) + builds the det core
+npm run setup    # ONCE: one root npm ci (single npm-workspaces lockfile, [60]) + builds the det core
 
 npm run dev      # DET Studio at http://localhost:3000/build
 # production-mode equivalent:  npm run start
@@ -85,8 +85,9 @@ Exit 0 = all stages completed; the bundle layout matches what Studio serves abov
 
 ## Troubleshooting
 
-- **`det: compiled core not found`** — run `npm run build` at the repository root (the
-  root `npm run dev` launcher does this automatically when `dist/` is missing or stale).
+- **`det: compiled core not found`** — run `npm run build` at the repository root (compiles
+  `packages/core/dist` in the [60] npm-workspaces layout; the root `npm run dev` launcher does
+  this automatically when the core dist is missing or stale).
 - **The build page shows "Runner not ready"** — Studio was started without
   `STUDIO_DET_RUNS_DIR` (e.g. `npm run dev` inside `apps/studio` instead of the root).
   Use the root launcher (`npm run dev` at the repository root), which defaults the runs

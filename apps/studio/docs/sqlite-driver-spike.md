@@ -66,6 +66,6 @@ means rewriting that one module, not the catalogue/indexer/UI.
 
 `better-sqlite3` (pinned portable driver): works on Node ≥ 20 and would avoid the
 Experimental label, but adds a native dependency (ABI rebuild per Node major, prebuilt
-availability, install scripts in the isolated studio lockfile) for a capability the standard
+availability, install scripts inside the single root npm-workspaces lockfile) for a capability the standard
 library already provides on the pinned CI/dev lines. Revisit only if `node:sqlite` breaks an
 upgrade — the driver seam keeps that cheap.

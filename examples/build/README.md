@@ -18,6 +18,7 @@ registry/probe, binding map, content manifest, projection). The preview installa
 Magento checkout is NOT part of the build — it is an explicitly OPERATOR_GATED gap recorded in
 the manifest (see `examples/local-preview/README.md`).
 
-Packaging (no npm publish): `npm link` at a toolkit checkout exposes the `det` bin locally, or
-pack/install the repo tarball (`npm pack`) into the consuming project; `npm ci && npm run build`
-prepares `dist/` either way.
+Packaging (no npm publish): `npm pack --workspace @det/core` ([60]) produces the portable
+`det-core-<version>.tgz` (bin/ + dist/ + schemas/ + adapters/*/descriptor.json); install it into a
+consuming project (`npm install <tarball>`) and run its `bin/det.js` — schemas resolve from the
+package root, never the caller's cwd (locked by tests/pack-portability-suite.mjs).
