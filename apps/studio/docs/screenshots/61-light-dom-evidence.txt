@@ -1,0 +1,28 @@
+[61] Light-only Ant Design DOM evidence — captured 2026-11-11
+Server: production Studio (`npm run start` from the repo root, port 3100 — 3000 was
+occupied by an unrelated local server), commit at capture: [61] C61-2 sweep + docs.
+Method: scoped DOM checks on the server-rendered HTML (curl) + headless Chrome
+`--dump-dom --virtual-time-budget=10000` for the post-hydration state.
+
+1. Root element carries NO dark class and no dark plumbing:
+   <html lang="en" class="…_variable …_variable …_variable font-sans antialiased">
+   — no `dark` class (the [52] dark-only shell rendered `class="… dark"`).
+
+2. Ant Design present on all routes (/, /build, /catalog, /runs/<runId>):
+   - `.ant-layout` ×3, `.ant-menu` (horizontal nav) in every served page;
+   - SSR-injected antd CSS-variable theme (`:where(.css-i19pbt)…`) in the document
+     head — AntdRegistry server style injection, first paint already styled (no FOUC).
+
+3. Honest states on the real-derived run page (build-1794385166500):
+   - `PREVIEW_UNAVAILABLE` rendered verbatim (no simulated storefront);
+   - stage table `capability-probe: reused / extraction: completed / composition: completed`;
+   - gaps verbatim: COMPOSITION_SKIPS_PRESENT · 10, COMPOSITION_GAPS_PRESENT · 12,
+     PREVIEW_INSTALL_OPERATOR_GATED, PREVIEW_ASSETS_NOT_GENERATED.
+
+4. Light-only note: antd's own injected library stylesheet contains internal
+   `.ant-menu-dark` variant rules (part of the antd component CSS, unused by this UI).
+   Studio source has zero dark tokens/classes; the dark theming is retired.
+
+5. Screenshots (same commit): 61-overview-desktop/narrow, 61-build-desktop/narrow,
+   61-catalog-desktop/narrow, 61-run-detail-desktop/narrow, 61-run-not-found-desktop.
+   Historical [52] dark assets are preserved untouched alongside.

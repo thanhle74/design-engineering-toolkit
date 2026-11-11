@@ -136,23 +136,32 @@ Notes on honesty and scope (also enforced in code and tests):
   `docs/converter/RECEIPT-ISSUE56-REAL-DERIVED-STUDIO-BUILD.md`); the
   operator runbook is `docs/runbook-real-derived-studio-build.md`.
 
-## Theme ([52])
+## Theme ([61])
 
-Dark-only by owner direction — no light mode, no toggle, no OS theme
-switching. The dark palette lives on `:root` in `app/globals.css` (calm
-charcoal-slate neutrals via semantic shadcn tokens) and `<html>` carries a
-static server-rendered `dark` class so the first paint is already dark; the
-class exists to keep the `dark:`-prefixed utilities inside the shadcn
-primitives active. The layout is deliberately spacious: `h-16` header,
-≥44px nav/button targets (default button `h-11`, compact `sm`/`icon-sm`
-sizes remain for in-table and dialog-close controls), roomier table rows
-and card spacing. Evidence: `docs/screenshots/52-*.png` and
-`52-dark-only-dom-evidence.txt`.
+Light-only by owner direction — Ant Design 6 is the single source of
+component theming. `StudioProviders`
+(`components/layout/studio-providers.tsx`) sets `ConfigProvider` with
+`theme.defaultAlgorithm` explicitly: no dark algorithm, no toggle, no OS
+theme switching. The root layout composes `AntdRegistry` +
+`StudioProviders` (ConfigProvider plus the antd `App` wrapper, so antd
+message/notification context works without per-call contextHolders) and
+antd styles are injected server-side, so the first paint is already styled
+(no FOUC). Tokens: `controlHeight: 44` carries the ≥44px operator
+click-target requirement into every Button/Input/Select (Menu
+`itemHeight: 44` likewise); everything else stays on antd's calm neutral
+light defaults with comfortable whitespace — enterprise tool aesthetics,
+not a card-heavy dashboard. `app/globals.css` is light-only (`:root` only)
+and Tailwind remains only for layout utilities inside Studio — the
+Magento/Hyvä adapter and the Preview Theme Tailwind contract are
+unchanged. No dark tokens or `dark:` classes exist anywhere in the Studio
+app. The [52] evidence assets (`docs/screenshots/52-*.png` and
+`52-dark-only-dom-evidence.txt`) show the retired dark UI and are
+preserved as history.
 
 ## Layout
 
 - `app/` — App Router pages (`/`, `/build`, `/runs/[runId]`) and route handlers under `app/api/**` (composition only)
-- `components/ui/` — installed shadcn/ui primitives; `components/layout/` — studio shell
+- antd primitives are used directly — no `components/ui` library, only tiny feature-specific wrappers where needed; `components/layout/` — studio shell plus `studio-providers` (the [61] antd light-only root providers)
 - `src/modules/` — feature lanes: `conversions`, `design-tree`, `mapping-review`, `preview`, `artifacts`
 - `src/server/` — server-only boundary: `DetRunReader` implementations (fixture + directory), the `[40]` build-bundle reader, build-config catalog, local build runner, path guards
 - `src/shared/contracts/` — frozen `StudioRunView` read model derived from `schemas/cli/*` + `schemas/converter/*` (with the `[40]` additive optional `build` block)
