@@ -39,6 +39,8 @@ Two new root scripts and one bounded Studio-server change; no second app, no wor
 
 CI note: the two exact-head jobs are unchanged in construction — `contracts` runs the root gate (new suite rides `npm test`), `studio` keeps its isolated lockfile install (the two-lockfile layout is preserved by design).
 
+**Correction C58-1 (on this PR, after the first exact-head CI run):** the `studio` job flaked in `build-runner.test.ts` C1 (`expected 'build-…177' to be 'build-…178'`). Root cause (pre-existing timing nondeterminism, first time fired under CI load): `start()` captures the provisional `build-${Date.now()}` synchronously at slot reservation, but `finalizeRunId()` re-read `Date.now()` after the first await — a crossed millisecond boundary changed the id AFTER a concurrent start had already observed it in the 409 `BuildBusyError.active` snapshot. Fix: `finalizeRunId` now scans forward **from the provisional id** instead of a fresh `Date.now()`, so the id changes only on a real journal/bundle collision — collision-bumping, pattern safety and all [40] guarantees unchanged; the C1 lock itself is untouched and is the regression guard. Studio suite 221/221 (build-runner file stable ×5), root gate 191/191 re-run after the fix.
+
 ## 4. Test-semantics changes (honest deltas, all locked)
 
 - `BuildConfigCatalog.open("")` (env unset) no longer 503s when the repository catalogue is reachable — it lists the committed examples; an **explicitly set but invalid** `STUDIO_BUILD_PROJECTS_DIR` still fails closed (`not-configured`, env name only). Locked in `build-catalog.test.ts` + `build-configs/route.test.ts`.

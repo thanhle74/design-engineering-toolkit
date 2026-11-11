@@ -477,9 +477,18 @@ export class BuildRunner {
    * Finalize the provisional run id while the slot is held (nothing written
    * yet, so updating snapshot.runId here is safe): collision-bumped against
    * existing journals/bundles, pattern-safe.
+   *
+   * The scan starts FROM the provisional id captured synchronously at slot
+   * reservation — never from a fresh Date.now() ([58] CI correction): a
+   * millisecond boundary crossed between the synchronous reserve and this
+   * await would otherwise change the id AFTER a concurrent start already
+   * observed it in the 409 BuildBusyError.active snapshot, breaking the C1
+   * determinism the [40] lock asserts. The id now changes only on a real
+   * journal/bundle collision.
    */
   private async finalizeRunId(snapshot: BuildJobSnapshot): Promise<void> {
-    let ms = Date.now();
+    const provisional = Number.parseInt(snapshot.runId.slice("build-".length), 10);
+    let ms = Number.isFinite(provisional) ? provisional : Date.now();
     for (;;) {
       const runId = `build-${ms}`;
       if (!RUN_ID_PATTERN.test(runId)) {
