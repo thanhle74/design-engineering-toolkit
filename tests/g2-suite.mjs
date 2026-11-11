@@ -10,17 +10,19 @@ import fs from "node:fs";
 import http from "node:http";
 import os from "node:os";
 import path from "node:path";
-import { main } from "../dist/src/core/cli/main.js";
-import { stableContentHash, canonicalStringify, stripVolatile } from "../dist/src/core/canonical.js";
-import { deriveNodeId } from "../dist/src/core/design-source/extract.js";
-import { SnapshotDesignSourcePort } from "../dist/src/core/design-source/port.js";
-import { loadAdapters, runAdapter } from "../dist/src/core/adapter-runtime.js";
-import { toSnapshotNodes, kindOf, MAX_NODES } from "../dist/adapters/design-source-figma-live/figma-map.js";
+import { main } from "../packages/core/dist/src/core/cli/main.js";
+import { stableContentHash, canonicalStringify, stripVolatile } from "../packages/core/dist/src/core/canonical.js";
+import { deriveNodeId } from "../packages/core/dist/src/core/design-source/extract.js";
+import { SnapshotDesignSourcePort } from "../packages/core/dist/src/core/design-source/port.js";
+import { loadAdapters, runAdapter } from "../packages/core/dist/src/core/adapter-runtime.js";
+import { toSnapshotNodes, kindOf, MAX_NODES } from "../packages/core/dist/adapters/design-source-figma-live/figma-map.js";
 
 const FIX = path.join(path.dirname(new URL(import.meta.url).pathname), "fixtures");
 const G2 = path.join(FIX, "g2-design-source");
 const LIVE = path.join(FIX, "g2-figma-live");
 const REPO = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
+// [60] the engine package root: adapters + schemas + dist live inside @det/core now.
+const CORE = path.join(REPO, "packages", "core");
 const PROFILE = path.join(FIX, "negative/profile-g2-design-fixture.fixture.json");
 const PROFILE_B = path.join(FIX, "negative/profile-g2-design-secondary.fixture.json");
 const REGISTRY = path.join(G2, "g2-capability-registry.fixture.json");
@@ -46,7 +48,7 @@ function extractArgs(extra = []) {
 
 export default async function registerG2Suite(checkAsync) {
   checkAsync("G2-T23a", "materialized G2 schemas validate their committed worked examples", async () => {
-    const { validateContract } = await import("../dist/src/core/schema-registry.js");
+    const { validateContract } = await import("../packages/core/dist/src/core/schema-registry.js");
     for (const [contract, file] of [
       ["node-ir", "node-ir.g2-fixture.example.json"],
       ["page-structure", "page-structure.g2-fixture.example.json"],
@@ -384,14 +386,14 @@ export default async function registerG2Suite(checkAsync) {
       if (m) hits.push(`${rel}: ${[...new Set(m)].join(",")}`);
     };
     for (const f of ["node-ir.schema.json", "page-structure.schema.json", "source-review.schema.json"]) {
-      scan(`schemas/converter/${f}`, fs.readFileSync(path.join(FIX, "..", "..", "schemas/converter", f), "utf8"));
+      scan(`schemas/converter/${f}`, fs.readFileSync(path.join(FIX, "..", "..", "packages/core/schemas/converter", f), "utf8"));
     }
-    scan("schemas/cli/design-source-snapshot.schema.json", fs.readFileSync(path.join(FIX, "..", "..", "schemas/cli/design-source-snapshot.schema.json"), "utf8"));
-    scan("dist/src/core/design-source/extract.js", fs.readFileSync(path.join(FIX, "..", "..", "dist/src/core/design-source/extract.js"), "utf8"));
-    scan("dist/src/core/design-source/port.js", fs.readFileSync(path.join(FIX, "..", "..", "dist/src/core/design-source/port.js"), "utf8"));
-    scan("dist/src/core/cli/commands/extract.js", fs.readFileSync(path.join(FIX, "..", "..", "dist/src/core/cli/commands/extract.js"), "utf8"));
+    scan("schemas/cli/design-source-snapshot.schema.json", fs.readFileSync(path.join(FIX, "..", "..", "packages/core/schemas/cli/design-source-snapshot.schema.json"), "utf8"));
+    scan("packages/core/dist/src/core/design-source/extract.js", fs.readFileSync(path.join(FIX, "..", "..", "packages/core/dist/src/core/design-source/extract.js"), "utf8"));
+    scan("packages/core/dist/src/core/design-source/port.js", fs.readFileSync(path.join(FIX, "..", "..", "packages/core/dist/src/core/design-source/port.js"), "utf8"));
+    scan("packages/core/dist/src/core/cli/commands/extract.js", fs.readFileSync(path.join(FIX, "..", "..", "packages/core/dist/src/core/cli/commands/extract.js"), "utf8"));
     for (const f of fs.readdirSync(G2)) if (f.endsWith(".json")) scan(`tests/fixtures/g2-design-source/${f}`, fs.readFileSync(path.join(G2, f), "utf8"));
-    for (const f of ["descriptor.json"]) scan(`adapters/design-source-fixture/${f}`, fs.readFileSync(path.join(FIX, "..", "..", "adapters/design-source-fixture", f), "utf8"));
+    for (const f of ["descriptor.json"]) scan(`adapters/design-source-fixture/${f}`, fs.readFileSync(path.join(FIX, "..", "..", "packages/core/adapters/design-source-fixture", f), "utf8"));
     for (const f of fs.readdirSync(path.join(FIX, "..", "..", "examples/converter")).filter((x) => x.includes("g2"))) {
       scan(`examples/converter/${f}`, fs.readFileSync(path.join(FIX, "..", "..", "examples/converter", f), "utf8"));
     }
@@ -471,14 +473,14 @@ export default async function registerG2Suite(checkAsync) {
   }
 
   checkAsync("G2-T31a", "live adapter registers beside the fixture adapter under the same snapshot contract, read-only, no bundled identifiers", async () => {
-    const { adapters } = loadAdapters(REPO);
+    const { adapters } = loadAdapters(CORE);
     const live = adapters.find((a) => a.id === "design-source-figma-live");
     assert.ok(live, "design-source-figma-live must be registered (build first)");
     assert.equal(live.permissions.readOnly, true);
     assert.deepEqual(live.platformIds, ["figma"]);
     assert.ok(live.outputContract.endsWith("/schemas/cli/design-source-snapshot.schema.json"), "same snapshot transport contract as the fixture adapter");
     assert.ok(adapters.find((a) => a.id === "design-source-fixture"), "fixture adapter still registered");
-    const descText = fs.readFileSync(path.join(REPO, "adapters/design-source-figma-live/descriptor.json"), "utf8");
+    const descText = fs.readFileSync(path.join(CORE, "adapters/design-source-figma-live/descriptor.json"), "utf8");
     const scrubbed = descText
       .replace(/https:\/\/[^"\s]+/g, "")
       .replace(/githubusercontent|design-engineering-toolkit|thanhle74/g, "");
@@ -534,9 +536,9 @@ export default async function registerG2Suite(checkAsync) {
   checkAsync("G2-T31c", "adapter end-to-end over the stubbed provider: revision-pinned, scope-bounded snapshot, credential never echoed", async () => {
     const { base } = await liveServer();
     await withLiveEnv(base, async () => {
-      const { adapters } = loadAdapters(REPO);
+      const { adapters } = loadAdapters(CORE);
       const live = adapters.find((a) => a.id === "design-source-figma-live");
-      const run = await runAdapter(REPO, live, liveAdapterInput("1000:1"));
+      const run = await runAdapter(CORE, live, liveAdapterInput("1000:1"));
       assert.equal(run.ok, true, `adapter run failed: ${JSON.stringify(run.diagnostics)}`);
       const snap = run.payload;
       assert.equal(snap.sourceId, "figma-live-source");
@@ -550,7 +552,7 @@ export default async function registerG2Suite(checkAsync) {
       // (never sync) so the in-process stub server keeps serving while the adapter runs.
       const { spawn } = await import("node:child_process");
       const direct = await new Promise((resolve) => {
-        const p = spawn(process.execPath, [path.join(REPO, "dist/adapters/design-source-figma-live/extract.js")], { stdio: ["pipe", "pipe", "pipe"] });
+        const p = spawn(process.execPath, [path.join(CORE, "dist/adapters/design-source-figma-live/extract.js")], { stdio: ["pipe", "pipe", "pipe"] });
         let stdout = "";
         let stderr = "";
         p.stdout.on("data", (d) => (stdout += d));
@@ -568,7 +570,7 @@ export default async function registerG2Suite(checkAsync) {
   checkAsync("G2-T31d", "adapter fails closed on every blocked path: missing token, auth, 404, 429, oversize, malformed, in-band error, absent node, no revision pin, redirect, scope escape, malformed inputs", async () => {
     const { base } = await liveServer();
     await withLiveEnv(base, async () => {
-      const { adapters } = loadAdapters(REPO);
+      const { adapters } = loadAdapters(CORE);
       const live = adapters.find((a) => a.id === "design-source-figma-live");
       const cases = [
         ["401 rejected token", liveAdapterInput("400:1"), {}],
@@ -585,14 +587,14 @@ export default async function registerG2Suite(checkAsync) {
         ["non-numeric node id", liveAdapterInput("1000:1", { designNode: "root-frame" }), {}],
       ];
       for (const [label, input] of cases) {
-        const run = await runAdapter(REPO, live, input);
+        const run = await runAdapter(CORE, live, input);
         assert.equal(run.ok, false, `${label} must fail closed`);
         assert.ok(run.diagnostics.some((d) => d.code === "ADAPTER_EXIT_NONZERO"), `${label}: ${JSON.stringify(run.diagnostics)}`);
         assert.ok(!JSON.stringify(run.diagnostics).includes("stub-token"), `${label}: credential leaked into diagnostics`);
         assert.ok(!(run.stderrTail ?? "").includes("stub-token"), `${label}: credential leaked into stderr tail`);
       }
       await withLiveEnv(base, async () => {
-        const run = await runAdapter(REPO, live, liveAdapterInput("1000:1"));
+        const run = await runAdapter(CORE, live, liveAdapterInput("1000:1"));
         assert.equal(run.ok, false, "missing token must fail closed");
         assert.ok(run.diagnostics.some((d) => d.code === "ADAPTER_EXIT_NONZERO"));
         assert.ok((run.stderrTail ?? "").includes("FIGMA_TOKEN"), "exact blocker named: FIGMA_TOKEN missing");
@@ -685,7 +687,7 @@ export default async function registerG2Suite(checkAsync) {
         else scan(`${rel}/${f}`, fs.readFileSync(p, "utf8"), banned);
       }
     };
-    walkDir(path.join(REPO, "adapters/design-source-figma-live"), "adapters/design-source-figma-live", adapterBanned);
+    walkDir(path.join(CORE, "adapters/design-source-figma-live"), "packages/core/adapters/design-source-figma-live", adapterBanned);
     walkDir(path.join(LIVE, ""), "tests/fixtures/g2-figma-live", adapterBanned);
     // Derived live evidence + receipt (when present): token-shaped secrets and absolute paths are
     // never committed; the source/revision provenance pins required by the issue are allowed.

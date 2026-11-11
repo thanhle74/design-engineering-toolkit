@@ -1,0 +1,32 @@
+{
+  "name": "@det/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "DET Core/CLI: deterministic profile validation, read-only capability inspection and structural mapping, KB engine, and the det CLI. Platform-neutral core; adapters run out-of-process via descriptor.json entries. Docs, examples and evidence live at the repository root.",
+  "bin": {
+    "det": "bin/det.js"
+  },
+  "main": "dist/src/core/cli/main.js",
+  "types": "dist/src/core/cli/main.d.ts",
+  "files": [
+    "bin/",
+    "dist/",
+    "schemas/",
+    "adapters/*/descriptor.json"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepack": "npm run build"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "ajv": "^8.20.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.0"
+  }
+}

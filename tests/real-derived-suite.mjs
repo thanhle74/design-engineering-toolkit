@@ -9,10 +9,10 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
-import { stableContentHash } from "../dist/src/core/canonical.js";
-import { validateContract } from "../dist/src/core/schema-registry.js";
-import { validateRegistry } from "../dist/src/core/semantic.js";
-import { main } from "../dist/src/core/cli/main.js";
+import { stableContentHash } from "../packages/core/dist/src/core/canonical.js";
+import { validateContract } from "../packages/core/dist/src/core/schema-registry.js";
+import { validateRegistry } from "../packages/core/dist/src/core/semantic.js";
+import { main } from "../packages/core/dist/src/core/cli/main.js";
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
 const PROJECT = path.join(ROOT, "examples/build/slaunchpad-home-real-derived");

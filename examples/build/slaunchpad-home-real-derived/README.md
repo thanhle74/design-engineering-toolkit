@@ -47,7 +47,7 @@ Since [58] the short form is the single-root operator flow — this project is c
 **in place** by Studio (no copying, no exports):
 
 ```bash
-npm run setup    # once: installs both lockfiles + builds the det core
+npm run setup    # once: one root npm ci (single npm-workspaces lockfile, [60]) + builds the det core
 npm run dev      # http://localhost:3000/build
 ```
 

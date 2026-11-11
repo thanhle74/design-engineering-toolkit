@@ -11,12 +11,12 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import { getAjv, contractId, contractAliases, REPO_ROOT } from "../dist/src/core/schema-registry.js";
-import { schemaRefFor } from "../dist/src/core/run-envelope.js";
-import { validateRegistry } from "../dist/src/core/semantic.js";
+import { getAjv, contractId, contractAliases, REPO_ROOT } from "../packages/core/dist/src/core/schema-registry.js";
+import { schemaRefFor } from "../packages/core/dist/src/core/run-envelope.js";
+import { validateRegistry } from "../packages/core/dist/src/core/semantic.js";
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
-const registry = JSON.parse(fs.readFileSync(path.join(ROOT, "schemas", "registry.json"), "utf8"));
+const registry = JSON.parse(fs.readFileSync(path.join(ROOT, "packages", "core", "schemas", "registry.json"), "utf8"));
 
 // Golden compatibility pin (issue #41): these alias -> $id pairs ARE the byte-for-byte
 // contract. A drift in any alias, path or $id fails this suite loudly — the $id URLs are
@@ -88,14 +88,14 @@ export default async function registerRegistrySuite(checkAsync) {
       assert.equal(typeof rel, "string", `alias '${alias}' maps to a string path`);
       assert.match(rel, /^schemas\/[A-Za-z0-9._/-]+\.schema\.json$/, `alias '${alias}' path is package-relative under schemas/ and ends in .schema.json: ${rel}`);
       assert.ok(!rel.includes(".."), `alias '${alias}' path must not traverse up: ${rel}`);
-      assert.ok(fs.existsSync(path.join(ROOT, rel)), `alias '${alias}' file exists on disk: ${rel}`);
+      assert.ok(fs.existsSync(path.join(REPO_ROOT, rel)), `alias '${alias}' file exists on disk (package-relative): ${rel}`);
     }
     return `${names.length} aliases, all package-relative + present`;
   });
 
   checkAsync("REG-02", "contractId resolves alias -> path -> the schema file's OWN $id (byte-for-byte identity)", async () => {
     for (const [alias, rel] of Object.entries(registry.aliases)) {
-      const fileId = JSON.parse(fs.readFileSync(path.join(ROOT, rel), "utf8"))["$id"];
+      const fileId = JSON.parse(fs.readFileSync(path.join(REPO_ROOT, rel), "utf8"))["$id"];
       assert.equal(typeof fileId, "string", `alias '${alias}' -> ${rel} declares a string $id`);
       assert.ok(fileId.length > 0, `alias '${alias}' -> ${rel} declares a non-empty $id`);
       assert.equal(contractId(alias), fileId, `alias '${alias}' resolves to the file's own $id, not a second copy`);
@@ -117,7 +117,7 @@ export default async function registerRegistrySuite(checkAsync) {
       assert.ok(ajv.getSchema(id), `Ajv has the schema registered for '${alias}' (${id})`);
       n++;
     }
-    assert.equal(REPO_ROOT, ROOT, "REPO_ROOT resolves to this checkout root");
+    assert.equal(REPO_ROOT, path.join(ROOT, "packages", "core"), "REPO_ROOT resolves to the @det/core package root ([60] npm-workspaces layout)");
     return `${n} $ids registered in Ajv`;
   });
 
@@ -134,12 +134,12 @@ export default async function registerRegistrySuite(checkAsync) {
   checkAsync("REG-06", "shipped adapter descriptors reference only registered contract $ids", async () => {
     const ids = new Set(Object.values(GOLDEN_IDS));
     const adapterDirs = fs
-      .readdirSync(path.join(ROOT, "adapters"), { withFileTypes: true })
+      .readdirSync(path.join(ROOT, "packages", "core", "adapters"), { withFileTypes: true })
       .filter((e) => e.isDirectory())
       .map((e) => e.name);
     assert.ok(adapterDirs.length >= 3, `found ${adapterDirs.length} adapter directories`);
     for (const dir of adapterDirs) {
-      const p = path.join(ROOT, "adapters", dir, "descriptor.json");
+      const p = path.join(ROOT, "packages", "core", "adapters", dir, "descriptor.json");
       if (!fs.existsSync(p)) continue;
       const d = JSON.parse(fs.readFileSync(p, "utf8"));
       for (const key of ["inputContract", "outputContract"]) {
@@ -150,7 +150,7 @@ export default async function registerRegistrySuite(checkAsync) {
   });
 
   checkAsync("REG-07", "registry resolves from the install/package root, not the process cwd", async () => {
-    const modPath = path.join(ROOT, "dist", "src", "core", "schema-registry.js");
+    const modPath = path.join(ROOT, "packages", "core", "dist", "src", "core", "schema-registry.js");
     const probe = `import { pathToFileURL } from "node:url";
 const { contractId } = await import(pathToFileURL(${JSON.stringify(modPath)}));
 process.stdout.write(contractId("build-manifest"));`;

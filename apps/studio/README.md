@@ -14,7 +14,7 @@ deployment (auth, per-run isolation and trust boundaries are future gates).
 **Primary operator path ([58]):** from the REPOSITORY ROOT (not this dir):
 
 ```bash
-npm run setup   # once: installs both lockfiles + builds the det core
+npm run setup   # once: one root npm ci (single npm-workspaces lockfile, [60]) + builds the det core
 npm run dev     # http://localhost:3000/build — repository examples are cataloged in place
 ```
 
