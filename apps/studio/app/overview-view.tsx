@@ -1,23 +1,23 @@
 "use client";
 
-import Link from "next/link";
 import {
   ApiOutlined,
   FolderOpenOutlined,
   ToolOutlined,
   WarningOutlined,
 } from "@ant-design/icons";
-import { Alert, Button, Card, Tag, Typography } from "antd";
+import { Alert, Button, Card, Flex, Tag, Typography } from "antd";
 
 import type { DetRunSummary } from "@/src/shared/contracts";
 import { RunModeBadge } from "@/src/modules/mapping-review";
 import { ConversionForm, DEMO_PROFILES } from "@/src/modules/conversions";
 
 /**
- * [61] Client view child for the Overview server page: antd light-only
- * presentation for the heading, conversion form, Build Control and Runs
- * cards. All copy, heading ids and hit-target sizes are carried over
- * verbatim from the previous shadcn markup.
+ * [61] Client view child for the Overview server page: stock antd light
+ * presentation (Flex/Typography/Card/Alert only — no custom CSS, no utility
+ * classes) for the heading, conversion form, Build Control and Runs cards.
+ * All copy, heading ids and semantics are carried over verbatim from the
+ * previous markup; the raw h1/h2 elements keep their aria-labelledby targets.
  */
 
 function unknownCount(value: number | null): string {
@@ -26,22 +26,23 @@ function unknownCount(value: number | null): string {
 
 function RunRow({ run }: { run: DetRunSummary }) {
   return (
-    <Link
-      href={`/runs/${encodeURIComponent(run.runId)}`}
-      className="flex flex-wrap items-center gap-x-3 gap-y-1.5 rounded-lg border px-4 py-3 text-sm transition-colors"
-    >
-      <span className="font-medium">{run.label}</span>
-      <RunModeBadge mode={run.mode} />
-      <span className="ml-auto flex items-center gap-2 text-xs">
-        <Typography.Text type="secondary">
-          errors {unknownCount(run.counts.errors)} · warnings{" "}
-          {unknownCount(run.counts.warnings)} · infos {unknownCount(run.counts.infos)}
-        </Typography.Text>
-        <Typography.Text type="secondary" className="font-mono">
-          {run.runId}
-        </Typography.Text>
-      </span>
-    </Link>
+    <Typography.Link href={`/runs/${encodeURIComponent(run.runId)}`}>
+      <Flex wrap="wrap" justify="space-between" align="center" gap={8}>
+        <Flex align="center" gap={8} wrap="wrap">
+          <Typography.Text strong>{run.label}</Typography.Text>
+          <RunModeBadge mode={run.mode} />
+        </Flex>
+        <Flex align="center" gap={8} wrap="wrap">
+          <Typography.Text type="secondary">
+            errors {unknownCount(run.counts.errors)} · warnings{" "}
+            {unknownCount(run.counts.warnings)} · infos {unknownCount(run.counts.infos)}
+          </Typography.Text>
+          <Typography.Text type="secondary" code>
+            {run.runId}
+          </Typography.Text>
+        </Flex>
+      </Flex>
+    </Typography.Link>
   );
 }
 
@@ -53,15 +54,13 @@ export interface OverviewViewProps {
 
 export function OverviewView({ runs, readerErrorCode, readerMessage }: OverviewViewProps) {
   return (
-    <div className="flex flex-col gap-8">
+    <Flex vertical gap={32}>
       <section aria-labelledby="studio-overview-heading">
-        <h1
-          id="studio-overview-heading"
-          className="text-xl font-semibold tracking-tight md:text-2xl"
-        >
+        {/* layout only: neutralize UA heading margins so the Flex gap owns rhythm */}
+        <h1 id="studio-overview-heading" style={{ margin: 0 }}>
           DET Studio
         </h1>
-        <Typography.Paragraph type="secondary" className="mt-2 max-w-3xl text-sm">
+        <Typography.Paragraph type="secondary">
           Review layer over the deterministic det CLI: inspect a conversion run,
           its mapping dispositions and diagnostics, and download validated
           artifacts. The engine owns all conversion logic — Studio never regenerates it.
@@ -73,14 +72,15 @@ export function OverviewView({ runs, readerErrorCode, readerMessage }: OverviewV
       <Card
         size="small"
         title={
-          <span className="flex items-center gap-2">
+          <Flex align="center" gap={8}>
             <ToolOutlined aria-hidden="true" />
-            <h2 className="text-base font-semibold">Build Control</h2>
-          </span>
+            {/* layout only: neutralize UA heading margins */}
+            <h2 style={{ margin: 0 }}>Build Control</h2>
+          </Flex>
         }
       >
-        <Typography.Paragraph type="secondary" className="text-sm">
-          Trigger a real offline <span className="font-mono">det build</span> through the local
+        <Typography.Paragraph type="secondary">
+          Trigger a real offline <Typography.Text code>det build</Typography.Text> through the local
           runner and download verified bundle artifacts. Requires configured env vars; without
           them the Build page shows an explicit not-connected state — never demo data.
         </Typography.Paragraph>
@@ -92,13 +92,14 @@ export function OverviewView({ runs, readerErrorCode, readerMessage }: OverviewV
       <Card
         size="small"
         title={
-          <span className="flex items-center gap-2">
+          <Flex align="center" gap={8}>
             <FolderOpenOutlined aria-hidden="true" />
-            <h2 className="text-base font-semibold">Runs</h2>
-          </span>
+            {/* layout only: neutralize UA heading margins */}
+            <h2 style={{ margin: 0 }}>Runs</h2>
+          </Flex>
         }
       >
-        <Typography.Paragraph type="secondary" className="text-sm">
+        <Typography.Paragraph type="secondary">
           Conversion runs this Studio instance can read. Fixture runs are
           visibly labeled DEMO; live runs come from a configured DET output
           root.
@@ -118,30 +119,28 @@ export function OverviewView({ runs, readerErrorCode, readerMessage }: OverviewV
             }
           />
         ) : runs.length === 0 ? (
-          <p className="flex items-center gap-2 text-sm">
+          <Flex align="center" gap={8} wrap="wrap">
             <WarningOutlined aria-hidden="true" />
             <Typography.Text type="secondary">
               No runs available. Configure STUDIO_DET_RUNS_DIR to point at real
               det output, or unset it for the DEMO fixture.
             </Typography.Text>
-          </p>
+          </Flex>
         ) : (
-          <div className="flex flex-col gap-2.5">
+          <Flex vertical gap={8}>
             {runs.map((run) => (
               <RunRow key={run.runId} run={run} />
             ))}
-          </div>
+          </Flex>
         )}
       </Card>
 
-      <p className="text-xs">
-        <Typography.Text type="secondary">
-          Single local trusted operator UI — not a public/multi-user deployment.
-          Starting a real conversion is intentionally not connected: issue [28]
-          owns the engine bridge.
-        </Typography.Text>
-      </p>
-      <Tag className="w-fit">MVP scope: review · preview · export</Tag>
-    </div>
+      <Typography.Text type="secondary">
+        Single local trusted operator UI — not a public/multi-user deployment.
+        Starting a real conversion is intentionally not connected: issue [28]
+        owns the engine bridge.
+      </Typography.Text>
+      <Tag>MVP scope: review · preview · export</Tag>
+    </Flex>
   );
 }

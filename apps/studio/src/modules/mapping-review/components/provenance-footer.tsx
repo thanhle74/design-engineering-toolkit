@@ -7,11 +7,12 @@
  * unknown facts (null source id/revision/timestamps/counts) render "unknown",
  * never 0, so fixture data can never masquerade as a live conversion.
  *
- * [61] Ant Design light-only Card; the plain <dl> markup is kept so the
- * provenance facts stay as plain, testable label/value pairs.
+ * [61] Ant Design stock light Card; the plain <dl> markup is kept so the
+ * provenance facts stay as plain, testable label/value pairs. Ids and hashes
+ * use antd inline code (`Typography.Text code`).
  */
 import type { ReactNode } from "react";
-import { Card, Typography } from "antd";
+import { Card, Flex, Typography } from "antd";
 import type { StudioRunView } from "@/src/shared/contracts";
 import { RunModeBadge } from "./disposition-badges";
 
@@ -35,13 +36,11 @@ function ProvenanceField({
   testId: string;
 }) {
   return (
-    <div className="flex flex-col gap-0.5">
-      <dt className="text-xs font-medium uppercase tracking-wide">
+    <div>
+      <dt>
         <Typography.Text type="secondary">{label}</Typography.Text>
       </dt>
-      <dd className="text-xs" data-testid={testId}>
-        {children}
-      </dd>
+      <dd data-testid={testId}>{children}</dd>
     </div>
   );
 }
@@ -52,33 +51,43 @@ export function ProvenanceFooter({ run }: { run: StudioRunView }) {
       size="small"
       data-testid="provenance-footer"
       title={
-        <div className="flex flex-wrap items-center gap-2">
+        <Flex wrap="wrap" align="center" gap="small">
           <span>Provenance</span>
           <RunModeBadge mode={run.mode} />
-        </div>
+        </Flex>
       }
     >
-      <Typography.Paragraph type="secondary" className="mb-4">
+      <Typography.Paragraph type="secondary">
         {run.label}
       </Typography.Paragraph>
-      <dl className="grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-3 lg:grid-cols-4">
+      <dl>
         <ProvenanceField label="Run" testId="provenance-run">
-          <span className="font-mono">{run.runId}</span>
+          <Typography.Text code>{run.runId}</Typography.Text>
         </ProvenanceField>
         <ProvenanceField label="Source ID" testId="provenance-source">
-          <span className="font-mono">{unknownIfNull(run.source.sourceId)}</span>
+          <Typography.Text code>
+            {unknownIfNull(run.source.sourceId)}
+          </Typography.Text>
         </ProvenanceField>
         <ProvenanceField label="Revision" testId="provenance-revision">
-          <span className="font-mono">{unknownIfNull(run.source.revisionId)}</span>
+          <Typography.Text code>
+            {unknownIfNull(run.source.revisionId)}
+          </Typography.Text>
         </ProvenanceField>
         <ProvenanceField label="Accessed at" testId="provenance-accessed">
-          <span className="font-mono">{unknownIfNull(run.source.accessedAt)}</span>
+          <Typography.Text code>
+            {unknownIfNull(run.source.accessedAt)}
+          </Typography.Text>
         </ProvenanceField>
         <ProvenanceField label="Profile" testId="provenance-profile">
-          <span className="font-mono">{unknownIfNull(run.profileId)}</span>
+          <Typography.Text code>
+            {unknownIfNull(run.profileId)}
+          </Typography.Text>
         </ProvenanceField>
         <ProvenanceField label="Platform" testId="provenance-platform">
-          <span className="font-mono">{unknownIfNull(run.platformId)}</span>
+          <Typography.Text code>
+            {unknownIfNull(run.platformId)}
+          </Typography.Text>
         </ProvenanceField>
         <ProvenanceField label="Exit code" testId="provenance-exit-code">
           {run.exitCode === null ? UNKNOWN : String(run.exitCode)}
@@ -90,12 +99,12 @@ export function ProvenanceFooter({ run }: { run: StudioRunView }) {
         </ProvenanceField>
         {run.toolCommand && (
           <ProvenanceField label="Tool command" testId="provenance-command">
-            <span className="block break-all font-mono">{run.toolCommand}</span>
+            <Typography.Text code>{run.toolCommand}</Typography.Text>
           </ProvenanceField>
         )}
         {run.generatedAt && (
           <ProvenanceField label="Generated at" testId="provenance-generated">
-            <span className="font-mono">{run.generatedAt}</span>
+            <Typography.Text code>{run.generatedAt}</Typography.Text>
           </ProvenanceField>
         )}
       </dl>

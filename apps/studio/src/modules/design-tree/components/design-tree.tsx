@@ -8,11 +8,11 @@
  * listed under an explicit "Not in plan / unassigned" group — never dropped,
  * never silently attached to a section.
  *
- * [61] Ant Design light-only: the empty state is a calm info Alert, not an
- * error banner.
+ * [61] Ant Design stock light appearance: the empty state is a calm info
+ * Alert, not an error banner; section cards stack in a stock Flex column.
  */
 import { SearchOutlined } from "@ant-design/icons";
-import { Alert, Typography } from "antd";
+import { Alert, Flex, Typography } from "antd";
 import type { StudioMappingView, StudioRunView, StudioSectionView } from "@/src/shared/contracts";
 import { DesignNodeTable } from "./node-table";
 import { SectionCard } from "./section-card";
@@ -24,10 +24,9 @@ function UnassignedGroup({ mappings }: { mappings: readonly StudioMappingView[] 
     <section
       aria-labelledby="studio-unassigned-heading"
       data-testid={UNKNOWN_GROUP_ID}
-      className="mt-4"
     >
-      <h3 className="text-sm font-semibold">Not in plan / unassigned</h3>
-      <Typography.Paragraph type="secondary" className="mb-2 mt-1 text-xs">
+      <h3>Not in plan / unassigned</h3>
+      <Typography.Paragraph type="secondary">
         Mappings the compose plan did not attach to any section. Kept visible —
         never silently dropped.
       </Typography.Paragraph>
@@ -39,7 +38,6 @@ function UnassignedGroup({ mappings }: { mappings: readonly StudioMappingView[] 
 function EmptySectionsAlert({ unmappedCount }: { unmappedCount: number }) {
   return (
     <Alert
-      className="mt-3"
       type="info"
       showIcon
       icon={<SearchOutlined aria-hidden="true" />}
@@ -86,11 +84,9 @@ export function DesignTree({ run }: { run: StudioRunView }) {
       aria-labelledby="studio-design-tree-heading"
       data-testid="design-tree"
     >
-      <h2 className="text-base font-semibold">
-        Source design tree
-        <Typography.Text type="secondary" className="ml-2 text-sm font-normal">
-          {summary}
-        </Typography.Text>
+      <h2>
+        Source design tree{" "}
+        <Typography.Text type="secondary">{summary}</Typography.Text>
       </h2>
       {sections.length === 0 ? (
         <>
@@ -99,7 +95,7 @@ export function DesignTree({ run }: { run: StudioRunView }) {
         </>
       ) : (
         <>
-          <div className="mt-3 flex flex-col gap-4">
+          <Flex vertical gap="middle">
             {sections.map((section) => (
               <SectionCard
                 key={section.sectionId}
@@ -107,7 +103,7 @@ export function DesignTree({ run }: { run: StudioRunView }) {
                 mappings={mappingsBySection.get(section.sectionId) ?? []}
               />
             ))}
-          </div>
+          </Flex>
           {unassigned.length > 0 && <UnassignedGroup mappings={unassigned} />}
         </>
       )}

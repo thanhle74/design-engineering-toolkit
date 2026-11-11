@@ -8,8 +8,8 @@
  * truthful EMPTY state — the provenance footer still renders so a fixture run
  * can never masquerade as live output.
  *
- * [61] Ant Design light-only: the empty state is a calm info Alert and the
- * section separator is an antd Divider.
+ * [61] Ant Design stock light appearance: the empty state is a calm info
+ * Alert, the section separator an antd Divider — no custom styling.
  */
 import { SearchOutlined } from "@ant-design/icons";
 import { Alert, Divider, Typography } from "antd";
@@ -25,9 +25,9 @@ export function MappingReview({ run }: { run: StudioRunView }) {
       aria-labelledby="studio-mapping-review-heading"
       data-testid="mapping-review"
     >
-      <h2 className="text-base font-semibold">
-        Mapping review
-        <Typography.Text type="secondary" className="ml-2 text-sm font-normal">
+      <h2>
+        Mapping review{" "}
+        <Typography.Text type="secondary">
           {run.mappings.length} mapping{run.mappings.length === 1 ? "" : "s"} ·{" "}
           {run.diagnostics.length} diagnostic
           {run.diagnostics.length === 1 ? "" : "s"}
@@ -35,7 +35,6 @@ export function MappingReview({ run }: { run: StudioRunView }) {
       </h2>
       {isEmpty ? (
         <Alert
-          className="mt-3"
           type="info"
           showIcon
           icon={<SearchOutlined aria-hidden="true" />}
@@ -45,14 +44,12 @@ export function MappingReview({ run }: { run: StudioRunView }) {
         />
       ) : (
         <>
-          <div className="mt-3">
-            <MappingReviewTable mappings={run.mappings} />
-          </div>
-          <Divider className="my-4" />
+          <MappingReviewTable mappings={run.mappings} />
+          <Divider />
           <DiagnosticsPanel diagnostics={run.diagnostics} />
         </>
       )}
-      <Divider className="my-4" />
+      <Divider />
       <ProvenanceFooter run={run} />
     </section>
   );

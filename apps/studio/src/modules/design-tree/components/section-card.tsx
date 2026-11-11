@@ -8,32 +8,19 @@
  * ("no composed elements") — truthful, not hidden. The section name MUST stay
  * inside the <h3> (callers and tests query the heading inside the card).
  *
- * [61] Ant Design light-only Card. PARTIAL keeps amber semantics through the
- * antd `gold` Tag plus the same attention background the review rows use —
- * attention, never destructive red. The `#fffbe6` value mirrors the light-only
- * `.mapping-row-needs-review` rule carried in globals.css.
+ * [61] Ant Design stock light Card. PARTIAL is the antd built-in `gold` Tag
+ * plus secondary text — attention, never destructive red. No custom colors
+ * or surfaces are applied.
  */
-import { Card, Tag, Typography } from "antd";
+import { Card, Flex, Tag, Typography } from "antd";
 import type { StudioMappingView, StudioSectionView } from "@/src/shared/contracts";
 import { DesignNodeTable } from "./node-table";
 
 const UNKNOWN = "unknown";
 
-/** Attention amber shared with the needs-review row highlight (light-only). */
-const PARTIAL_SURFACE = "var(--ant-color-warning-bg, #fffbe6)";
-
 function RoleBadge({ role }: { role?: string }) {
   if (!role) {
-    return (
-      <Tag
-        style={{
-          borderStyle: "dashed",
-          color: "var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45))",
-        }}
-      >
-        {UNKNOWN}
-      </Tag>
-    );
+    return <Tag>{UNKNOWN}</Tag>;
   }
   return <Tag>{role}</Tag>;
 }
@@ -53,56 +40,43 @@ export function SectionCard({
       data-section-id={section.sectionId}
       data-order={section.order}
       title={
-        <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-          <span
-            className="font-mono text-xs"
-            style={{ color: "var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45))" }}
-            title="section order"
-          >
+        <Flex wrap="wrap" align="center" gap="small">
+          <Typography.Text type="secondary" title="section order">
             #{section.order}
-          </span>
-          <h3 className="text-sm font-semibold">{section.name}</h3>
-          <Tag className="font-mono">{section.sectionId}</Tag>
+          </Typography.Text>
+          <h3>{section.name}</h3>
+          <Tag>{section.sectionId}</Tag>
           <RoleBadge role={section.role} />
-        </div>
+        </Flex>
       }
     >
-      <Typography.Text type="secondary" className="mb-2 block text-xs">
+      <Typography.Paragraph type="secondary">
         <span data-testid="design-tree-element-count">
           {section.elementCount}{" "}
           {section.elementCount === 1 ? "element" : "elements"}
         </span>
         {" · "}
-        <span className="font-mono">
+        <Typography.Text code>
           {section.sourceLocators.length > 0
             ? section.sourceLocators.join(", ")
             : UNKNOWN}
-        </span>
-      </Typography.Text>
+        </Typography.Text>
+      </Typography.Paragraph>
       {isPartial && (
-        <p
-          data-testid="design-tree-partial"
-          className="mb-2 flex flex-wrap items-center gap-2 rounded-md px-2 py-1.5"
-          style={{ background: PARTIAL_SURFACE }}
-        >
-          <Tag color="gold" className="mb-0">
-            PARTIAL
-          </Tag>
-          <span
-            className="text-xs"
-            style={{ color: "var(--ant-color-warning, #d48806)" }}
-          >
+        <p data-testid="design-tree-partial">
+          <Tag color="gold">PARTIAL</Tag>
+          <Typography.Text type="secondary">
             no composed elements
-          </span>
+          </Typography.Text>
         </p>
       )}
       {mappings.length === 0 ? (
-        <Typography.Paragraph type="secondary" className="text-xs">
+        <Typography.Paragraph type="secondary">
           No node mappings are grouped under this section.
         </Typography.Paragraph>
       ) : (
         <>
-          <Typography.Paragraph type="secondary" className="mb-2 text-xs">
+          <Typography.Paragraph type="secondary">
             {mappings.length} node mapping{mappings.length === 1 ? "" : "s"} in
             plan
           </Typography.Paragraph>

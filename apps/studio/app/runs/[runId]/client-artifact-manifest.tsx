@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { Typography } from "antd";
+import { Flex, Typography } from "antd";
 
 import { ArtifactManifest } from "@/src/modules/artifacts";
 import type { StudioArtifactView } from "@/src/shared/contracts";
@@ -67,13 +67,13 @@ export function ClientArtifactManifest({
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <Flex vertical gap={8}>
       <ArtifactManifest artifacts={artifacts} onDownload={onDownload} />
       {error !== null ? (
-        <p role="alert" className="text-xs">
+        <p role="alert">
           <Typography.Text type="danger">{error}</Typography.Text>
         </p>
       ) : null}
-    </div>
+    </Flex>
   );
 }

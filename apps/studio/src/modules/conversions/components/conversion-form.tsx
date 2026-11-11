@@ -10,16 +10,16 @@
  *
  * There is deliberately NO Figma token field: [28]'s engine owns Figma access.
  *
- * [61] Ant Design light-only, deliberately WITHOUT antd Form: the plain
- * <form onSubmit> + requestSubmit flow and the plain <p role="alert">
+ * [61] Ant Design stock light appearance, deliberately WITHOUT antd Form: the
+ * plain <form onSubmit> + requestSubmit flow and the plain <p role="alert">
  * validation error are kept (no antd Form validation machinery, no progress
  * states). antd Selects use the `options` prop and carry the same ids the
  * labels point at, so label association keeps working through antd's inner
- * search input.
+ * search input. Layout uses stock antd Flex/Grid primitives only.
  */
 import * as React from "react";
 import { ApiOutlined } from "@ant-design/icons";
-import { Button, Input, Select, Typography } from "antd";
+import { Button, Col, Flex, Input, Row, Select, Typography } from "antd";
 
 import { DEFAULT_OUTPUT_TARGET, OUTPUT_TARGET_OPTIONS } from "../conversion-options";
 import { parseFigmaInput, type FigmaInputParseResult } from "../figma-input";
@@ -96,141 +96,130 @@ export function ConversionForm({ profiles, className }: ConversionFormProps) {
   }
 
   return (
-    <section aria-labelledby="new-conversion-heading" className={"w-full max-w-2xl " + (className ?? "")}>
-      <h2 id="new-conversion-heading" className="text-base font-semibold tracking-tight">
-        New conversion
-      </h2>
-      <Typography.Paragraph type="secondary" className="mt-1 text-xs">
+    <section aria-labelledby="new-conversion-heading" className={className}>
+      <h2 id="new-conversion-heading">New conversion</h2>
+      <Typography.Paragraph type="secondary">
         Point the studio at one Figma frame to convert. Studio only prepares and reviews the
         request — the det engine performs the conversion.
       </Typography.Paragraph>
 
-      <form className="mt-4 flex flex-col gap-5" onSubmit={handleSubmit} noValidate>
-        <div className="flex flex-col gap-1.5">
-          <label
-            htmlFor={SOURCE_INPUT_ID}
-            className="text-sm font-medium"
-          >
-            Figma design source
-          </label>
-          <Input
-            id={SOURCE_INPUT_ID}
-            name="figmaSource"
-            type="text"
-            inputMode="url"
-            autoComplete="off"
-            spellCheck={false}
-            placeholder="https://www.figma.com/design/<fileKey>/<fileName>?node-id=245-2 — or 245:2"
-            value={sourceInput}
-            onChange={handleSourceChange}
-            onKeyDown={(event) => {
-              if (event.key === "Enter") {
-                // Uniform keyboard submit: implicit form submission for Enter in
-                // text inputs varies by engine, so request it exactly once here.
-                event.preventDefault();
-                event.currentTarget.form?.requestSubmit();
-              }
-            }}
-            status={validationError ? "error" : undefined}
-            aria-invalid={validationError ? true : undefined}
-            aria-describedby={validationError ? `${SOURCE_ERROR_ID} ${SOURCE_HELP_ID}` : SOURCE_HELP_ID}
-            className="font-mono"
-          />
-          {validationError ? (
-            <p
-              id={SOURCE_ERROR_ID}
-              role="alert"
-              className="text-xs"
-              style={{ color: "var(--ant-color-error, #ff4d4f)" }}
-            >
-              {validationError.message}
-            </p>
-          ) : null}
-          <p id={SOURCE_HELP_ID} className="text-xs">
-            <Typography.Text type="secondary">
-              Accepted: a Figma design-file URL including node-id (…?node-id=1-2), or a bare node
-              id like 245:2. A URL without node-id is rejected — the engine needs a node to extract.
-            </Typography.Text>
-          </p>
-        </div>
-
-        <div className="grid gap-5 sm:grid-cols-2">
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor={TARGET_SELECT_ID} className="text-sm font-medium">
-              Output target
-            </label>
-            {/* antd Select keeps the id on its inner search input, so the
-                label association above still names the combobox. */}
-            <Select
-              id={TARGET_SELECT_ID}
-              className="w-full"
-              value={target}
-              onChange={(value) => setTarget(value as ConversionOutputTarget)}
-              options={OUTPUT_TARGET_OPTIONS.map((option) => ({
-                value: option.value,
-                label: option.label,
-              }))}
+      <form onSubmit={handleSubmit} noValidate>
+        <Flex vertical gap="middle">
+          <Flex vertical gap="small">
+            <label htmlFor={SOURCE_INPUT_ID}>Figma design source</label>
+            <Input
+              id={SOURCE_INPUT_ID}
+              name="figmaSource"
+              type="text"
+              inputMode="url"
+              autoComplete="off"
+              spellCheck={false}
+              placeholder="https://www.figma.com/design/<fileKey>/<fileName>?node-id=245-2 — or 245:2"
+              value={sourceInput}
+              onChange={handleSourceChange}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  // Uniform keyboard submit: implicit form submission for Enter in
+                  // text inputs varies by engine, so request it exactly once here.
+                  event.preventDefault();
+                  event.currentTarget.form?.requestSubmit();
+                }
+              }}
+              status={validationError ? "error" : undefined}
+              aria-invalid={validationError ? true : undefined}
+              aria-describedby={validationError ? `${SOURCE_ERROR_ID} ${SOURCE_HELP_ID}` : SOURCE_HELP_ID}
             />
-          </div>
+            {validationError ? (
+              <p id={SOURCE_ERROR_ID} role="alert">
+                <Typography.Text type="danger">
+                  {validationError.message}
+                </Typography.Text>
+              </p>
+            ) : null}
+            <p id={SOURCE_HELP_ID}>
+              <Typography.Text type="secondary">
+                Accepted: a Figma design-file URL including node-id (…?node-id=1-2), or a bare node
+                id like 245:2. A URL without node-id is rejected — the engine needs a node to extract.
+              </Typography.Text>
+            </p>
+          </Flex>
 
-          <div className="flex flex-col gap-1.5">
-            {profilesConfigured ? (
-              <>
-                <label htmlFor={PROFILE_SELECT_ID} className="text-sm font-medium">
-                  Project profile
-                </label>
+          <Row gutter={16}>
+            <Col xs={24} md={12}>
+              <Flex vertical gap="small">
+                <label htmlFor={TARGET_SELECT_ID}>Output target</label>
+                {/* antd Select keeps the id on its inner search input, so the
+                    label association above still names the combobox. */}
                 <Select
-                  id={PROFILE_SELECT_ID}
-                  className="w-full"
-                  value={selectedProfileId || undefined}
-                  onChange={(value) => setProfileId(value)}
-                  options={availableProfiles.map((profile) => ({
-                    value: profile.id,
-                    label: profile.name,
+                  id={TARGET_SELECT_ID}
+                  // layout only
+                  style={{ width: "100%" }}
+                  value={target}
+                  onChange={(value) => setTarget(value as ConversionOutputTarget)}
+                  options={OUTPUT_TARGET_OPTIONS.map((option) => ({
+                    value: option.value,
+                    label: option.label,
                   }))}
                 />
-              </>
-            ) : (
-              <div
-                data-testid="profiles-not-configured"
-                className="px-4 py-3"
-                style={{
-                  border: "1px dashed var(--ant-color-border, #d9d9d9)",
-                  borderRadius: "var(--ant-border-radius, 6px)",
-                }}
-              >
-                <p className="text-xs font-medium">Profile: NOT CONFIGURED</p>
-                <Typography.Paragraph type="secondary" className="mt-0.5 text-xs">
-                  No project profiles configured — profiles come from local DET profile
-                  configuration.
-                </Typography.Paragraph>
-              </div>
-            )}
-          </div>
-        </div>
+              </Flex>
+            </Col>
+            <Col xs={24} md={12}>
+              <Flex vertical gap="small">
+                {profilesConfigured ? (
+                  <>
+                    <label htmlFor={PROFILE_SELECT_ID}>Project profile</label>
+                    <Select
+                      id={PROFILE_SELECT_ID}
+                      // layout only
+                      style={{ width: "100%" }}
+                      value={selectedProfileId || undefined}
+                      onChange={(value) => setProfileId(value)}
+                      options={availableProfiles.map((profile) => ({
+                        value: profile.id,
+                        label: profile.name,
+                      }))}
+                    />
+                  </>
+                ) : (
+                  // Plain div on purpose: the form's single <p role="alert">
+                  // validation error must stay the only alert role here.
+                  <div data-testid="profiles-not-configured">
+                    <Typography.Text strong>
+                      Profile: NOT CONFIGURED
+                    </Typography.Text>
+                    <Typography.Paragraph type="secondary">
+                      No project profiles configured — profiles come from
+                      local DET profile configuration.
+                    </Typography.Paragraph>
+                  </div>
+                )}
+              </Flex>
+            </Col>
+          </Row>
 
-        <div className="flex flex-col gap-1.5">
-          <div className="flex flex-wrap items-center gap-3">
-            <Button type="primary" htmlType="submit">
-              Review conversion request
-            </Button>
-            <span className="inline-flex items-center gap-1.5 text-xs">
-              <ApiOutlined aria-hidden="true" />
+          <Flex vertical gap="small">
+            <Flex wrap="wrap" align="center" gap="small">
+              <Button type="primary" htmlType="submit">
+                Review conversion request
+              </Button>
+              <Flex align="center" gap="small">
+                <ApiOutlined aria-hidden="true" />
+                <Typography.Text type="secondary">
+                  Execution not connected — issue [28] owns the engine bridge.
+                </Typography.Text>
+              </Flex>
+            </Flex>
+            <p>
               <Typography.Text type="secondary">
-                Execution not connected — issue [28] owns the engine bridge.
+                Submitting only validates this input and shows a request summary. No conversion runs
+                and nothing is stored.
               </Typography.Text>
-            </span>
-          </div>
-          <p className="text-xs">
-            <Typography.Text type="secondary">
-              Submitting only validates this input and shows a request summary. No conversion runs
-              and nothing is stored.
-            </Typography.Text>
-          </p>
-        </div>
+            </p>
+          </Flex>
+        </Flex>
       </form>
 
-      {summary ? <NotConnectedResult summary={summary} className="mt-5" /> : null}
+      {summary ? <NotConnectedResult summary={summary} /> : null}
     </section>
   );
 }

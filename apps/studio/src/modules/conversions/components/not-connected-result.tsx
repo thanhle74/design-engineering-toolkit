@@ -8,10 +8,10 @@
  * There is intentionally NO spinner, NO progress state and NO success claim —
  * no conversion has run.
  *
- * [61] Ant Design light-only: antd Card + dashed neutral Tag + a calm info
- * Alert carrying the exact not-connected copy.
+ * [61] Ant Design stock light appearance: antd Card + default Tag + a calm
+ * info Alert carrying the exact not-connected copy.
  */
-import { Alert, Card, Tag, Typography } from "antd";
+import { Alert, Card, Flex, Tag, Typography } from "antd";
 
 import { TARGET_LABELS } from "../conversion-options";
 import type { ConversionRequestSummary } from "../types";
@@ -24,7 +24,7 @@ interface NotConnectedResultProps {
 interface SummaryRow {
   label: string;
   value: string;
-  /** Unknown facts render as unknown text, never as a plausible-looking value. */
+  /** Id-like facts render as antd inline code; unknown facts stay plain. */
   mono?: boolean;
 }
 
@@ -50,20 +50,22 @@ export function NotConnectedResult({ summary, className }: NotConnectedResultPro
       aria-label="Conversion request summary"
       className={className}
       title={
-        <div className="flex flex-wrap items-center gap-2">
-          <h3 className="text-sm font-semibold">Conversion request summary</h3>
-          <Tag style={{ borderStyle: "dashed" }}>NOT CONNECTED</Tag>
-        </div>
+        <Flex wrap="wrap" align="center" gap="small">
+          <h3>Conversion request summary</h3>
+          <Tag>NOT CONNECTED</Tag>
+        </Flex>
       }
     >
-      <dl className="grid gap-x-6 gap-y-2 sm:grid-cols-2">
+      <dl>
         {rows.map((row) => (
-          <div key={row.label} className="min-w-0">
-            <dt className="text-xs">
+          <div key={row.label}>
+            <dt>
               <Typography.Text type="secondary">{row.label}</Typography.Text>
             </dt>
-            <dd className={"truncate text-sm " + (row.mono ? "font-mono" : "")}>
-              {!row.mono && row.value.startsWith("Not ") ? (
+            <dd>
+              {row.mono ? (
+                <Typography.Text code>{row.value}</Typography.Text>
+              ) : row.value.startsWith("Not ") ? (
                 <Typography.Text type="secondary">{row.value}</Typography.Text>
               ) : (
                 row.value
@@ -74,14 +76,13 @@ export function NotConnectedResult({ summary, className }: NotConnectedResultPro
       </dl>
 
       {summary.inputKind === "bare" ? (
-        <Typography.Paragraph type="secondary" className="mt-3 text-xs">
+        <Typography.Paragraph type="secondary">
           Bare node id: no file key was provided. Paste the full Figma design URL (with
           ?node-id=…) to include the file the engine would read.
         </Typography.Paragraph>
       ) : null}
 
       <Alert
-        className="mt-4"
         type="info"
         showIcon
         title="Conversion execution is not connected"

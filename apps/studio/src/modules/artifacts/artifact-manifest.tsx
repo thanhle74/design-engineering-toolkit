@@ -20,9 +20,10 @@
  *    data or an artifact not exposed for download).
  *  - Empty manifest renders a truthful EMPTY state, never an empty table.
  *
- * [61] Ant Design light-only: Table via the `columns` prop (no dot-notation
- * subcomponents), the hash tooltip rides the cell via `onCell`, and the empty
- * state stays a custom div so no antd built-in empty table is ever rendered.
+ * [61] Ant Design stock light appearance: Table via the `columns` prop (no
+ * dot-notation subcomponents), the hash tooltip rides the cell via `onCell`,
+ * ids/hashes are antd inline code, and the empty state stays a custom div so
+ * no antd built-in empty table is ever rendered.
  */
 import type { HTMLAttributes, ReactNode } from "react";
 import {
@@ -79,9 +80,6 @@ function shortHash(hash: string): string {
 const UNSAFE_PATH_TITLE =
   "Manifest files must be relative paths under the run output directory. This absolute-looking path is withheld and never rendered.";
 
-/** antd light-theme tertiary text (CSS-var first, light-only fallback). */
-const SECONDARY_TEXT = "var(--ant-color-text-tertiary, rgba(0, 0, 0, 0.45))";
-
 /**
  * antd `onRow` prop bags accept arbitrary DOM attributes, but React's
  * `HTMLAttributes` type has no `data-*` index signature — a narrow cast keeps
@@ -101,15 +99,11 @@ export function ArtifactManifest({
     {
       title: "Role",
       width: 160,
-      render: (_, artifact) => <Tag className="font-mono">{artifact.role}</Tag>,
+      render: (_, artifact) => <Tag>{artifact.role}</Tag>,
     },
     {
       title: "File",
-      render: (_, artifact) => (
-        <span className="font-mono text-xs">
-          <ArtifactFileCell file={artifact.file} />
-        </span>
-      ),
+      render: (_, artifact) => <ArtifactFileCell file={artifact.file} />,
     },
     {
       title: "Schema",
@@ -123,13 +117,11 @@ export function ArtifactManifest({
       onCell: (artifact) => ({ title: artifact.contentHash ?? undefined }),
       render: (_, artifact) =>
         artifact.contentHash ? (
-          <span className="font-mono text-xs">
+          <Typography.Text code>
             {shortHash(artifact.contentHash)}
-          </span>
+          </Typography.Text>
         ) : (
-          <span className="font-mono text-xs" style={{ color: SECONDARY_TEXT }}>
-            —
-          </span>
+          <Typography.Text type="secondary">—</Typography.Text>
         ),
     },
     {
@@ -146,7 +138,7 @@ export function ArtifactManifest({
     <Card
       size="small"
       data-testid="artifact-manifest"
-      title={<h2 className="text-base font-semibold">Artifacts</h2>}
+      title={<h2>Artifacts</h2>}
       extra={
         artifacts.length > 0 ? (
           <Tag data-testid="artifact-count">
@@ -155,7 +147,7 @@ export function ArtifactManifest({
         ) : undefined
       }
     >
-      <Typography.Paragraph type="secondary" className="mb-4">
+      <Typography.Paragraph type="secondary">
         Artifact manifest from the det run. Downloads are handed to the page
         and served only for reader-validated files.
       </Typography.Paragraph>
@@ -183,25 +175,16 @@ export function ArtifactManifest({
  */
 function EmptyManifest(): ReactNode {
   return (
-    <div
-      data-testid="artifacts-empty"
-      className="flex flex-col items-center gap-2 px-4 py-10 text-center"
-    >
+    <div data-testid="artifacts-empty">
       <Empty
-        image={
-          <InboxOutlined
-            aria-hidden="true"
-            className="text-2xl"
-            style={{ color: SECONDARY_TEXT }}
-          />
-        }
+        image={<InboxOutlined aria-hidden="true" />}
         description={
           <>
-            <p className="text-sm font-medium">No artifacts in this run</p>
-            <Typography.Text type="secondary" className="text-xs">
+            <Typography.Text strong>No artifacts in this run</Typography.Text>
+            <Typography.Paragraph type="secondary">
               When the run writes validated artifacts, they are listed here
               with their role, schema and content hash.
-            </Typography.Text>
+            </Typography.Paragraph>
           </>
         }
       />
@@ -215,7 +198,7 @@ function EmptyManifest(): ReactNode {
  */
 function ArtifactFileCell({ file }: { file?: string }) {
   if (!file) {
-    return <span style={{ color: SECONDARY_TEXT }}>—</span>;
+    return <Typography.Text type="secondary">—</Typography.Text>;
   }
   if (isUnsafeArtifactFile(file)) {
     return (
@@ -229,45 +212,36 @@ function ArtifactFileCell({ file }: { file?: string }) {
       </Tag>
     );
   }
-  return <span className="break-all">{file}</span>;
+  return <Typography.Text code>{file}</Typography.Text>;
 }
 
 /**
  * schemaRef is a reference string, not guaranteed to be a URL: http(s)
- * references render as external links, everything else as plain text. Both
- * truncate visually and keep the full value in the tooltip title.
+ * references render as external links, everything else as secondary text.
+ * Both keep the full value in the tooltip title.
  */
 function SchemaRefCell({ schemaRef }: { schemaRef: string }) {
-  const truncateStyle = {
-    maxWidth: 192,
-    overflow: "hidden" as const,
-    textOverflow: "ellipsis" as const,
-    whiteSpace: "nowrap" as const,
-  };
   if (/^https?:\/\//i.test(schemaRef)) {
     return (
-      <a
+      <Typography.Link
         href={schemaRef}
         target="_blank"
         rel="noreferrer"
         title={schemaRef}
         data-testid="artifact-schema-link"
-        className="block text-xs underline underline-offset-4"
-        style={truncateStyle}
       >
         {schemaRef}
-      </a>
+      </Typography.Link>
     );
   }
   return (
-    <span
+    <Typography.Text
+      type="secondary"
       title={schemaRef}
       data-testid="artifact-schema-text"
-      className="block text-xs"
-      style={{ ...truncateStyle, color: SECONDARY_TEXT }}
     >
       {schemaRef}
-    </span>
+    </Typography.Text>
   );
 }
 
@@ -301,7 +275,6 @@ function DownloadCell({
       <span
         tabIndex={0}
         data-testid={`artifact-download-disabled-${artifact.artifactId}`}
-        className="inline-flex cursor-not-allowed"
       >
         <Button
           size="small"

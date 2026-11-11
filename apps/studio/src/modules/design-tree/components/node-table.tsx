@@ -8,9 +8,10 @@
  * mapping-review module public interface — the canonical vocabulary is not
  * re-defined here.
  *
- * [61] Ant Design Table (`columns` prop — no dot-notation subcomponents). The
- * wrapper div keeps the caller-visible `data-testid` around the table so the
- * grouped row assertions do not depend on antd's internal markup.
+ * [61] Ant Design stock light Table (`columns` prop — no dot-notation
+ * subcomponents); node ids render as antd inline code. The wrapper div keeps
+ * the caller-visible `data-testid` around the table so the grouped row
+ * assertions do not depend on antd's internal markup.
  */
 import type { HTMLAttributes } from "react";
 import { Table, Typography } from "antd";
@@ -39,15 +40,17 @@ const columns: ColumnsType<StudioMappingView> = [
   {
     title: "Node id",
     render: (_, mapping) => (
-      <span className="font-mono text-xs" title={mapping.nodeId}>
+      <Typography.Text code title={mapping.nodeId}>
         {mapping.nodeId}
-      </span>
+      </Typography.Text>
     ),
   },
   {
     title: "Source name",
     render: (_, mapping) => (
-      <span className="text-xs">{mapping.sourceName ?? UNKNOWN}</span>
+      <Typography.Text type="secondary">
+        {mapping.sourceName ?? UNKNOWN}
+      </Typography.Text>
     ),
   },
   {

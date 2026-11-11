@@ -1,37 +1,17 @@
 "use client";
 
-import { App as AntdApp, ConfigProvider, theme, type ThemeConfig } from "antd";
+import { App as AntdApp } from "antd";
 
 /**
- * [61] Light-only Ant Design root providers.
+ * [61] DET Studio root providers — stock Ant Design light, no theme.
  *
- * `defaultAlgorithm` is set explicitly: Studio is light-only — no dark
- * algorithm, no theme toggle, no OS-following. Ant Design is the single source
- * of component theming; Tailwind stays only for layout utilities. The App
- * wrapper pairs with ConfigProvider so antd message/notification context works
- * without per-call contextHolder (used by the build launcher's 409 feedback).
- *
- * Tokens: 44px default control height carries the "generous 44px+ click
- * targets" operator requirement into every Button/Input/Select; everything
- * else stays on antd's calm neutral light defaults.
+ * There is intentionally NO ConfigProvider and NO ThemeConfig: Ant Design's
+ * out-of-the-box default theme IS the light theme, so light-only costs no
+ * configuration (no algorithm choice, no token overrides, no dark mode
+ * anywhere). The only wrapper kept is antd's `App`, so `App.useApp()`
+ * message/notification context resolves to the real API without per-call
+ * contextHolder (the build launcher's feedback path may use it).
  */
-export const STUDIO_ANTD_THEME: ThemeConfig = {
-  algorithm: theme.defaultAlgorithm,
-  token: {
-    controlHeight: 44,
-    borderRadius: 6,
-    fontFamily:
-      "var(--font-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
-  },
-  components: {
-    Menu: { itemHeight: 44 },
-  },
-};
-
 export function StudioProviders({ children }: { children: React.ReactNode }) {
-  return (
-    <ConfigProvider theme={STUDIO_ANTD_THEME}>
-      <AntdApp>{children}</AntdApp>
-    </ConfigProvider>
-  );
+  return <AntdApp>{children}</AntdApp>;
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import { Button, Typography } from "antd";
+import { Button, Flex, Typography } from "antd";
 
 import type { StudioRunMode } from "@/src/shared/contracts";
 import { RunModeBadge } from "@/src/modules/mapping-review";
@@ -9,7 +9,8 @@ import { RunModeBadge } from "@/src/modules/mapping-review";
 /**
  * [61] Client view child for the run page header: the back-to-overview
  * button, the run label heading, the engine-emitted mode badge and the mono
- * run id. Copy and structure carried over verbatim from the shadcn markup.
+ * run id. Copy and structure carried over verbatim; stock antd only — the raw
+ * h1 keeps its heading semantics, the run id uses the stock `Text code` look.
  */
 export function RunHeader({
   label,
@@ -21,22 +22,22 @@ export function RunHeader({
   runId: string;
 }) {
   return (
-    <div className="flex flex-col gap-3">
+    <Flex vertical gap={8} align="flex-start">
       <Button
         type="text"
         href="/"
         icon={<ArrowLeftOutlined aria-hidden="true" />}
-        className="w-fit self-start"
       >
         Overview
       </Button>
-      <div className="flex flex-wrap items-center gap-2.5">
-        <h1 className="text-xl font-semibold tracking-tight md:text-2xl">{label}</h1>
+      <Flex wrap="wrap" align="center" gap={8}>
+        {/* layout only: neutralize UA heading margins so the Flex gap owns rhythm */}
+        <h1 style={{ margin: 0 }}>{label}</h1>
         <RunModeBadge mode={mode} />
-      </div>
-      <p className="font-mono text-xs">
-        <Typography.Text type="secondary">{runId}</Typography.Text>
-      </p>
-    </div>
+      </Flex>
+      <Typography.Text type="secondary" code>
+        {runId}
+      </Typography.Text>
+    </Flex>
   );
 }

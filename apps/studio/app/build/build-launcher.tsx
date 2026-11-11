@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { CaretRightOutlined, ToolOutlined, WarningOutlined } from "@ant-design/icons";
-import { Alert, Button, Card, Table, Tag, Typography } from "antd";
-import type { TableColumnsType } from "antd";
+import { Alert, Button, Card, Descriptions, Flex, List, Table, Tag, Typography } from "antd";
+import type { DescriptionsProps, TableColumnsType } from "antd";
 
 import type { StudioBuildStageView } from "@/src/shared/contracts";
 
@@ -15,6 +14,11 @@ import type { StudioBuildStageView } from "@/src/shared/contracts";
  * manifest, capped diagnostics tails, timeout/spawn/interrupt truths. No
  * fabricated progress, no demo data, and completion links to the bundle run
  * where downloads are hash-verified.
+ *
+ * [61] Stock antd light presentation only: Flex/Typography/Card/Descriptions/
+ * List/Table primitives, built-in Tag color presets and the stock `Text code`
+ * inline-code look for mono tokens. No custom CSS, no utility classes. The two
+ * remaining inline styles are pure layout (documented inline).
  */
 
 export interface BuildLauncherEntry {
@@ -96,12 +100,37 @@ function stateTag(state: BuildJobView["state"], exitCode: number | null) {
   }
 }
 
+/** Declared provenance paths of one build config, as stock antd label/value pairs. */
+function declaredDescriptions(entry: BuildLauncherEntry): DescriptionsProps["items"] {
+  const mono = (value: string) => <Typography.Text code>{value}</Typography.Text>;
+  const items: NonNullable<DescriptionsProps["items"]> = [
+    { key: "profile", label: "profile", children: mono(entry.profileId) },
+    { key: "design-node", label: "design node", children: mono(entry.designSource.designNode) },
+    { key: "design-file", label: "design file", children: mono(entry.designSource.designFile) },
+    { key: "profile-file", label: "profile file", children: mono(entry.declaredPaths.profile) },
+  ];
+  if (entry.declaredPaths.probeProject !== undefined) {
+    items.push({ key: "probe-project", label: "probe project", children: mono(entry.declaredPaths.probeProject) });
+  }
+  if (entry.declaredPaths.registry !== undefined) {
+    items.push({ key: "registry", label: "registry", children: mono(entry.declaredPaths.registry) });
+  }
+  items.push(
+    { key: "bindings", label: "bindings", children: mono(entry.declaredPaths.bindings) },
+    { key: "content", label: "content", children: mono(entry.declaredPaths.content) }
+  );
+  if (entry.declaredPaths.projection !== undefined) {
+    items.push({ key: "projection", label: "projection", children: mono(entry.declaredPaths.projection) });
+  }
+  return items;
+}
+
 function StageTable({ stages }: { stages: BuildStageLite[] | StudioBuildStageView[] }) {
   const columns: TableColumnsType<StageRow> = [
     {
       title: "Stage",
       dataIndex: "stage",
-      render: (_, record: StageRow) => <span className="font-mono">{record.stage}</span>,
+      render: (_, record: StageRow) => <Typography.Text code>{record.stage}</Typography.Text>,
     },
     {
       title: "Status",
@@ -116,7 +145,7 @@ function StageTable({ stages }: { stages: BuildStageLite[] | StudioBuildStageVie
     {
       title: "Exit code",
       dataIndex: "exitCode",
-      render: (_, record: StageRow) => <span className="font-mono">{record.exitCode}</span>,
+      render: (_, record: StageRow) => <Typography.Text code>{record.exitCode}</Typography.Text>,
     },
   ];
   return (
@@ -130,27 +159,6 @@ function StageTable({ stages }: { stages: BuildStageLite[] | StudioBuildStageVie
   );
 }
 
-function DeclaredPath({
-  label,
-  value,
-  className,
-}: {
-  label: string;
-  value: string;
-  className?: string;
-}) {
-  return (
-    <div className={className === undefined ? "flex gap-1" : `flex gap-1 ${className}`}>
-      <dt className="shrink-0">
-        <Typography.Text type="secondary">{label}</Typography.Text>
-      </dt>
-      <dd className="font-mono">
-        <Typography.Text type="secondary">{value}</Typography.Text>
-      </dd>
-    </div>
-  );
-}
-
 function JobPanel({ job }: { job: BuildJobView }) {
   const completed = job.state === "exited" && job.exitCode === 0;
   const failedButBundle =
@@ -160,14 +168,14 @@ function JobPanel({ job }: { job: BuildJobView }) {
       size="small"
       aria-live="polite"
       title={
-        <span className="flex flex-wrap items-center gap-2">
+        <Flex wrap="wrap" align="center" gap={8}>
           {stateTag(job.state, job.exitCode)}
-          <span className="font-mono text-sm">{job.runId}</span>
+          <Typography.Text code>{job.runId}</Typography.Text>
           <Typography.Text type="secondary">config {job.configId}</Typography.Text>
-        </span>
+        </Flex>
       }
     >
-      <div className="flex flex-col gap-4">
+      <Flex vertical gap={16}>
         <Typography.Text type="secondary">
           {job.startedAt === null ? "not started" : `started ${job.startedAt}`}
           {job.finishedAt === null ? " · not finished yet" : ` · finished ${job.finishedAt}`}
@@ -212,9 +220,9 @@ function JobPanel({ job }: { job: BuildJobView }) {
             description={
               <>
                 The bundle is written and now listed as a live run.{" "}
-                <Link className="underline" href={`/runs/${encodeURIComponent(job.runId)}`}>
+                <Typography.Link href={`/runs/${encodeURIComponent(job.runId)}`}>
                   Open the bundle run
-                </Link>{" "}
+                </Typography.Link>{" "}
                 — artifacts are served only after byte-verification against the build manifest.
                 Native Page Builder HTML stays source/download only; no Magento storefront or Admin
                 preview is claimed.
@@ -232,9 +240,9 @@ function JobPanel({ job }: { job: BuildJobView }) {
             description={
               <>
                 The engine still wrote a truthful partial manifest (see the stage table).{" "}
-                <Link className="underline" href={`/runs/${encodeURIComponent(job.runId)}`}>
+                <Typography.Link href={`/runs/${encodeURIComponent(job.runId)}`}>
                   Open the partial bundle run
-                </Link>{" "}
+                </Typography.Link>{" "}
                 — it stays visibly failed there.
               </>
             }
@@ -242,42 +250,42 @@ function JobPanel({ job }: { job: BuildJobView }) {
         ) : null}
 
         {job.manifestSummary !== null ? (
-          <div className="flex flex-col gap-2">
+          <Flex vertical gap={8}>
             <StageTable stages={job.manifestSummary.stages} />
-            <Typography.Text type="secondary" className="text-xs">
+            <Typography.Text type="secondary">
               {job.manifestSummary.gaps.length} manifest gap(s) · {job.manifestSummary.outputCount}{" "}
               declared output(s) · source{" "}
-              <span className="font-mono">
+              <Typography.Text code>
                 {job.manifestSummary.sourceId}@{job.manifestSummary.revisionId}
-              </span>{" "}
-              · platform <span className="font-mono">{job.manifestSummary.platformId}</span>. Full
-              gap detail and verified downloads live on the run page.
+              </Typography.Text>{" "}
+              · platform <Typography.Text code>{job.manifestSummary.platformId}</Typography.Text>.
+              Full gap detail and verified downloads live on the run page.
             </Typography.Text>
-          </div>
+          </Flex>
         ) : job.state === "exited" ? (
-          <Typography.Text type="secondary" className="text-xs">
+          <Typography.Text type="secondary">
             No bundle manifest was written (the build stopped before any stage ran — e.g. an
             invalid config). Nothing is listed as a run for this id.
           </Typography.Text>
         ) : null}
 
         {job.stderrTail !== "" ? (
-          <div>
-            <h3 className="mb-1 text-xs font-semibold">stderr tail</h3>
-            <pre className="max-h-40 overflow-auto rounded-md border p-2 text-xs">
-              {job.stderrTail}
-            </pre>
-          </div>
+          <Flex vertical gap={4}>
+            {/* layout only: neutralize UA heading margins */}
+            <h3 style={{ margin: 0 }}>stderr tail</h3>
+            {/* layout only: contain the log tail with a capped scroll area */}
+            <pre style={{ margin: 0, overflow: "auto", maxHeight: 160 }}>{job.stderrTail}</pre>
+          </Flex>
         ) : null}
         {job.stdoutTail !== "" && !completed ? (
-          <div>
-            <h3 className="mb-1 text-xs font-semibold">stdout tail</h3>
-            <pre className="max-h-40 overflow-auto rounded-md border p-2 text-xs">
-              {job.stdoutTail}
-            </pre>
-          </div>
+          <Flex vertical gap={4}>
+            {/* layout only: neutralize UA heading margins */}
+            <h3 style={{ margin: 0 }}>stdout tail</h3>
+            {/* layout only: contain the log tail with a capped scroll area */}
+            <pre style={{ margin: 0, overflow: "auto", maxHeight: 160 }}>{job.stdoutTail}</pre>
+          </Flex>
         ) : null}
-      </div>
+      </Flex>
     </Card>
   );
 }
@@ -363,7 +371,7 @@ export function BuildLauncher({
   const busy = job !== null && !TERMINAL_STATES.has(job.state);
 
   return (
-    <div className="flex flex-col gap-8">
+    <Flex vertical gap={32}>
       {!runnerReady ? (
         <Alert
           type="error"
@@ -372,18 +380,18 @@ export function BuildLauncher({
           message="Runner not ready"
           description={
             <>
-              {runnerReason} Start Studio with <span className="font-mono">npm run dev</span> from
-              the repository root (it defaults STUDIO_DET_RUNS_DIR to{" "}
-              <span className="font-mono">out/studio-runs</span>) or set it explicitly — optionally
-              with STUDIO_DET_CLI. See apps/studio/README.md. The catalog below stays read-only
-              until then.
+              {runnerReason} Start Studio with <Typography.Text code>npm run dev</Typography.Text>{" "}
+              from the repository root (it defaults STUDIO_DET_RUNS_DIR to{" "}
+              <Typography.Text code>out/studio-runs</Typography.Text>) or set it explicitly —
+              optionally with STUDIO_DET_CLI. See apps/studio/README.md. The catalog below stays
+              read-only until then.
             </>
           }
         />
       ) : null}
 
       {error !== null ? (
-        <p role="alert" className="text-sm">
+        <p role="alert">
           <Typography.Text type="danger">{error}</Typography.Text>
         </p>
       ) : null}
@@ -397,28 +405,33 @@ export function BuildLauncher({
           icon={<WarningOutlined aria-hidden="true" />}
           message={`${invalid.length} catalog entr${invalid.length === 1 ? "y" : "ies"} failed the listing mirror`}
           description={
-            <ul className="mt-1 flex flex-col gap-1">
-              {invalid.map((entry) => (
-                <li key={entry.configId} className="text-xs">
-                  <span className="font-mono">{entry.configId}</span> — {entry.reason}
-                </li>
-              ))}
-            </ul>
+            <List
+              size="small"
+              dataSource={invalid}
+              renderItem={(entry) => (
+                <List.Item>
+                  <Typography.Text code>{entry.configId}</Typography.Text> — {entry.reason}
+                </List.Item>
+              )}
+            />
           }
         />
       ) : null}
 
       <Card
         size="small"
-        title={<h2 className="text-base font-semibold">Build configs</h2>}
+        title={
+          // layout only: neutralize UA heading margins
+          <h2 style={{ margin: 0 }}>Build configs</h2>
+        }
       >
-        <Typography.Paragraph type="secondary" className="text-sm">
+        <Typography.Paragraph type="secondary">
           Committed repository examples (read-only, cataloged in place) plus caller-configured
           entries from STUDIO_BUILD_PROJECTS_DIR when set. Provenance paths are shown as
           declared in each config (config-relative); the engine resolves and validates them at
           build time.
         </Typography.Paragraph>
-        <div className="flex flex-col gap-3">
+        <Flex vertical gap={12}>
           {entries.length === 0 ? (
             <Typography.Text type="secondary">
               No build-config entries found. Add one subdirectory per entry with a
@@ -427,70 +440,50 @@ export function BuildLauncher({
             </Typography.Text>
           ) : (
             entries.map((entry) => (
-              <div key={entry.configId} className="flex flex-col gap-2.5 rounded-lg border p-4">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-sm font-medium">{entry.label}</span>
-                  {entry.origin === "repository" ? (
-                    <Tag>repository example</Tag>
-                  ) : null}
-                  <Tag>{entry.designSource.mode}</Tag>
-                  <Tag>
-                    {entry.inputSource === "capability-probe" ? "capability probe" : "pinned registry"}
-                  </Tag>
-                  <Typography.Text type="secondary" className="ml-auto font-mono text-xs">
-                    {entry.configId}
-                  </Typography.Text>
-                </div>
-                {entry.description !== undefined ? (
-                  <Typography.Text type="secondary">{entry.description}</Typography.Text>
-                ) : null}
-                <dl className="grid grid-cols-1 gap-x-4 gap-y-0.5 text-xs sm:grid-cols-2">
-                  <DeclaredPath label="profile:" value={entry.profileId} />
-                  <DeclaredPath label="design node:" value={entry.designSource.designNode} />
-                  <DeclaredPath
-                    label="design file:"
-                    value={entry.designSource.designFile}
-                    className="sm:col-span-2"
-                  />
-                  <DeclaredPath label="profile file:" value={entry.declaredPaths.profile} />
-                  {entry.declaredPaths.probeProject !== undefined ? (
-                    <DeclaredPath label="probe project:" value={entry.declaredPaths.probeProject} />
-                  ) : null}
-                  {entry.declaredPaths.registry !== undefined ? (
-                    <DeclaredPath label="registry:" value={entry.declaredPaths.registry} />
-                  ) : null}
-                  <DeclaredPath label="bindings:" value={entry.declaredPaths.bindings} />
-                  <DeclaredPath label="content:" value={entry.declaredPaths.content} />
-                  {entry.declaredPaths.projection !== undefined ? (
-                    <DeclaredPath label="projection:" value={entry.declaredPaths.projection} />
-                  ) : null}
-                </dl>
-                <div>
-                  <Button
-                    type="primary"
-                    htmlType="button"
-                    disabled={!runnerReady || busy || starting !== null}
-                    loading={starting === entry.configId}
-                    icon={<CaretRightOutlined aria-hidden="true" />}
-                    onClick={() => void startBuild(entry.configId)}
-                  >
-                    {starting === entry.configId ? "Starting…" : "Build"}
-                  </Button>
-                  {!runnerReady ? (
-                    <Typography.Text type="secondary" className="ml-2 text-xs">
-                      runner not ready
+              <Card key={entry.configId} size="small">
+                <Flex vertical gap={12}>
+                  <Flex wrap="wrap" justify="space-between" align="center" gap={8}>
+                    <Flex align="center" gap={8} wrap="wrap">
+                      <Typography.Text strong>{entry.label}</Typography.Text>
+                      {entry.origin === "repository" ? <Tag>repository example</Tag> : null}
+                      <Tag>{entry.designSource.mode}</Tag>
+                      <Tag>
+                        {entry.inputSource === "capability-probe" ? "capability probe" : "pinned registry"}
+                      </Tag>
+                    </Flex>
+                    <Typography.Text type="secondary" code>
+                      {entry.configId}
                     </Typography.Text>
-                  ) : busy ? (
-                    <Typography.Text type="secondary" className="ml-2 text-xs">
-                      one build at a time — waiting for the active build
-                    </Typography.Text>
+                  </Flex>
+                  {entry.description !== undefined ? (
+                    <Typography.Text type="secondary">{entry.description}</Typography.Text>
                   ) : null}
-                </div>
-              </div>
+                  <Descriptions column={1} size="small" items={declaredDescriptions(entry)} />
+                  <Flex align="center" gap={8}>
+                    <Button
+                      type="primary"
+                      htmlType="button"
+                      disabled={!runnerReady || busy || starting !== null}
+                      loading={starting === entry.configId}
+                      icon={<CaretRightOutlined aria-hidden="true" />}
+                      onClick={() => void startBuild(entry.configId)}
+                    >
+                      {starting === entry.configId ? "Starting…" : "Build"}
+                    </Button>
+                    {!runnerReady ? (
+                      <Typography.Text type="secondary">runner not ready</Typography.Text>
+                    ) : busy ? (
+                      <Typography.Text type="secondary">
+                        one build at a time — waiting for the active build
+                      </Typography.Text>
+                    ) : null}
+                  </Flex>
+                </Flex>
+              </Card>
             ))
           )}
-        </div>
+        </Flex>
       </Card>
-    </div>
+    </Flex>
   );
 }

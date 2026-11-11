@@ -1,32 +1,24 @@
-@import "tailwindcss";
-
 /**
- * [61] Tailwind stays for layout/typography utilities only; the two font
- * mappings wire the `font-sans` / `font-mono` utilities to the next/font
- * variables loaded in app/layout.tsx. Ant Design (studio-providers.tsx,
- * ConfigProvider `defaultAlgorithm`) is the single source of component
- * theming — there are no dark tokens, no shadcn token variables and no
- * `dark` class anywhere: light-only is an invariant.
+ * [61] DET Studio global CSS — intentionally minimal after the antd-default
+ * correction. Light-only costs no CSS: Ant Design's out-of-the-box default
+ * theme IS the light theme (the Studio has no ConfigProvider, no token
+ * overrides and no dark algorithm anywhere), so this file carries no colors,
+ * no fonts and no dark-mode rules — only the `color-scheme` declaration and
+ * the single documented layout exception the shell requires.
  */
-@theme inline {
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
 :root {
   color-scheme: light;
 }
 
-@layer base {
-  body {
-    /* Calm neutral light surface; antd Layout surfaces render above it. */
-    background: #f5f5f5;
-    color: #1f2329;
-  }
-}
-
-/** [61] Row highlight for mapping-review rows that need review (attention
- * amber, never destructive red) — applied via antd Table `rowClassName`. */
-.mapping-row-needs-review > td {
-  background: #fffbe6;
+/**
+ * [61] The ONE documented layout exception (see studio-shell.tsx): Ant Design
+ * has no primitive for a centered max-width content column, so the shell uses
+ * this single geometry-only class to center the header band and the page
+ * content region. No colors or theme values live here.
+ */
+.studio-content {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1152px;
+  padding: 24px;
 }

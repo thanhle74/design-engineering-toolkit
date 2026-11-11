@@ -1,3 +1,4 @@
+import { Col, Flex, Row } from "antd";
 import { connection } from "next/server";
 
 import { DetRunReaderError, type StudioRunView } from "@/src/shared/contracts";
@@ -52,7 +53,7 @@ export default async function RunPage({ params }: RunPageProps) {
   }
 
   return (
-    <div className="flex flex-col gap-8">
+    <Flex vertical gap={32}>
       <RunHeader label={run.label} mode={run.mode} runId={run.runId} />
 
       <BuildBundleSection run={run} />
@@ -61,13 +62,17 @@ export default async function RunPage({ params }: RunPageProps) {
 
       <MappingReview run={run} />
 
-      <div className="grid gap-8 lg:grid-cols-2">
-        <PreviewPanel preview={run.preview} mode={run.mode} label={run.label} />
-        <ClientArtifactManifest runId={run.runId} artifacts={run.artifacts} />
-      </div>
+      <Row gutter={[32, 32]}>
+        <Col xs={24} lg={12}>
+          <PreviewPanel preview={run.preview} mode={run.mode} label={run.label} />
+        </Col>
+        <Col xs={24} lg={12}>
+          <ClientArtifactManifest runId={run.runId} artifacts={run.artifacts} />
+        </Col>
+      </Row>
 
       <ProvenanceFooter run={run} />
-    </div>
+    </Flex>
   );
 }
 

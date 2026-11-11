@@ -1,32 +1,21 @@
 import { Suspense } from "react";
-import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { StudioProviders } from "@/components/layout/studio-providers";
 import { studioMetadata } from "@/components/layout/studio-metadata";
 import { StudioShell } from "@/components/layout/studio-shell";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
 export const metadata = studioMetadata;
 
 /**
- * [61] Light-only theme: Ant Design owns component theming through the client
- * `StudioProviders` (ConfigProvider `defaultAlgorithm` — no dark algorithm, no
- * toggle, no OS switch). `AntdRegistry` injects the server-rendered first-screen
- * antd styles so the first paint is already styled (no FOUC, no client swap).
- * Tailwind remains only for layout utilities; globals.css carries a neutral
- * light palette with no dark tokens and no `dark` class.
+ * [61] Stock Ant Design light: there is NO custom theme anywhere in the
+ * Studio — antd's out-of-the-box default IS the light theme, so the client
+ * `StudioProviders` keeps only antd's `App` wrapper and no web fonts are
+ * loaded (antd ships its own system font stack). `AntdRegistry` injects the
+ * server-rendered first-screen antd styles so the first paint is already
+ * styled (no FOUC, no client swap). `globals.css` carries only the light
+ * color-scheme and one documented layout exception — no colors, no dark
+ * tokens, no `dark` class anywhere.
  */
 
 /**
@@ -46,11 +35,8 @@ export const metadata = studioMetadata;
  */
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} font-sans antialiased`}
-    >
-      <body className="min-h-full flex flex-col">
+    <html lang="en">
+      <body>
         <Suspense fallback={null}>
           <AntdRegistry>
             <StudioProviders>

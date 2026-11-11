@@ -1,7 +1,7 @@
 "use client";
 
 import { SafetyCertificateOutlined, WarningOutlined } from "@ant-design/icons";
-import { Alert, Card, Table, Tag, Typography } from "antd";
+import { Alert, Card, Flex, List, Table, Tag, Typography } from "antd";
 import type { TableColumnsType } from "antd";
 
 import type { StudioBuildStageView, StudioRunView } from "@/src/shared/contracts";
@@ -12,6 +12,10 @@ import type { StudioBuildStageView, StudioRunView } from "@/src/shared/contracts
  * persisted stage table, the honest gap list, and Studio-side manifest
  * verification truth. Native Page Builder HTML stays source/download only:
  * no Magento storefront or Admin preview is claimed anywhere here.
+ *
+ * [61] Stock antd light presentation only: Card/Alert/Table/List/Flex and the
+ * stock `Text code` inline-code look for mono tokens; no custom CSS or
+ * utility classes. The two inline styles are pure layout (documented inline).
  */
 
 type StageRow = Pick<StudioBuildStageView, "stage" | "status" | "exitCode" | "outDir">;
@@ -20,7 +24,7 @@ const stageColumns: TableColumnsType<StageRow> = [
   {
     title: "Stage",
     dataIndex: "stage",
-    render: (_, record: StageRow) => <span className="font-mono">{record.stage}</span>,
+    render: (_, record: StageRow) => <Typography.Text code>{record.stage}</Typography.Text>,
   },
   {
     title: "Status",
@@ -35,13 +39,13 @@ const stageColumns: TableColumnsType<StageRow> = [
   {
     title: "Exit code",
     dataIndex: "exitCode",
-    render: (_, record: StageRow) => <span className="font-mono">{record.exitCode}</span>,
+    render: (_, record: StageRow) => <Typography.Text code>{record.exitCode}</Typography.Text>,
   },
   {
     title: "Output dir",
     dataIndex: "outDir",
     render: (_, record: StageRow) => (
-      <span className="font-mono text-xs">{record.outDir ?? "—"}</span>
+      <Typography.Text code>{record.outDir ?? "—"}</Typography.Text>
     ),
   },
 ];
@@ -56,29 +60,30 @@ export function BuildBundleSection({ run }: { run: StudioRunView }) {
     <Card
       size="small"
       title={
-        <span className="flex items-center gap-2">
+        <Flex align="center" gap={8}>
           <SafetyCertificateOutlined aria-hidden="true" />
-          <h2 className="text-base font-semibold">Build bundle</h2>
-        </span>
+          {/* layout only: neutralize UA heading margins so the Flex gap owns rhythm */}
+          <h2 style={{ margin: 0 }}>Build bundle</h2>
+        </Flex>
       }
     >
-      <div className="flex flex-col gap-4">
-        <Typography.Paragraph type="secondary" className="text-sm">
+      <Flex vertical gap={16}>
+        <Typography.Paragraph type="secondary">
           Assembled from the build-manifest.json bundle written by{" "}
-          <span className="font-mono">det build</span> (profile{" "}
-          <span className="font-mono">{run.profileId ?? "unknown"}</span>, platform{" "}
-          <span className="font-mono">{run.platformId ?? "unknown"}</span>). The root manifest is
+          <Typography.Text code>det build</Typography.Text> (profile{" "}
+          <Typography.Text code>{run.profileId ?? "unknown"}</Typography.Text>, platform{" "}
+          <Typography.Text code>{run.platformId ?? "unknown"}</Typography.Text>). The root manifest is
           the trust anchor; every declared output is re-checked against its recorded SHA-256 and
           byte size before it is downloadable.
         </Typography.Paragraph>
 
         {build.manifestVerified ? (
-          <p className="flex items-center gap-2 text-sm">
+          <Flex align="center" gap={8} wrap="wrap">
             <SafetyCertificateOutlined aria-hidden="true" />
             <Typography.Text type="secondary">
               Manifest verified: every declared output matches its recorded SHA-256 and byte size.
             </Typography.Text>
-          </p>
+          </Flex>
         ) : (
           <Alert
             type="error"
@@ -97,33 +102,34 @@ export function BuildBundleSection({ run }: { run: StudioRunView }) {
           size="small"
         />
 
-        <div>
-          <h3 className="mb-2 text-sm font-semibold">
-            Gaps {failedStages.length > 0 ? "" : "and boundaries"}
-          </h3>
-          <ul className="flex flex-col gap-2">
-            {build.gaps.map((gap) => (
-              <li key={gap.code} className="flex flex-col gap-0.5 rounded-md border px-3 py-2">
-                <span className="font-mono text-xs font-medium">
-                  {gap.code}
-                  {gap.count !== undefined ? ` · count ${gap.count}` : ""}
-                </span>
-                <Typography.Text type="secondary" className="text-sm">
-                  {gap.message}
-                </Typography.Text>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <Flex vertical gap={8}>
+          {/* layout only: neutralize UA heading margins */}
+          <h3 style={{ margin: 0 }}>Gaps {failedStages.length > 0 ? "" : "and boundaries"}</h3>
+          <List
+            size="small"
+            dataSource={build.gaps}
+            renderItem={(gap) => (
+              <List.Item>
+                <Flex vertical gap={4}>
+                  <Typography.Text code>
+                    {gap.code}
+                    {gap.count !== undefined ? ` · count ${gap.count}` : ""}
+                  </Typography.Text>
+                  <Typography.Text type="secondary">{gap.message}</Typography.Text>
+                </Flex>
+              </List.Item>
+            )}
+          />
+        </Flex>
 
-        <Typography.Text type="secondary" className="text-xs">
-          Config identity <span className="font-mono">{build.configContentHash}</span> · This bundle
-          is an offline build. Native Page Builder HTML is offered as{" "}
+        <Typography.Text type="secondary">
+          Config identity <Typography.Text code>{build.configContentHash}</Typography.Text> · This
+          bundle is an offline build. Native Page Builder HTML is offered as{" "}
           <strong>source/download only</strong> — installing it into a Magento instance and any
           storefront/Admin preview remain operator steps (see the manifest gaps), never claims of
           this UI.
         </Typography.Text>
-      </div>
+      </Flex>
     </Card>
   );
 }

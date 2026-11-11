@@ -138,30 +138,33 @@ Notes on honesty and scope (also enforced in code and tests):
 
 ## Theme ([61])
 
-Light-only by owner direction — Ant Design 6 is the single source of
-component theming. `StudioProviders`
-(`components/layout/studio-providers.tsx`) sets `ConfigProvider` with
-`theme.defaultAlgorithm` explicitly: no dark algorithm, no toggle, no OS
-theme switching. The root layout composes `AntdRegistry` +
-`StudioProviders` (ConfigProvider plus the antd `App` wrapper, so antd
-message/notification context works without per-call contextHolders) and
-antd styles are injected server-side, so the first paint is already styled
-(no FOUC). Tokens: `controlHeight: 44` carries the ≥44px operator
-click-target requirement into every Button/Input/Select (Menu
-`itemHeight: 44` likewise); everything else stays on antd's calm neutral
-light defaults with comfortable whitespace — enterprise tool aesthetics,
-not a card-heavy dashboard. `app/globals.css` is light-only (`:root` only)
-and Tailwind remains only for layout utilities inside Studio — the
-Magento/Hyvä adapter and the Preview Theme Tailwind contract are
-unchanged. No dark tokens or `dark:` classes exist anywhere in the Studio
-app. The [52] evidence assets (`docs/screenshots/52-*.png` and
-`52-dark-only-dom-evidence.txt`) show the retired dark UI and are
+Light-only by owner direction — and **stock Ant Design 6 light, out of
+the box**: the antd default light theme is used as-is, with **no
+`ConfigProvider` theme and no token overrides** anywhere. The Owner's
+2026-11-11 correction superseded the earlier 44px direction
+(`controlHeight: 44` / Menu `itemHeight: 44`) — antd's default sizes,
+colors, borders, radii and system font stack are the standard, with no
+bespoke styling such as row-highlight CSS; custom styling is limited to
+documented nonvisual layout exceptions. An experienced antd user should
+recognize the UI as stock antd Light. Light-only remains an invariant:
+no dark algorithm, no toggle, no OS theme switching, and no dark tokens
+or `dark:` classes anywhere in the Studio app. The root layout composes
+`AntdRegistry` + `StudioProviders`
+(`components/layout/studio-providers.tsx`, the antd `App` wrapper, so
+antd message/notification context works without per-call contextHolders)
+and antd styles are injected server-side, so the first paint is already
+styled (no FOUC). **Tailwind is removed from Studio**: antd layout
+primitives (`Flex`, `Space`, `Row`/`Col`, `Typography`) replace the
+utility classes and fonts come from antd's native system stack (no
+`next/font`); the Magento/Hyvä adapter and the Preview Theme Tailwind
+contract are unchanged. The [52] evidence assets (`docs/screenshots/52-*.png`
+and `52-dark-only-dom-evidence.txt`) show the retired dark UI and are
 preserved as history.
 
 ## Layout
 
 - `app/` — App Router pages (`/`, `/build`, `/runs/[runId]`) and route handlers under `app/api/**` (composition only)
-- antd primitives are used directly — no `components/ui` library, only tiny feature-specific wrappers where needed; `components/layout/` — studio shell plus `studio-providers` (the [61] antd light-only root providers)
+- antd primitives are used directly — no `components/ui` library, only tiny feature-specific wrappers where needed; `components/layout/` — studio shell plus `studio-providers` (the [61] root providers wrapping the antd `App`; no `ConfigProvider` theme)
 - `src/modules/` — feature lanes: `conversions`, `design-tree`, `mapping-review`, `preview`, `artifacts`
 - `src/server/` — server-only boundary: `DetRunReader` implementations (fixture + directory), the `[40]` build-bundle reader, build-config catalog, local build runner, path guards
 - `src/shared/contracts/` — frozen `StudioRunView` read model derived from `schemas/cli/*` + `schemas/converter/*` (with the `[40]` additive optional `build` block)

@@ -22,14 +22,15 @@
  * DEMO fixture runs (`mode === "fixture"`) always carry a visible DEMO badge
  * near the preview panel so fixture data can never masquerade as live proof.
  *
- * [61] Ant Design light-only: antd Card + calm info Alert for the unavailable
- * state + a success Tag for the verified badge. Icons are decorative.
+ * [61] Ant Design stock light appearance: antd Card, antd links, a calm info
+ * Alert for the unavailable state and built-in preset-color Tags. Icons are
+ * decorative.
  */
 import {
   ExportOutlined,
   SafetyCertificateOutlined,
 } from "@ant-design/icons";
-import { Alert, Card, Tag, Typography } from "antd";
+import { Alert, Card, Flex, Tag, Typography } from "antd";
 import type { StudioPreviewState, StudioRunMode } from "@/src/shared/contracts";
 
 export interface PreviewPanelProps {
@@ -46,13 +47,12 @@ export function PreviewPanel({ preview, mode, label }: PreviewPanelProps) {
     <Card
       size="small"
       data-testid="preview-panel"
-      title={<h2 className="text-base font-semibold">Preview</h2>}
+      title={<h2>Preview</h2>}
       extra={
         mode === "fixture" ? (
           <Tag
+            color="gold"
             data-testid="preview-demo-badge"
-            className="font-semibold tracking-wide"
-            style={{ borderStyle: "dashed" }}
             title="DEMO fixture run — illustrative data, not a live conversion."
           >
             DEMO
@@ -60,7 +60,7 @@ export function PreviewPanel({ preview, mode, label }: PreviewPanelProps) {
         ) : undefined
       }
     >
-      <Typography.Paragraph type="secondary" className="mb-4">
+      <Typography.Paragraph type="secondary">
         {preview.status === "available"
           ? "Resolved from the run's verified, isolated DET Preview Theme output."
           : "No verified preview is bound to this run."}
@@ -84,17 +84,15 @@ function PreviewUnavailableReason({ reason }: { reason: string }) {
       type="info"
       showIcon
       title={
-        <span className="flex flex-wrap items-center gap-2">
+        <Flex wrap="wrap" align="center" gap="small">
           Preview unavailable
-          <Tag className="font-mono" style={{ fontSize: 10 }}>
-            PREVIEW_UNAVAILABLE
-          </Tag>
-        </span>
+          <Tag>PREVIEW_UNAVAILABLE</Tag>
+        </Flex>
       }
       description={
         <>
           <p data-testid="preview-unavailable-reason">{reason}</p>
-          <p className="text-xs">
+          <p>
             <Typography.Text type="secondary">
               A preview appears only when [28]&rsquo;s verified DET Preview
               Theme output is bound to this run. This is a normal state, not a
@@ -116,9 +114,9 @@ function PreviewAvailableSource({
   label: string;
 }) {
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="text-sm font-medium">{label}</span>
+    <Flex vertical gap="middle">
+      <Flex wrap="wrap" align="center" gap="small">
+        <Typography.Text strong>{label}</Typography.Text>
         <Tag
           color="success"
           data-testid="preview-verified-badge"
@@ -127,32 +125,30 @@ function PreviewAvailableSource({
         >
           Verified
         </Tag>
-      </div>
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-        <a
+      </Flex>
+      <Flex wrap="wrap" align="center" gap="small">
+        <Typography.Link
           href={preview.url}
           data-testid="preview-url-link"
           title={preview.url}
-          className="text-sm underline underline-offset-4 break-all"
         >
           {preview.url}
-        </a>
-        <a
+        </Typography.Link>
+        <Typography.Link
           href={preview.url}
           target="_blank"
           rel="noreferrer"
           data-testid="preview-new-tab-link"
-          className="inline-flex items-center gap-1 text-xs underline underline-offset-4"
         >
           <ExportOutlined aria-hidden="true" />
           Open in new tab
-        </a>
-      </div>
-      <Typography.Paragraph type="secondary" className="mb-0 text-xs">
+        </Typography.Link>
+      </Flex>
+      <Typography.Paragraph type="secondary">
         The preview is rendered by the engine&rsquo;s isolated DET Preview
         Theme, outside Studio. Studio shows the verified link only — never a
         mock screenshot as Magento proof.
       </Typography.Paragraph>
-    </div>
+    </Flex>
   );
 }

@@ -3,21 +3,22 @@
 /**
  * [29] Studio — mapping review table (one row per run.mappings entry).
  *
- * [61] Ant Design Table (`columns` prop — no dot-notation subcomponents),
- * light-only theme. Row highlight for derived `needsReview` comes from the
- * `.mapping-row-needs-review` rule carried in globals.css (attention amber,
- * never destructive red).
+ * [61] Ant Design stock light appearance: Table via the `columns` prop (no
+ * dot-notation subcomponents), default light theme, no custom row styling.
+ * The derived `needsReview` fact is carried ONLY as the row's
+ * `data-needs-review` attribute plus the gold NEEDS_REVIEW review badge —
+ * no row highlight class is applied.
  *
  * Data honesty rules enforced here:
  *  - node ids render verbatim (n-… / s-…);
  *  - optional fields render "unknown", never 0 and never a fabricated value;
  *  - compose dispositions are the exact engine vocabulary;
- *  - `needsReview` is presented only as the DERIVED review highlight + review
+ *  - `needsReview` is presented only as the DERIVED review flag + review
  *    badge — it is never shown as a compose disposition;
  *  - every GAP / EXCLUDED / SKIPPED row stays in the table with its reasons.
  */
 import type { HTMLAttributes } from "react";
-import { Table, Typography } from "antd";
+import { Flex, Table, Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import type { StudioMappingView } from "@/src/shared/contracts";
 import {
@@ -51,17 +52,17 @@ function TargetCell({ mapping }: { mapping: StudioMappingView }) {
     const { capabilityId, appearanceId, nativeElement, nativeField } =
       mapping.target;
     return (
-      <div className="flex flex-col gap-0.5">
-        <span className="font-mono text-xs">{capabilityId}</span>
-        <Typography.Text type="secondary" className="text-xs">
+      <Flex vertical gap="small">
+        <Typography.Text code>{capabilityId}</Typography.Text>
+        <Typography.Text type="secondary">
           {appearanceId}
         </Typography.Text>
         {(nativeElement || nativeField) && (
-          <Typography.Text type="secondary" className="text-xs">
+          <Typography.Text type="secondary">
             {nativeElement ?? UNKNOWN} · {nativeField ?? UNKNOWN}
           </Typography.Text>
         )}
-      </div>
+      </Flex>
     );
   }
   if (mapping.composeDisposition === "mapped") {
@@ -79,20 +80,20 @@ function NotesCell({ mapping }: { mapping: StudioMappingView }) {
     return <Typography.Text type="secondary">—</Typography.Text>;
   }
   return (
-    <div className="flex flex-col gap-1">
+    <Flex vertical gap="small">
       {mapping.note && <p>{mapping.note}</p>}
       {hasReasons && (
-        <ul className="list-disc space-y-0.5 pl-4">
+        <ul>
           {mapping.reasons.map((reason, index) => (
             <li key={index}>
-              <Typography.Text type="secondary" className="text-xs">
+              <Typography.Text type="secondary">
                 {reason}
               </Typography.Text>
             </li>
           ))}
         </ul>
       )}
-    </div>
+    </Flex>
   );
 }
 
@@ -100,26 +101,23 @@ const columns: ColumnsType<StudioMappingView> = [
   {
     title: "Node",
     render: (_, mapping) => (
-      <div className="flex flex-col gap-0.5">
-        <span className="font-mono text-xs" title={mapping.nodeId}>
+      <Flex vertical gap="small">
+        <Typography.Text code title={mapping.nodeId}>
           {mapping.nodeId}
-        </span>
-        <Typography.Text type="secondary" className="text-xs">
+        </Typography.Text>
+        <Typography.Text type="secondary">
           {mapping.sourceName ?? UNKNOWN}
         </Typography.Text>
-      </div>
+      </Flex>
     ),
   },
   {
     title: "Source locator",
     render: (_, mapping) =>
       mapping.sourceLocator ? (
-        <span
-          className="block max-w-48 truncate font-mono text-xs"
-          title={mapping.sourceLocator}
-        >
+        <Typography.Text code ellipsis title={mapping.sourceLocator}>
           {mapping.sourceLocator}
-        </span>
+        </Typography.Text>
       ) : (
         <UnknownText />
       ),
@@ -131,10 +129,7 @@ const columns: ColumnsType<StudioMappingView> = [
   {
     title: "Semantic class",
     render: (_, mapping) => (
-      <Typography.Text
-        type="secondary"
-        className="font-mono text-xs"
-      >
+      <Typography.Text code type="secondary">
         {mapping.semanticClass ?? UNKNOWN}
       </Typography.Text>
     ),
@@ -184,9 +179,6 @@ export function MappingReviewTable({
             "data-node-id": mapping.nodeId,
             "data-needs-review": mapping.needsReview ? "true" : "false",
           })
-        }
-        rowClassName={(mapping) =>
-          mapping.needsReview ? "mapping-row-needs-review" : ""
         }
       />
     </div>
