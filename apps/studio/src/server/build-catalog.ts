@@ -1,10 +1,20 @@
 /**
  * [40] DET Studio — read-only build-config catalog (S1).
  *
- * Enumerates caller-configured project/build-config entries from ONE flat
- * directory named by `STUDIO_BUILD_PROJECTS_DIR`. Each entry is a
- * subdirectory `<configId>/build-config.json` (plus an optional
+ * Lists build-config entries from a set of flat catalog roots. Each entry is
+ * a subdirectory `<configId>/build-config.json` (plus an optional
  * `<configId>/project.json` carrying `{label, description}`).
+ *
+ * Roots ([58]):
+ *  - the CANONICAL repository catalogue `<repoRoot>/examples/build` — the
+ *    committed, revision-pinned examples discovered IN PLACE (never copied
+ *    into `out/`; entries are read-only inputs, builds write only to the
+ *    configured runs root). Located from this module's own layout with a
+ *    cwd fallback, both validated against the checkout shape — a relocated
+ *    Studio server simply has no repository catalogue.
+ *  - ONE caller-configured directory named by `STUDIO_BUILD_PROJECTS_DIR`
+ *    (optional since [58]: it ADDS the caller's own entries; a configured
+ *    entry with the same id overrides the repository example).
  *
  * Boundaries:
  *  - Studio-side validation is a LIGHT mirror of BuildConfig v1 used ONLY to
@@ -12,16 +22,22 @@
  *    itself (exit 2 INPUT_SCHEMA_INVALID). The JSON Schema is never
  *    duplicated or re-implemented here, and a mirror-accepted config that
  *    det rejects still surfaces det's own diagnostics at build time.
- *  - No hardcoded project ids/paths, no defaults, no network fetches.
- *    Provenance paths are shown AS DECLARED in the config (config-relative
- *    strings) — never resolved or echoed as absolute server paths.
+ *  - No hardcoded project ids/paths, no defaults beyond the repository
+ *    catalogue location, no network fetches. Provenance paths are shown AS
+ *    DECLARED in the config (config-relative strings) — never resolved or
+ *    echoed as absolute server paths.
+ *  - Only directories that directly contain a `build-config.json` are
+ *    entries; unrelated fixture/example directories are never promoted into
+ *    the catalogue.
  *  - designSource.mode is schema-const "snapshot": the catalog can only ever
  *    list offline snapshot builds, and the UI must not offer anything else.
  */
 import "server-only";
 
+import { existsSync, statSync } from "node:fs";
 import { readdir, readFile, realpath, stat } from "node:fs/promises";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { z } from "zod";
 
 import { DetRunReaderError } from "@/src/shared/contracts";
@@ -33,6 +49,35 @@ export const STUDIO_BUILD_PROJECTS_DIR_ENV = "STUDIO_BUILD_PROJECTS_DIR";
 
 const BUILD_CONFIG_FILE = "build-config.json";
 const PROJECT_META_FILE = "project.json";
+
+/** The canonical repository catalogue, relative to the checkout root. */
+const REPO_CATALOG_SEGMENTS = ["examples", "build"] as const;
+
+/**
+ * [58] Locate the checkout root for the canonical repository catalogue: from
+ * this module's own location (`apps/studio/src/server` → repo root, the same
+ * bundler contract as the runner's STUDIO_APP_ROOT) with cwd-based fallbacks
+ * (`next` runs with cwd = apps/studio in this layout). Every candidate is
+ * validated against the checkout shape (package.json + examples/build) so an
+ * accidental match can never promote an unrelated directory. No match →
+ * `null` (a relocated Studio server lists only configured entries).
+ */
+function findRepoCatalogRoot(): string | null {
+  const moduleDir = path.dirname(fileURLToPath(import.meta.url));
+  const candidates = [
+    path.resolve(moduleDir, "..", "..", "..", ".."), // src/server → apps/studio → apps → checkout root
+    path.resolve(process.cwd(), "..", ".."), // next runs with cwd = apps/studio in this layout
+    path.resolve(process.cwd()), // a server started directly at the checkout root
+  ];
+  for (const candidate of candidates) {
+    if (!existsSync(path.join(candidate, "package.json"))) continue;
+    const info = statSync(path.join(candidate, ...REPO_CATALOG_SEGMENTS), { throwIfNoEntry: false });
+    if (info !== undefined && info.isDirectory()) return candidate;
+  }
+  return null;
+}
+
+const REPO_ROOT = findRepoCatalogRoot();
 
 /**
  * Light zod mirror of schemas/cli/build-config.schema.json v1 — listing only
@@ -71,6 +116,11 @@ export interface BuildConfigCatalogEntry {
   designSource: { mode: "snapshot"; project: string; designFile: string; designNode: string };
   /** How the capability registry is provided, as declared in the config. */
   inputSource: "capability-probe" | "pinned-registry";
+  /**
+   * [58] Where the entry was discovered: a committed repository example
+   * (`examples/build`, read-only, in place) or the caller-configured dir.
+   */
+  origin: "repository" | "configured";
   /** Declared config-relative paths, shown verbatim as provenance. */
   declaredPaths: {
     profile: string;
@@ -93,65 +143,103 @@ export interface BuildConfigCatalogListing {
   invalid: BuildConfigCatalogInvalid[];
 }
 
-export class BuildConfigCatalog {
-  private readonly configuredRoot: string;
-  private rootRealPromise: Promise<string> | null = null;
+interface CatalogRoot {
+  origin: "repository" | "configured";
+  /** Realpath'd directory this root was validated against. */
+  resolved: string;
+}
 
-  private constructor(configuredRoot: string) {
-    this.configuredRoot = configuredRoot;
+export class BuildConfigCatalog {
+  /**
+   * Configured root FIRST, repository catalogue second: a caller-configured
+   * entry with the same id overrides the repository example, in both
+   * `list()` (first origin wins) and `resolveConfigPath()`.
+   */
+  private readonly roots: CatalogRoot[];
+
+  private constructor(roots: CatalogRoot[]) {
+    this.roots = roots;
   }
 
-  /** Validate + realpath the configured root exactly once, then cache it. */
-  static async open(configuredRoot: string): Promise<BuildConfigCatalog> {
-    if (typeof configuredRoot !== "string" || configuredRoot.trim() === "") {
+  /**
+   * Open the catalog: the canonical repository catalogue (when this is a
+   * checkout layout) plus — when set — the caller-configured
+   * STUDIO_BUILD_PROJECTS_DIR directory. An explicitly set but unusable
+   * configured dir still fails loudly (fail-closed); an unset one simply
+   * means "repository examples only". Env values are never echoed into
+   * error messages.
+   */
+  static async open(configuredRoot: string | undefined | null): Promise<BuildConfigCatalog> {
+    const roots: CatalogRoot[] = [];
+    const configured = typeof configuredRoot === "string" ? configuredRoot.trim() : "";
+    if (configured !== "") {
+      let resolved: string;
+      try {
+        resolved = await realpath(configured);
+      } catch {
+        throw new DetRunReaderError(
+          "not-configured",
+          `${STUDIO_BUILD_PROJECTS_DIR_ENV} is set but does not point to a readable directory.`
+        );
+      }
+      const info = await stat(resolved).catch(() => null);
+      if (info === null || !info.isDirectory()) {
+        throw new DetRunReaderError(
+          "not-configured",
+          `${STUDIO_BUILD_PROJECTS_DIR_ENV} is set but is not a directory.`
+        );
+      }
+      roots.push({ origin: "configured", resolved });
+    }
+    if (REPO_ROOT !== null) {
+      // Validated at module init (isDirectory); realpath in case the checkout
+      // itself is reached through a symlink.
+      const resolved = await realpath(path.join(REPO_ROOT, ...REPO_CATALOG_SEGMENTS));
+      roots.push({ origin: "repository", resolved });
+    }
+    if (roots.length === 0) {
       throw new DetRunReaderError(
         "not-configured",
-        "STUDIO_BUILD_PROJECTS_DIR is set but empty; it must point at a directory of build-config entries."
+        "No build-config catalog is available: the repository catalogue is not reachable and STUDIO_BUILD_PROJECTS_DIR is not set."
       );
     }
-    const catalog = new BuildConfigCatalog(configuredRoot);
-    await catalog.rootReal();
-    return catalog;
-  }
-
-  private rootReal(): Promise<string> {
-    if (this.rootRealPromise === null) {
-      this.rootRealPromise = (async () => {
-        let resolved: string;
-        try {
-          resolved = await realpath(this.configuredRoot);
-        } catch {
-          throw new DetRunReaderError(
-            "not-configured",
-            "STUDIO_BUILD_PROJECTS_DIR is set but does not point to a readable directory."
-          );
-        }
-        const info = await stat(resolved).catch(() => null);
-        if (info === null || !info.isDirectory()) {
-          throw new DetRunReaderError(
-            "not-configured",
-            "STUDIO_BUILD_PROJECTS_DIR is set but is not a directory."
-          );
-        }
-        return resolved;
-      })();
-    }
-    return this.rootRealPromise;
+    return new BuildConfigCatalog(roots);
   }
 
   /** List every entry; broken entries surface in `invalid` with a safe reason. */
   async list(): Promise<BuildConfigCatalogListing> {
-    const root = await this.rootReal();
-    const dirents = await readdir(root, { withFileTypes: true }).catch(() => {
-      throw new DetRunReaderError("not-configured", "STUDIO_BUILD_PROJECTS_DIR is set but cannot be listed.");
+    const entries = new Map<string, BuildConfigCatalogEntry>();
+    const invalid: BuildConfigCatalogInvalid[] = [];
+    for (const root of this.roots) {
+      await this.listRoot(root, entries, invalid);
+    }
+    const merged = [...entries.values()];
+    merged.sort((a, b) => a.configId.localeCompare(b.configId));
+    invalid.sort((a, b) => a.configId.localeCompare(b.configId));
+    return { entries: merged, invalid };
+  }
+
+  /** Scan one root; ids already listed (configured roots run first) are skipped. */
+  private async listRoot(
+    root: CatalogRoot,
+    entries: Map<string, BuildConfigCatalogEntry>,
+    invalid: BuildConfigCatalogInvalid[]
+  ): Promise<void> {
+    const rootDir = root.resolved;
+    const dirents = await readdir(rootDir, { withFileTypes: true }).catch(() => {
+      throw new DetRunReaderError(
+        "not-configured",
+        root.origin === "configured"
+          ? `${STUDIO_BUILD_PROJECTS_DIR_ENV} is set but cannot be listed.`
+          : "The repository build-config catalogue cannot be listed."
+      );
     });
 
-    const entries: BuildConfigCatalogEntry[] = [];
-    const invalid: BuildConfigCatalogInvalid[] = [];
     for (const dirent of dirents) {
       if (!dirent.isDirectory()) continue;
       if (!RUN_ID_PATTERN.test(dirent.name)) continue;
-      const entryDir = path.join(root, dirent.name);
+      if (entries.has(dirent.name)) continue; // configured entry overrides the repository example
+      const entryDir = path.join(rootDir, dirent.name);
       const configPath = path.join(entryDir, BUILD_CONFIG_FILE);
       const configInfo = await stat(configPath).catch(() => null);
       if (configInfo === null || !configInfo.isFile()) continue; // no build-config.json → not an entry
@@ -191,13 +279,14 @@ export class BuildConfigCatalog {
           }
         }
 
-        entries.push({
+        entries.set(dirent.name, {
           configId: dirent.name,
           label,
           ...(description === undefined ? {} : { description }),
           profileId: config.profileId,
           designSource: { ...config.designSource },
           inputSource: config.capabilityProbe ? "capability-probe" : "pinned-registry",
+          origin: root.origin,
           declaredPaths: {
             profile: config.profile,
             ...(config.capabilityProbe ? { probeProject: config.capabilityProbe.project } : {}),
@@ -215,46 +304,44 @@ export class BuildConfigCatalog {
         });
       }
     }
-
-    entries.sort((a, b) => a.configId.localeCompare(b.configId));
-    invalid.sort((a, b) => a.configId.localeCompare(b.configId));
-    return { entries, invalid };
   }
 
   /**
    * Resolve one entry's config file for the runner. The id is pattern-checked
-   * and the resolved path must realpath back inside the catalog root; the
-   * file must exist. Throws DetRunReaderError("run-not-found") for unknown
-   * ids (the UI maps it to 404) — messages name only the id, never server paths.
+   * and the resolved path must realpath back inside its catalog root; the
+   * file must exist. Configured roots are checked first (a configured entry
+   * with the same id wins over the repository example). Throws
+   * DetRunReaderError("run-not-found") for unknown ids (the UI maps it to
+   * 404) — messages name only the id, never server paths.
    */
   async resolveConfigPath(configId: string): Promise<string> {
-    const root = await this.rootReal();
     if (typeof configId !== "string" || !RUN_ID_PATTERN.test(configId)) {
       throw new DetRunReaderError(
         "run-not-found",
         `No build-config entry matching the requested id "${echoId(configId)}".`
       );
     }
-    const joined = path.join(root, configId, BUILD_CONFIG_FILE);
-    const info = await stat(joined).catch(() => null);
-    if (info === null || !info.isFile()) {
-      throw new DetRunReaderError(
-        "run-not-found",
-        `No build-config entry "${echoId(configId)}" in the configured ${STUDIO_BUILD_PROJECTS_DIR_ENV} catalog.`
-      );
+    for (const root of this.roots) {
+      const joined = path.join(root.resolved, configId, BUILD_CONFIG_FILE);
+      const info = await stat(joined).catch(() => null);
+      if (info === null || !info.isFile()) continue;
+      let resolved: string;
+      try {
+        resolved = await realpath(joined);
+      } catch {
+        throw new DetRunReaderError("path-refused", "The build-config path was refused: it is not readable.");
+      }
+      if (!isInsideDir(resolved, root.resolved)) {
+        throw new DetRunReaderError(
+          "path-refused",
+          "The build-config path was refused: it resolves outside its catalog directory."
+        );
+      }
+      return resolved;
     }
-    let resolved: string;
-    try {
-      resolved = await realpath(joined);
-    } catch {
-      throw new DetRunReaderError("path-refused", "The build-config path was refused: it is not readable.");
-    }
-    if (!isInsideDir(resolved, root)) {
-      throw new DetRunReaderError(
-        "path-refused",
-        "The build-config path was refused: it resolves outside the configured catalog directory."
-      );
-    }
-    return resolved;
+    throw new DetRunReaderError(
+      "run-not-found",
+      `No build-config entry "${echoId(configId)}" in the build-config catalog.`
+    );
   }
 }

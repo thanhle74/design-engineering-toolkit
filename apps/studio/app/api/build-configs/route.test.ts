@@ -38,13 +38,23 @@ function setEnv(projects: string | undefined, runs: string | undefined): void {
 }
 
 describe("GET /api/build-configs", () => {
-  it("maps an unset projects dir to 503 not-configured (env name, not value)", async () => {
+  // [58] an unset projects dir now means "repository examples only": the
+  // committed catalogue is listed in place while the runner stays honestly
+  // not-ready without STUDIO_DET_RUNS_DIR.
+  it("lists the repository catalogue with runnerReady=false when no env is set", async () => {
     setEnv(undefined, undefined);
     const response = await GET(new Request("http://localhost/api/build-configs"));
-    expect(response.status).toBe(503);
-    const body = (await response.json()) as { error: { code: string; message: string } };
-    expect(body.error.code).toBe("not-configured");
-    expect(body.error.message).toContain("STUDIO_BUILD_PROJECTS_DIR");
+    expect(response.status).toBe(200);
+    const body = (await response.json()) as {
+      entries: Array<{ configId: string; origin?: string }>;
+      runnerReady: boolean;
+      runnerReason?: string;
+    };
+    expect(body.entries.some((e) => e.configId === "slaunchpad-home-real-derived" && e.origin === "repository")).toBe(
+      true
+    );
+    expect(body.runnerReady).toBe(false);
+    expect(body.runnerReason).toContain("STUDIO_DET_RUNS_DIR");
   });
 
   // NOTE: this case must run BEFORE the successful listing test below — the
@@ -86,12 +96,15 @@ describe("GET /api/build-configs", () => {
     const response = await GET(new Request("http://localhost/api/build-configs"));
     expect(response.status).toBe(200);
     const body = (await response.json()) as {
-      entries: Array<{ configId: string; profileId: string }>;
+      entries: Array<{ configId: string; profileId: string; origin?: string }>;
       invalid: Array<{ configId: string; reason: string }>;
       runnerReady: boolean;
     };
-    expect(body.entries.map((e) => e.configId)).toEqual(["good-entry"]);
-    expect(body.entries[0]!.profileId).toBe("demo-profile");
+    // the configured entry rides alongside the committed repository catalogue ([58])
+    expect(body.entries.map((e) => e.configId)).toEqual(["good-entry", "slaunchpad-home-real-derived"]);
+    const good = body.entries.find((e) => e.configId === "good-entry")!;
+    expect(good.profileId).toBe("demo-profile");
+    expect(good.origin).toBe("configured");
     expect(body.invalid.map((e) => e.configId)).toEqual(["bad-entry"]);
     expect(body.invalid[0]!.reason).not.toContain(projectsRoot);
     expect(body.runnerReady).toBe(true);

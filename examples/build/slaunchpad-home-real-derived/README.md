@@ -43,27 +43,22 @@ without edits. No credentials, no provider identifiers, no machine-specific abso
 ## Run it
 
 Operator runbook (Studio on Fedora): [docs/runbook-real-derived-studio-build.md](../../../docs/runbook-real-derived-studio-build.md).
-Short form:
+Since [58] the short form is the single-root operator flow — this project is cataloged
+**in place** by Studio (no copying, no exports):
 
 ```bash
-# from the repository root: build the det CLI once
-npm ci && npm run build
-
-export STUDIO_DET_RUNS_DIR="$PWD/out/studio-runs"          # finished bundles land here
-export STUDIO_BUILD_PROJECTS_DIR="$PWD/out/studio-build-projects"
-mkdir -p "$STUDIO_DET_RUNS_DIR" "$STUDIO_BUILD_PROJECTS_DIR"
-cp -r examples/build/slaunchpad-home-real-derived "$STUDIO_BUILD_PROJECTS_DIR/"
-
-cd apps/studio && npm install && npm run dev   # http://localhost:3000/build
+npm run setup    # once: installs both lockfiles + builds the det core
+npm run dev      # http://localhost:3000/build
 ```
 
 Then on `/build`: choose **"Slaunchpad Homepage — real-derived (Figma rev
-2417494580183108397)"** (the fixture demo entry is labeled separately), click **Build**,
+2417494580183108397)"** (it carries the "repository example" badge), click **Build**,
 open the bundle run, and inspect the stage table, the per-section Compose/Review columns
 and the gap list. Artifacts (native Page Builder HTML, compose report, extraction
 inventory) download only after byte-verification against `build-manifest.json`.
 
-Headless equivalent of the same build (what the Studio runner executes):
+Headless equivalent of the same build (what the Studio runner executes — in place, this
+directory stays read-only):
 
 ```bash
 node bin/det.js build \

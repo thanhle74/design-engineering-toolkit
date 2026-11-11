@@ -11,9 +11,21 @@ deployment (auth, per-run isolation and trust boundaries are future gates).
 
 ## Run
 
+**Primary operator path ([58]):** from the REPOSITORY ROOT (not this dir):
+
 ```bash
-npm install   # once
-npm run dev   # http://localhost:3000
+npm run setup   # once: installs both lockfiles + builds the det core
+npm run dev     # http://localhost:3000/build — repository examples are cataloged in place
+```
+
+`npm run dev` at the root launches this app with `STUDIO_DET_RUNS_DIR`
+defaulted to `<root>/out/studio-runs` (created on demand) and the root `det`
+dist built. `npm run start` at the root is the production-mode equivalent
+(`next build` + `next start`). This dir's own scripts stay for Studio
+development:
+
+```bash
+npm run dev     # http://localhost:3000 (needs the env vars from [40] below)
 ```
 
 Other commands: `npm run build` · `npm start` (serve the production build) ·
@@ -44,28 +56,40 @@ Other commands: `npm run build` · `npm start` (serve the production build) ·
   `docs/catalog-data-model.md` for the schema, backup/restore and recovery
   behavior.
 
-## Local build control setup ([40])
+## Local build control ([40], single-root operator flow [58])
 
 Build Control (`/build`) triggers **real** offline `det build` runs through a
 thin server-only local runner and serves the resulting bundle artifacts
-download-verified against `build-manifest.json`. It needs THREE env vars set
-before `npm run dev` (unset vars render an explicit not-connected state — the
-build page never shows demo data):
+download-verified against `build-manifest.json`.
+
+**Default local operation needs NO env setup** — start it from the repository
+root with `npm run dev` (one-time `npm run setup` first). Then:
+
+- **Catalogue (in place, [58]).** The build-config catalogue is the union of
+  the committed repository examples (`examples/build/*` — the revision-pinned
+  real-derived Slaunchpad project is listed and buildable IN PLACE, never
+  copied into `out/`) plus caller-configured entries from
+  `STUDIO_BUILD_PROJECTS_DIR` when set. Unrelated fixture directories are
+  never promoted; a configured entry with the same id overrides the
+  repository example. Repository entries carry a "repository example" badge;
+  the engine resolves and validates every config at build time.
+- **`STUDIO_DET_RUNS_DIR`** — where finished bundles land (one subdirectory
+  per run/bundle). Required by the runner; the root `npm run dev`/`npm run
+  start` launchers default it to `<root>/out/studio-runs` and create it, so
+  operators normally never export it. An unset env renders the honest
+  not-ready state — the build page never shows demo data.
+- **Optional:** `STUDIO_DET_CLI` (which det CLI to spawn; default
+  `../../bin/det.js` relative to apps/studio, i.e. this checkout layout;
+  relative values resolve against apps/studio), `STUDIO_BUILD_TIMEOUT_MS`
+  (default 120000), and `STUDIO_DATA_DIR` (the [50] catalogue DB). To add
+  your OWN build projects, point `STUDIO_BUILD_PROJECTS_DIR` at a directory
+  of entries (one subdirectory per entry with a `build-config.json`); the
+  fixture demo (`g28-example`) can be created there with this one-liner if
+  you want it listed too:
 
 ```bash
-# from the repo root: build the det CLI once (dist/)
-npm ci && npm run build
-
-# 1. where finished bundles land (one subdirectory per run/bundle)
-export STUDIO_DET_RUNS_DIR="$PWD/out/studio-runs"
-mkdir -p "$STUDIO_DET_RUNS_DIR"
-
-# 2. your build-config catalog: one subdirectory per entry
 export STUDIO_BUILD_PROJECTS_DIR="$PWD/out/studio-build-projects"
-# The committed example's paths are CONFIG-RELATIVE (they resolve from
-# examples/build/), so copying it elsewhere needs a path fix. This one-liner
-# writes an equivalent entry with absolute paths that builds from any
-# checkout location — replace it with your own project's config for real use:
+mkdir -p "$STUDIO_BUILD_PROJECTS_DIR"
 node -e '
 const fs=require("fs"),path=require("path");
 const root=process.cwd(), fx=path.join(root,"tests/fixtures/g28-home-design-source");
@@ -82,12 +106,6 @@ fs.writeFileSync(path.join(dir,"build-config.json"),JSON.stringify({
 },null,2));'
 # optional human label: $STUDIO_BUILD_PROJECTS_DIR/g28-example/project.json
 #   {"label": "G28 example", "description": "offline example build"}
-
-# 3. optional: which det CLI to spawn (default: ../../bin/det.js relative to
-#    apps/studio, i.e. this checkout layout; relative values resolve against
-#    apps/studio). Also optional: STUDIO_BUILD_TIMEOUT_MS (default 120000).
-
-cd apps/studio && npm install && npm run dev   # http://localhost:3000/build
 ```
 
 Notes on honesty and scope (also enforced in code and tests):
@@ -96,6 +114,9 @@ Notes on honesty and scope (also enforced in code and tests):
   `designSource.mode` to `"snapshot"`; the UI offers no live mode.
 - Config provenance paths are displayed **as declared** (config-relative);
   the engine resolves and authoritatively validates them at build time.
+- The committed repository catalogue is **read-only**: builds write only
+  under the configured runs root (and optional explicit SQLite path), never
+  into `examples/build/`.
 - One build at a time per Studio process; a second request while busy fails
   with **409** and the live job state. Job journals live under
   `<STUDIO_DET_RUNS_DIR>/.build-jobs/` and are never exposed as runs or
@@ -109,13 +130,11 @@ Notes on honesty and scope (also enforced in code and tests):
 - Native Page Builder HTML is offered as **source/download only**. No Magento
   storefront or Admin preview is claimed anywhere; installing the output into
   a Magento checkout remains an operator step (a recorded manifest gap).
-- A committed **real-derived** example — the issue [#18] live Figma read
-  (revision-pinned) materialized as a portable offline build project — can be
-  copied into `STUDIO_BUILD_PROJECTS_DIR` and run exactly like the fixture
-  demo, and stays clearly labeled apart from it. See
-  `examples/build/slaunchpad-home-real-derived/` and the operator runbook
-  `docs/runbook-real-derived-studio-build.md` ([56] receipt:
-  `docs/converter/RECEIPT-ISSUE56-REAL-DERIVED-STUDIO-BUILD.md`).
+- The committed **real-derived** example — the issue [#18] live Figma read
+  (revision-pinned) materialized as a portable offline build project — is the
+  canonical catalogue entry ([56] receipt:
+  `docs/converter/RECEIPT-ISSUE56-REAL-DERIVED-STUDIO-BUILD.md`); the
+  operator runbook is `docs/runbook-real-derived-studio-build.md`.
 
 ## Theme ([52])
 

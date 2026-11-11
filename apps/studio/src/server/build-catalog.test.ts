@@ -3,9 +3,10 @@
  * (light listing mirror only), safe id resolution and containment.
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { mkdir, mkdtemp, rm, symlink, writeFile } from "node:fs/promises";
+import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import { mkdir, mkdtemp, rm, symlink, writeFile } from "node:fs/promises";
 
 vi.mock("server-only", () => ({}));
 
@@ -43,8 +44,7 @@ afterEach(async () => {
 });
 
 describe("catalog configuration", () => {
-  it("reports not-configured for an unset/empty/invalid root", async () => {
-    await expect(BuildConfigCatalog.open("")).rejects.toMatchObject({ code: "not-configured" });
+  it("fails closed for an explicitly invalid configured root", async () => {
     await expect(
       BuildConfigCatalog.open(path.join(projectsRoot, "missing-dir"))
     ).rejects.toMatchObject({ code: "not-configured" });
@@ -52,6 +52,57 @@ describe("catalog configuration", () => {
     await expect(BuildConfigCatalog.open(path.join(projectsRoot, "afile"))).rejects.toMatchObject({
       code: "not-configured",
     });
+  });
+});
+
+describe("repository catalogue ([58])", () => {
+  it("lists the committed real-derived example IN PLACE when no env dir is set", async () => {
+    const catalog = await BuildConfigCatalog.open("");
+    const listing = await catalog.list();
+    const entry = listing.entries.find((e) => e.configId === "slaunchpad-home-real-derived");
+    expect(entry).toBeDefined();
+    expect(entry!.origin).toBe("repository");
+    expect(entry!.label).toContain("real-derived"); // committed project.json label
+    expect(entry!.inputSource).toBe("pinned-registry");
+    expect(entry!.profileId).toBe("slaunchpad-fashion");
+    // provenance paths stay as declared (config-relative), never absolute server paths
+    expect(entry!.declaredPaths.profile).toBe("profile.json");
+    expect(entry!.declaredPaths.registry).toBe("capability-registry.json");
+    expect(JSON.stringify(entry!)).not.toContain(os.tmpdir());
+  });
+
+  it("resolves the repository entry's config inside examples/build", async () => {
+    const catalog = await BuildConfigCatalog.open("");
+    const resolved = await catalog.resolveConfigPath("slaunchpad-home-real-derived");
+    expect(resolved).toContain(path.join("examples", "build", "slaunchpad-home-real-derived", "build-config.json"));
+    expect(fs.existsSync(resolved)).toBe(true);
+  });
+
+  it("a configured dir adds its entries alongside the repository catalogue", async () => {
+    await writeJson(path.join(projectsRoot, "mine", "build-config.json"), VALID_CONFIG);
+    const catalog = await BuildConfigCatalog.open(projectsRoot);
+    const listing = await catalog.list();
+    const mine = listing.entries.find((e) => e.configId === "mine");
+    expect(mine).toBeDefined();
+    expect(mine!.origin).toBe("configured");
+    expect(listing.entries.some((e) => e.origin === "repository")).toBe(true);
+  });
+
+  it("a configured entry with the same id overrides the repository example", async () => {
+    await writeJson(path.join(projectsRoot, "slaunchpad-home-real-derived", "build-config.json"), VALID_CONFIG);
+    const catalog = await BuildConfigCatalog.open(projectsRoot);
+    const listing = await catalog.list();
+    const duplicates = listing.entries.filter((e) => e.configId === "slaunchpad-home-real-derived");
+    expect(duplicates).toHaveLength(1);
+    expect(duplicates[0]!.origin).toBe("configured");
+    const resolved = await catalog.resolveConfigPath("slaunchpad-home-real-derived");
+    expect(resolved.startsWith(projectsRoot)).toBe(true);
+  });
+
+  it("still resolves other entries and stays fail-closed on ids across the union", async () => {
+    await writeJson(path.join(projectsRoot, "g28-example", "build-config.json"), VALID_CONFIG);
+    const catalog = await BuildConfigCatalog.open(projectsRoot);
+    await expect(catalog.resolveConfigPath("nope")).rejects.toMatchObject({ code: "run-not-found" });
   });
 });
 
@@ -66,9 +117,10 @@ describe("listing", () => {
     const catalog = await BuildConfigCatalog.open(projectsRoot);
     const listing = await catalog.list();
     expect(listing.invalid).toHaveLength(0);
-    expect(listing.entries).toHaveLength(1);
-    const entry = listing.entries[0]!;
-    expect(entry.configId).toBe("g28-example");
+    // [58] the committed repository catalogue rides alongside the configured dir
+    expect(listing.entries.map((e) => e.configId).sort()).toEqual(["g28-example", "slaunchpad-home-real-derived"]);
+    const entry = listing.entries.find((e) => e.configId === "g28-example")!;
+    expect(entry.origin).toBe("configured");
     expect(entry.label).toBe("G28 example");
     expect(entry.description).toBe("The accepted offline example build.");
     expect(entry.profileId).toBe("g28-home-preview");
@@ -88,9 +140,10 @@ describe("listing", () => {
     });
     const catalog = await BuildConfigCatalog.open(projectsRoot);
     const listing = await catalog.list();
-    expect(listing.entries[0]!.inputSource).toBe("pinned-registry");
-    expect(listing.entries[0]!.label).toBe("pinned");
-    expect(listing.entries[0]!.declaredPaths.registry).toBe("../../tests/fixtures/registry.json");
+    const entry = listing.entries.find((e) => e.configId === "pinned")!;
+    expect(entry.inputSource).toBe("pinned-registry");
+    expect(entry.label).toBe("pinned");
+    expect(entry.declaredPaths.registry).toBe("../../tests/fixtures/registry.json");
   });
 
   it("surfaces broken entries in invalid without hiding the rest", async () => {
@@ -108,7 +161,7 @@ describe("listing", () => {
 
     const catalog = await BuildConfigCatalog.open(projectsRoot);
     const listing = await catalog.list();
-    expect(listing.entries.map((e) => e.configId)).toEqual(["good"]);
+    expect(listing.entries.map((e) => e.configId)).toEqual(["good", "slaunchpad-home-real-derived"]);
     expect(listing.invalid.map((e) => e.configId).sort()).toEqual(["badjson", "missingfield"]);
     // reasons are safe: no absolute server paths
     for (const bad of listing.invalid) {

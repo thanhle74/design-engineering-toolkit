@@ -40,6 +40,8 @@ export interface BuildLauncherEntry {
   profileId: string;
   designSource: { mode: string; project: string; designFile: string; designNode: string };
   inputSource: "capability-probe" | "pinned-registry";
+  /** [58] repository = committed examples/build catalogue, configured = caller dir. */
+  origin?: "repository" | "configured";
   declaredPaths: {
     profile: string;
     registry?: string;
@@ -344,9 +346,11 @@ export function BuildLauncher({
           <CircleAlert className="size-4" aria-hidden="true" />
           <AlertTitle>Runner not ready</AlertTitle>
           <AlertDescription>
-            {runnerReason} Configure the runs dir (and optionally STUDIO_DET_CLI) per the local
-            build-control setup in apps/studio/README.md. The catalog below stays read-only until
-            then.
+            {runnerReason} Start Studio with <span className="font-mono">npm run dev</span> from
+            the repository root (it defaults STUDIO_DET_RUNS_DIR to{" "}
+            <span className="font-mono">out/studio-runs</span>) or set it explicitly — optionally
+            with STUDIO_DET_CLI. See apps/studio/README.md. The catalog below stays read-only
+            until then.
           </AlertDescription>
         </Alert>
       ) : null}
@@ -379,7 +383,8 @@ export function BuildLauncher({
         <CardHeader>
           <CardTitle className="text-base">Build configs</CardTitle>
           <CardDescription>
-            Caller-configured entries from the build projects dir. Provenance paths are shown as
+            Committed repository examples (read-only, cataloged in place) plus caller-configured
+            entries from STUDIO_BUILD_PROJECTS_DIR when set. Provenance paths are shown as
             declared in each config (config-relative); the engine resolves and validates them at
             build time.
           </CardDescription>
@@ -387,8 +392,8 @@ export function BuildLauncher({
         <CardContent className="flex flex-col gap-3">
           {entries.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              No build-config entries found in the configured projects dir. Add one subdirectory
-              per entry with a build-config.json (see apps/studio/README.md and
+              No build-config entries found. Add one subdirectory per entry with a
+              build-config.json under STUDIO_BUILD_PROJECTS_DIR (see apps/studio/README.md and
               examples/build/project.example.json for the shape).
             </p>
           ) : (
@@ -396,6 +401,9 @@ export function BuildLauncher({
               <div key={entry.configId} className="flex flex-col gap-2.5 rounded-lg border p-4">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="text-sm font-medium">{entry.label}</span>
+                  {entry.origin === "repository" ? (
+                    <Badge variant="secondary">repository example</Badge>
+                  ) : null}
                   <Badge variant="outline">{entry.designSource.mode}</Badge>
                   <Badge variant="outline">
                     {entry.inputSource === "capability-probe" ? "capability probe" : "pinned registry"}
