@@ -1,35 +1,35 @@
+"use client";
+
 /**
- * [29] Studio — disposition/severity badge vocabulary.
+ * [29] Studio — disposition/severity badge vocabulary ([61] Ant Design stock
+ * light appearance).
  *
  * Canonical engine strings are rendered EXACTLY as the engine emits them.
  * Compose dispositions are the frozen `mapped | gap | decoration-merged |
  * excluded | skipped` vocabulary; `NEEDS_REVIEW` appears only as a review
  * disposition / derived flag badge, never as a compose disposition.
  *
- * Semantic color mapping (calm operator look, theme tokens + Tailwind palette):
- *   mapped            -> default (primary)
- *   gap               -> amber (attention, not destructive-red)
- *   decoration-merged -> secondary (muted)
- *   excluded          -> secondary (muted)
- *   skipped           -> outline
- *   NEEDS_REVIEW      -> amber + warning icon
+ * Semantic color mapping (antd built-in preset Tag colors only — attention is
+ * amber/gold, never destructive red):
+ *   mapped            -> success (green)
+ *   gap               -> gold (attention, not error)
+ *   decoration-merged -> default gray
+ *   excluded          -> default gray
+ *   skipped           -> default subtle
+ *   NEEDS_REVIEW      -> gold + warning icon
+ *   info -> blue · warning -> gold · error -> error
+ *
+ * "Value absent" tags render as plain default Tags so an unknown fact never
+ * looks like data.
  */
-import { TriangleAlert } from "lucide-react";
+import { WarningOutlined } from "@ant-design/icons";
+import { Tag } from "antd";
 import type {
   StudioComposeDisposition,
   StudioNodeKind,
   StudioReviewDisposition,
   StudioSeverity,
 } from "@/src/shared/contracts";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
-
-/** Amber attention tint shared by `gap` and `NEEDS_REVIEW`. */
-const AMBER_BADGE =
-  "border-amber-600/40 bg-amber-500/15 text-amber-800 dark:border-amber-500/40 dark:bg-amber-500/20 dark:text-amber-300";
-
-/** Muted fill used for "value absent" badges so unknown never looks like data. */
-const UNKNOWN_BADGE = "border-dashed text-muted-foreground";
 
 export function ComposeDispositionBadge({
   disposition,
@@ -38,14 +38,14 @@ export function ComposeDispositionBadge({
 }) {
   switch (disposition) {
     case "mapped":
-      return <Badge variant="default">{disposition}</Badge>;
+      return <Tag color="success">{disposition}</Tag>;
     case "gap":
-      return <Badge variant="outline" className={AMBER_BADGE}>{disposition}</Badge>;
+      return <Tag color="gold">{disposition}</Tag>;
     case "decoration-merged":
     case "excluded":
-      return <Badge variant="secondary">{disposition}</Badge>;
+      return <Tag>{disposition}</Tag>;
     case "skipped":
-      return <Badge variant="outline">{disposition}</Badge>;
+      return <Tag>{disposition}</Tag>;
   }
 }
 
@@ -56,34 +56,33 @@ export function ReviewDispositionBadge({
 }) {
   if (disposition === "NEEDS_REVIEW") {
     return (
-      <Badge variant="outline" className={AMBER_BADGE}>
-        <TriangleAlert data-icon="inline-start" aria-hidden="true" />
+      <Tag
+        color="gold"
+        icon={<WarningOutlined aria-hidden="true" data-icon="inline-start" />}
+      >
         {disposition}
-      </Badge>
+      </Tag>
     );
   }
-  return <Badge variant="outline">{disposition}</Badge>;
+  return <Tag>{disposition}</Tag>;
 }
 
 export function KindBadge({ kind }: { kind?: StudioNodeKind }) {
   if (!kind) {
-    return (
-      <Badge variant="outline" className={UNKNOWN_BADGE}>
-        unknown
-      </Badge>
-    );
+    // "không rõ" — a fact the run does not carry is shown, never invented ([61] Vietnamese).
+    return <Tag>không rõ</Tag>;
   }
-  return <Badge variant="outline">{kind}</Badge>;
+  return <Tag>{kind}</Tag>;
 }
 
 export function SeverityBadge({ severity }: { severity: StudioSeverity }) {
   switch (severity) {
     case "info":
-      return <Badge variant="secondary">{severity}</Badge>;
+      return <Tag color="blue">{severity}</Tag>;
     case "warning":
-      return <Badge variant="outline" className={AMBER_BADGE}>{severity}</Badge>;
+      return <Tag color="gold">{severity}</Tag>;
     case "error":
-      return <Badge variant="destructive">{severity}</Badge>;
+      return <Tag color="error">{severity}</Tag>;
   }
 }
 
@@ -92,25 +91,21 @@ export function OriginBadge({
 }: {
   origin: "run" | "compose" | "review";
 }) {
-  return (
-    <Badge variant="outline" className="font-mono">
-      {origin}
-    </Badge>
-  );
+  return <Tag>{origin}</Tag>;
 }
 
 /** DEMO/LIVE run-mode badge: a fixture run is always visibly labeled DEMO. */
 export function RunModeBadge({ mode }: { mode: "fixture" | "live" }) {
   if (mode === "fixture") {
     return (
-      <Badge
-        variant="outline"
-        data-testid="studio-demo-badge"
-        className={cn("font-semibold tracking-wide", AMBER_BADGE)}
-      >
+      <Tag color="gold" data-testid="studio-demo-badge">
         DEMO
-      </Badge>
+      </Tag>
     );
   }
-  return <Badge variant="default" data-testid="studio-live-badge">LIVE</Badge>;
+  return (
+    <Tag color="success" data-testid="studio-live-badge">
+      LIVE
+    </Tag>
+  );
 }

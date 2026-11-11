@@ -1,21 +1,28 @@
+"use client";
+
 /**
  * [29] Studio — provenance footer.
  *
  * Provenance is mandatory: a fixture run is always visibly labeled DEMO, and
- * unknown facts (null source id/revision/timestamps/counts) render "unknown",
+ * unknown facts (null source id/revision/timestamps/counts) render "không rõ",
  * never 0, so fixture data can never masquerade as a live conversion.
+ *
+ * [61] Vietnamese + progressive disclosure ("ít chữ"): the DEMO/LIVE badge and
+ * the honest error/warning/info counts stay VISIBLE as a single line; every
+ * machine id fact (run id, source, revision, timestamps, profile, platform,
+ * exit code, tool command) moves one click away into a stock antd Collapse
+ * item "Chi tiết kỹ thuật". The item uses the stock `forceRender` prop so the
+ * facts stay present (and testable) in the DOM even while collapsed. Stock
+ * light Card; the plain <dl> markup is kept so the provenance facts stay
+ * plain, testable label/value pairs. Ids and hashes use antd inline code
+ * (`Typography.Text code`).
  */
 import type { ReactNode } from "react";
+import { Card, Collapse, Flex, Typography } from "antd";
 import type { StudioRunView } from "@/src/shared/contracts";
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { RunModeBadge } from "./disposition-badges";
 
-const UNKNOWN = "unknown";
+const UNKNOWN = "không rõ";
 
 function unknownIfNull(value: string | null): string {
   return value === null ? UNKNOWN : value;
@@ -35,65 +42,93 @@ function ProvenanceField({
   testId: string;
 }) {
   return (
-    <div className="flex flex-col gap-0.5">
-      <dt className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-        {label}
+    <div>
+      <dt>
+        <Typography.Text type="secondary">{label}</Typography.Text>
       </dt>
-      <dd className="text-xs" data-testid={testId}>
-        {children}
-      </dd>
+      <dd data-testid={testId}>{children}</dd>
     </div>
   );
 }
 
 export function ProvenanceFooter({ run }: { run: StudioRunView }) {
   return (
-    <Card size="sm" data-testid="provenance-footer" className="bg-muted/30">
-      <CardHeader>
-        <CardTitle className="flex flex-wrap items-center gap-2">
-          <span>Provenance</span>
+    <Card
+      size="small"
+      data-testid="provenance-footer"
+      title={
+        <Flex wrap="wrap" align="center" gap="small">
+          <span>Nguồn gốc dữ liệu</span>
           <RunModeBadge mode={run.mode} />
-        </CardTitle>
-        <CardDescription>{run.label}</CardDescription>
-      </CardHeader>
-      <dl className="grid grid-cols-2 gap-x-4 gap-y-3 px-4 pb-1 sm:grid-cols-3 lg:grid-cols-4">
-        <ProvenanceField label="Run" testId="provenance-run">
-          <span className="font-mono">{run.runId}</span>
-        </ProvenanceField>
-        <ProvenanceField label="Source ID" testId="provenance-source">
-          <span className="font-mono">{unknownIfNull(run.source.sourceId)}</span>
-        </ProvenanceField>
-        <ProvenanceField label="Revision" testId="provenance-revision">
-          <span className="font-mono">{unknownIfNull(run.source.revisionId)}</span>
-        </ProvenanceField>
-        <ProvenanceField label="Accessed at" testId="provenance-accessed">
-          <span className="font-mono">{unknownIfNull(run.source.accessedAt)}</span>
-        </ProvenanceField>
-        <ProvenanceField label="Profile" testId="provenance-profile">
-          <span className="font-mono">{unknownIfNull(run.profileId)}</span>
-        </ProvenanceField>
-        <ProvenanceField label="Platform" testId="provenance-platform">
-          <span className="font-mono">{unknownIfNull(run.platformId)}</span>
-        </ProvenanceField>
-        <ProvenanceField label="Exit code" testId="provenance-exit-code">
-          {run.exitCode === null ? UNKNOWN : String(run.exitCode)}
-        </ProvenanceField>
-        <ProvenanceField label="Diagnostic counts" testId="provenance-counts">
-          errors: {countOrNull(run.counts.errors)} · warnings:{" "}
-          {countOrNull(run.counts.warnings)} · infos:{" "}
+        </Flex>
+      }
+    >
+      <Typography.Paragraph type="secondary">
+        {run.label}
+      </Typography.Paragraph>
+      <p data-testid="provenance-counts">
+        <Typography.Text type="secondary">
+          lỗi: {countOrNull(run.counts.errors)} · cảnh báo:{" "}
+          {countOrNull(run.counts.warnings)} · thông tin:{" "}
           {countOrNull(run.counts.infos)}
-        </ProvenanceField>
-        {run.toolCommand && (
-          <ProvenanceField label="Tool command" testId="provenance-command">
-            <span className="block break-all font-mono">{run.toolCommand}</span>
-          </ProvenanceField>
-        )}
-        {run.generatedAt && (
-          <ProvenanceField label="Generated at" testId="provenance-generated">
-            <span className="font-mono">{run.generatedAt}</span>
-          </ProvenanceField>
-        )}
-      </dl>
+        </Typography.Text>
+      </p>
+      <Collapse
+        items={[
+          {
+            key: "chi-tiet-ky-thuat",
+            label: "Chi tiết kỹ thuật",
+            // Stock antd prop: keep the machine facts in the DOM even while
+            // the item is collapsed — present and reachable, not hidden.
+            forceRender: true,
+            children: (
+              <dl>
+                <ProvenanceField label="Lần chạy" testId="provenance-run">
+                  <Typography.Text code>{run.runId}</Typography.Text>
+                </ProvenanceField>
+                <ProvenanceField label="Nguồn" testId="provenance-source">
+                  <Typography.Text code>
+                    {unknownIfNull(run.source.sourceId)}
+                  </Typography.Text>
+                </ProvenanceField>
+                <ProvenanceField label="Bản sửa" testId="provenance-revision">
+                  <Typography.Text code>
+                    {unknownIfNull(run.source.revisionId)}
+                  </Typography.Text>
+                </ProvenanceField>
+                <ProvenanceField label="Truy cập lúc" testId="provenance-accessed">
+                  <Typography.Text code>
+                    {unknownIfNull(run.source.accessedAt)}
+                  </Typography.Text>
+                </ProvenanceField>
+                <ProvenanceField label="Hồ sơ" testId="provenance-profile">
+                  <Typography.Text code>
+                    {unknownIfNull(run.profileId)}
+                  </Typography.Text>
+                </ProvenanceField>
+                <ProvenanceField label="Nền tảng" testId="provenance-platform">
+                  <Typography.Text code>
+                    {unknownIfNull(run.platformId)}
+                  </Typography.Text>
+                </ProvenanceField>
+                <ProvenanceField label="Mã thoát" testId="provenance-exit-code">
+                  {run.exitCode === null ? UNKNOWN : String(run.exitCode)}
+                </ProvenanceField>
+                {run.toolCommand && (
+                  <ProvenanceField label="Lệnh công cụ" testId="provenance-command">
+                    <Typography.Text code>{run.toolCommand}</Typography.Text>
+                  </ProvenanceField>
+                )}
+                {run.generatedAt && (
+                  <ProvenanceField label="Tạo lúc" testId="provenance-generated">
+                    <Typography.Text code>{run.generatedAt}</Typography.Text>
+                  </ProvenanceField>
+                )}
+              </dl>
+            ),
+          },
+        ]}
+      />
     </Card>
   );
 }

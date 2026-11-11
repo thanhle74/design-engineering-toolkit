@@ -1,0 +1,85 @@
+[61] Stock Ant Design light DOM evidence — C61-1 correction + C61-2 internal-tool round, captured 2026-11-11
+Server: production Studio (`next start`, port 3100 — 3000 occupied by an unrelated
+local server), commits at capture: C61-4 correction (`be3a2fd`) + the C61-2
+internal-tool round (Footer/tagline removal, Vietnamese copy, Collapse disclosure,
+white main background). Method: scoped DOM checks on the served HTML (curl) + the
+served CSS bundle + headless Chrome `--screenshot --virtual-time-budget=10000`.
+
+1. Root element: `<html lang="vi">` with NO classes — no dark class, no font
+   plumbing (next/font removed in the C61-1 correction; lang switched to `vi`
+   because all human-readable UI copy is Vietnamese per Owner C61-2).
+
+2. The ENTIRE DET-authored stylesheet is one 211-byte bundle
+   (/_next/static/chunks/3ncwfwyw3d3p3.css). Its complete custom content:
+     :root{--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light}
+     .studio-content{width:100%;max-width:1152px;margin-inline:auto;padding:24px}
+     .ant-layout{background:var(--ant-color-bg-container,#fff)}
+   — (a) the light-only declaration; (b) the ONE geometry exception (centered
+   max-width column); (c) the C61-2 Owner request: whole-site main background
+   WHITE, implemented with Ant Design's own container token variable (default
+   light `colorBgContainer` = white) instead of antd's Layout default gray
+   `colorBgLayout` — no bespoke color introduced. Zero hits for 44px, tailwind,
+   `tw-`, #001529, mapping-row, font-family. All appearance is Ant Design's own
+   injected cssinjs styles (`<style id="antd-cssinjs">`, via AntdRegistry).
+
+3. No Footer, no header tagline: `class="ant-layout-footer"` element count = 0
+   (the only `ant-layout-footer*` strings are unused rules inside antd's own
+   injected library stylesheet — same situation as the internal `.ant-menu-dark`
+   variant rules); the tagline "local trusted operator UI · demo-capable" and
+   the shell disclaimer copy do not exist in the DOM. Shell = brand
+   ("DET Studio" + icon) + horizontal Menu (Tổng quan / Build / Dự án).
+
+4. Vietnamese human-readable copy everywhere; machine tokens verbatim:
+   - nav/headings: "Tổng quan", "Bản dựng", "Dự án & lần chạy", "Lần chạy gần
+     đây", "Chuyển đổi mới", "Tạo bản dựng", "Cấu hình bản dựng", "Gói build",
+     "Khoảng trống và ranh giới", "Soát mapping", "Cây thiết kế gốc",
+     "Danh sách artifact", "Xem trước", "Chi tiết kỹ thuật" (Collapse label);
+   - honest state labels: "Chưa hỗ trợ chạy trực tiếp." (the not-connected
+     conversion form), "Chưa cấu hình trình đọc lần chạy", "Catalog đang tắt",
+     "Không tìm thấy lần chạy", "Không thể xem trước", "Đã xác minh: mọi output
+     khớp SHA-256 và kích thước đã ghi.";
+   - machine vocabulary NOT translated, kept in `Typography.Text code` chips or
+     table cells: run/config/profile/platform/source/revision ids, stage names +
+     statuses (capability-probe, reused, completed), run status enums
+     (SUCCEEDED/PARTIAL/FAILED/RUNNING/INTERRUPTED), gap/diagnostic codes
+     (COMPOSITION_SKIPS_PRESENT · số lượng 10, COMPOSITION_GAPS_PRESENT · số
+     lượng 12, PREVIEW_INSTALL_OPERATOR_GATED, PREVIEW_ASSETS_NOT_GENERATED,
+     PREVIEW_UNAVAILABLE, NOT_CONFIGURED, NOT_CONNECTED), artifact names/paths/
+     sha256, env vars (STUDIO_DET_RUNS_DIR, STUDIO_DATA_DIR), HTTP codes, DEMO.
+
+5. Progressive disclosure: technical details live in stock antd `Collapse`
+   items labeled "Chi tiết kỹ thuật" (default collapsed, 3 on the run page:
+   per-config declared provenance paths on Build, provenance machine-id fields
+   and the original English gap messages on Run Details) — raw codes stay
+   visible up front as code chips; nothing is hidden from the operator.
+
+6. Stock antd primitives only: ant-layout / ant-menu / ant-card / ant-table /
+   ant-tag / ant-alert / ant-collapse / ant-descriptions / ant-flex /
+   ant-typography classes; built-in Tag color presets; Typography.Link anchors
+   for content links; Menu keeps next/link items (Menu styles its own). The
+   horizontal Menu carries one documented geometry-only style
+   (`flex:auto; minWidth:0` — antd's own top-nav demo pattern) so items do not
+   collapse into the ellipsis overflow indicator on desktop.
+
+7. Honest states on the fresh C61-2 run (build-1794390708023):
+   - POST /api/builds → 202 → exited, exit code 0; stages `capability-probe:
+     reused / extraction: completed / composition: completed` (verbatim in the
+     stage table);
+   - gaps verbatim with Vietnamese lead-ins: COMPOSITION_SKIPS_PRESENT · số
+     lượng 10 ("Một số node đã bị bỏ qua trong quá trình ghép."),
+     COMPOSITION_GAPS_PRESENT · số lượng 12 ("Có nội dung chưa ghép được vào
+     cấu trúc Page Builder."), PREVIEW_INSTALL_OPERATOR_GATED ("Bản xem trước
+     cần vận hành viên tự cài đặt."), PREVIEW_ASSETS_NOT_GENERATED ("Chưa tạo
+     tài nguyên cho bản xem trước.");
+   - PREVIEW_UNAVAILABLE rendered as a code chip (raw string in DOM, no
+     simulated storefront); 409 single-build semantics unchanged;
+   - download re-verified: native-content.html = 3288 bytes,
+     sha256 6362c6a943e061dcadacaf4f12597b460a1f425e11c123c7492458b692893bdf —
+     byte-identical to the manifest-declared hash (and to every earlier run:
+     deterministic engine).
+
+8. Screenshots (C61-2 round, corrected Vietnamese UI + white main background):
+   61-overview-desktop/narrow, 61-build-desktop/narrow, 61-catalog-desktop/narrow,
+   61-run-detail-desktop/narrow (run build-1794390708023), 61-run-not-found-desktop.
+   Earlier-round versions of the same filenames live in git history; historical
+   [52] dark assets preserved untouched alongside.

@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import { Flex, Typography } from "antd";
+
 import { ArtifactManifest } from "@/src/modules/artifacts";
 import type { StudioArtifactView } from "@/src/shared/contracts";
 
@@ -43,7 +45,7 @@ export function ClientArtifactManifest({
           error?: { code?: string; message?: string };
         } | null;
         setError(
-          `Download refused (HTTP ${response.status}${body?.error?.code ? ` · ${body.error.code}` : ""}).`
+          `Tải xuống bị từ chối (HTTP ${response.status}${body?.error?.code ? ` · ${body.error.code}` : ""}).`
         );
         return;
       }
@@ -60,18 +62,18 @@ export function ClientArtifactManifest({
       anchor.remove();
       URL.revokeObjectURL(url);
     } catch {
-      setError("Download failed — the artifact route is unreachable.");
+      setError("Tải xuống thất bại — route artifact không truy cập được.");
     }
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <Flex vertical gap={8}>
       <ArtifactManifest artifacts={artifacts} onDownload={onDownload} />
       {error !== null ? (
-        <p role="alert" className="text-xs text-destructive">
-          {error}
+        <p role="alert">
+          <Typography.Text type="danger">{error}</Typography.Text>
         </p>
       ) : null}
-    </div>
+    </Flex>
   );
 }

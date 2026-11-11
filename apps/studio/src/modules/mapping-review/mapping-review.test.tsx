@@ -144,7 +144,7 @@ describe("MappingReview — diagnostics", () => {
     };
     render(<MappingReview run={noDiagnosticsRun} />);
     expect(screen.getByTestId("diagnostics-empty")).toHaveTextContent(
-      "No diagnostics recorded for this run."
+      "Không có chẩn đoán nào được ghi cho lần chạy này."
     );
     expect(screen.getAllByTestId("mapping-row")).toHaveLength(18);
   });
@@ -165,9 +165,9 @@ describe("MappingReview — provenance", () => {
       "2026-11-09T00:00:00.000Z"
     );
     const counts = screen.getByTestId("provenance-counts");
-    expect(counts).toHaveTextContent("errors: 0");
-    expect(counts).toHaveTextContent("warnings: 3");
-    expect(counts).toHaveTextContent("infos: 2");
+    expect(counts).toHaveTextContent("lỗi: 0");
+    expect(counts).toHaveTextContent("cảnh báo: 3");
+    expect(counts).toHaveTextContent("thông tin: 2");
     expect(screen.getByTestId("provenance-command")).toHaveTextContent(
       "det compose"
     );
@@ -182,7 +182,7 @@ describe("MappingReview — empty run", () => {
     render(<MappingReview run={EMPTY_RUN} />);
 
     expect(screen.getByTestId("mapping-review-empty")).toHaveTextContent(
-      "No node mappings or diagnostics"
+      "Không có node mapping hay chẩn đoán"
     );
     expect(screen.queryByTestId("mapping-row")).not.toBeInTheDocument();
 
@@ -191,10 +191,10 @@ describe("MappingReview — empty run", () => {
     expect(screen.getByTestId("studio-demo-badge")).toHaveTextContent("DEMO");
 
     // Unknown facts stay unknown — never rendered as zero.
-    expect(screen.getByTestId("provenance-source")).toHaveTextContent("unknown");
-    expect(screen.getByTestId("provenance-revision")).toHaveTextContent("unknown");
+    expect(screen.getByTestId("provenance-source")).toHaveTextContent("không rõ");
+    expect(screen.getByTestId("provenance-revision")).toHaveTextContent("không rõ");
     expect(screen.getByTestId("provenance-counts")).toHaveTextContent(
-      "errors: unknown"
+      "lỗi: không rõ"
     );
     expect(screen.queryByTestId("provenance-command")).not.toBeInTheDocument();
     expect(screen.queryByTestId("provenance-generated")).not.toBeInTheDocument();

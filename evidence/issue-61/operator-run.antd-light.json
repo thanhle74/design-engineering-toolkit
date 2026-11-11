@@ -1,0 +1,72 @@
+{
+  "job": {
+    "runId": "build-1794385166500",
+    "configId": "slaunchpad-home-real-derived",
+    "state": "exited",
+    "exitCode": 0,
+    "signal": null,
+    "timedOut": false,
+    "startedAt": "2026-11-11T08:19:26.500Z",
+    "finishedAt": "2026-11-11T08:19:27.429Z",
+    "command": [
+      "<repo-root>",
+      "<repo-root>",
+      "build",
+      "--config",
+      "<repo-root>",
+      "--out",
+      "<repo-root>",
+      "--json"
+    ],
+    "stdoutTail": "{   \"run\": {     \"schemaVersion\": 1,     \"tool\": {       \"name\": \"det\",       \"toolVersion\": \"0.1.0\"     },     \"command\": \"build\",     \"exitCode\": 0,     \"generatedAt\": \"2026-11-11T08:19:27.419Z\",     \"profileId\": \"slaunchpad-fashion\",     \"platformId\": \"magento-pagebuilder\",     \"artifacts\": [       {         \"role\": \"build-manifest\",         \"schemaRef\": \"https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/build-manifest.schema.json\",         \"contentHash\": \"8d220c016fff014fd851192b88b0a0b087d6aa8b4e5974291bf8789c8c1d8b4d\",         \"volatileContentHash\": \"8d220c016fff014fd851192b88b0a0b087d6aa8b4e5974291bf8789c8c1d8b4d\",         \"file\": \"build-manifest.json\"       }     ],     \"converterDiagnostics\": [],     \"runDiagnostics\": [],     \"counts\": {       \"errors\": 0,       \"warnings\": 0,       \"infos\": 0     },     \"wroteFiles\": true   },   \"manifest\": {     \"schemaVersion\": 1,     \"kind\": \"det-build-manifest\",     \"profileId\": \"slaunchpad-fashion\",     \"platformId\": \"magento-pagebuilder\",     \"source\": {       \"sourceId\": \"figma-home-desktop\",       \"revisionId\": \"2417494580183108397\"     },     \"config\": {       \"contentHash\": \"sha256:a8e94df0f51837b78c1a5f693055c1cd11b2d931f63b73c10a9b88573a144a24\"     },     \"stages\": [       {         \"stage\": \"capability-probe\",         \"status\": \"reused\",         \"exitCode\": 0       },       {         \"stage\": \"extraction\",         \"status\": \"completed\",         \"exitCode\": 0,         \"outDir\": \"02-extraction\"       },       {         \"stage\": \"composition\",         \"status\": \"completed\",         \"exitCode\": 0,         \"outDir\": \"03-composition\"       }     ],     \"inputs\": [       {         \"path\": \"capability-registry.json\",         \"role\": \"registry\",         \"sha256\": \"ae6afa979f8c100d42a73a83920ff8da40b05dcb6889009116a8b87eaf1af6ff\",         \"bytes\": 121814,         \"provenance\": {           \"via\": \"caller-input\"         }       },       {         \"path\": \"component-bindings.json\",         \"role\": \"binding-map\",         \"sha256\": \"084be1fb96ae8632eeccf352002249de8e83c58c76a7ee5cb47c6f379339e7e5\",         \"bytes\": 311,         \"provenance\": {           \"via\": \"caller-input\"         }       },       {         \"path\": \"content-manifest.json\",         \"role\": \"content-manifest-input\",         \"sha256\": \"a042a37441968936bd1d68254bcc7a5833af0fd55343e214bab77ede1ae5a77b\",         \"bytes\": 2142,         \"provenance\": {           \"via\": \"caller-input\"         }       },       {         \"path\": \"profile.json\",         \"role\": \"profile-input\",         \"sha256\": \"1a1e620c5f94f7ac0ac1ebec35e5986ff05625d79a7166a2900bc3ad77dc08a0\",         \"bytes\": 1592,         \"provenance\": {           \"via\": \"caller-input\"         }       },       {         \"path\": \"semantic-projection.json\",         \"role\": \"projection-input\",         \"sha256\": \"289356c0e648e6688eadfcda455c340522625636c4f5fc00579cc91f2ff3f7d6\",         \"bytes\": 3094,         \"provenance\": {           \"via\": \"caller-input\"         }       },       {         \"path\": \"snapshot-project/figma-home-desktop.245-2.tree.json\",         \"role\": \"design-tree-input\",         \"sha256\": \"9f5fecf17629c0316d54e04dc485c2949c7b7a3aa1203b4610a58d424b608ac4\",         \"bytes\": 169696,         \"provenance\": {           \"via\": \"caller-input\"         }       }     ],     \"outputs\": [       {         \"path\": \"02-extraction/node-ir.json\",         \"role\": \"node-ir\",         \"sha256\": \"8df437edb513ef4135630e724258be6edf53cdd53cb934178b44943386d366d8\",         \"bytes\": 448733,         \"provenance\": {           \"via\": \"det-extract\",           \"stage\": \"02-extraction\"         }       },       {         \"path\": \"02-extraction/page-structure.json\",         \"role\": \"page-structure\",         \"sha256\": \"64ab5dc7d8a030566e2f425ec3913f2e5639f30772a1a31234a9f6bb1f02c76d\",         \"bytes\": 18560,         \"provenance\": {           \"via\": \"det-extract\",           \"stage\": \"02-extraction\"         }       },       {         \"path\": \"02-extraction/source-review.json\",         \"role\": \"source-review\",         \"sha256\": \"c76a2b0f696935db9f19a8c20de9a427fcf853f252090a1ee619e165236656f4\",         \"bytes\": 202654,         \"provenance\": {           \"via\": \"det-extract\",           \"stage\": \"02-extraction\"         }       },       {         \"path\": \"02-extraction/tool-run.json\",         \"role\": \"tool-run-envelope\",         \"sha256\": \"6efece768766cd20a5cdff80879dffab4930d9725bd4596c6aa177363fec0147\",         \"bytes\": 2025,         \"provenance\": {           \"via\": \"det-extract\",           \"stage\": \"02-extraction\"         }       },       {         \"path\": \"03-composition/compose-report.json\",         \"role\": \"compose-report\",         \"sha256\": \"7736894621c199b82802fa31338513296ac7c6a28b7e2f39a9f425583027c6e7\",         \"bytes\": 27725,         \"provenance\": {           \"via\": \"det-compose\",           \"stage\": \"03-composition\"         }       },       {         \"path\": \"03-composition/native-content.html\",         \"role\": \"native-content\",         \"sha256\": \"6362c6a943e061dcadacaf4f12597b460a1f425e11c123c7492458b692893bdf\",         \"bytes\": 3288,         \"provenance\": {           \"via\": \"det-compose\",           \"stage\": \"03-composition\"         }       },       {         \"path\": \"03-composition/tool-run.json\",         \"role\": \"tool-run-envelope\",         \"sha256\": \"68c3b4d89b650673d31ccfaafdf1c7e3b939a6211b0e80a1d21f3c3a97869b3b\",         \"bytes\": 11431,         \"provenance\": {           \"via\": \"det-compose\",           \"stage\": \"03-composition\"         }       }     ],     \"gaps\": [       {         \"code\": \"COMPOSITION_SKIPS_PRESENT\",         \"message\": \"10 planned section(s) skipped by the composition table \u2014 measured partial coverage, never claimed complete.\",         \"count\": 10       },       {         \"code\": \"COMPOSITION_GAPS_PRESENT\",         \"message\": \"12 composed source node(s) carry explicit fidelity gaps (see 03-composition/compose-report.json mapping) \u2014 recorded, never engineered around.\",         \"count\": 12       },       {         \"code\": \"PREVIEW_INSTALL_OPERATOR_GATED\",         \"message\": \"Theme installation and isolated-preview CMS import are operator steps outside this build's write boundary (see the toolkit's local-preview runbook); they are never performed or claimed by det build.\"       },       {         \"code\": \"PREVIEW_ASSETS_NOT_GENERATED\",         \"message\": \"No media/theme assets are generated by the offline build; real assets come from the caller's own authorized local sources via the content manifest.\"       }     ]   } } ",
+    "stderrTail": "",
+    "manifestSummary": {
+      "profileId": "slaunchpad-fashion",
+      "platformId": "magento-pagebuilder",
+      "sourceId": "figma-home-desktop",
+      "revisionId": "2417494580183108397",
+      "stages": [
+        {
+          "stage": "capability-probe",
+          "status": "reused",
+          "exitCode": 0
+        },
+        {
+          "stage": "extraction",
+          "status": "completed",
+          "exitCode": 0,
+          "outDir": "02-extraction"
+        },
+        {
+          "stage": "composition",
+          "status": "completed",
+          "exitCode": 0,
+          "outDir": "03-composition"
+        }
+      ],
+      "gaps": [
+        {
+          "code": "COMPOSITION_SKIPS_PRESENT",
+          "message": "10 planned section(s) skipped by the composition table \u2014 measured partial coverage, never claimed complete.",
+          "count": 10
+        },
+        {
+          "code": "COMPOSITION_GAPS_PRESENT",
+          "message": "12 composed source node(s) carry explicit fidelity gaps (see 03-composition/compose-report.json mapping) \u2014 recorded, never engineered around.",
+          "count": 12
+        },
+        {
+          "code": "PREVIEW_INSTALL_OPERATOR_GATED",
+          "message": "Theme installation and isolated-preview CMS import are operator steps outside this build's write boundary (see the toolkit's local-preview runbook); they are never performed or claimed by det build."
+        },
+        {
+          "code": "PREVIEW_ASSETS_NOT_GENERATED",
+          "message": "No media/theme assets are generated by the offline build; real assets come from the caller's own authorized local sources via the content manifest."
+        }
+      ],
+      "outputCount": 7
+    },
+    "spawnError": null,
+    "pid": 3557017
+  }
+}

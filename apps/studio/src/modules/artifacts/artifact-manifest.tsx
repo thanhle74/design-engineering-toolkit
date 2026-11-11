@@ -14,26 +14,26 @@
  *    parent-escaping values are a read-model contract violation: the path is
  *    WITHHELD and the row shows an explicit error state instead.
  *  - `contentHash` is shortened to its first 10 characters + "…"; the full
- *    hash stays in the tooltip title, never rendered as if copied out.
+ *    hash stays in the row tooltip title, never rendered as if copied out.
  *  - `downloadable: false` renders a disabled control whose tooltip says why,
  *    truthfully: the run reader does not serve this artifact (DEMO/fixture
  *    data or an artifact not exposed for download).
- *  - Empty manifest renders a truthful EMPTY state, not an empty table.
+ *  - Empty manifest renders a truthful EMPTY state, never an empty table.
+ *
+ * [61] Ant Design stock light appearance: Table via the `columns` prop (no
+ * dot-notation subcomponents), the hash tooltip rides the cell via `onCell`,
+ * ids/hashes are antd inline code, and the empty state stays a custom div so
+ * no antd built-in empty table is ever rendered.
  */
-import { Download, Lock, PackageOpen, TriangleAlert } from "lucide-react";
-
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import type { HTMLAttributes, ReactNode } from "react";
 import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+  DownloadOutlined,
+  InboxOutlined,
+  LockOutlined,
+  WarningOutlined,
+} from "@ant-design/icons";
+import { Button, Card, Empty, Table, Tag, Tooltip, Typography } from "antd";
+import type { ColumnsType } from "antd/es/table";
 import type { StudioArtifactView } from "@/src/shared/contracts";
 
 export type ArtifactDownloadHandler = (artifact: StudioArtifactView) => void;
@@ -57,7 +57,7 @@ const HASH_SHORT_LENGTH = 10;
  * data and reader-unexposed artifacts have no real file to download.
  */
 const NOT_DOWNLOADABLE_TOOLTIP =
-  "Not downloadable — the run reader does not serve this artifact (DEMO/fixture data, or an artifact not exposed for download). Downloads exist only for reader-validated files.";
+  "Không tải được — run reader không phục vụ artifact này (dữ liệu DEMO/fixture, hoặc artifact không được mở cho tải xuống). Chỉ file đã được reader xác thực mới tải được.";
 
 /**
  * A manifest `file` must be a relative path under the run's out dir. Anything
@@ -78,80 +78,117 @@ function shortHash(hash: string): string {
 }
 
 const UNSAFE_PATH_TITLE =
-  "Manifest files must be relative paths under the run output directory. This absolute-looking path is withheld and never rendered.";
+  "Đường dẫn trong manifest phải là đường dẫn tương đối dưới thư mục output của lần chạy. Đường dẫn tuyệt đối này đã bị ẩn và không bao giờ hiển thị.";
 
-export function ArtifactManifest({ artifacts, onDownload }: ArtifactManifestProps) {
-  return (
-    <Card size="sm" data-testid="artifact-manifest">
-      <CardHeader>
-        <CardTitle>
-          <h2>Artifacts</h2>
-        </CardTitle>
-        <CardDescription>
-          Artifact manifest from the det run. Downloads are handed to the page
-          and served only for reader-validated files.
-        </CardDescription>
-        {artifacts.length > 0 ? (
-          <CardAction>
-            <Badge variant="secondary" data-testid="artifact-count">
-              {artifacts.length} {artifacts.length === 1 ? "artifact" : "artifacts"}
-            </Badge>
-          </CardAction>
-        ) : null}
-      </CardHeader>
-      <CardContent>
-        {artifacts.length === 0 ? (
-          <div
-            data-testid="artifacts-empty"
-            className="flex flex-col items-center gap-2 rounded-lg border border-dashed px-4 py-10 text-center"
-          >
-            <PackageOpen aria-hidden="true" className="size-5 text-muted-foreground" />
-            <p className="text-sm font-medium">No artifacts in this run</p>
-            <p className="text-xs text-muted-foreground">
-              When the run writes validated artifacts, they are listed here with
-              their role, schema and content hash.
-            </p>
-          </div>
+/**
+ * antd `onRow` prop bags accept arbitrary DOM attributes, but React's
+ * `HTMLAttributes` type has no `data-*` index signature — a narrow cast keeps
+ * the test-visible row attribute honest without loosening antd's own typing.
+ */
+function rowProps(
+  props: Record<string, string>
+): HTMLAttributes<HTMLTableRowElement> {
+  return props as unknown as HTMLAttributes<HTMLTableRowElement>;
+}
+
+export function ArtifactManifest({
+  artifacts,
+  onDownload,
+}: ArtifactManifestProps) {
+  const columns: ColumnsType<StudioArtifactView> = [
+    {
+      title: "Vai trò",
+      width: 160,
+      render: (_, artifact) => <Tag>{artifact.role}</Tag>,
+    },
+    {
+      title: "Tệp",
+      render: (_, artifact) => <ArtifactFileCell file={artifact.file} />,
+    },
+    {
+      title: "Schema",
+      render: (_, artifact) => <SchemaRefCell schemaRef={artifact.schemaRef} />,
+    },
+    {
+      title: "Hash nội dung",
+      width: 112,
+      // The full hash stays a cell tooltip — visible on demand, never rendered
+      // as if it were copied out.
+      onCell: (artifact) => ({ title: artifact.contentHash ?? undefined }),
+      render: (_, artifact) =>
+        artifact.contentHash ? (
+          <Typography.Text code>
+            {shortHash(artifact.contentHash)}
+          </Typography.Text>
         ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-40">Role</TableHead>
-                <TableHead>File</TableHead>
-                <TableHead>Schema</TableHead>
-                <TableHead className="w-28">Content hash</TableHead>
-                <TableHead className="w-32 text-right">Download</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {artifacts.map((artifact) => (
-                <TableRow key={artifact.artifactId} data-artifact-id={artifact.artifactId}>
-                  <TableCell>
-                    <Badge variant="outline" className="font-mono">
-                      {artifact.role}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="font-mono text-xs">
-                    <ArtifactFileCell file={artifact.file} />
-                  </TableCell>
-                  <TableCell>
-                    <SchemaRefCell schemaRef={artifact.schemaRef} />
-                  </TableCell>
-                  <TableCell className="font-mono text-xs" title={artifact.contentHash}>
-                    {artifact.contentHash ? shortHash(artifact.contentHash) : (
-                      <span className="text-muted-foreground">—</span>
-                    )}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <DownloadCell artifact={artifact} onDownload={onDownload} />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        )}
-      </CardContent>
+          <Typography.Text type="secondary">—</Typography.Text>
+        ),
+    },
+    {
+      title: "Tải xuống",
+      width: 128,
+      align: "right",
+      render: (_, artifact) => (
+        <DownloadCell artifact={artifact} onDownload={onDownload} />
+      ),
+    },
+  ];
+
+  return (
+    <Card
+      size="small"
+      data-testid="artifact-manifest"
+      title={<h2>Danh sách artifact</h2>}
+      extra={
+        artifacts.length > 0 ? (
+          <Tag data-testid="artifact-count">{artifacts.length} artifact</Tag>
+        ) : undefined
+      }
+    >
+      <Typography.Paragraph type="secondary">
+        Manifest artifact của lần chạy det. Lượt tải xuống do trang xử lý và chỉ
+        phục vụ file đã được reader xác thực.
+      </Typography.Paragraph>
+      {artifacts.length === 0 ? (
+        <EmptyManifest />
+      ) : (
+        <Table<StudioArtifactView>
+          rowKey="artifactId"
+          columns={columns}
+          dataSource={[...artifacts]}
+          pagination={false}
+          onRow={(artifact) =>
+            rowProps({ "data-artifact-id": artifact.artifactId })
+          }
+        />
+      )}
     </Card>
+  );
+}
+
+/**
+ * Truthful EMPTY state for a run without artifacts. A custom div — never the
+ * antd Table's built-in empty rendering — so an empty manifest is visibly not
+ * a rendered-but-empty table.
+ */
+function EmptyManifest(): ReactNode {
+  return (
+    <div data-testid="artifacts-empty">
+      <Empty
+        image={<InboxOutlined aria-hidden="true" />}
+        description={
+          <>
+            <Typography.Text strong>
+              Chưa có artifact nào trong lần chạy này
+            </Typography.Text>
+            <Typography.Paragraph type="secondary">
+              Khi lần chạy tạo ra artifact đã được xác thực, chúng sẽ được liệt
+              kê ở đây cùng vai trò, schema và hash nội dung.
+            </Typography.Paragraph>
+          </>
+        }
+      />
+    </div>
   );
 }
 
@@ -161,51 +198,50 @@ export function ArtifactManifest({ artifacts, onDownload }: ArtifactManifestProp
  */
 function ArtifactFileCell({ file }: { file?: string }) {
   if (!file) {
-    return <span className="text-muted-foreground">—</span>;
+    return <Typography.Text type="secondary">—</Typography.Text>;
   }
   if (isUnsafeArtifactFile(file)) {
     return (
-      <Badge
-        variant="destructive"
+      <Tag
+        color="error"
         data-testid="artifact-file-invalid"
         title={UNSAFE_PATH_TITLE}
+        icon={<WarningOutlined aria-hidden="true" />}
       >
-        <TriangleAlert aria-hidden="true" />
-        Invalid file path withheld
-      </Badge>
+        Đã ẩn đường dẫn không hợp lệ
+      </Tag>
     );
   }
-  return <span className="break-all">{file}</span>;
+  return <Typography.Text code>{file}</Typography.Text>;
 }
 
 /**
  * schemaRef is a reference string, not guaranteed to be a URL: http(s)
- * references render as external links, everything else as plain text. Both
- * truncate visually and keep the full value in the tooltip title.
+ * references render as external links, everything else as secondary text.
+ * Both keep the full value in the tooltip title.
  */
 function SchemaRefCell({ schemaRef }: { schemaRef: string }) {
   if (/^https?:\/\//i.test(schemaRef)) {
     return (
-      <a
+      <Typography.Link
         href={schemaRef}
         target="_blank"
         rel="noreferrer"
         title={schemaRef}
         data-testid="artifact-schema-link"
-        className="block max-w-48 truncate text-xs underline underline-offset-4"
       >
         {schemaRef}
-      </a>
+      </Typography.Link>
     );
   }
   return (
-    <span
+    <Typography.Text
+      type="secondary"
       title={schemaRef}
       data-testid="artifact-schema-text"
-      className="block max-w-48 truncate text-xs text-muted-foreground"
     >
       {schemaRef}
-    </span>
+    </Typography.Text>
   );
 }
 
@@ -225,36 +261,29 @@ function DownloadCell({
   if (artifact.downloadable) {
     return (
       <Button
-        type="button"
-        variant="outline"
-        size="sm"
+        size="small"
+        icon={<DownloadOutlined aria-hidden="true" />}
         data-testid={`artifact-download-${artifact.artifactId}`}
         onClick={() => onDownload(artifact)}
       >
-        <Download aria-hidden="true" />
-        Download
+        Tải xuống
       </Button>
     );
   }
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <span
-            tabIndex={0}
-            data-testid={`artifact-download-disabled-${artifact.artifactId}`}
-            className="inline-flex cursor-not-allowed"
-          >
-            <Button type="button" variant="outline" size="sm" disabled>
-              <Lock aria-hidden="true" />
-              Download
-            </Button>
-          </span>
-        </TooltipTrigger>
-        <TooltipContent className="max-w-64 text-xs">
-          {NOT_DOWNLOADABLE_TOOLTIP}
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <Tooltip title={NOT_DOWNLOADABLE_TOOLTIP} trigger={["hover", "focus"]}>
+      <span
+        tabIndex={0}
+        data-testid={`artifact-download-disabled-${artifact.artifactId}`}
+      >
+        <Button
+          size="small"
+          icon={<LockOutlined aria-hidden="true" />}
+          disabled
+        >
+          Tải xuống
+        </Button>
+      </span>
+    </Tooltip>
   );
 }

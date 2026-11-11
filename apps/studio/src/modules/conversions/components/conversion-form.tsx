@@ -9,21 +9,17 @@
  * conversion ran, never shows progress, and stores nothing anywhere.
  *
  * There is deliberately NO Figma token field: [28]'s engine owns Figma access.
+ *
+ * [61] Ant Design stock light appearance, deliberately WITHOUT antd Form: the
+ * plain <form onSubmit> + requestSubmit flow and the plain <p role="alert">
+ * validation error are kept (no antd Form validation machinery, no progress
+ * states). antd Selects use the `options` prop and carry the same ids the
+ * labels point at, so label association keeps working through antd's inner
+ * search input. Layout uses stock antd Flex/Grid primitives only.
  */
 import * as React from "react";
-import { Unplug } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { cn } from "@/lib/utils";
+import { ApiOutlined } from "@ant-design/icons";
+import { Button, Col, Flex, Input, Row, Select, Typography } from "antd";
 
 import { DEFAULT_OUTPUT_TARGET, OUTPUT_TARGET_OPTIONS } from "../conversion-options";
 import { parseFigmaInput, type FigmaInputParseResult } from "../figma-input";
@@ -100,122 +96,131 @@ export function ConversionForm({ profiles, className }: ConversionFormProps) {
   }
 
   return (
-    <section aria-labelledby="new-conversion-heading" className={cn("w-full max-w-2xl", className)}>
-      <h2 id="new-conversion-heading" className="text-base font-semibold tracking-tight">
-        New conversion
-      </h2>
-      <p className="mt-1 text-xs text-muted-foreground">
-        Point the studio at one Figma frame to convert. Studio only prepares and reviews the
-        request — the det engine performs the conversion.
-      </p>
+    <section aria-labelledby="new-conversion-heading" className={className}>
+      <h2 id="new-conversion-heading">Chuyển đổi mới</h2>
+      <Typography.Paragraph type="secondary">
+        Trỏ Studio vào một frame Figma để chuyển đổi. Studio chỉ chuẩn bị và soát lại yêu cầu —
+        engine det mới thực hiện chuyển đổi.
+      </Typography.Paragraph>
 
-      <form className="mt-4 space-y-5" onSubmit={handleSubmit} noValidate>
-        <div className="space-y-1.5">
-          <Label htmlFor={SOURCE_INPUT_ID}>Figma design source</Label>
-          <Input
-            id={SOURCE_INPUT_ID}
-            name="figmaSource"
-            type="text"
-            inputMode="url"
-            autoComplete="off"
-            spellCheck={false}
-            placeholder="https://www.figma.com/design/<fileKey>/<fileName>?node-id=245-2 — or 245:2"
-            value={sourceInput}
-            onChange={handleSourceChange}
-            onKeyDown={(event) => {
-              if (event.key === "Enter") {
-                // Uniform keyboard submit: implicit form submission for Enter in
-                // text inputs varies by engine, so request it exactly once here.
-                event.preventDefault();
-                event.currentTarget.form?.requestSubmit();
-              }
-            }}
-            aria-invalid={validationError ? true : undefined}
-            aria-describedby={validationError ? `${SOURCE_ERROR_ID} ${SOURCE_HELP_ID}` : SOURCE_HELP_ID}
-            className="font-mono text-sm"
-          />
-          {validationError ? (
-            <p id={SOURCE_ERROR_ID} role="alert" className="text-xs text-destructive">
-              {validationError.message}
+      <form onSubmit={handleSubmit} noValidate>
+        <Flex vertical gap="middle">
+          <Flex vertical gap="small">
+            <label htmlFor={SOURCE_INPUT_ID}>Nguồn thiết kế Figma</label>
+            <Input
+              id={SOURCE_INPUT_ID}
+              name="figmaSource"
+              type="text"
+              inputMode="url"
+              autoComplete="off"
+              spellCheck={false}
+              placeholder="https://www.figma.com/design/<fileKey>/<fileName>?node-id=245-2 — or 245:2"
+              value={sourceInput}
+              onChange={handleSourceChange}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  // Uniform keyboard submit: implicit form submission for Enter in
+                  // text inputs varies by engine, so request it exactly once here.
+                  event.preventDefault();
+                  event.currentTarget.form?.requestSubmit();
+                }
+              }}
+              status={validationError ? "error" : undefined}
+              aria-invalid={validationError ? true : undefined}
+              aria-describedby={validationError ? `${SOURCE_ERROR_ID} ${SOURCE_HELP_ID}` : SOURCE_HELP_ID}
+            />
+            {validationError ? (
+              <p id={SOURCE_ERROR_ID} role="alert">
+                <Typography.Text type="danger">
+                  {validationError.message}
+                </Typography.Text>
+              </p>
+            ) : null}
+            <p id={SOURCE_HELP_ID}>
+              <Typography.Text type="secondary">
+                Chấp nhận: URL file thiết kế Figma kèm node-id (…?node-id=1-2), hoặc node id trần
+                dạng 245:2. URL thiếu node-id sẽ bị từ chối — engine cần một node để trích xuất.
+              </Typography.Text>
             </p>
-          ) : null}
-          <p id={SOURCE_HELP_ID} className="text-xs text-muted-foreground">
-            Accepted: a Figma design-file URL including node-id (…?node-id=1-2), or a bare node
-            id like 245:2. A URL without node-id is rejected — the engine needs a node to extract.
-          </p>
-        </div>
+          </Flex>
 
-        <div className="grid gap-5 sm:grid-cols-2">
-          <div className="space-y-1.5">
-            <Label htmlFor={TARGET_SELECT_ID}>Output target</Label>
-            <Select value={target} onValueChange={(value) => setTarget(value as ConversionOutputTarget)}>
-              <SelectTrigger id={TARGET_SELECT_ID} className="w-full">
-                {/* Children keep the trigger truthful before the first open — Radix
-                    only portals item text into the trigger once items mount. */}
-                <SelectValue placeholder="Select output target">
-                  {OUTPUT_TARGET_OPTIONS.find((option) => option.value === target)?.label}
-                </SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                {OUTPUT_TARGET_OPTIONS.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <Row gutter={16}>
+            <Col xs={24} md={12}>
+              <Flex vertical gap="small">
+                <label htmlFor={TARGET_SELECT_ID}>Đích xuất</label>
+                {/* antd Select keeps the id on its inner search input, so the
+                    label association above still names the combobox. */}
+                <Select
+                  id={TARGET_SELECT_ID}
+                  // layout only
+                  style={{ width: "100%" }}
+                  value={target}
+                  onChange={(value) => setTarget(value as ConversionOutputTarget)}
+                  options={OUTPUT_TARGET_OPTIONS.map((option) => ({
+                    value: option.value,
+                    label: option.label,
+                  }))}
+                />
+              </Flex>
+            </Col>
+            <Col xs={24} md={12}>
+              <Flex vertical gap="small">
+                {profilesConfigured ? (
+                  <>
+                    <label htmlFor={PROFILE_SELECT_ID}>Hồ sơ dự án</label>
+                    <Select
+                      id={PROFILE_SELECT_ID}
+                      // layout only
+                      style={{ width: "100%" }}
+                      value={selectedProfileId || undefined}
+                      onChange={(value) => setProfileId(value)}
+                      options={availableProfiles.map((profile) => ({
+                        value: profile.id,
+                        label: profile.name,
+                      }))}
+                    />
+                  </>
+                ) : (
+                  // Plain div on purpose: the form's single <p role="alert">
+                  // validation error must stay the only alert role here.
+                  <div data-testid="profiles-not-configured">
+                    <Typography.Text strong>
+                      Hồ sơ: Chưa cấu hình{" "}
+                      <Typography.Text code>NOT_CONFIGURED</Typography.Text>
+                    </Typography.Text>
+                    <Typography.Paragraph type="secondary">
+                      Chưa có hồ sơ dự án nào được cấu hình — hồ sơ lấy từ cấu hình
+                      profile DET cục bộ.
+                    </Typography.Paragraph>
+                  </div>
+                )}
+              </Flex>
+            </Col>
+          </Row>
 
-          <div className="space-y-1.5">
-            {profilesConfigured ? (
-              <>
-                <Label htmlFor={PROFILE_SELECT_ID}>Project profile</Label>
-                <Select value={selectedProfileId} onValueChange={setProfileId}>
-                  <SelectTrigger id={PROFILE_SELECT_ID} className="w-full">
-                    <SelectValue placeholder="Select project profile">
-                      {selectedProfile?.name}
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    {availableProfiles.map((profile) => (
-                      <SelectItem key={profile.id} value={profile.id}>
-                        {profile.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </>
-            ) : (
-              <div
-                data-testid="profiles-not-configured"
-                className="rounded-md border border-dashed px-4 py-3"
-              >
-                <p className="text-xs font-medium">Profile: NOT CONFIGURED</p>
-                <p className="mt-0.5 text-xs text-muted-foreground">
-                  No project profiles configured — profiles come from local DET profile
-                  configuration.
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className="space-y-1.5">
-          <div className="flex flex-wrap items-center gap-3">
-            <Button type="submit">Review conversion request</Button>
-            <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Unplug className="size-3.5" aria-hidden="true" />
-              Execution not connected — issue [28] owns the engine bridge.
-            </span>
-          </div>
-          <p className="text-xs text-muted-foreground">
-            Submitting only validates this input and shows a request summary. No conversion runs
-            and nothing is stored.
-          </p>
-        </div>
+          <Flex vertical gap="small">
+            <Flex wrap="wrap" align="center" gap="small">
+              <Button type="primary" htmlType="submit">
+                Xem lại yêu cầu
+              </Button>
+              <Flex align="center" gap="small">
+                <ApiOutlined aria-hidden="true" />
+                <Typography.Text type="secondary">
+                  Chưa kết nối phần thực thi — cầu nối engine thuộc [28].
+                </Typography.Text>
+              </Flex>
+            </Flex>
+            <p>
+              <Typography.Text type="secondary">
+                Việc gửi chỉ kiểm tra dữ liệu vừa nhập và hiển thị tóm tắt yêu cầu. Không có
+                chuyển đổi nào chạy và không lưu gì cả.
+              </Typography.Text>
+            </p>
+          </Flex>
+        </Flex>
       </form>
 
-      {summary ? <NotConnectedResult summary={summary} className="mt-5" /> : null}
+      {summary ? <NotConnectedResult summary={summary} /> : null}
     </section>
   );
 }

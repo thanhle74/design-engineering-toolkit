@@ -1,56 +1,21 @@
-import Link from "next/link";
+import { Col, Flex, Row } from "antd";
 import { connection } from "next/server";
-import { ArrowLeft, CircleAlert, Unplug } from "lucide-react";
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
 import { DetRunReaderError, type StudioRunView } from "@/src/shared/contracts";
 import { getDetRunReader } from "@/src/server/det-run-reader-factory";
 import { DesignTree } from "@/src/modules/design-tree";
 import {
   MappingReview,
   ProvenanceFooter,
-  RunModeBadge,
 } from "@/src/modules/mapping-review";
 import { PreviewPanel } from "@/src/modules/preview";
 import { ClientArtifactManifest } from "./client-artifact-manifest";
 import { BuildBundleSection } from "./build-bundle-section";
+import { RunHeader } from "./run-header";
+import { ReaderProblemState } from "./reader-problem-state";
 
 interface RunPageProps {
   params: Promise<{ runId: string }>;
-}
-
-function ReaderProblemState({
-  title,
-  message,
-  hint,
-}: {
-  title: string;
-  message: string;
-  hint: string;
-}) {
-  return (
-    <div className="flex flex-col gap-4">
-      <Button asChild variant="ghost" className="w-fit">
-        <Link href="/">
-          <ArrowLeft className="size-4" aria-hidden="true" />
-          Overview
-        </Link>
-      </Button>
-      <Alert>
-        {title === "Run not found" ? (
-          <CircleAlert className="size-4" aria-hidden="true" />
-        ) : (
-          <Unplug className="size-4" aria-hidden="true" />
-        )}
-        <AlertTitle>{title}</AlertTitle>
-        <AlertDescription>
-          <p>{message}</p>
-          <p className="mt-2 text-muted-foreground">{hint}</p>
-        </AlertDescription>
-      </Alert>
-    </div>
-  );
 }
 
 export default async function RunPage({ params }: RunPageProps) {
@@ -67,20 +32,25 @@ export default async function RunPage({ params }: RunPageProps) {
     run = await reader.getRun(runId);
   } catch (error) {
     if (error instanceof DetRunReaderError) {
+      // [61] operator-facing copy is Vietnamese; machine tokens (the raw run
+      // id, the reader error code, STUDIO_DET_RUNS_DIR) stay verbatim. The
+      // reader's own English message renders verbatim — never paraphrased.
       if (error.code === "run-not-found") {
         return (
           <ReaderProblemState
-            title="Run not found"
-            message={`No run with id "${runId}" is readable by this Studio instance.`}
-            hint="Pick a run from the overview list; run ids come from the configured DET output root (or the DEMO fixture)."
+            kind="run-not-found"
+            title="Không tìm thấy lần chạy"
+            message={`Không có lần chạy nào với id "${runId}" mà Studio này đọc được.`}
+            hint="Hãy chọn một lần chạy trong danh sách tổng quan; run id lấy từ thư mục output DET đã cấu hình (hoặc từ fixture DEMO)."
           />
         );
       }
       return (
         <ReaderProblemState
-          title={`Reader error (${error.code})`}
+          kind="reader-error"
+          title={`Lỗi đọc lần chạy (${error.code})`}
           message={error.message}
-          hint="Check the STUDIO_DET_RUNS_DIR configuration — or unset it to browse the DEMO fixture."
+          hint="Kiểm tra cấu hình STUDIO_DET_RUNS_DIR — hoặc bỏ nó để xem fixture DEMO."
         />
       );
     }
@@ -88,20 +58,8 @@ export default async function RunPage({ params }: RunPageProps) {
   }
 
   return (
-    <div className="flex flex-col gap-8">
-      <div className="flex flex-col gap-3">
-        <Button asChild variant="ghost" className="w-fit self-start">
-          <Link href="/">
-            <ArrowLeft className="size-4" aria-hidden="true" />
-            Overview
-          </Link>
-        </Button>
-        <div className="flex flex-wrap items-center gap-2.5">
-          <h1 className="text-xl font-semibold tracking-tight md:text-2xl">{run.label}</h1>
-          <RunModeBadge mode={run.mode} />
-        </div>
-        <p className="font-mono text-xs text-muted-foreground">{run.runId}</p>
-      </div>
+    <Flex vertical gap={32}>
+      <RunHeader label={run.label} mode={run.mode} runId={run.runId} />
 
       <BuildBundleSection run={run} />
 
@@ -109,13 +67,17 @@ export default async function RunPage({ params }: RunPageProps) {
 
       <MappingReview run={run} />
 
-      <div className="grid gap-8 lg:grid-cols-2">
-        <PreviewPanel preview={run.preview} mode={run.mode} label={run.label} />
-        <ClientArtifactManifest runId={run.runId} artifacts={run.artifacts} />
-      </div>
+      <Row gutter={[32, 32]}>
+        <Col xs={24} lg={12}>
+          <PreviewPanel preview={run.preview} mode={run.mode} label={run.label} />
+        </Col>
+        <Col xs={24} lg={12}>
+          <ClientArtifactManifest runId={run.runId} artifacts={run.artifacts} />
+        </Col>
+      </Row>
 
       <ProvenanceFooter run={run} />
-    </div>
+    </Flex>
   );
 }
 

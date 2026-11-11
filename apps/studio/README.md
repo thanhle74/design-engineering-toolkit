@@ -58,7 +58,7 @@ Other commands: `npm run build` · `npm start` (serve the production build) ·
 
 ## Local build control ([40], single-root operator flow [58])
 
-Build Control (`/build`) triggers **real** offline `det build` runs through a
+Cấu hình build (`/build`) triggers **real** offline `det build` runs through a
 thin server-only local runner and serves the resulting bundle artifacts
 download-verified against `build-manifest.json`.
 
@@ -136,23 +136,46 @@ Notes on honesty and scope (also enforced in code and tests):
   `docs/converter/RECEIPT-ISSUE56-REAL-DERIVED-STUDIO-BUILD.md`); the
   operator runbook is `docs/runbook-real-derived-studio-build.md`.
 
-## Theme ([52])
+## Theme ([61])
 
-Dark-only by owner direction — no light mode, no toggle, no OS theme
-switching. The dark palette lives on `:root` in `app/globals.css` (calm
-charcoal-slate neutrals via semantic shadcn tokens) and `<html>` carries a
-static server-rendered `dark` class so the first paint is already dark; the
-class exists to keep the `dark:`-prefixed utilities inside the shadcn
-primitives active. The layout is deliberately spacious: `h-16` header,
-≥44px nav/button targets (default button `h-11`, compact `sm`/`icon-sm`
-sizes remain for in-table and dialog-close controls), roomier table rows
-and card spacing. Evidence: `docs/screenshots/52-*.png` and
-`52-dark-only-dom-evidence.txt`.
+Light-only by owner direction — and **stock Ant Design 6 light, out of
+the box**: the antd default light theme is used as-is, with **no
+`ConfigProvider` theme and no token overrides** anywhere. The Owner's
+2026-11-11 correction superseded the earlier 44px direction
+(`controlHeight: 44` / Menu `itemHeight: 44`) — antd's default sizes,
+colors, borders, radii and system font stack are the standard, with no
+bespoke styling such as row-highlight CSS; custom styling is limited to
+documented nonvisual layout exceptions. An experienced antd user should
+recognize the UI as stock antd Light. Light-only remains an invariant:
+no dark algorithm, no toggle, no OS theme switching, and no dark tokens
+or `dark:` classes anywhere in the Studio app. The root layout composes
+`AntdRegistry` + `StudioProviders`
+(`components/layout/studio-providers.tsx`, the antd `App` wrapper, so
+antd message/notification context works without per-call contextHolders)
+and antd styles are injected server-side, so the first paint is already
+styled (no FOUC). **Tailwind is removed from Studio**: antd layout
+primitives (`Flex`, `Space`, `Row`/`Col`, `Typography`) replace the
+utility classes and fonts come from antd's native system stack (no
+`next/font`); the Magento/Hyvä adapter and the Preview Theme Tailwind
+contract are unchanged. The [52] evidence assets (`docs/screenshots/52-*.png`
+and `52-dark-only-dom-evidence.txt`) show the retired dark UI and are
+preserved as history.
+
+**C61-2 operator corrections (PR #64):** the Studio is a small internal
+operator tool, so the shell stays minimal — no `Layout.Footer` and no header
+tagline; pages are task-focused and sparse (ít chữ), with technical detail
+progressively disclosed behind the stock antd `Collapse` **Chi tiết kỹ
+thiết**. All human-readable UI copy is natural Vietnamese — nav **Tổng quan ·
+Build · Dự án**, and page copy such as **Chuyển đổi mới**, **Tạo bản dựng**,
+**Cấu hình build**, **Lần chạy gần đây**, **Xem kết quả**, **Chưa hỗ trợ chạy
+trực tiếp** — while machine vocabulary stays verbatim: ids, enum/gap/diagnostic
+codes, paths, env var names, HTTP codes, CLI flags, artifact names and the
+`DEMO` marker. Stock antd default light is unchanged by all of this.
 
 ## Layout
 
 - `app/` — App Router pages (`/`, `/build`, `/runs/[runId]`) and route handlers under `app/api/**` (composition only)
-- `components/ui/` — installed shadcn/ui primitives; `components/layout/` — studio shell
+- antd primitives are used directly — no `components/ui` library, only tiny feature-specific wrappers where needed; `components/layout/` — studio shell plus `studio-providers` (the [61] root providers wrapping the antd `App`; no `ConfigProvider` theme)
 - `src/modules/` — feature lanes: `conversions`, `design-tree`, `mapping-review`, `preview`, `artifacts`
 - `src/server/` — server-only boundary: `DetRunReader` implementations (fixture + directory), the `[40]` build-bundle reader, build-config catalog, local build runner, path guards
 - `src/shared/contracts/` — frozen `StudioRunView` read model derived from `schemas/cli/*` + `schemas/converter/*` (with the `[40]` additive optional `build` block)

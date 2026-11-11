@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * [29] Studio — design-tree node rows.
  *
@@ -5,23 +7,73 @@
  * "Not in plan / unassigned" group. Disposition badges are imported from the
  * mapping-review module public interface — the canonical vocabulary is not
  * re-defined here.
+ *
+ * [61] Ant Design stock light Table (`columns` prop — no dot-notation
+ * subcomponents); node ids render as antd inline code. The wrapper div keeps
+ * the caller-visible `data-testid` around the table so the grouped row
+ * assertions do not depend on antd's internal markup.
  */
+import type { HTMLAttributes } from "react";
+import { Table, Typography } from "antd";
+import type { ColumnsType } from "antd/es/table";
 import type { StudioMappingView } from "@/src/shared/contracts";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import {
   ComposeDispositionBadge,
   KindBadge,
   ReviewDispositionBadge,
 } from "@/src/modules/mapping-review";
 
-const UNKNOWN = "unknown";
+/** "không rõ" — a fact the run does not carry is shown, never invented ([61] Vietnamese). */
+const UNKNOWN = "không rõ";
+
+/**
+ * antd `onRow` prop bags accept arbitrary DOM attributes, but React's
+ * `HTMLAttributes` type has no `data-*` index signature — a narrow cast keeps
+ * the test-visible row attribute honest without loosening antd's own typing.
+ */
+function rowProps(
+  props: Record<string, string>
+): HTMLAttributes<HTMLTableRowElement> {
+  return props as unknown as HTMLAttributes<HTMLTableRowElement>;
+}
+
+const columns: ColumnsType<StudioMappingView> = [
+  {
+    title: "Node id",
+    render: (_, mapping) => (
+      <Typography.Text code title={mapping.nodeId}>
+        {mapping.nodeId}
+      </Typography.Text>
+    ),
+  },
+  {
+    title: "Tên trong nguồn",
+    render: (_, mapping) => (
+      <Typography.Text type="secondary">
+        {mapping.sourceName ?? UNKNOWN}
+      </Typography.Text>
+    ),
+  },
+  {
+    title: "Loại",
+    render: (_, mapping) => <KindBadge kind={mapping.kind} />,
+  },
+  {
+    title: "Compose",
+    render: (_, mapping) => (
+      <ComposeDispositionBadge disposition={mapping.composeDisposition} />
+    ),
+  },
+  {
+    title: "Review",
+    render: (_, mapping) =>
+      mapping.reviewDisposition ? (
+        <ReviewDispositionBadge disposition={mapping.reviewDisposition} />
+      ) : (
+        <Typography.Text type="secondary">—</Typography.Text>
+      ),
+  },
+];
 
 export function DesignNodeTable({
   mappings,
@@ -32,46 +84,14 @@ export function DesignNodeTable({
 }) {
   return (
     <div data-testid={testId}>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead scope="col">Node id</TableHead>
-            <TableHead scope="col">Source name</TableHead>
-            <TableHead scope="col">Kind</TableHead>
-            <TableHead scope="col">Compose</TableHead>
-            <TableHead scope="col">Review</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {mappings.map((mapping) => (
-            <TableRow key={mapping.nodeId} data-testid="design-tree-node">
-              <TableCell className="align-top">
-                <span className="font-mono text-xs" title={mapping.nodeId}>
-                  {mapping.nodeId}
-                </span>
-              </TableCell>
-              <TableCell className="align-top">
-                <span className="text-xs">
-                  {mapping.sourceName ?? UNKNOWN}
-                </span>
-              </TableCell>
-              <TableCell className="align-top">
-                <KindBadge kind={mapping.kind} />
-              </TableCell>
-              <TableCell className="align-top">
-                <ComposeDispositionBadge disposition={mapping.composeDisposition} />
-              </TableCell>
-              <TableCell className="align-top">
-                {mapping.reviewDisposition ? (
-                  <ReviewDispositionBadge disposition={mapping.reviewDisposition} />
-                ) : (
-                  <span className="text-xs text-muted-foreground">—</span>
-                )}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <Table<StudioMappingView>
+        rowKey="nodeId"
+        size="small"
+        columns={columns}
+        dataSource={[...mappings]}
+        pagination={false}
+        onRow={() => rowProps({ "data-testid": "design-tree-node" })}
+      />
     </div>
   );
 }

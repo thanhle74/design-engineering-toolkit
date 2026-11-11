@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * [29] Studio — source design tree (presentational; receives the run).
  *
@@ -5,10 +7,13 @@
  * rows whose mapping.sectionId points at it. Mappings without a sectionId are
  * listed under an explicit "Not in plan / unassigned" group — never dropped,
  * never silently attached to a section.
+ *
+ * [61] Ant Design stock light appearance: the empty state is a calm info
+ * Alert, not an error banner; section cards stack in a stock Flex column.
  */
+import { SearchOutlined } from "@ant-design/icons";
+import { Alert, Flex, Typography } from "antd";
 import type { StudioMappingView, StudioRunView, StudioSectionView } from "@/src/shared/contracts";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { SearchX } from "lucide-react";
 import { DesignNodeTable } from "./node-table";
 import { SectionCard } from "./section-card";
 
@@ -19,15 +24,12 @@ function UnassignedGroup({ mappings }: { mappings: readonly StudioMappingView[] 
     <section
       aria-labelledby="studio-unassigned-heading"
       data-testid={UNKNOWN_GROUP_ID}
-      className="mt-4"
     >
-      <h3 id="studio-unassigned-heading" className="text-sm font-semibold">
-        Not in plan / unassigned
-      </h3>
-      <p className="mb-2 mt-1 text-xs text-muted-foreground">
-        Mappings the compose plan did not attach to any section. Kept visible —
-        never silently dropped.
-      </p>
+      <h3>Chưa gán vào mục nào</h3>
+      <Typography.Paragraph type="secondary">
+        Các mapping mà kế hoạch ghép không gắn vào mục nào. Giữ nguyên hiển thị —
+        không bao giờ bị bỏ im lặng.
+      </Typography.Paragraph>
       <DesignNodeTable mappings={mappings} testId="design-tree-unassigned-nodes" />
     </section>
   );
@@ -35,17 +37,18 @@ function UnassignedGroup({ mappings }: { mappings: readonly StudioMappingView[] 
 
 function EmptySectionsAlert({ unmappedCount }: { unmappedCount: number }) {
   return (
-    <Alert className="mt-3" data-testid="design-tree-empty">
-      <SearchX aria-hidden="true" />
-      <AlertTitle>No sections extracted</AlertTitle>
-      <AlertDescription>
-        {unmappedCount === 0
-          ? "This run has no PageStructure sections and no node mappings. Nothing is hidden — there is nothing extracted to review."
-          : `No PageStructure sections were extracted, but ${unmappedCount} node mapping${
-              unmappedCount === 1 ? "" : "s"
-            } exist. They are listed under "Not in plan / unassigned" below — never dropped.`}
-      </AlertDescription>
-    </Alert>
+    <Alert
+      type="info"
+      showIcon
+      icon={<SearchOutlined aria-hidden="true" />}
+      data-testid="design-tree-empty"
+      title="Chưa trích xuất được mục nào"
+      description={
+        unmappedCount === 0
+          ? "Lần chạy này không có mục PageStructure nào và không có node mapping nào. Không có gì bị ẩn — không có nội dung nào được trích xuất để soát."
+          : `Chưa trích xuất được mục PageStructure nào, nhưng có ${unmappedCount} node mapping. Chúng được liệt kê trong "Chưa gán vào mục nào" bên dưới — không bao giờ bị bỏ.`
+      }
+    />
   );
 }
 
@@ -70,20 +73,16 @@ export function DesignTree({ run }: { run: StudioRunView }) {
     }
   }
 
-  const summary = `${sections.length} section${
-    sections.length === 1 ? "" : "s"
-  } · ${run.mappings.length} mapping${run.mappings.length === 1 ? "" : "s"}`;
+  const summary = `${sections.length} mục · ${run.mappings.length} mapping`;
 
   return (
     <section
       aria-labelledby="studio-design-tree-heading"
       data-testid="design-tree"
     >
-      <h2 id="studio-design-tree-heading" className="text-base font-semibold">
-        Source design tree
-        <span className="ml-2 text-sm font-normal text-muted-foreground">
-          {summary}
-        </span>
+      <h2>
+        Cây thiết kế gốc{" "}
+        <Typography.Text type="secondary">{summary}</Typography.Text>
       </h2>
       {sections.length === 0 ? (
         <>
@@ -92,7 +91,7 @@ export function DesignTree({ run }: { run: StudioRunView }) {
         </>
       ) : (
         <>
-          <div className="mt-3 flex flex-col gap-4">
+          <Flex vertical gap="middle">
             {sections.map((section) => (
               <SectionCard
                 key={section.sectionId}
@@ -100,7 +99,7 @@ export function DesignTree({ run }: { run: StudioRunView }) {
                 mappings={mappingsBySection.get(section.sectionId) ?? []}
               />
             ))}
-          </div>
+          </Flex>
           {unassigned.length > 0 && <UnassignedGroup mappings={unassigned} />}
         </>
       )}

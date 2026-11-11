@@ -1,67 +1,92 @@
-import type { Metadata } from "next";
+"use client";
+
 import Link from "next/link";
-import { Boxes } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { usePathname } from "next/navigation";
+import { AppstoreOutlined } from "@ant-design/icons";
+import { Flex, Layout, Menu, Space, Typography, type MenuProps } from "antd";
+
+const { Content } = Layout;
 
 /**
- * Integrator-owned studio shell: one calm operator header, no dashboard chrome.
- * Pages compose feature modules beneath it; this component owns navigation only.
+ * [61] Stock Ant Design light shell — every component renders with its
+ * out-of-the-box light defaults. There are NO style props on any antd
+ * component: no custom colors, no pinned heights, no Menu background or
+ * border overrides, no font-size/weight/letter-spacing tuning, and no
+ * Tailwind utility classes. antd is the single source of appearance.
+ *
+ * Why there is no `Layout.Header`: antd's stock `Header` background token is
+ * `headerBg: '#001529'` (verified in antd 6.7.0 `layout/style` component
+ * defaults) — the classic dark-navy band, which does not belong in a light
+ * UI. The stock light composition here (default light backgrounds only:
+ * Menu `itemBg` = white container) is a top horizontal `Menu` plus a default
+ * `Content` directly under the `Layout`. The shell stays compact — brand
+ * plus nav only: no tagline and no `Layout.Footer`.
+ *
+ * Documented layout exceptions (the correction contract allows a minimal
+ * number, each commented):
+ * 1. `.studio-content` (globals.css) — antd has no primitive for a centered
+ *    max-width content column, so this single geometry-only class centers the
+ *    header band and the page content region (margin auto + max-width + padding).
+ * 2. `minHeight: "100dvh"` on the `Layout` root — keeps the layout filling
+ *    the viewport on short pages; this is antd's own documented Layout demo
+ *    pattern, a viewport constraint, not a theme token override.
+ * 3. `style={{ flex: "auto", minWidth: 0 }}` on the horizontal `Menu` — pure
+ *    flex sizing so the brand and the nav share the header row; without it
+ *    the Menu measures a min-content width and antd collapses the items into
+ *    the ellipsis overflow indicator even on desktop. Same pattern as antd's
+ *    own top-navigation header demo; geometry only, no theme values.
+ * 4. `.ant-layout` (globals.css) — Owner request (C61-2): the whole-site main
+ *    background is white; the rule uses antd's own container token variable.
+ *
+ * Menu uses the `items` prop (antd 6: no dot-notation children) with real
+ * Next `<Link>` labels so client-side routing is preserved; `selectedKeys`
+ * matches the pathname exactly (nested routes like /runs/[runId] highlight
+ * nothing). Human-readable copy is natural Vietnamese; "DET Studio"
+ * and "Build" stay Latin/English on purpose (brand and machine-term naming).
+ * Metadata lives in the server-safe `./studio-metadata`; a server layout must
+ * not import non-component exports from this `'use client'` module.
  */
 
 export const studioNavItems = [
-  { href: "/", label: "Overview" },
+  { href: "/", label: "Tổng quan" },
   { href: "/build", label: "Build" },
-  { href: "/catalog", label: "Catalog" },
+  { href: "/catalog", label: "Dự án" },
 ] as const;
 
-export const studioMetadata: Metadata = {
-  title: {
-    default: "DET Studio",
-    template: "%s · DET Studio",
-  },
-  description:
-    "Thin review/preview/export UI over the deterministic det CLI. Local trusted operator tool — not a conversion engine.",
-};
-
 export function StudioShell({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+
+  const navMenuItems: MenuProps["items"] = studioNavItems.map((item) => ({
+    key: item.href,
+    label: <Link href={item.href}>{item.label}</Link>,
+  }));
+
+  const selectedKeys = studioNavItems
+    .filter((item) => item.href === pathname)
+    .map((item) => item.href);
+
   return (
-    <div className="min-h-dvh bg-background text-foreground">
-      <header className="border-b">
-        <div className="mx-auto flex h-16 max-w-6xl items-center gap-5 px-4 sm:px-6 lg:px-8">
-          <Link
-            href="/"
-            className="flex items-center gap-2.5 whitespace-nowrap text-base font-semibold tracking-tight"
-          >
-            <Boxes className="size-5 text-muted-foreground" aria-hidden="true" />
-            DET Studio
+    <Layout style={{ minHeight: "100dvh" }}>
+      <header className="studio-content">
+        <Flex align="center" justify="space-between" gap="middle" wrap="wrap">
+          <Link href="/" aria-label="DET Studio home">
+            <Space align="center" size="small">
+              <AppstoreOutlined aria-hidden="true" />
+              <Typography.Text strong>DET Studio</Typography.Text>
+            </Space>
           </Link>
-          <nav aria-label="Studio" className="flex items-center gap-1.5">
-            {studioNavItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "inline-flex min-h-11 items-center whitespace-nowrap rounded-lg px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring/60 sm:px-3.5"
-                )}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-          <span className="ml-auto hidden text-xs text-muted-foreground md:inline">
-            local trusted operator UI · demo-capable
-          </span>
-        </div>
+          <Menu
+            aria-label="Studio"
+            mode="horizontal"
+            items={navMenuItems}
+            selectedKeys={selectedKeys}
+            style={{ flex: "auto", minWidth: 0 }}
+          />
+        </Flex>
       </header>
-      <main className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 md:py-10 lg:px-8">
-        {children}
-      </main>
-      <footer className="border-t">
-        <div className="mx-auto max-w-6xl px-4 py-6 text-xs text-muted-foreground sm:px-6 lg:px-8">
-          DET Studio is a presentation layer over the det CLI — the engine owns all
-          conversion logic ([28]). No Figma, Magento or CMS writes from this UI.
-        </div>
-      </footer>
-    </div>
+      <Content>
+        <div className="studio-content">{children}</div>
+      </Content>
+    </Layout>
   );
 }

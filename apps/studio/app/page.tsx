@@ -1,44 +1,9 @@
-import Link from "next/link";
 import { connection } from "next/server";
-import { FolderOpen, Hammer, Unplug, CircleAlert } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { DetRunReaderError, type DetRunSummary } from "@/src/shared/contracts";
 import { getDetRunReader } from "@/src/server/det-run-reader-factory";
-import { RunModeBadge } from "@/src/modules/mapping-review";
-import { ConversionForm, DEMO_PROFILES } from "@/src/modules/conversions";
 
-function unknownCount(value: number | null): string {
-  return value === null ? "unknown" : String(value);
-}
-
-function RunRow({ run }: { run: DetRunSummary }) {
-  return (
-    <Link
-      href={`/runs/${encodeURIComponent(run.runId)}`}
-      className="flex flex-wrap items-center gap-x-3 gap-y-1.5 rounded-lg border px-4 py-3 text-sm transition-colors hover:bg-accent"
-    >
-      <span className="font-medium">{run.label}</span>
-      <RunModeBadge mode={run.mode} />
-      <span className="ml-auto flex items-center gap-2 text-xs text-muted-foreground">
-        <span>
-          errors {unknownCount(run.counts.errors)} · warnings{" "}
-          {unknownCount(run.counts.warnings)} · infos {unknownCount(run.counts.infos)}
-        </span>
-        <span className="font-mono">{run.runId}</span>
-      </span>
-    </Link>
-  );
-}
+import { OverviewView } from "./overview-view";
 
 export default async function OverviewPage() {
   // Runs are read from local disk/env per request. fs/env are not tracked as
@@ -63,93 +28,11 @@ export default async function OverviewPage() {
   }
 
   return (
-    <div className="flex flex-col gap-8">
-      <section aria-labelledby="studio-overview-heading">
-        <h1
-          id="studio-overview-heading"
-          className="text-xl font-semibold tracking-tight md:text-2xl"
-        >
-          DET Studio
-        </h1>
-        <p className="mt-2 max-w-3xl text-sm text-muted-foreground">
-          Review layer over the deterministic det CLI: inspect a conversion run,
-          its mapping dispositions and diagnostics, and download validated
-          artifacts. The engine owns all conversion logic — Studio never regenerates it.
-        </p>
-      </section>
-
-      <ConversionForm profiles={DEMO_PROFILES} />
-
-      <Card size="sm">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Hammer className="size-4 text-muted-foreground" aria-hidden="true" />
-            <h2 className="text-base font-semibold">Build Control</h2>
-          </CardTitle>
-          <CardDescription>
-            Trigger a real offline <span className="font-mono">det build</span> through the local
-            runner and download verified bundle artifacts. Requires configured env vars; without
-            them the Build page shows an explicit not-connected state — never demo data.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Button asChild variant="outline" className="w-fit self-start">
-            <Link href="/build">
-              <Hammer className="size-4" aria-hidden="true" />
-              Open Build Control
-            </Link>
-          </Button>
-        </CardContent>
-      </Card>
-
-      <Card size="sm">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FolderOpen className="size-4 text-muted-foreground" aria-hidden="true" />
-            <h2 className="text-base font-semibold">Runs</h2>
-          </CardTitle>
-          <CardDescription>
-            Conversion runs this Studio instance can read. Fixture runs are
-            visibly labeled DEMO; live runs come from a configured DET output
-            root.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {readerErrorCode !== null ? (
-            <Alert>
-              <Unplug className="size-4" aria-hidden="true" />
-              <AlertTitle>Reader not configured ({readerErrorCode})</AlertTitle>
-              <AlertDescription>
-                {readerMessage} Set the STUDIO_DET_RUNS_DIR environment variable
-                to a DET run output root — or leave it unset to browse the DEMO
-                fixture.
-              </AlertDescription>
-            </Alert>
-          ) : runs.length === 0 ? (
-            <p className="flex items-center gap-2 text-sm text-muted-foreground">
-              <CircleAlert className="size-4" aria-hidden="true" />
-              No runs available. Configure STUDIO_DET_RUNS_DIR to point at real
-              det output, or unset it for the DEMO fixture.
-            </p>
-          ) : (
-            <div className="flex flex-col gap-2.5">
-              {runs.map((run) => (
-                <RunRow key={run.runId} run={run} />
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      <p className="text-xs text-muted-foreground">
-        Single local trusted operator UI — not a public/multi-user deployment.
-        Starting a real conversion is intentionally not connected: issue [28]
-        owns the engine bridge.
-      </p>
-      <Badge variant="outline" className="w-fit">
-        MVP scope: review · preview · export
-      </Badge>
-    </div>
+    <OverviewView
+      runs={runs}
+      readerErrorCode={readerErrorCode}
+      readerMessage={readerMessage}
+    />
   );
 }
 

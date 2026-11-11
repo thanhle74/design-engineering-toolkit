@@ -1,27 +1,21 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
-import { CircleAlert, Hammer, LoaderCircle, Play } from "lucide-react";
-
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { CaretRightOutlined, ToolOutlined, WarningOutlined } from "@ant-design/icons";
 import {
+  Alert,
+  Button,
   Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
+  Collapse,
+  Descriptions,
+  Flex,
+  List,
   Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+  Tag,
+  Typography,
+} from "antd";
+import type { DescriptionsProps, TableColumnsType } from "antd";
+
 import type { StudioBuildStageView } from "@/src/shared/contracts";
 
 /**
@@ -31,6 +25,15 @@ import type { StudioBuildStageView } from "@/src/shared/contracts";
  * manifest, capped diagnostics tails, timeout/spawn/interrupt truths. No
  * fabricated progress, no demo data, and completion links to the bundle run
  * where downloads are hash-verified.
+ *
+ * [61] Stock antd light presentation only: Flex/Typography/Card/Collapse/
+ * Descriptions/List/Table primitives, built-in Tag color presets and the
+ * stock `Text code` inline-code look for mono tokens. Terse Vietnamese copy
+ * ("ít chữ"): machine tokens (config ids, run ids, exit codes, stage names/
+ * statuses, timestamps) stay verbatim; declared provenance paths collapse
+ * into one default-collapsed "Chi tiết kỹ thuật" item per config. No custom
+ * CSS, no utility classes. The remaining inline styles are pure layout
+ * (documented inline).
  */
 
 export interface BuildLauncherEntry {
@@ -94,46 +97,84 @@ interface BuildLauncherProps {
 const TERMINAL_STATES = new Set(["exited", "timeout", "spawn-failed", "interrupted"]);
 const POLL_MS = 1000;
 
-function stateBadge(state: BuildJobView["state"], exitCode: number | null) {
+type StageRow = { stage: string; status: string; exitCode: number };
+
+/** Vietnamese display labels; the machine `state` enum stays in logic only. */
+function stateTag(state: BuildJobView["state"], exitCode: number | null) {
   switch (state) {
     case "queued":
+      return <Tag color="processing">trong hàng đợi</Tag>;
     case "running":
-      return <Badge variant="secondary">{state === "queued" ? "queued" : "running…"}</Badge>;
+      return <Tag color="processing">đang chạy…</Tag>;
     case "exited":
-      return <Badge variant={exitCode === 0 ? "outline" : "destructive"}>{`exited ${exitCode ?? "?"}`}</Badge>;
+      return (
+        <Tag color={exitCode === 0 ? "success" : "error"}>{`đã kết thúc (exit ${exitCode ?? "?"})`}</Tag>
+      );
     case "timeout":
-      return <Badge variant="destructive">timed out</Badge>;
+      return <Tag color="error">hết thời gian chờ</Tag>;
     case "spawn-failed":
-      return <Badge variant="destructive">spawn failed</Badge>;
+      return <Tag color="error">không khởi chạy được</Tag>;
     case "interrupted":
-      return <Badge variant="destructive">interrupted</Badge>;
+      return <Tag color="error">bị gián đoạn</Tag>;
   }
 }
 
+/** Declared provenance paths of one build config, as stock antd label/value pairs. */
+function declaredDescriptions(entry: BuildLauncherEntry): DescriptionsProps["items"] {
+  const mono = (value: string) => <Typography.Text code>{value}</Typography.Text>;
+  const items: NonNullable<DescriptionsProps["items"]> = [
+    { key: "profile", label: "profile", children: mono(entry.profileId) },
+    { key: "design-node", label: "design node", children: mono(entry.designSource.designNode) },
+    { key: "design-file", label: "design file", children: mono(entry.designSource.designFile) },
+    { key: "profile-file", label: "profile file", children: mono(entry.declaredPaths.profile) },
+  ];
+  if (entry.declaredPaths.probeProject !== undefined) {
+    items.push({ key: "probe-project", label: "probe project", children: mono(entry.declaredPaths.probeProject) });
+  }
+  if (entry.declaredPaths.registry !== undefined) {
+    items.push({ key: "registry", label: "registry", children: mono(entry.declaredPaths.registry) });
+  }
+  items.push(
+    { key: "bindings", label: "bindings", children: mono(entry.declaredPaths.bindings) },
+    { key: "content", label: "content", children: mono(entry.declaredPaths.content) }
+  );
+  if (entry.declaredPaths.projection !== undefined) {
+    items.push({ key: "projection", label: "projection", children: mono(entry.declaredPaths.projection) });
+  }
+  return items;
+}
+
 function StageTable({ stages }: { stages: BuildStageLite[] | StudioBuildStageView[] }) {
+  const columns: TableColumnsType<StageRow> = [
+    {
+      title: "Giai đoạn",
+      dataIndex: "stage",
+      render: (_, record: StageRow) => <Typography.Text code>{record.stage}</Typography.Text>,
+    },
+    {
+      title: "Trạng thái",
+      dataIndex: "status",
+      render: (_, record: StageRow) =>
+        record.status === "failed" ? (
+          <Tag color="error">{record.status}</Tag>
+        ) : (
+          <Tag>{record.status}</Tag>
+        ),
+    },
+    {
+      title: "Exit code",
+      dataIndex: "exitCode",
+      render: (_, record: StageRow) => <Typography.Text code>{record.exitCode}</Typography.Text>,
+    },
+  ];
   return (
-    <div className="overflow-hidden rounded-md border">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Stage</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Exit code</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {stages.map((stage) => (
-            <TableRow key={stage.stage}>
-              <TableCell className="font-mono">{stage.stage}</TableCell>
-              <TableCell>
-                <Badge variant={stage.status === "failed" ? "destructive" : "outline"}>{stage.status}</Badge>
-              </TableCell>
-              <TableCell className="font-mono">{stage.exitCode}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+    <Table<StageRow>
+      rowKey="stage"
+      columns={columns}
+      dataSource={stages}
+      pagination={false}
+      size="small"
+    />
   );
 }
 
@@ -142,119 +183,127 @@ function JobPanel({ job }: { job: BuildJobView }) {
   const failedButBundle =
     job.state === "exited" && job.exitCode !== 0 && job.manifestSummary !== null;
   return (
-    <Card size="sm" aria-live="polite">
-      <CardHeader>
-        <CardTitle className="flex flex-wrap items-center gap-2 text-base">
-          {stateBadge(job.state, job.exitCode)}
-          <span className="font-mono text-sm">{job.runId}</span>
-          <span className="text-sm font-normal text-muted-foreground">config {job.configId}</span>
-        </CardTitle>
-        <CardDescription>
-          {job.startedAt === null ? "not started" : `started ${job.startedAt}`}
-          {job.finishedAt === null ? " · not finished yet" : ` · finished ${job.finishedAt}`}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4">
+    <Card
+      size="small"
+      aria-live="polite"
+      title={
+        <Flex wrap="wrap" align="center" gap={8}>
+          {stateTag(job.state, job.exitCode)}
+          <Typography.Text code>{job.runId}</Typography.Text>
+          <Typography.Text type="secondary">config {job.configId}</Typography.Text>
+        </Flex>
+      }
+    >
+      <Flex vertical gap={16}>
+        <Typography.Text type="secondary">
+          {job.startedAt === null ? "chưa bắt đầu" : `bắt đầu ${job.startedAt}`}
+          {job.finishedAt === null ? " · chưa kết thúc" : ` · kết thúc ${job.finishedAt}`}
+        </Typography.Text>
+
         {job.state === "interrupted" ? (
-          <Alert variant="destructive">
-            <CircleAlert className="size-4" aria-hidden="true" />
-            <AlertTitle>Build interrupted</AlertTitle>
-            <AlertDescription>
-              The server restarted while this build was running; the journal recorded no
-              completion. Start a new build — no bundle for this run is trusted.
-            </AlertDescription>
-          </Alert>
+          <Alert
+            type="error"
+            showIcon
+            icon={<WarningOutlined aria-hidden="true" />}
+            message="Bản dựng bị gián đoạn"
+            description="Server khởi động lại khi bản dựng đang chạy; nhật ký không ghi nhận hoàn tất. Hãy tạo bản dựng mới — không tin bundle nào của lần chạy này."
+          />
         ) : null}
 
         {job.state === "timeout" ? (
-          <Alert variant="destructive">
-            <CircleAlert className="size-4" aria-hidden="true" />
-            <AlertTitle>Build timed out</AlertTitle>
-            <AlertDescription>
-              The runner sent SIGTERM after the configured timeout. Diagnostics below show what the
-              build reported before termination.
-            </AlertDescription>
-          </Alert>
+          <Alert
+            type="error"
+            showIcon
+            icon={<WarningOutlined aria-hidden="true" />}
+            message="Bản dựng hết thời gian chờ"
+            description="Runner gửi SIGTERM sau thời hạn cấu hình. Log bên dưới cho thấy những gì bản dựng báo cáo trước khi bị dừng."
+          />
         ) : null}
 
         {job.state === "spawn-failed" ? (
-          <Alert variant="destructive">
-            <CircleAlert className="size-4" aria-hidden="true" />
-            <AlertTitle>Runner error — the build never started</AlertTitle>
-            <AlertDescription>
-              {job.spawnError ?? "The det CLI could not be spawned."} This is a runner
-              configuration problem, not a build result.
-            </AlertDescription>
-          </Alert>
+          <Alert
+            type="error"
+            showIcon
+            icon={<WarningOutlined aria-hidden="true" />}
+            message="Lỗi runner — bản dựng chưa khởi chạy được"
+            description={`${job.spawnError ?? "Không khởi chạy được det CLI."} Đây là lỗi cấu hình runner, không phải kết quả bản dựng.`}
+          />
         ) : null}
 
         {completed ? (
-          <Alert>
-            <Hammer className="size-4" aria-hidden="true" />
-            <AlertTitle>Build completed (exit 0)</AlertTitle>
-            <AlertDescription>
-              The bundle is written and now listed as a live run.{" "}
-              <Link className="underline" href={`/runs/${encodeURIComponent(job.runId)}`}>
-                Open the bundle run
-              </Link>{" "}
-              — artifacts are served only after byte-verification against the build manifest.
-              Native Page Builder HTML stays source/download only; no Magento storefront or Admin
-              preview is claimed.
-            </AlertDescription>
-          </Alert>
+          <Alert
+            type="success"
+            showIcon
+            icon={<ToolOutlined aria-hidden="true" />}
+            message="Bản dựng hoàn tất (exit 0)"
+            description={
+              <>
+                Bundle đã được ghi và liệt kê như một lần chạy thật.{" "}
+                <Typography.Link href={`/runs/${encodeURIComponent(job.runId)}`}>
+                  Xem kết quả
+                </Typography.Link>{" "}
+                — artifacts chỉ được phục vụ sau khi xác minh byte khớp build manifest; HTML Page
+                Builder native chỉ ở dạng nguồn/tải về.
+              </>
+            }
+          />
         ) : null}
 
         {failedButBundle ? (
-          <Alert variant="destructive">
-            <CircleAlert className="size-4" aria-hidden="true" />
-            <AlertTitle>{`Build finished with exit ${job.exitCode} — a stage failed`}</AlertTitle>
-            <AlertDescription>
-              The engine still wrote a truthful partial manifest (see the stage table).{" "}
-              <Link className="underline" href={`/runs/${encodeURIComponent(job.runId)}`}>
-                Open the partial bundle run
-              </Link>{" "}
-              — it stays visibly failed there.
-            </AlertDescription>
-          </Alert>
+          <Alert
+            type="error"
+            showIcon
+            icon={<WarningOutlined aria-hidden="true" />}
+            message={`Bản dựng kết thúc với exit ${job.exitCode} — có giai đoạn thất bại`}
+            description={
+              <>
+                Engine vẫn ghi manifest thật (xem bảng giai đoạn).{" "}
+                <Typography.Link href={`/runs/${encodeURIComponent(job.runId)}`}>
+                  Xem lần chạy một phần
+                </Typography.Link>{" "}
+                — nó vẫn hiển thị là thất bại ở đó.
+              </>
+            }
+          />
         ) : null}
 
         {job.manifestSummary !== null ? (
-          <div className="flex flex-col gap-2">
+          <Flex vertical gap={8}>
             <StageTable stages={job.manifestSummary.stages} />
-            <p className="text-xs text-muted-foreground">
-              {job.manifestSummary.gaps.length} manifest gap(s) · {job.manifestSummary.outputCount}{" "}
-              declared output(s) · source{" "}
-              <span className="font-mono">
+            <Typography.Text type="secondary">
+              {job.manifestSummary.gaps.length} khoảng trống manifest ·{" "}
+              {job.manifestSummary.outputCount} output đã khai báo · nguồn{" "}
+              <Typography.Text code>
                 {job.manifestSummary.sourceId}@{job.manifestSummary.revisionId}
-              </span>{" "}
-              · platform <span className="font-mono">{job.manifestSummary.platformId}</span>. Full
-              gap detail and verified downloads live on the run page.
-            </p>
-          </div>
+              </Typography.Text>{" "}
+              · nền tảng <Typography.Text code>{job.manifestSummary.platformId}</Typography.Text>.
+              Chi tiết khoảng trống và tải xuống đã xác minh nằm ở trang lần chạy.
+            </Typography.Text>
+          </Flex>
         ) : job.state === "exited" ? (
-          <p className="text-xs text-muted-foreground">
-            No bundle manifest was written (the build stopped before any stage ran — e.g. an
-            invalid config). Nothing is listed as a run for this id.
-          </p>
+          <Typography.Text type="secondary">
+            Không ghi được bundle manifest (bản dựng dừng trước khi giai đoạn nào chạy — ví dụ cấu
+            hình không hợp lệ). Không có lần chạy nào được liệt kê cho id này.
+          </Typography.Text>
         ) : null}
 
         {job.stderrTail !== "" ? (
-          <div>
-            <h3 className="mb-1 text-xs font-semibold">stderr tail</h3>
-            <pre className="max-h-40 overflow-auto rounded-md border bg-muted/40 p-2 text-xs">
-              {job.stderrTail}
-            </pre>
-          </div>
+          <Flex vertical gap={4}>
+            {/* layout only: neutralize UA heading margins */}
+            <h3 style={{ margin: 0 }}>stderr tail</h3>
+            {/* layout only: contain the log tail with a capped scroll area */}
+            <pre style={{ margin: 0, overflow: "auto", maxHeight: 160 }}>{job.stderrTail}</pre>
+          </Flex>
         ) : null}
         {job.stdoutTail !== "" && !completed ? (
-          <div>
-            <h3 className="mb-1 text-xs font-semibold">stdout tail</h3>
-            <pre className="max-h-40 overflow-auto rounded-md border bg-muted/40 p-2 text-xs">
-              {job.stdoutTail}
-            </pre>
-          </div>
+          <Flex vertical gap={4}>
+            {/* layout only: neutralize UA heading margins */}
+            <h3 style={{ margin: 0 }}>stdout tail</h3>
+            {/* layout only: contain the log tail with a capped scroll area */}
+            <pre style={{ margin: 0, overflow: "auto", maxHeight: 160 }}>{job.stdoutTail}</pre>
+          </Flex>
         ) : null}
-      </CardContent>
+      </Flex>
     </Card>
   );
 }
@@ -286,11 +335,11 @@ export function BuildLauncher({
       try {
         const response = await fetch(`/api/builds/${encodeURIComponent(runId)}`, { cache: "no-store" });
         if (response.status === 404) {
-          setError(`Build job ${runId} is no longer readable (HTTP 404).`);
+          setError(`Không còn đọc được bản dựng ${runId} (HTTP 404).`);
           return;
         }
         if (!response.ok) {
-          setError(`Could not read the build job state (HTTP ${response.status}).`);
+          setError(`Không đọc được trạng thái bản dựng (HTTP ${response.status}).`);
           return;
         }
         const body = (await response.json()) as { job: BuildJobView };
@@ -299,7 +348,7 @@ export function BuildLauncher({
           timerRef.current = window.setTimeout(() => void tick(), POLL_MS);
         }
       } catch {
-        if (!stoppedRef.current) setError("Could not reach the build API.");
+        if (!stoppedRef.current) setError("Không kết nối được API bản dựng.");
       }
     };
     void tick();
@@ -322,16 +371,18 @@ export function BuildLauncher({
       if (response.status === 409) {
         const body = (await response.json()) as { active: BuildJobView | null };
         setJob(body.active ?? null);
-        setError("A build is already running — this runner executes one build at a time. Live state shown below.");
+        setError(
+          "Đã có bản dựng đang chạy — mỗi lần chỉ chạy một. Hiển thị trạng thái thật bên dưới."
+        );
         if (body.active !== null && !TERMINAL_STATES.has(body.active.state)) poll(body.active.runId);
         return;
       }
       const body = (await response.json().catch(() => null)) as {
         error?: { message?: string };
       } | null;
-      setError(body?.error?.message ?? `Build start failed (HTTP ${response.status}).`);
+      setError(body?.error?.message ?? `Khởi chạy bản dựng thất bại (HTTP ${response.status}).`);
     } catch {
-      setError("Could not reach the build API.");
+      setError("Không kết nối được API bản dựng.");
     } finally {
       setStarting(null);
     }
@@ -340,148 +391,125 @@ export function BuildLauncher({
   const busy = job !== null && !TERMINAL_STATES.has(job.state);
 
   return (
-    <div className="flex flex-col gap-8">
+    <Flex vertical gap={32}>
       {!runnerReady ? (
-        <Alert variant="destructive">
-          <CircleAlert className="size-4" aria-hidden="true" />
-          <AlertTitle>Runner not ready</AlertTitle>
-          <AlertDescription>
-            {runnerReason} Start Studio with <span className="font-mono">npm run dev</span> from
-            the repository root (it defaults STUDIO_DET_RUNS_DIR to{" "}
-            <span className="font-mono">out/studio-runs</span>) or set it explicitly — optionally
-            with STUDIO_DET_CLI. See apps/studio/README.md. The catalog below stays read-only
-            until then.
-          </AlertDescription>
-        </Alert>
+        <Alert
+          type="error"
+          showIcon
+          icon={<WarningOutlined aria-hidden="true" />}
+          message="Runner chưa sẵn sàng"
+          description={
+            <>
+              {runnerReason} Chạy <Typography.Text code>npm run dev</Typography.Text> từ gốc repo
+              (mặc định <Typography.Text code>STUDIO_DET_RUNS_DIR</Typography.Text> thành{" "}
+              <Typography.Text code>out/studio-runs</Typography.Text>) hoặc đặt biến này — có thể
+              kèm <Typography.Text code>STUDIO_DET_CLI</Typography.Text>. Xem{" "}
+              <Typography.Text code>apps/studio/README.md</Typography.Text>. Danh mục bên dưới vẫn
+              chỉ đọc cho tới khi sẵn sàng.
+            </>
+          }
+        />
       ) : null}
 
       {error !== null ? (
-        <p role="alert" className="text-sm text-destructive">
-          {error}
+        <p role="alert">
+          <Typography.Text type="danger">{error}</Typography.Text>
         </p>
       ) : null}
 
       {job !== null ? <JobPanel job={job} /> : null}
 
       {invalid.length > 0 ? (
-        <Alert>
-          <CircleAlert className="size-4" aria-hidden="true" />
-          <AlertTitle>{`${invalid.length} catalog entr${invalid.length === 1 ? "y" : "ies"} failed the listing mirror`}</AlertTitle>
-          <AlertDescription>
-            <ul className="mt-1 flex flex-col gap-1">
-              {invalid.map((entry) => (
-                <li key={entry.configId} className="text-xs">
-                  <span className="font-mono">{entry.configId}</span> — {entry.reason}
-                </li>
-              ))}
-            </ul>
-          </AlertDescription>
-        </Alert>
+        <Alert
+          type="warning"
+          showIcon
+          icon={<WarningOutlined aria-hidden="true" />}
+          message={`${invalid.length} mục catalog không hợp lệ khi mirror listing`}
+          description={
+            <List
+              size="small"
+              dataSource={invalid}
+              renderItem={(entry) => (
+                <List.Item>
+                  <Typography.Text code>{entry.configId}</Typography.Text> — {entry.reason}
+                </List.Item>
+              )}
+            />
+          }
+        />
       ) : null}
 
-      <Card size="sm">
-        <CardHeader>
-          <CardTitle className="text-base">Build configs</CardTitle>
-          <CardDescription>
-            Committed repository examples (read-only, cataloged in place) plus caller-configured
-            entries from STUDIO_BUILD_PROJECTS_DIR when set. Provenance paths are shown as
-            declared in each config (config-relative); the engine resolves and validates them at
-            build time.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-3">
+      <Card
+        size="small"
+        title={
+          // layout only: neutralize UA heading margins
+          <h2 style={{ margin: 0 }}>Cấu hình bản dựng</h2>
+        }
+      >
+        <Flex vertical gap={12}>
           {entries.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              No build-config entries found. Add one subdirectory per entry with a
-              build-config.json under STUDIO_BUILD_PROJECTS_DIR (see apps/studio/README.md and
-              examples/build/project.example.json for the shape).
-            </p>
+            <Typography.Text type="secondary">
+              Chưa có mục cấu hình bản dựng nào. Thêm một thư mục con mỗi mục chứa{" "}
+              <Typography.Text code>build-config.json</Typography.Text> dưới{" "}
+              <Typography.Text code>STUDIO_BUILD_PROJECTS_DIR</Typography.Text> (xem{" "}
+              <Typography.Text code>apps/studio/README.md</Typography.Text> và{" "}
+              <Typography.Text code>examples/build/project.example.json</Typography.Text>).
+            </Typography.Text>
           ) : (
             entries.map((entry) => (
-              <div key={entry.configId} className="flex flex-col gap-2.5 rounded-lg border p-4">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-sm font-medium">{entry.label}</span>
-                  {entry.origin === "repository" ? (
-                    <Badge variant="secondary">repository example</Badge>
+              <Card key={entry.configId} size="small">
+                <Flex vertical gap={12}>
+                  <Flex wrap="wrap" justify="space-between" align="center" gap={8}>
+                    <Flex align="center" gap={8} wrap="wrap">
+                      <Typography.Text strong>{entry.label}</Typography.Text>
+                      {entry.origin === "repository" ? <Tag>ví dụ có sẵn</Tag> : null}
+                      <Tag>{entry.designSource.mode}</Tag>
+                      <Tag>{entry.inputSource}</Tag>
+                    </Flex>
+                    <Typography.Text type="secondary" code>
+                      {entry.configId}
+                    </Typography.Text>
+                  </Flex>
+                  {entry.description !== undefined ? (
+                    <Typography.Text type="secondary">{entry.description}</Typography.Text>
                   ) : null}
-                  <Badge variant="outline">{entry.designSource.mode}</Badge>
-                  <Badge variant="outline">
-                    {entry.inputSource === "capability-probe" ? "capability probe" : "pinned registry"}
-                  </Badge>
-                  <span className="ml-auto font-mono text-xs text-muted-foreground">{entry.configId}</span>
-                </div>
-                {entry.description !== undefined ? (
-                  <p className="text-sm text-muted-foreground">{entry.description}</p>
-                ) : null}
-                <dl className="grid grid-cols-1 gap-x-4 gap-y-0.5 text-xs text-muted-foreground sm:grid-cols-2">
-                  <div className="flex gap-1">
-                    <dt className="shrink-0">profile:</dt>
-                    <dd className="font-mono">{entry.profileId}</dd>
-                  </div>
-                  <div className="flex gap-1">
-                    <dt className="shrink-0">design node:</dt>
-                    <dd className="font-mono">{entry.designSource.designNode}</dd>
-                  </div>
-                  <div className="flex gap-1 sm:col-span-2">
-                    <dt className="shrink-0">design file:</dt>
-                    <dd className="font-mono">{entry.designSource.designFile}</dd>
-                  </div>
-                  <div className="flex gap-1">
-                    <dt className="shrink-0">profile file:</dt>
-                    <dd className="font-mono">{entry.declaredPaths.profile}</dd>
-                  </div>
-                  {entry.declaredPaths.probeProject !== undefined ? (
-                    <div className="flex gap-1">
-                      <dt className="shrink-0">probe project:</dt>
-                      <dd className="font-mono">{entry.declaredPaths.probeProject}</dd>
-                    </div>
-                  ) : null}
-                  {entry.declaredPaths.registry !== undefined ? (
-                    <div className="flex gap-1">
-                      <dt className="shrink-0">registry:</dt>
-                      <dd className="font-mono">{entry.declaredPaths.registry}</dd>
-                    </div>
-                  ) : null}
-                  <div className="flex gap-1">
-                    <dt className="shrink-0">bindings:</dt>
-                    <dd className="font-mono">{entry.declaredPaths.bindings}</dd>
-                  </div>
-                  <div className="flex gap-1">
-                    <dt className="shrink-0">content:</dt>
-                    <dd className="font-mono">{entry.declaredPaths.content}</dd>
-                  </div>
-                  {entry.declaredPaths.projection !== undefined ? (
-                    <div className="flex gap-1">
-                      <dt className="shrink-0">projection:</dt>
-                      <dd className="font-mono">{entry.declaredPaths.projection}</dd>
-                    </div>
-                  ) : null}
-                </dl>
-                <div>
-                  <Button
-                    disabled={!runnerReady || busy || starting !== null}
-                    onClick={() => void startBuild(entry.configId)}
-                  >
-                    {starting === entry.configId ? (
-                      <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
-                    ) : (
-                      <Play className="size-4" aria-hidden="true" />
-                    )}
-                    {starting === entry.configId ? "Starting…" : "Build"}
-                  </Button>
-                  {!runnerReady ? (
-                    <span className="ml-2 text-xs text-muted-foreground">runner not ready</span>
-                  ) : busy ? (
-                    <span className="ml-2 text-xs text-muted-foreground">
-                      one build at a time — waiting for the active build
-                    </span>
-                  ) : null}
-                </div>
-              </div>
+                  <Collapse
+                    size="small"
+                    items={[
+                      {
+                        key: "declared-paths",
+                        label: "Chi tiết kỹ thuật",
+                        children: (
+                          <Descriptions column={1} size="small" items={declaredDescriptions(entry)} />
+                        ),
+                      },
+                    ]}
+                  />
+                  <Flex align="center" gap={8}>
+                    <Button
+                      type="primary"
+                      htmlType="button"
+                      disabled={!runnerReady || busy || starting !== null}
+                      loading={starting === entry.configId}
+                      icon={<CaretRightOutlined aria-hidden="true" />}
+                      onClick={() => void startBuild(entry.configId)}
+                    >
+                      {starting === entry.configId ? "Đang khởi chạy…" : "Build"}
+                    </Button>
+                    {!runnerReady ? (
+                      <Typography.Text type="secondary">runner chưa sẵn sàng</Typography.Text>
+                    ) : busy ? (
+                      <Typography.Text type="secondary">
+                        mỗi lần chỉ chạy một — đang chờ bản dựng hiện tại
+                      </Typography.Text>
+                    ) : null}
+                  </Flex>
+                </Flex>
+              </Card>
             ))
           )}
-        </CardContent>
+        </Flex>
       </Card>
-    </div>
+    </Flex>
   );
 }

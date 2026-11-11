@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * [29] DET Studio — honest NOT CONNECTED result state (New Conversion module, lane W-A).
  *
@@ -5,12 +7,14 @@
  * execution is not connected in this MVP (issue [28] owns the engine bridge).
  * There is intentionally NO spinner, NO progress state and NO success claim —
  * no conversion has run.
+ *
+ * [61] Ant Design stock light appearance: antd Card + default Tag + a calm
+ * info Alert carrying the exact not-connected copy. Human copy is natural
+ * Vietnamese ("Chưa hỗ trợ chạy trực tiếp") with the machine reason token
+ * `NOT_CONNECTED` kept visible as an inline `Text code` chip; file keys and
+ * node ids stay verbatim.
  */
-import { Unplug } from "lucide-react";
-
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { Alert, Card, Flex, Tag, Typography } from "antd";
 
 import { TARGET_LABELS } from "../conversion-options";
 import type { ConversionRequestSummary } from "../types";
@@ -23,71 +27,75 @@ interface NotConnectedResultProps {
 interface SummaryRow {
   label: string;
   value: string;
-  /** Unknown facts render as unknown text, never as a plausible-looking value. */
+  /** Id-like facts render as antd inline code; unknown facts stay plain. */
   mono?: boolean;
+  /** An absent fact renders secondary — visibly not data. */
+  muted?: boolean;
 }
 
 export function NotConnectedResult({ summary, className }: NotConnectedResultProps) {
   const rows: SummaryRow[] = [
     {
-      label: "Source file key",
-      value: summary.fileKey ?? "Not provided (bare node id)",
+      label: "File key nguồn",
+      value: summary.fileKey ?? "Không có (chỉ node id)",
       mono: summary.fileKey !== null,
+      muted: summary.fileKey === null,
     },
     { label: "Node id", value: summary.nodeId, mono: true },
-    { label: "Output target", value: TARGET_LABELS[summary.target] },
+    { label: "Đích xuất", value: TARGET_LABELS[summary.target] },
     {
-      label: "Project profile",
-      value: summary.profileName ? summary.profileName : "Not configured",
+      label: "Hồ sơ dự án",
+      value: summary.profileName ? summary.profileName : "Chưa cấu hình",
+      muted: !summary.profileName,
     },
   ];
 
   return (
-    <section
+    <Card
+      size="small"
       data-testid="conversion-result"
-      aria-label="Conversion request summary"
-      className={cn("rounded-lg border bg-card p-4", className)}
+      aria-label="Tóm tắt yêu cầu chuyển đổi"
+      className={className}
+      title={
+        <Flex wrap="wrap" align="center" gap="small">
+          <h3>Tóm tắt yêu cầu chuyển đổi</h3>
+          <Tag>Chưa hỗ trợ chạy trực tiếp</Tag>
+          <Typography.Text code>NOT_CONNECTED</Typography.Text>
+        </Flex>
+      }
     >
-      <div className="flex flex-wrap items-center gap-2">
-        <h3 className="text-sm font-semibold">Conversion request summary</h3>
-        <Badge variant="outline" className="border-dashed text-xs">
-          NOT CONNECTED
-        </Badge>
-      </div>
-
-      <dl className="mt-3 grid gap-x-6 gap-y-2 sm:grid-cols-2">
+      <dl>
         {rows.map((row) => (
-          <div key={row.label} className="min-w-0">
-            <dt className="text-xs text-muted-foreground">{row.label}</dt>
-            <dd
-              className={cn(
-                "truncate text-sm",
-                row.mono && "font-mono",
-                !row.mono && row.value.startsWith("Not ") && "text-muted-foreground"
+          <div key={row.label}>
+            <dt>
+              <Typography.Text type="secondary">{row.label}</Typography.Text>
+            </dt>
+            <dd>
+              {row.mono ? (
+                <Typography.Text code>{row.value}</Typography.Text>
+              ) : row.muted ? (
+                <Typography.Text type="secondary">{row.value}</Typography.Text>
+              ) : (
+                row.value
               )}
-            >
-              {row.value}
             </dd>
           </div>
         ))}
       </dl>
 
       {summary.inputKind === "bare" ? (
-        <p className="mt-3 text-xs text-muted-foreground">
-          Bare node id: no file key was provided. Paste the full Figma design URL (with
-          ?node-id=…) to include the file the engine would read.
-        </p>
+        <Typography.Paragraph type="secondary">
+          Node id trần: chưa có file key nào được cung cấp. Dán URL Figma đầy đủ
+          (kèm ?node-id=…) để xác định cả file mà engine sẽ đọc.
+        </Typography.Paragraph>
       ) : null}
 
-      <Alert className="mt-4">
-        <Unplug />
-        <AlertTitle>Conversion execution is not connected</AlertTitle>
-        <AlertDescription>
-          Studio cannot run conversions in this MVP: issue [28] owns the engine bridge to the
-          det CLI, and it is not connected yet. No conversion was run — this panel only
-          summarizes the request you entered.
-        </AlertDescription>
-      </Alert>
-    </section>
+      <Alert
+        type="info"
+        showIcon
+        title="Studio chưa hỗ trợ chạy chuyển đổi trực tiếp"
+        description="Studio chưa thể tự chạy chuyển đổi ở giai đoạn này: cầu nối engine tới det CLI thuộc [28] và chưa được nối. Chưa có chuyển đổi nào được chạy — bảng này chỉ tóm tắt yêu cầu bạn vừa nhập."
+      />
+    </Card>
   );
 }

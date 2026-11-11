@@ -8,7 +8,7 @@
 ## 1. One engine; three persistent concerns, not three engines
 
 ```text
-       det CLI (no DB required)          DET Studio (Next.js + shadcn)
+       det CLI (no DB required)          DET Studio (Next.js + Ant Design 6, light-only per [61])
                 |                                  |
                 +------------ DET Engine -----------+
                              |             |
@@ -104,7 +104,7 @@ $DET_DATA_HOME/
 ## 6. Issue boundaries / phased GO
 
 - **[28] ACTIVE:** standalone engine, `det build`, source extraction, bounded Page Builder/PHTML conversion, isolated preview theme and run artifact manifest. **No SQLite dependency**.
-- **[29] ACTIVE:** Next.js/shadcn UI with four parallel workers and **schema-shaped, openly labeled fixtures**; no added DB, migration or worker scope change mid-flight.
+- **[29] ACTIVE:** Next.js UI with Ant Design 6 light-only ([61], superseding the earlier shadcn choice) with four parallel workers and **schema-shaped, openly labeled fixtures**; no added DB, migration or worker scope change mid-flight.
 - **[30] NOW:** agree on persistence, KB reuse, lifecycle, licensing and multi-project boundaries in a standalone architecture document and review. **No DB code/merge authorization implied.**
 - **NEXT only after #28/#29 results and Owner GO:** implement small SQLite catalogue + KB snapshot references/reader + migration/backup/recovery tests, then connect Studio to real run artifacts. Reuse existing `det kb`; do not create another knowledge engine.
 - **TEAM sharing gate:** access control, private project/KB authorization, safe downloads, concurrency and backup verified before hosting for multiple people.

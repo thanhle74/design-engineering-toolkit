@@ -1,40 +1,52 @@
+"use client";
+
 /**
  * [29] Studio — diagnostics panel fed by run.diagnostics.
  *
  * Every carried-over diagnostic renders with its severity, code, message,
- * subject and origin (run/compose/review). An empty diagnostics list renders a
- * truthful "none recorded" line rather than pretending silence means health.
+ * subject and origin (run/compose/review) as a plain list — never a table.
+ * An empty diagnostics list renders a truthful "none recorded" line rather
+ * than pretending silence means health.
+ *
+ * [61] Ant Design stock light appearance: badges are preset-color Tags, the
+ * diagnostic codes are antd inline code, and the rows are `Flex` items with
+ * the stock gap — no custom surfaces or colors.
  */
+import { Flex, Typography } from "antd";
 import type { StudioDiagnosticView } from "@/src/shared/contracts";
 import { OriginBadge, SeverityBadge } from "./disposition-badges";
 
-const UNKNOWN = "unknown";
+/** "không rõ" — a fact the run does not carry is shown, never invented ([61] Vietnamese). */
+const UNKNOWN = "không rõ";
 
 function DiagnosticRow({ diagnostic }: { diagnostic: StudioDiagnosticView }) {
   return (
-    <li
+    <Flex
+      component="li"
+      wrap="wrap"
+      align="flex-start"
+      gap="small"
       data-testid="diagnostic-row"
       data-severity={diagnostic.severity}
       data-origin={diagnostic.origin}
-      className="flex flex-wrap items-start gap-x-2 gap-y-1 rounded-md border bg-card px-3 py-2 text-left"
     >
       <SeverityBadge severity={diagnostic.severity} />
       {diagnostic.code && (
-        <code className="font-mono text-[11px] text-muted-foreground">
+        <Typography.Text code type="secondary">
           {diagnostic.code}
-        </code>
+        </Typography.Text>
       )}
-      <p className="min-w-0 flex-1 text-sm text-pretty">{diagnostic.message}</p>
-      <span className="text-xs text-muted-foreground">
+      <p>{diagnostic.message}</p>
+      <Typography.Text type="secondary">
         subject: {diagnostic.subjectType ?? UNKNOWN}
-        {diagnostic.subjectId && (
-          <code className="ml-1 font-mono text-[11px]" title={diagnostic.subjectId}>
-            {diagnostic.subjectId}
-          </code>
-        )}
-      </span>
+      </Typography.Text>
+      {diagnostic.subjectId && (
+        <Typography.Text code type="secondary" title={diagnostic.subjectId}>
+          {diagnostic.subjectId}
+        </Typography.Text>
+      )}
       <OriginBadge origin={diagnostic.origin} />
-    </li>
+    </Flex>
   );
 }
 
@@ -48,18 +60,20 @@ export function DiagnosticsPanel({
       aria-labelledby="studio-diagnostics-heading"
       data-testid="diagnostics-panel"
     >
-      <h3 id="studio-diagnostics-heading" className="text-sm font-semibold">
-        Diagnostics{" "}
-        <span className="font-normal text-muted-foreground">
-          ({diagnostics.length} recorded)
-        </span>
+      <h3>
+        Chẩn đoán{" "}
+        <Typography.Text type="secondary">
+          ({diagnostics.length} bản ghi)
+        </Typography.Text>
       </h3>
       {diagnostics.length === 0 ? (
-        <p className="mt-2 text-xs text-muted-foreground" data-testid="diagnostics-empty">
-          No diagnostics recorded for this run.
+        <p data-testid="diagnostics-empty">
+          <Typography.Text type="secondary">
+            Không có chẩn đoán nào được ghi cho lần chạy này.
+          </Typography.Text>
         </p>
       ) : (
-        <ul className="mt-2 flex flex-col gap-2">
+        <ul>
           {diagnostics.map((diagnostic, index) => (
             <DiagnosticRow diagnostic={diagnostic} key={`${diagnostic.origin}-${diagnostic.code ?? "no-code"}-${index}`} />
           ))}

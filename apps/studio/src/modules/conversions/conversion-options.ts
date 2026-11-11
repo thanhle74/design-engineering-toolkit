@@ -17,7 +17,7 @@ export interface ConversionOutputTargetOption {
 export const OUTPUT_TARGET_OPTIONS: readonly ConversionOutputTargetOption[] = [
   { value: "native-page-builder", label: "Native Page Builder" },
   { value: "hyva-phtml", label: "Hyvä PHTML (frontend-only)" },
-  { value: "auto", label: "Auto" },
+  { value: "auto", label: "Tự động" },
 ];
 
 export const DEFAULT_OUTPUT_TARGET: ConversionOutputTarget = "native-page-builder";
@@ -33,6 +33,6 @@ export const TARGET_LABELS: Record<ConversionOutputTarget, string> = Object.from
  * configuration. Used by tests; the integrator may wire them for the demo page.
  */
 export const DEMO_PROFILES: readonly StudioProfileOption[] = [
-  { id: "demo-fashion-storefront", name: "DEMO — Fashion storefront", demo: true },
-  { id: "demo-content-site", name: "DEMO — Content site", demo: true },
+  { id: "demo-fashion-storefront", name: "DEMO — Cửa hàng thời trang", demo: true },
+  { id: "demo-content-site", name: "DEMO — Trang nội dung", demo: true },
 ];
