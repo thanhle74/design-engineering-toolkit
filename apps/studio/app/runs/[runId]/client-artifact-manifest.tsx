@@ -45,7 +45,7 @@ export function ClientArtifactManifest({
           error?: { code?: string; message?: string };
         } | null;
         setError(
-          `Download refused (HTTP ${response.status}${body?.error?.code ? ` · ${body.error.code}` : ""}).`
+          `Tải xuống bị từ chối (HTTP ${response.status}${body?.error?.code ? ` · ${body.error.code}` : ""}).`
         );
         return;
       }
@@ -62,7 +62,7 @@ export function ClientArtifactManifest({
       anchor.remove();
       URL.revokeObjectURL(url);
     } catch {
-      setError("Download failed — the artifact route is unreachable.");
+      setError("Tải xuống thất bại — route artifact không truy cập được.");
     }
   }
 

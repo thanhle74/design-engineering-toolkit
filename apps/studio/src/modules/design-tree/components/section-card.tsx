@@ -16,7 +16,8 @@ import { Card, Flex, Tag, Typography } from "antd";
 import type { StudioMappingView, StudioSectionView } from "@/src/shared/contracts";
 import { DesignNodeTable } from "./node-table";
 
-const UNKNOWN = "unknown";
+/** "không rõ" — a fact the run does not carry is shown, never invented ([61] Vietnamese). */
+const UNKNOWN = "không rõ";
 
 function RoleBadge({ role }: { role?: string }) {
   if (!role) {
@@ -41,7 +42,7 @@ export function SectionCard({
       data-order={section.order}
       title={
         <Flex wrap="wrap" align="center" gap="small">
-          <Typography.Text type="secondary" title="section order">
+          <Typography.Text type="secondary" title="thứ tự mục">
             #{section.order}
           </Typography.Text>
           <h3>{section.name}</h3>
@@ -52,8 +53,7 @@ export function SectionCard({
     >
       <Typography.Paragraph type="secondary">
         <span data-testid="design-tree-element-count">
-          {section.elementCount}{" "}
-          {section.elementCount === 1 ? "element" : "elements"}
+          {section.elementCount} phần tử
         </span>
         {" · "}
         <Typography.Text code>
@@ -66,19 +66,18 @@ export function SectionCard({
         <p data-testid="design-tree-partial">
           <Tag color="gold">PARTIAL</Tag>
           <Typography.Text type="secondary">
-            no composed elements
+            không có phần tử nào được ghép
           </Typography.Text>
         </p>
       )}
       {mappings.length === 0 ? (
         <Typography.Paragraph type="secondary">
-          No node mappings are grouped under this section.
+          Không có node mapping nào được gắn vào mục này.
         </Typography.Paragraph>
       ) : (
         <>
           <Typography.Paragraph type="secondary">
-            {mappings.length} node mapping{mappings.length === 1 ? "" : "s"} in
-            plan
+            {mappings.length} node mapping trong plan
           </Typography.Paragraph>
           <DesignNodeTable
             mappings={mappings}

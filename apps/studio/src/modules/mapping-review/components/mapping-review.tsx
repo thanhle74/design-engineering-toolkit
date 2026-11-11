@@ -26,11 +26,9 @@ export function MappingReview({ run }: { run: StudioRunView }) {
       data-testid="mapping-review"
     >
       <h2>
-        Mapping review{" "}
+        Soát mapping{" "}
         <Typography.Text type="secondary">
-          {run.mappings.length} mapping{run.mappings.length === 1 ? "" : "s"} ·{" "}
-          {run.diagnostics.length} diagnostic
-          {run.diagnostics.length === 1 ? "" : "s"}
+          {run.mappings.length} mapping · {run.diagnostics.length} chẩn đoán
         </Typography.Text>
       </h2>
       {isEmpty ? (
@@ -39,8 +37,8 @@ export function MappingReview({ run }: { run: StudioRunView }) {
           showIcon
           icon={<SearchOutlined aria-hidden="true" />}
           data-testid="mapping-review-empty"
-          title="No node mappings or diagnostics"
-          description="This run carries no compose mappings and no diagnostics. Nothing was hidden — the source produced nothing to review yet."
+          title="Không có node mapping hay chẩn đoán"
+          description="Lần chạy này không có mapping ghép và không có chẩn đoán nào. Không có gì bị ẩn — nguồn chưa tạo ra nội dung nào để soát."
         />
       ) : (
         <>

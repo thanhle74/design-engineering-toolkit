@@ -96,3 +96,39 @@ Honesty note: one full-suite run had `src/server/build-runner.test.ts` "runs the
 `61-overview-desktop/narrow`, `61-build-desktop/narrow`, `61-catalog-desktop/narrow`, `61-run-detail-desktop/narrow` (run `build-1794387796247`), `61-run-not-found-desktop` re-captured at `be3a2fd`; `61-light-dom-evidence.txt` rewritten with the stock-antd checks: `<html lang="en">` with NO classes; 153-byte custom CSS (color-scheme + one geometry class); 0 Tailwind utility tokens in served HTML; no ConfigProvider/theme in source; stock antd class inventory on all routes; Typography.Link anchors.
 
 **STOP here for Coordinator re-review — no self-merge, no new issue, #63 untouched.**
+
+---
+
+## 9. C61-2 internal-tool round — remove clutter + Vietnamese copy (PR #64 comment thread, 2026-11-11)
+
+Two follow-up Owner comments on PR #64 ("C61-2: INTERNAL TOOL, remove visual clutter" + the Vietnamese addendum marked "ưu tiên mới nhất"): small internal operator tool — remove Footer/tagline/disclaimer clutter, task-first pages, technical details behind stock antd `Collapse` ("Chi tiết kỹ thuật", default collapsed), **all human-readable UI copy in natural Vietnamese** while machine tokens stay verbatim (ids, enum/gap/diagnostic codes, paths, hashes, env vars, CLI flags, DEMO). Stock Ant Design default light unchanged (C61-1 doctrine still in force). Same PR #64, same workspace, 4 parallel workers → single integrator.
+
+### What changed
+
+1. **Shell**: `Layout.Footer` + disclaimer copy deleted; header tagline deleted (brand + nav only). Nav relabelled "Tổng quan / Build / Dự án". `studio-metadata` description Vietnamese; `<html lang="vi">`.
+2. **Overview** = heading "Tổng quan" + one action `Button` "Tạo bản dựng" → /build, Card "Lần chạy gần đây" (concise rows), and the ConversionForm demoted to a small untitled Card with the honest note "Chưa hỗ trợ chạy trực tiếp." Removed: intro paragraph, "Build Control" promotional card, MVP-scope Tag banner, trailing operator-UI disclaimer.
+3. **Build** = config name + compact tags + configId + **Build** button + real status; ALL declared provenance paths (profile/registry/probe/bindings/content/projection, design file/node) moved into a per-config `Collapse` "Chi tiết kỹ thuật" (default collapsed); intro/paragraph clutter removed. All runner/job logic (POST, poll, 409, terminal states, tails) byte-identical; display labels Vietnamese over unchanged machine states.
+4. **Run/Catalog/Run details**: stage tables keep machine values verbatim; gap list = raw code chip + "· số lượng N" + short Vietnamese lead-in (deterministic map), original English machine messages inside a default-collapsed "Chi tiết kỹ thuật"; provenance machine-id fields likewise (`forceRender` so data stays testable while collapsed); long explanatory paragraphs removed; statuses/empty/off/unavailable states short Vietnamese with raw codes as chips. PREVIEW_UNAVAILABLE honesty preserved as visible `Text code` chip + Vietnamese label.
+5. **Owner request: whole-site main background WHITE** — antd `Layout` paints gray `colorBgLayout` by default; one documented globals.css rule swaps it via antd's own token variable: `.ant-layout{background:var(--ant-color-bg-container,#fff)}` (no bespoke color; served custom CSS total = 211 bytes).
+6. **Integration fixes by the single integrator**: horizontal Menu given antd's own top-nav demo geometry (`flex:auto; minWidth:0`) — without it antd collapsed nav into the ellipsis overflow indicator even on desktop; duplicate "Chuyển đổi mới" heading removed (Card title dropped, form h2 is the only heading); verified-line icon moved inline into the Text (no naked icon when the line wraps at 390px); `KindBadge` absence marker aligned to "không rõ" (no test asserted the old string).
+
+### Gates (C61-2 round)
+
+| Gate | Command | Result |
+|---|---|---|
+| Root contracts | `npm test` | **195/195 pass** (engine untouched) |
+| Studio unit | `cd apps/studio && npx vitest run` | **225/225** (same count as §8 — module tests updated to Vietnamese copy, structural/data contracts intact: `mapping-row`, `data-needs-review` true/false, single `<p role="alert">`, htmlFor↔id, Enter submit, no progressbar/Spin in not-connected, `provenance-counts` testId) |
+| Studio typecheck / lint / build | `npm run typecheck` · `npm run lint` · `npm run build` | all pass (same 3 pre-existing build-catalog fs-tracing warnings) |
+| CI | `contracts` + `studio` at exact head | pass (run ids in the PR comment) |
+
+Honesty notes: (a) no full-suite failures this round; (b) the intermediate evidence capture round found and fixed 3 integration defects (menu ellipsis collapse, duplicated heading, wrapped naked icon) before the final captures; (c) config `description` strings shown on Build come from the committed repository example's build-config.json (caller data) and stay verbatim English — machine/data, not UI copy.
+
+### Operator E2E (C61-2 round, production server port 3100, final build)
+
+`POST /api/builds {"configId":"slaunchpad-home-real-derived"}` → **202** `build-1794390708023` → **exit 0** (capability-probe reused / extraction completed / composition completed) → gaps verbatim (10 skips · 12 fidelity gaps · both PREVIEW boundaries) → PREVIEW_UNAVAILABLE verbatim chip → download `native-content.html` **3288 bytes, sha256 `6362c6a9…893bdf` == manifest** — byte-identical to every earlier round (deterministic engine).
+
+### Visual + DOM evidence
+
+`61-*` screenshots re-captured (desktop + 414px narrow; same filenames, history keeps earlier versions): Tổng quan / Bản dựng / Dự án & lần chạy / run detail of `build-1794390708023` / run-not-found. `61-light-dom-evidence.txt` rewritten for this round: `<html lang="vi">` no classes; 211-byte custom CSS inventory; footer element count 0 (only unused antd library footer CSS in the injected stylesheet); Vietnamese + machine-token inventory; `Collapse` disclosure inventory; white-background rule.
+
+**STOP here for Coordinator re-review — no self-merge, no new issue, #63 untouched.**

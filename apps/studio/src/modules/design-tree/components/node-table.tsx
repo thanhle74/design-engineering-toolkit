@@ -23,7 +23,8 @@ import {
   ReviewDispositionBadge,
 } from "@/src/modules/mapping-review";
 
-const UNKNOWN = "unknown";
+/** "không rõ" — a fact the run does not carry is shown, never invented ([61] Vietnamese). */
+const UNKNOWN = "không rõ";
 
 /**
  * antd `onRow` prop bags accept arbitrary DOM attributes, but React's
@@ -46,7 +47,7 @@ const columns: ColumnsType<StudioMappingView> = [
     ),
   },
   {
-    title: "Source name",
+    title: "Tên trong nguồn",
     render: (_, mapping) => (
       <Typography.Text type="secondary">
         {mapping.sourceName ?? UNKNOWN}
@@ -54,7 +55,7 @@ const columns: ColumnsType<StudioMappingView> = [
     ),
   },
   {
-    title: "Kind",
+    title: "Loại",
     render: (_, mapping) => <KindBadge kind={mapping.kind} />,
   },
   {

@@ -12,7 +12,7 @@ import {
 
 import { CatalogView } from "./catalog-view";
 
-export const metadata: Metadata = { title: "Catalog" };
+export const metadata: Metadata = { title: "Dự án & lần chạy" };
 
 // Catalogue state is read per request (local DB + env) — fully blocking route.
 export const instant = false;
@@ -44,7 +44,7 @@ export default async function CatalogPage() {
     try {
       const catalog = await getStudioCatalog();
       if (catalog === null) {
-        offMessage = "STUDIO_DATA_DIR is not set; the SQLite catalogue is off.";
+        offMessage = "STUDIO_DATA_DIR chưa đặt; catalog SQLite đang tắt.";
       } else {
         const runsRoot = process.env.STUDIO_DET_RUNS_DIR;
         if (typeof runsRoot === "string") {
@@ -64,7 +64,7 @@ export default async function CatalogPage() {
     }
   } else {
     offMessage =
-      "The SQLite catalogue is off: STUDIO_DATA_DIR is not set. Set it to a local directory to persist project/run metadata across Studio restarts; fixture and file-backed modes are unaffected.";
+      "Catalog SQLite đang tắt: STUDIO_DATA_DIR chưa đặt. Đặt nó trỏ tới một thư mục cục bộ để lưu metadata dự án/lần chạy qua các lần khởi động lại Studio; chế độ fixture và file-backed không bị ảnh hưởng.";
   }
 
   return (

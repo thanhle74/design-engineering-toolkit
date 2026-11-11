@@ -22,3 +22,15 @@
   max-width: 1152px;
   padding: 24px;
 }
+
+/**
+ * [61] C61-2 Owner request: the whole-site main background is WHITE. Ant
+ * Design's Layout paints the gray `colorBgLayout` (#f0f2f5) by default; this
+ * rule swaps it for antd's own container token so the value stays Ant
+ * Design's (default light `colorBgContainer` = white) — no bespoke color is
+ * introduced. The literal `#fff` is only a fallback equal to that same
+ * default token value for the case CSS variables are unavailable.
+ */
+.ant-layout {
+  background: var(--ant-color-bg-container, #fff);
+}

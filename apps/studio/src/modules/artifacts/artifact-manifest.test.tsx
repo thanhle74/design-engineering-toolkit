@@ -54,14 +54,14 @@ describe("ArtifactManifest", () => {
     expect(screen.queryByText(hash)).not.toBeInTheDocument();
 
     expect(screen.getByTestId("artifact-count")).toHaveTextContent(
-      `${FIXTURE_ARTIFACTS.length} artifacts`
+      `${FIXTURE_ARTIFACTS.length} artifact`
     );
   });
 
   it("renders non-downloadable rows as disabled controls whose tooltip explains why", async () => {
     renderManifest(FIXTURE_ARTIFACTS);
 
-    const buttons = screen.getAllByRole("button", { name: /download/i });
+    const buttons = screen.getAllByRole("button", { name: /tải xuống/i });
     expect(buttons).toHaveLength(FIXTURE_ARTIFACTS.length);
     for (const button of buttons) {
       expect(button).toBeDisabled();
@@ -73,15 +73,15 @@ describe("ArtifactManifest", () => {
     await user.hover(wrapper as HTMLElement);
 
     const tooltip = await screen.findByRole("tooltip");
-    expect(tooltip).toHaveTextContent(/the run reader does not serve this artifact/i);
-    expect(tooltip).toHaveTextContent(/Downloads exist only for reader-validated files\./i);
+    expect(tooltip).toHaveTextContent(/run reader không phục vụ artifact này/i);
+    expect(tooltip).toHaveTextContent(/Chỉ file đã được reader xác thực mới tải được\./i);
   });
 
   it("never calls onDownload for non-downloadable rows", async () => {
     const onDownload = vi.fn();
     renderManifest(FIXTURE_ARTIFACTS, onDownload);
 
-    for (const button of screen.getAllByRole("button", { name: /download/i })) {
+    for (const button of screen.getAllByRole("button", { name: /tải xuống/i })) {
       await user.click(button);
     }
     expect(onDownload).not.toHaveBeenCalled();
@@ -95,7 +95,7 @@ describe("ArtifactManifest", () => {
     };
     renderManifest([downloadable], onDownload);
 
-    const button = screen.getByRole("button", { name: /download/i });
+    const button = screen.getByRole("button", { name: /tải xuống/i });
     expect(button).toBeEnabled();
 
     await user.click(button);
@@ -113,15 +113,15 @@ describe("ArtifactManifest", () => {
     // The absolute path is never rendered anywhere in the table.
     expect(screen.queryByText("/etc/passwd")).not.toBeInTheDocument();
     expect(screen.getByTestId("artifact-file-invalid")).toHaveTextContent(
-      "Invalid file path withheld"
+      "Đã ẩn đường dẫn không hợp lệ"
     );
   });
 
   it("renders a truthful EMPTY state for a run without artifacts", () => {
     renderManifest([]);
 
-    expect(screen.getByText("No artifacts in this run")).toBeInTheDocument();
+    expect(screen.getByText("Chưa có artifact nào trong lần chạy này")).toBeInTheDocument();
     expect(screen.queryByRole("table")).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /download/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /tải xuống/i })).not.toBeInTheDocument();
   });
 });

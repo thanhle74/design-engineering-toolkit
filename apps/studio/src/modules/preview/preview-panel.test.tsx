@@ -41,9 +41,11 @@ describe("PreviewPanel", () => {
       fixturePreview.reason
     );
 
-    // Calm informational state vocabulary, not an alarming error banner.
+    // Calm informational state vocabulary, not an alarming error banner: the
+    // Vietnamese label rides next to the raw machine code, still in the DOM.
     expect(screen.getByText("PREVIEW_UNAVAILABLE")).toBeInTheDocument();
-    expect(screen.getByText(/A preview appears only when/)).toBeInTheDocument();
+    expect(screen.getByText("Không thể xem trước")).toBeInTheDocument();
+    expect(screen.getByText(/Bản xem trước chỉ xuất hiện khi/)).toBeInTheDocument();
 
     // DEMO fixture runs must be visibly labeled.
     expect(screen.getByTestId("preview-demo-badge")).toHaveTextContent("DEMO");
@@ -79,7 +81,7 @@ describe("PreviewPanel", () => {
     expect(newTab).toHaveAttribute("target", "_blank");
     expect(newTab.getAttribute("rel")).toContain("noreferrer");
 
-    expect(screen.getByTestId("preview-verified-badge")).toHaveTextContent("Verified");
+    expect(screen.getByTestId("preview-verified-badge")).toHaveTextContent("Đã xác minh");
 
     // A live run never carries the DEMO badge.
     expect(screen.queryByTestId("preview-demo-badge")).not.toBeInTheDocument();

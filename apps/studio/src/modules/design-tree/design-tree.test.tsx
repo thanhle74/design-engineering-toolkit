@@ -55,10 +55,10 @@ describe("DesignTree — DEMO fixture", () => {
 
     const counts = screen.getAllByTestId("design-tree-element-count");
     expect(counts.map((node) => node.textContent)).toEqual([
-      "3 elements",
-      "5 elements",
-      "2 elements",
-      "0 elements",
+      "3 phần tử",
+      "5 phần tử",
+      "2 phần tử",
+      "0 phần tử",
     ]);
   });
 
@@ -72,7 +72,7 @@ describe("DesignTree — DEMO fixture", () => {
       .find((card) => card.dataset.sectionId === "s-3d4e5f6a7b8c");
     expect(journalCard).toBeDefined();
     expect(partials[0]).toHaveTextContent("PARTIAL");
-    expect(partials[0]).toHaveTextContent("no composed elements");
+    expect(partials[0]).toHaveTextContent("không có phần tử nào được ghép");
     expect(journalCard).toContainElement(partials[0]);
   });
 
@@ -90,7 +90,7 @@ describe("DesignTree — DEMO fixture", () => {
     expect(within(heroNodes).getAllByTestId("design-tree-node")).toHaveLength(6);
 
     const unassigned = screen.getByTestId("design-tree-unassigned");
-    expect(unassigned).toHaveTextContent("Not in plan / unassigned");
+    expect(unassigned).toHaveTextContent("Chưa gán vào mục nào");
     // Nodes without a sectionId — SCROLL and SITE/Footer — stay visible here.
     expect(unassigned).toHaveTextContent("n-5e6f7a8b9c0d");
     expect(unassigned).toHaveTextContent("n-7a8b9c0d1e2f");
@@ -121,7 +121,7 @@ describe("DesignTree — empty run", () => {
     render(<DesignTree run={EMPTY_RUN} />);
 
     expect(screen.getByTestId("design-tree-empty")).toHaveTextContent(
-      "No sections extracted"
+      "Chưa trích xuất được mục nào"
     );
     expect(screen.queryByTestId("design-tree-section")).not.toBeInTheDocument();
     expect(screen.queryByTestId("design-tree-partial")).not.toBeInTheDocument();

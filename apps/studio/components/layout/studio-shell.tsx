@@ -3,9 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AppstoreOutlined } from "@ant-design/icons";
-import { Flex, Grid, Layout, Menu, Space, Typography, type MenuProps } from "antd";
+import { Flex, Layout, Menu, Space, Typography, type MenuProps } from "antd";
 
-const { Content, Footer } = Layout;
+const { Content } = Layout;
 
 /**
  * [61] Stock Ant Design light shell — every component renders with its
@@ -17,40 +17,44 @@ const { Content, Footer } = Layout;
  * Why there is no `Layout.Header`: antd's stock `Header` background token is
  * `headerBg: '#001529'` (verified in antd 6.7.0 `layout/style` component
  * defaults) — the classic dark-navy band, which does not belong in a light
- * UI. The stock light alternative composed here (all default light
- * backgrounds: Menu `itemBg` = white container, Footer `footerBg` =
- * `colorBgLayout` light gray) is a top horizontal `Menu` plus default
- * `Content` and `Footer` directly under the `Layout`.
+ * UI. The stock light composition here (default light backgrounds only:
+ * Menu `itemBg` = white container) is a top horizontal `Menu` plus a default
+ * `Content` directly under the `Layout`. The shell stays compact — brand
+ * plus nav only: no tagline and no `Layout.Footer`.
  *
  * Documented layout exceptions (the correction contract allows a minimal
  * number, each commented):
  * 1. `.studio-content` (globals.css) — antd has no primitive for a centered
  *    max-width content column, so this single geometry-only class centers the
  *    header band and the page content region (margin auto + max-width + padding).
- * 2. `minHeight: "100dvh"` on the `Layout` root — keeps the Footer at the
- *    viewport bottom on short pages; this is antd's own documented Layout
- *    demo pattern, a viewport constraint, not a theme token override.
+ * 2. `minHeight: "100dvh"` on the `Layout` root — keeps the layout filling
+ *    the viewport on short pages; this is antd's own documented Layout demo
+ *    pattern, a viewport constraint, not a theme token override.
+ * 3. `style={{ flex: "auto", minWidth: 0 }}` on the horizontal `Menu` — pure
+ *    flex sizing so the brand and the nav share the header row; without it
+ *    the Menu measures a min-content width and antd collapses the items into
+ *    the ellipsis overflow indicator even on desktop. Same pattern as antd's
+ *    own top-navigation header demo; geometry only, no theme values.
+ * 4. `.ant-layout` (globals.css) — Owner request (C61-2): the whole-site main
+ *    background is white; the rule uses antd's own container token variable.
  *
  * Menu uses the `items` prop (antd 6: no dot-notation children) with real
  * Next `<Link>` labels so client-side routing is preserved; `selectedKeys`
  * matches the pathname exactly (nested routes like /runs/[runId] highlight
- * nothing). antd's overflow collapse into an ellipsis item is the
- * narrow-width/mobile strategy for the Menu itself — keep `disabledOverflow`
- * at its default. Responsive tagline visibility uses antd's `Grid
- * .useBreakpoint()` (no CSS media classes). Metadata lives in the
- * server-safe `./studio-metadata`; a server layout must not import
- * non-component exports from this `'use client'` module.
+ * nothing). Human-readable copy is natural Vietnamese; "DET Studio"
+ * and "Build" stay Latin/English on purpose (brand and machine-term naming).
+ * Metadata lives in the server-safe `./studio-metadata`; a server layout must
+ * not import non-component exports from this `'use client'` module.
  */
 
 export const studioNavItems = [
-  { href: "/", label: "Overview" },
+  { href: "/", label: "Tổng quan" },
   { href: "/build", label: "Build" },
-  { href: "/catalog", label: "Catalog" },
+  { href: "/catalog", label: "Dự án" },
 ] as const;
 
 export function StudioShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const screens = Grid.useBreakpoint();
 
   const navMenuItems: MenuProps["items"] = studioNavItems.map((item) => ({
     key: item.href,
@@ -76,24 +80,13 @@ export function StudioShell({ children }: { children: React.ReactNode }) {
             mode="horizontal"
             items={navMenuItems}
             selectedKeys={selectedKeys}
+            style={{ flex: "auto", minWidth: 0 }}
           />
-          {screens.md ? (
-            <Typography.Text type="secondary">
-              local trusted operator UI · demo-capable
-            </Typography.Text>
-          ) : null}
         </Flex>
       </header>
       <Content>
         <div className="studio-content">{children}</div>
       </Content>
-      <Footer>
-        <Typography.Text type="secondary">
-          DET Studio is a presentation layer over the det CLI — the engine owns
-          all conversion logic ([28]). No Figma, Magento or CMS writes from
-          this UI.
-        </Typography.Text>
-      </Footer>
     </Layout>
   );
 }

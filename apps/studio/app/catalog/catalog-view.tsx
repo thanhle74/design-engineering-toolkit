@@ -15,11 +15,12 @@ import type {
 /**
  * [61] Client view child for the Catalogue server page: stock antd light
  * heading, off/unavailable alerts, stats row and the two catalogue tables.
- * Labels, integrity vocabulary and the "never lie" rule are carried over
- * verbatim from the previous markup; the empty paragraphs remain real content
- * (the antd Tables render only when rows exist). No custom CSS or utility
- * classes — mono tokens use the stock `Typography.Text code` look and the
- * status/integrity Tags keep antd's built-in color presets.
+ * Terse Vietnamese operator copy ("ít chữ"); machine vocabulary stays
+ * verbatim — run status enums (SUCCEEDED/PARTIAL/…), the integrity verdict
+ * labels (verified/unverified/TAMPERED/files missing/manifest corrupt) and
+ * mono ids/hashes in the stock `Typography.Text code` look. Table rows render
+ * only when data exists, so empty-state messages below are real content. No
+ * custom CSS or utility classes; inline heading styles are layout-only.
  */
 
 function shortHash(hash: string): string {
@@ -53,36 +54,36 @@ const INTEGRITY_TAG_COLOR: Record<CatalogIntegrity, "success" | "default" | "err
 
 const projectColumns: TableColumnsType<CatalogProjectView> = [
   {
-    title: "Project",
+    title: "Dự án",
     dataIndex: "id",
     render: (_, record: CatalogProjectView) => (
       <Typography.Text code>{record.id}</Typography.Text>
     ),
   },
   {
-    title: "Platform",
+    title: "Nền tảng",
     dataIndex: "platformId",
     render: (_, record: CatalogProjectView) => (
       <Typography.Text code>{record.platformId}</Typography.Text>
     ),
   },
   {
-    title: "Config hash (last observed)",
+    title: "Hash cấu hình (lần chạm cuối)",
     dataIndex: "configHash",
     render: (_, record: CatalogProjectView) => (
       <Typography.Text code>{shortHash(record.configHash)}</Typography.Text>
     ),
   },
   {
-    title: "Config history",
+    title: "Lịch sử cấu hình",
     dataIndex: "configHistoryCount",
   },
   {
-    title: "Runs",
+    title: "Số lần chạy",
     dataIndex: "runCount",
   },
   {
-    title: "First seen",
+    title: "Lần đầu thấy",
     dataIndex: "firstSeenAt",
     render: (_, record: CatalogProjectView) => (
       <Typography.Text type="secondary">{record.firstSeenAt}</Typography.Text>
@@ -92,7 +93,7 @@ const projectColumns: TableColumnsType<CatalogProjectView> = [
 
 const runColumns: TableColumnsType<CatalogRunView> = [
   {
-    title: "Run",
+    title: "Lần chạy",
     dataIndex: "id",
     render: (_, record: CatalogRunView) =>
       record.bundlePresent ? (
@@ -104,58 +105,60 @@ const runColumns: TableColumnsType<CatalogRunView> = [
       ),
   },
   {
-    title: "Status",
+    title: "Trạng thái",
     dataIndex: "status",
     render: (_, record: CatalogRunView) => (
       <Tag color={STATUS_TAG_COLOR[record.status]}>{record.status}</Tag>
     ),
   },
   {
-    title: "Integrity (last index)",
+    title: "Toàn vẹn (lần index cuối)",
     dataIndex: "integrity",
     render: (_, record: CatalogRunView) => (
       <Tag color={INTEGRITY_TAG_COLOR[record.integrity]}>{INTEGRITY_LABEL[record.integrity]}</Tag>
     ),
   },
   {
-    title: "Project",
+    title: "Dự án",
     dataIndex: "projectId",
     render: (_, record: CatalogRunView) =>
-      record.projectId ?? <Typography.Text type="secondary">unknown (job started)</Typography.Text>,
+      record.projectId ?? (
+        <Typography.Text type="secondary">không rõ (bản dựng đã bắt đầu)</Typography.Text>
+      ),
   },
   {
-    title: "Source",
+    title: "Nguồn",
     dataIndex: "sourceId",
     render: (_, record: CatalogRunView) => (
       <Typography.Text code>{record.sourceId ?? "—"}</Typography.Text>
     ),
   },
   {
-    title: "Revision",
+    title: "Bản sửa",
     dataIndex: "revisionId",
     render: (_, record: CatalogRunView) => (
       <Typography.Text code>{record.revisionId ?? "—"}</Typography.Text>
     ),
   },
   {
-    title: "Config pin",
+    title: "Ghim cấu hình",
     dataIndex: "configHash",
     render: (_, record: CatalogRunView) => (
       <Typography.Text code>{record.configHash === "" ? "—" : shortHash(record.configHash)}</Typography.Text>
     ),
   },
   {
-    title: "Artifacts",
+    title: "Số artifacts",
     dataIndex: "artifactCount",
   },
   {
-    title: "Timing",
+    title: "Thời điểm",
     dataIndex: "indexedAt",
     render: (_, record: CatalogRunView) => (
       <Typography.Text type="secondary">
         {record.startedAt ?? "—"}
         {record.finishedAt !== null ? ` → ${record.finishedAt}` : ""}
-        {record.startedAt === null && record.finishedAt === null ? `catalogued ${record.indexedAt}` : ""}
+        {record.startedAt === null && record.finishedAt === null ? `lưu danh mục ${record.indexedAt}` : ""}
       </Typography.Text>
     ),
   },
@@ -187,15 +190,9 @@ export function CatalogView({
           <DatabaseOutlined aria-hidden="true" />
           {/* layout only: neutralize UA heading margins so the Flex gap owns rhythm */}
           <h1 id="catalog-heading" style={{ margin: 0 }}>
-            Project / Run Catalog
+            Dự án &amp; lần chạy
           </h1>
         </Flex>
-        <Typography.Paragraph type="secondary">
-          Durable, inspectable metadata about known projects, builds and their verified artifacts,
-          persisted across Studio restarts. Files remain the truth: the catalogue indexes what the
-          build manifest declared and what the on-disk bytes verified — it never makes a missing or
-          tampered artifact downloadable.
-        </Typography.Paragraph>
       </section>
 
       {!configured ? (
@@ -203,7 +200,7 @@ export function CatalogView({
           type="info"
           showIcon
           icon={<ApiOutlined aria-hidden="true" />}
-          message="Catalogue off"
+          message="Catalog đang tắt"
           description={offMessage}
         />
       ) : errorCode !== null ? (
@@ -211,38 +208,33 @@ export function CatalogView({
           type="error"
           showIcon
           icon={<WarningOutlined aria-hidden="true" />}
-          message={`Catalogue unavailable (${errorCode})`}
+          message={`Không đọc được catalog (${errorCode})`}
           description={errorMessage}
         />
       ) : (
         <>
           <Flex wrap="wrap" gap={16}>
             <span>
-              <Typography.Text strong>{stats?.projects ?? 0}</Typography.Text> projects
+              <Typography.Text strong>{stats?.projects ?? 0}</Typography.Text> dự án
             </span>
             <span>
-              <Typography.Text strong>{stats?.runs ?? 0}</Typography.Text> runs (
+              <Typography.Text strong>{stats?.runs ?? 0}</Typography.Text> lần chạy (
               {stats
                 ? `${stats.byStatus.SUCCEEDED} succeeded · ${stats.byStatus.PARTIAL} partial · ${stats.byStatus.FAILED} failed · ${stats.byStatus.INTERRUPTED} interrupted`
                 : "—"}
               )
             </span>
             <span>
-              <Typography.Text strong>{stats?.artifacts ?? 0}</Typography.Text> catalogued
-              artifacts
+              <Typography.Text strong>{stats?.artifacts ?? 0}</Typography.Text> artifacts đã lưu
+              danh mục
             </span>
           </Flex>
 
-          <Card size="small" title={<h2 style={{ margin: 0 }}>Projects</h2>}>
-            <Typography.Paragraph type="secondary">
-              Identity comes from the validated build manifests (profile id = project id). The
-              config hash is the last observed validated value; every historical hash stays in
-              the per-run pins and the config history.
-            </Typography.Paragraph>
+          <Card size="small" title={<h2 style={{ margin: 0 }}>Dự án</h2>}>
             {projects.length === 0 ? (
               <Typography.Text type="secondary">
-                No projects catalogued yet. Run a build with the catalogue enabled (see Build) or
-                place a finished bundle in the configured runs root.
+                Chưa có dự án nào trong catalog. Chạy một bản dựng với catalog bật (xem trang Bản
+                dựng) hoặc đặt một bundle hoàn tất vào thư mục runs đã cấu hình.
               </Typography.Text>
             ) : (
               <Table<CatalogProjectView>
@@ -255,15 +247,9 @@ export function CatalogView({
             )}
           </Card>
 
-          <Card size="small" title={<h2 style={{ margin: 0 }}>Runs</h2>}>
-            <Typography.Paragraph type="secondary">
-              Build jobs and indexed bundles with their frozen pins (config hash, source identity)
-              and the last index&apos;s integrity verdict. Bundle runs open in the normal run view —
-              downloads there are re-verified against the manifest bytes, exactly as without the
-              catalogue.
-            </Typography.Paragraph>
+          <Card size="small" title={<h2 style={{ margin: 0 }}>Lần chạy</h2>}>
             {runs.length === 0 ? (
-              <Typography.Text type="secondary">No catalogued runs yet.</Typography.Text>
+              <Typography.Text type="secondary">Chưa có lần chạy nào trong catalog.</Typography.Text>
             ) : (
               <Table<CatalogRunView>
                 rowKey="id"

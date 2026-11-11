@@ -6,7 +6,7 @@ import {
   ToolOutlined,
   WarningOutlined,
 } from "@ant-design/icons";
-import { Alert, Button, Card, Flex, Tag, Typography } from "antd";
+import { Alert, Button, Card, Flex, Typography } from "antd";
 
 import type { DetRunSummary } from "@/src/shared/contracts";
 import { RunModeBadge } from "@/src/modules/mapping-review";
@@ -14,14 +14,14 @@ import { ConversionForm, DEMO_PROFILES } from "@/src/modules/conversions";
 
 /**
  * [61] Client view child for the Overview server page: stock antd light
- * presentation (Flex/Typography/Card/Alert only — no custom CSS, no utility
- * classes) for the heading, conversion form, Build Control and Runs cards.
- * All copy, heading ids and semantics are carried over verbatim from the
- * previous markup; the raw h1/h2 elements keep their aria-labelledby targets.
+ * presentation (Flex/Typography/Card/Button/Alert only — no custom CSS, no
+ * utility classes), terse Vietnamese operator copy ("ít chữ"). Machine tokens
+ * (ids, error codes, STUDIO_DET_RUNS_DIR) stay verbatim; raw h1/h2 keep their
+ * aria-labelledby targets. The inline heading styles are layout-only.
  */
 
 function unknownCount(value: number | null): string {
-  return value === null ? "unknown" : String(value);
+  return value === null ? "không rõ" : String(value);
 }
 
 function RunRow({ run }: { run: DetRunSummary }) {
@@ -34,8 +34,8 @@ function RunRow({ run }: { run: DetRunSummary }) {
         </Flex>
         <Flex align="center" gap={8} wrap="wrap">
           <Typography.Text type="secondary">
-            errors {unknownCount(run.counts.errors)} · warnings{" "}
-            {unknownCount(run.counts.warnings)} · infos {unknownCount(run.counts.infos)}
+            lỗi {unknownCount(run.counts.errors)} · cảnh báo{" "}
+            {unknownCount(run.counts.warnings)} · thông tin {unknownCount(run.counts.infos)}
           </Typography.Text>
           <Typography.Text type="secondary" code>
             {run.runId}
@@ -56,38 +56,16 @@ export function OverviewView({ runs, readerErrorCode, readerMessage }: OverviewV
   return (
     <Flex vertical gap={32}>
       <section aria-labelledby="studio-overview-heading">
-        {/* layout only: neutralize UA heading margins so the Flex gap owns rhythm */}
-        <h1 id="studio-overview-heading" style={{ margin: 0 }}>
-          DET Studio
-        </h1>
-        <Typography.Paragraph type="secondary">
-          Review layer over the deterministic det CLI: inspect a conversion run,
-          its mapping dispositions and diagnostics, and download validated
-          artifacts. The engine owns all conversion logic — Studio never regenerates it.
-        </Typography.Paragraph>
+        <Flex vertical gap={12} align="flex-start">
+          {/* layout only: neutralize UA heading margins so the Flex gap owns rhythm */}
+          <h1 id="studio-overview-heading" style={{ margin: 0 }}>
+            Tổng quan
+          </h1>
+          <Button type="default" href="/build" icon={<ToolOutlined aria-hidden="true" />}>
+            Tạo bản dựng
+          </Button>
+        </Flex>
       </section>
-
-      <ConversionForm profiles={DEMO_PROFILES} />
-
-      <Card
-        size="small"
-        title={
-          <Flex align="center" gap={8}>
-            <ToolOutlined aria-hidden="true" />
-            {/* layout only: neutralize UA heading margins */}
-            <h2 style={{ margin: 0 }}>Build Control</h2>
-          </Flex>
-        }
-      >
-        <Typography.Paragraph type="secondary">
-          Trigger a real offline <Typography.Text code>det build</Typography.Text> through the local
-          runner and download verified bundle artifacts. Requires configured env vars; without
-          them the Build page shows an explicit not-connected state — never demo data.
-        </Typography.Paragraph>
-        <Button type="default" href="/build" icon={<ToolOutlined aria-hidden="true" />}>
-          Open Build Control
-        </Button>
-      </Card>
 
       <Card
         size="small"
@@ -95,26 +73,21 @@ export function OverviewView({ runs, readerErrorCode, readerMessage }: OverviewV
           <Flex align="center" gap={8}>
             <FolderOpenOutlined aria-hidden="true" />
             {/* layout only: neutralize UA heading margins */}
-            <h2 style={{ margin: 0 }}>Runs</h2>
+            <h2 style={{ margin: 0 }}>Lần chạy gần đây</h2>
           </Flex>
         }
       >
-        <Typography.Paragraph type="secondary">
-          Conversion runs this Studio instance can read. Fixture runs are
-          visibly labeled DEMO; live runs come from a configured DET output
-          root.
-        </Typography.Paragraph>
         {readerErrorCode !== null ? (
           <Alert
             type="warning"
             showIcon
             icon={<ApiOutlined aria-hidden="true" />}
-            message={`Reader not configured (${readerErrorCode})`}
+            message={`Chưa cấu hình trình đọc lần chạy (${readerErrorCode})`}
             description={
               <>
-                {readerMessage} Set the STUDIO_DET_RUNS_DIR environment variable
-                to a DET run output root — or leave it unset to browse the DEMO
-                fixture.
+                {readerMessage} Đặt biến môi trường{" "}
+                <Typography.Text code>STUDIO_DET_RUNS_DIR</Typography.Text> trỏ tới thư mục output
+                det, hoặc bỏ trống để xem fixture DEMO.
               </>
             }
           />
@@ -122,8 +95,9 @@ export function OverviewView({ runs, readerErrorCode, readerMessage }: OverviewV
           <Flex align="center" gap={8} wrap="wrap">
             <WarningOutlined aria-hidden="true" />
             <Typography.Text type="secondary">
-              No runs available. Configure STUDIO_DET_RUNS_DIR to point at real
-              det output, or unset it for the DEMO fixture.
+              Chưa có lần chạy nào. Đặt{" "}
+              <Typography.Text code>STUDIO_DET_RUNS_DIR</Typography.Text> trỏ tới output det thật,
+              hoặc bỏ trống để dùng fixture DEMO.
             </Typography.Text>
           </Flex>
         ) : (
@@ -135,12 +109,13 @@ export function OverviewView({ runs, readerErrorCode, readerMessage }: OverviewV
         )}
       </Card>
 
-      <Typography.Text type="secondary">
-        Single local trusted operator UI — not a public/multi-user deployment.
-        Starting a real conversion is intentionally not connected: issue [28]
-        owns the engine bridge.
-      </Typography.Text>
-      <Tag>MVP scope: review · preview · export</Tag>
+      {/* No Card title on purpose: ConversionForm renders its own h2 "Chuyển đổi mới" */}
+      <Card size="small">
+        <Flex vertical gap={8}>
+          <ConversionForm profiles={DEMO_PROFILES} />
+          <Typography.Text type="secondary">Chưa hỗ trợ chạy trực tiếp.</Typography.Text>
+        </Flex>
+      </Card>
     </Flex>
   );
 }

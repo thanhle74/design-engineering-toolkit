@@ -9,7 +9,10 @@
  * no conversion has run.
  *
  * [61] Ant Design stock light appearance: antd Card + default Tag + a calm
- * info Alert carrying the exact not-connected copy.
+ * info Alert carrying the exact not-connected copy. Human copy is natural
+ * Vietnamese ("Chưa hỗ trợ chạy trực tiếp") with the machine reason token
+ * `NOT_CONNECTED` kept visible as an inline `Text code` chip; file keys and
+ * node ids stay verbatim.
  */
 import { Alert, Card, Flex, Tag, Typography } from "antd";
 
@@ -26,20 +29,24 @@ interface SummaryRow {
   value: string;
   /** Id-like facts render as antd inline code; unknown facts stay plain. */
   mono?: boolean;
+  /** An absent fact renders secondary — visibly not data. */
+  muted?: boolean;
 }
 
 export function NotConnectedResult({ summary, className }: NotConnectedResultProps) {
   const rows: SummaryRow[] = [
     {
-      label: "Source file key",
-      value: summary.fileKey ?? "Not provided (bare node id)",
+      label: "File key nguồn",
+      value: summary.fileKey ?? "Không có (chỉ node id)",
       mono: summary.fileKey !== null,
+      muted: summary.fileKey === null,
     },
     { label: "Node id", value: summary.nodeId, mono: true },
-    { label: "Output target", value: TARGET_LABELS[summary.target] },
+    { label: "Đích xuất", value: TARGET_LABELS[summary.target] },
     {
-      label: "Project profile",
-      value: summary.profileName ? summary.profileName : "Not configured",
+      label: "Hồ sơ dự án",
+      value: summary.profileName ? summary.profileName : "Chưa cấu hình",
+      muted: !summary.profileName,
     },
   ];
 
@@ -47,12 +54,13 @@ export function NotConnectedResult({ summary, className }: NotConnectedResultPro
     <Card
       size="small"
       data-testid="conversion-result"
-      aria-label="Conversion request summary"
+      aria-label="Tóm tắt yêu cầu chuyển đổi"
       className={className}
       title={
         <Flex wrap="wrap" align="center" gap="small">
-          <h3>Conversion request summary</h3>
-          <Tag>NOT CONNECTED</Tag>
+          <h3>Tóm tắt yêu cầu chuyển đổi</h3>
+          <Tag>Chưa hỗ trợ chạy trực tiếp</Tag>
+          <Typography.Text code>NOT_CONNECTED</Typography.Text>
         </Flex>
       }
     >
@@ -65,7 +73,7 @@ export function NotConnectedResult({ summary, className }: NotConnectedResultPro
             <dd>
               {row.mono ? (
                 <Typography.Text code>{row.value}</Typography.Text>
-              ) : row.value.startsWith("Not ") ? (
+              ) : row.muted ? (
                 <Typography.Text type="secondary">{row.value}</Typography.Text>
               ) : (
                 row.value
@@ -77,16 +85,16 @@ export function NotConnectedResult({ summary, className }: NotConnectedResultPro
 
       {summary.inputKind === "bare" ? (
         <Typography.Paragraph type="secondary">
-          Bare node id: no file key was provided. Paste the full Figma design URL (with
-          ?node-id=…) to include the file the engine would read.
+          Node id trần: chưa có file key nào được cung cấp. Dán URL Figma đầy đủ
+          (kèm ?node-id=…) để xác định cả file mà engine sẽ đọc.
         </Typography.Paragraph>
       ) : null}
 
       <Alert
         type="info"
         showIcon
-        title="Conversion execution is not connected"
-        description="Studio cannot run conversions in this MVP: issue [28] owns the engine bridge to the det CLI, and it is not connected yet. No conversion was run — this panel only summarizes the request you entered."
+        title="Studio chưa hỗ trợ chạy chuyển đổi trực tiếp"
+        description="Studio chưa thể tự chạy chuyển đổi ở giai đoạn này: cầu nối engine tới det CLI thuộc [28] và chưa được nối. Chưa có chuyển đổi nào được chạy — bảng này chỉ tóm tắt yêu cầu bạn vừa nhập."
       />
     </Card>
   );

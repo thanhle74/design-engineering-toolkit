@@ -57,7 +57,7 @@ const HASH_SHORT_LENGTH = 10;
  * data and reader-unexposed artifacts have no real file to download.
  */
 const NOT_DOWNLOADABLE_TOOLTIP =
-  "Not downloadable — the run reader does not serve this artifact (DEMO/fixture data, or an artifact not exposed for download). Downloads exist only for reader-validated files.";
+  "Không tải được — run reader không phục vụ artifact này (dữ liệu DEMO/fixture, hoặc artifact không được mở cho tải xuống). Chỉ file đã được reader xác thực mới tải được.";
 
 /**
  * A manifest `file` must be a relative path under the run's out dir. Anything
@@ -78,7 +78,7 @@ function shortHash(hash: string): string {
 }
 
 const UNSAFE_PATH_TITLE =
-  "Manifest files must be relative paths under the run output directory. This absolute-looking path is withheld and never rendered.";
+  "Đường dẫn trong manifest phải là đường dẫn tương đối dưới thư mục output của lần chạy. Đường dẫn tuyệt đối này đã bị ẩn và không bao giờ hiển thị.";
 
 /**
  * antd `onRow` prop bags accept arbitrary DOM attributes, but React's
@@ -97,12 +97,12 @@ export function ArtifactManifest({
 }: ArtifactManifestProps) {
   const columns: ColumnsType<StudioArtifactView> = [
     {
-      title: "Role",
+      title: "Vai trò",
       width: 160,
       render: (_, artifact) => <Tag>{artifact.role}</Tag>,
     },
     {
-      title: "File",
+      title: "Tệp",
       render: (_, artifact) => <ArtifactFileCell file={artifact.file} />,
     },
     {
@@ -110,7 +110,7 @@ export function ArtifactManifest({
       render: (_, artifact) => <SchemaRefCell schemaRef={artifact.schemaRef} />,
     },
     {
-      title: "Content hash",
+      title: "Hash nội dung",
       width: 112,
       // The full hash stays a cell tooltip — visible on demand, never rendered
       // as if it were copied out.
@@ -125,7 +125,7 @@ export function ArtifactManifest({
         ),
     },
     {
-      title: "Download",
+      title: "Tải xuống",
       width: 128,
       align: "right",
       render: (_, artifact) => (
@@ -138,18 +138,16 @@ export function ArtifactManifest({
     <Card
       size="small"
       data-testid="artifact-manifest"
-      title={<h2>Artifacts</h2>}
+      title={<h2>Danh sách artifact</h2>}
       extra={
         artifacts.length > 0 ? (
-          <Tag data-testid="artifact-count">
-            {artifacts.length} {artifacts.length === 1 ? "artifact" : "artifacts"}
-          </Tag>
+          <Tag data-testid="artifact-count">{artifacts.length} artifact</Tag>
         ) : undefined
       }
     >
       <Typography.Paragraph type="secondary">
-        Artifact manifest from the det run. Downloads are handed to the page
-        and served only for reader-validated files.
+        Manifest artifact của lần chạy det. Lượt tải xuống do trang xử lý và chỉ
+        phục vụ file đã được reader xác thực.
       </Typography.Paragraph>
       {artifacts.length === 0 ? (
         <EmptyManifest />
@@ -180,10 +178,12 @@ function EmptyManifest(): ReactNode {
         image={<InboxOutlined aria-hidden="true" />}
         description={
           <>
-            <Typography.Text strong>No artifacts in this run</Typography.Text>
+            <Typography.Text strong>
+              Chưa có artifact nào trong lần chạy này
+            </Typography.Text>
             <Typography.Paragraph type="secondary">
-              When the run writes validated artifacts, they are listed here
-              with their role, schema and content hash.
+              Khi lần chạy tạo ra artifact đã được xác thực, chúng sẽ được liệt
+              kê ở đây cùng vai trò, schema và hash nội dung.
             </Typography.Paragraph>
           </>
         }
@@ -208,7 +208,7 @@ function ArtifactFileCell({ file }: { file?: string }) {
         title={UNSAFE_PATH_TITLE}
         icon={<WarningOutlined aria-hidden="true" />}
       >
-        Invalid file path withheld
+        Đã ẩn đường dẫn không hợp lệ
       </Tag>
     );
   }
@@ -266,7 +266,7 @@ function DownloadCell({
         data-testid={`artifact-download-${artifact.artifactId}`}
         onClick={() => onDownload(artifact)}
       >
-        Download
+        Tải xuống
       </Button>
     );
   }
@@ -281,7 +281,7 @@ function DownloadCell({
           icon={<LockOutlined aria-hidden="true" />}
           disabled
         >
-          Download
+          Tải xuống
         </Button>
       </span>
     </Tooltip>

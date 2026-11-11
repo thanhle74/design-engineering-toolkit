@@ -15,5 +15,5 @@ export const studioMetadata: Metadata = {
     template: "%s · DET Studio",
   },
   description:
-    "Thin review/preview/export UI over the deterministic det CLI. Local trusted operator tool — not a conversion engine.",
+    "Giao diện nội bộ dành cho vận hành viên: xem lại, xem trước và xuất nội dung CMS.",
 };

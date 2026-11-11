@@ -79,7 +79,7 @@ describe("parseFigmaInput — invalid input", () => {
   it("rejects a malformed node-id parameter", () => {
     const result = parseFigmaInput("https://www.figma.com/design/FILEKEY01/Name?node-id=abc");
     expect(result).toMatchObject({ ok: false, reason: "malformed-node-id" });
-    expect(result.ok === false && result.message).toMatch(/1-2 or 1:2/);
+    expect(result.ok === false && result.message).toMatch(/dạng 1-2 hoặc 1:2/);
   });
 
   it("rejects a design URL without a file key", () => {

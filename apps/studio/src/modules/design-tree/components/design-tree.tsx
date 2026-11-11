@@ -25,10 +25,10 @@ function UnassignedGroup({ mappings }: { mappings: readonly StudioMappingView[] 
       aria-labelledby="studio-unassigned-heading"
       data-testid={UNKNOWN_GROUP_ID}
     >
-      <h3>Not in plan / unassigned</h3>
+      <h3>Chưa gán vào mục nào</h3>
       <Typography.Paragraph type="secondary">
-        Mappings the compose plan did not attach to any section. Kept visible —
-        never silently dropped.
+        Các mapping mà kế hoạch ghép không gắn vào mục nào. Giữ nguyên hiển thị —
+        không bao giờ bị bỏ im lặng.
       </Typography.Paragraph>
       <DesignNodeTable mappings={mappings} testId="design-tree-unassigned-nodes" />
     </section>
@@ -42,13 +42,11 @@ function EmptySectionsAlert({ unmappedCount }: { unmappedCount: number }) {
       showIcon
       icon={<SearchOutlined aria-hidden="true" />}
       data-testid="design-tree-empty"
-      title="No sections extracted"
+      title="Chưa trích xuất được mục nào"
       description={
         unmappedCount === 0
-          ? "This run has no PageStructure sections and no node mappings. Nothing is hidden — there is nothing extracted to review."
-          : `No PageStructure sections were extracted, but ${unmappedCount} node mapping${
-              unmappedCount === 1 ? "" : "s"
-            } exist. They are listed under "Not in plan / unassigned" below — never dropped.`
+          ? "Lần chạy này không có mục PageStructure nào và không có node mapping nào. Không có gì bị ẩn — không có nội dung nào được trích xuất để soát."
+          : `Chưa trích xuất được mục PageStructure nào, nhưng có ${unmappedCount} node mapping. Chúng được liệt kê trong "Chưa gán vào mục nào" bên dưới — không bao giờ bị bỏ.`
       }
     />
   );
@@ -75,9 +73,7 @@ export function DesignTree({ run }: { run: StudioRunView }) {
     }
   }
 
-  const summary = `${sections.length} section${
-    sections.length === 1 ? "" : "s"
-  } · ${run.mappings.length} mapping${run.mappings.length === 1 ? "" : "s"}`;
+  const summary = `${sections.length} mục · ${run.mappings.length} mapping`;
 
   return (
     <section
@@ -85,7 +81,7 @@ export function DesignTree({ run }: { run: StudioRunView }) {
       data-testid="design-tree"
     >
       <h2>
-        Source design tree{" "}
+        Cây thiết kế gốc{" "}
         <Typography.Text type="secondary">{summary}</Typography.Text>
       </h2>
       {sections.length === 0 ? (

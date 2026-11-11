@@ -58,7 +58,7 @@ Other commands: `npm run build` · `npm start` (serve the production build) ·
 
 ## Local build control ([40], single-root operator flow [58])
 
-Build Control (`/build`) triggers **real** offline `det build` runs through a
+Cấu hình build (`/build`) triggers **real** offline `det build` runs through a
 thin server-only local runner and serves the resulting bundle artifacts
 download-verified against `build-manifest.json`.
 
@@ -160,6 +160,17 @@ utility classes and fonts come from antd's native system stack (no
 contract are unchanged. The [52] evidence assets (`docs/screenshots/52-*.png`
 and `52-dark-only-dom-evidence.txt`) show the retired dark UI and are
 preserved as history.
+
+**C61-2 operator corrections (PR #64):** the Studio is a small internal
+operator tool, so the shell stays minimal — no `Layout.Footer` and no header
+tagline; pages are task-focused and sparse (ít chữ), with technical detail
+progressively disclosed behind the stock antd `Collapse` **Chi tiết kỹ
+thiết**. All human-readable UI copy is natural Vietnamese — nav **Tổng quan ·
+Build · Dự án**, and page copy such as **Chuyển đổi mới**, **Tạo bản dựng**,
+**Cấu hình build**, **Lần chạy gần đây**, **Xem kết quả**, **Chưa hỗ trợ chạy
+trực tiếp** — while machine vocabulary stays verbatim: ids, enum/gap/diagnostic
+codes, paths, env var names, HTTP codes, CLI flags, artifact names and the
+`DEMO` marker. Stock antd default light is unchanged by all of this.
 
 ## Layout
 

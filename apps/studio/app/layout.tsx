@@ -35,7 +35,7 @@ export const metadata = studioMetadata;
  */
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="vi">
       <body>
         <Suspense fallback={null}>
           <AntdRegistry>

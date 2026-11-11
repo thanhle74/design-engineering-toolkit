@@ -32,20 +32,25 @@ export default async function RunPage({ params }: RunPageProps) {
     run = await reader.getRun(runId);
   } catch (error) {
     if (error instanceof DetRunReaderError) {
+      // [61] operator-facing copy is Vietnamese; machine tokens (the raw run
+      // id, the reader error code, STUDIO_DET_RUNS_DIR) stay verbatim. The
+      // reader's own English message renders verbatim — never paraphrased.
       if (error.code === "run-not-found") {
         return (
           <ReaderProblemState
-            title="Run not found"
-            message={`No run with id "${runId}" is readable by this Studio instance.`}
-            hint="Pick a run from the overview list; run ids come from the configured DET output root (or the DEMO fixture)."
+            kind="run-not-found"
+            title="Không tìm thấy lần chạy"
+            message={`Không có lần chạy nào với id "${runId}" mà Studio này đọc được.`}
+            hint="Hãy chọn một lần chạy trong danh sách tổng quan; run id lấy từ thư mục output DET đã cấu hình (hoặc từ fixture DEMO)."
           />
         );
       }
       return (
         <ReaderProblemState
-          title={`Reader error (${error.code})`}
+          kind="reader-error"
+          title={`Lỗi đọc lần chạy (${error.code})`}
           message={error.message}
-          hint="Check the STUDIO_DET_RUNS_DIR configuration — or unset it to browse the DEMO fixture."
+          hint="Kiểm tra cấu hình STUDIO_DET_RUNS_DIR — hoặc bỏ nó để xem fixture DEMO."
         />
       );
     }

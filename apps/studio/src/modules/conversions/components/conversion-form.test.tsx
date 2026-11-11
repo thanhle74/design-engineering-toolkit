@@ -15,13 +15,14 @@ describe("ConversionForm — project profile configuration", () => {
     render(<ConversionForm />);
 
     const hint = screen.getByTestId("profiles-not-configured");
-    expect(hint).toHaveTextContent(/NOT CONFIGURED/);
+    expect(hint).toHaveTextContent(/Chưa cấu hình/);
+    expect(hint).toHaveTextContent(/NOT_CONFIGURED/);
     expect(hint).toHaveTextContent(
-      /No project profiles configured — profiles come from local DET profile configuration\./
+      /Chưa có hồ sơ dự án nào được cấu hình — hồ sơ lấy từ cấu hình profile DET cục bộ\./
     );
     // Only the output target select is rendered; there is no profile selector.
     expect(screen.getAllByRole("combobox")).toHaveLength(1);
-    expect(screen.queryByText("Project profile")).not.toBeInTheDocument();
+    expect(screen.queryByText("Hồ sơ dự án")).not.toBeInTheDocument();
   });
 
   it("renders a profile select fed by the profiles prop and hides the hint", () => {
@@ -32,10 +33,10 @@ describe("ConversionForm — project profile configuration", () => {
     // The first profile is selected by default and visibly demo-labeled in the
     // trigger. antd renders the selected label in a sibling of the combobox
     // input, so the label is asserted on the Select root (.ant-select).
-    const profileTrigger = screen.getByRole("combobox", { name: "Project profile" });
+    const profileTrigger = screen.getByRole("combobox", { name: "Hồ sơ dự án" });
     const profileRoot = profileTrigger.closest(".ant-select");
     expect(profileRoot).not.toBeNull();
-    expect(profileRoot).toHaveTextContent("DEMO — Fashion storefront");
+    expect(profileRoot).toHaveTextContent("DEMO — Cửa hàng thời trang");
   });
 });
 
@@ -44,11 +45,11 @@ describe("ConversionForm — validation blocks submit", () => {
     const user = userEvent.setup();
     render(<ConversionForm profiles={DEMO_PROFILES} />);
 
-    await user.type(screen.getByLabelText("Figma design source"), "convert my design please");
-    await user.click(screen.getByRole("button", { name: /review conversion request/i }));
+    await user.type(screen.getByLabelText("Nguồn thiết kế Figma"), "convert my design please");
+    await user.click(screen.getByRole("button", { name: /xem lại yêu cầu/i }));
 
     const alert = screen.getByRole("alert");
-    expect(alert).toHaveTextContent(/not a figma\.com URL|design-file URL/i);
+    expect(alert).toHaveTextContent(/URL file thiết kế Figma|node id dạng 245:2/);
     expect(screen.queryByTestId("conversion-result")).not.toBeInTheDocument();
   });
 
@@ -57,12 +58,12 @@ describe("ConversionForm — validation blocks submit", () => {
     render(<ConversionForm />);
 
     await user.type(
-      screen.getByLabelText("Figma design source"),
+      screen.getByLabelText("Nguồn thiết kế Figma"),
       "https://www.figma.com/design/FILEKEY01/Name"
     );
-    await user.click(screen.getByRole("button", { name: /review conversion request/i }));
+    await user.click(screen.getByRole("button", { name: /xem lại yêu cầu/i }));
 
-    expect(screen.getByRole("alert")).toHaveTextContent(/missing a node-id parameter/);
+    expect(screen.getByRole("alert")).toHaveTextContent(/thiếu tham số node-id/);
     expect(screen.queryByTestId("conversion-result")).not.toBeInTheDocument();
   });
 
@@ -70,9 +71,9 @@ describe("ConversionForm — validation blocks submit", () => {
     const user = userEvent.setup();
     render(<ConversionForm />);
 
-    const input = screen.getByLabelText("Figma design source");
+    const input = screen.getByLabelText("Nguồn thiết kế Figma");
     await user.type(input, "garbage");
-    await user.click(screen.getByRole("button", { name: /review conversion request/i }));
+    await user.click(screen.getByRole("button", { name: /xem lại yêu cầu/i }));
     expect(screen.getByRole("alert")).toBeInTheDocument();
 
     await user.clear(input);
@@ -80,7 +81,7 @@ describe("ConversionForm — validation blocks submit", () => {
     // The error is re-evaluated live once shown, so it clears without resubmitting.
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /review conversion request/i }));
+    await user.click(screen.getByRole("button", { name: /xem lại yêu cầu/i }));
     expect(screen.getByTestId("conversion-result")).toBeInTheDocument();
   });
 });
@@ -90,22 +91,24 @@ describe("ConversionForm — honest NOT CONNECTED result", () => {
     const user = userEvent.setup();
     render(<ConversionForm profiles={DEMO_PROFILES} />);
 
-    await user.type(screen.getByLabelText("Figma design source"), VALID_URL);
-    await user.click(screen.getByRole("button", { name: /review conversion request/i }));
+    await user.type(screen.getByLabelText("Nguồn thiết kế Figma"), VALID_URL);
+    await user.click(screen.getByRole("button", { name: /xem lại yêu cầu/i }));
 
     const result = screen.getByTestId("conversion-result");
     expect(within(result).getByText("AbC123xyzQrs")).toBeInTheDocument();
     expect(within(result).getByText("245:2")).toBeInTheDocument();
     expect(within(result).getByText("Native Page Builder")).toBeInTheDocument();
-    expect(within(result).getByText("DEMO — Fashion storefront")).toBeInTheDocument();
+    expect(within(result).getByText("DEMO — Cửa hàng thời trang")).toBeInTheDocument();
 
-    // The action is explicitly unavailable — never a fake success.
-    expect(within(result).getByText("NOT CONNECTED")).toBeInTheDocument();
+    // The action is explicitly unavailable — never a fake success. The
+    // Vietnamese label carries the machine reason token as an inline code chip.
+    expect(within(result).getByText("Chưa hỗ trợ chạy trực tiếp")).toBeInTheDocument();
+    expect(within(result).getByText("NOT_CONNECTED")).toBeInTheDocument();
     expect(
-      within(result).getByText(/Conversion execution is not connected/)
+      within(result).getByText(/Studio chưa hỗ trợ chạy chuyển đổi trực tiếp/)
     ).toBeInTheDocument();
-    expect(within(result).getByText(/\[28\] owns the engine bridge/)).toBeInTheDocument();
-    expect(within(result).getByText(/No conversion was run/)).toBeInTheDocument();
+    expect(within(result).getByText(/thuộc \[28\]/)).toBeInTheDocument();
+    expect(within(result).getByText(/Chưa có chuyển đổi nào được chạy/)).toBeInTheDocument();
 
     // No progress or success claim anywhere.
     expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
@@ -120,45 +123,45 @@ describe("ConversionForm — honest NOT CONNECTED result", () => {
     const user = userEvent.setup();
     render(<ConversionForm />);
 
-    const input = screen.getByLabelText("Figma design source");
+    const input = screen.getByLabelText("Nguồn thiết kế Figma");
     await user.type(input, "245:2");
     await user.type(input, "{Enter}");
 
     const result = screen.getByTestId("conversion-result");
     expect(within(result).getByText("245:2")).toBeInTheDocument();
-    expect(within(result).getByText(/No conversion was run/)).toBeInTheDocument();
+    expect(within(result).getByText(/Chưa có chuyển đổi nào được chạy/)).toBeInTheDocument();
   });
 
   it("reports an unknown file key honestly for a bare node id", async () => {
     const user = userEvent.setup();
     render(<ConversionForm />);
 
-    await user.type(screen.getByLabelText("Figma design source"), "245:2");
-    await user.click(screen.getByRole("button", { name: /review conversion request/i }));
+    await user.type(screen.getByLabelText("Nguồn thiết kế Figma"), "245:2");
+    await user.click(screen.getByRole("button", { name: /xem lại yêu cầu/i }));
 
     const result = screen.getByTestId("conversion-result");
-    expect(within(result).getByText("Not provided (bare node id)")).toBeInTheDocument();
-    expect(within(result).getByText(/no file key was provided/i)).toBeInTheDocument();
-    expect(within(result).getByText(/No conversion was run/)).toBeInTheDocument();
+    expect(within(result).getByText("Không có (chỉ node id)")).toBeInTheDocument();
+    expect(within(result).getByText(/chưa có file key nào được cung cấp/i)).toBeInTheDocument();
+    expect(within(result).getByText(/Chưa có chuyển đổi nào được chạy/)).toBeInTheDocument();
   });
 
   it("marks the summary profile as not configured when none are provided", async () => {
     const user = userEvent.setup();
     render(<ConversionForm />);
 
-    await user.type(screen.getByLabelText("Figma design source"), VALID_URL);
-    await user.click(screen.getByRole("button", { name: /review conversion request/i }));
+    await user.type(screen.getByLabelText("Nguồn thiết kế Figma"), VALID_URL);
+    await user.click(screen.getByRole("button", { name: /xem lại yêu cầu/i }));
 
     const result = screen.getByTestId("conversion-result");
-    expect(within(result).getByText("Not configured")).toBeInTheDocument();
+    expect(within(result).getByText("Chưa cấu hình")).toBeInTheDocument();
   });
 
   it("never persists input: no localStorage or sessionStorage writes", async () => {
     const user = userEvent.setup();
     render(<ConversionForm profiles={DEMO_PROFILES} />);
 
-    await user.type(screen.getByLabelText("Figma design source"), VALID_URL);
-    await user.click(screen.getByRole("button", { name: /review conversion request/i }));
+    await user.type(screen.getByLabelText("Nguồn thiết kế Figma"), VALID_URL);
+    await user.click(screen.getByRole("button", { name: /xem lại yêu cầu/i }));
 
     expect(window.localStorage.length).toBe(0);
     expect(window.sessionStorage.length).toBe(0);

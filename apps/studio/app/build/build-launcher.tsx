@@ -2,7 +2,18 @@
 
 import { useEffect, useRef, useState } from "react";
 import { CaretRightOutlined, ToolOutlined, WarningOutlined } from "@ant-design/icons";
-import { Alert, Button, Card, Descriptions, Flex, List, Table, Tag, Typography } from "antd";
+import {
+  Alert,
+  Button,
+  Card,
+  Collapse,
+  Descriptions,
+  Flex,
+  List,
+  Table,
+  Tag,
+  Typography,
+} from "antd";
 import type { DescriptionsProps, TableColumnsType } from "antd";
 
 import type { StudioBuildStageView } from "@/src/shared/contracts";
@@ -15,10 +26,14 @@ import type { StudioBuildStageView } from "@/src/shared/contracts";
  * fabricated progress, no demo data, and completion links to the bundle run
  * where downloads are hash-verified.
  *
- * [61] Stock antd light presentation only: Flex/Typography/Card/Descriptions/
- * List/Table primitives, built-in Tag color presets and the stock `Text code`
- * inline-code look for mono tokens. No custom CSS, no utility classes. The two
- * remaining inline styles are pure layout (documented inline).
+ * [61] Stock antd light presentation only: Flex/Typography/Card/Collapse/
+ * Descriptions/List/Table primitives, built-in Tag color presets and the
+ * stock `Text code` inline-code look for mono tokens. Terse Vietnamese copy
+ * ("ít chữ"): machine tokens (config ids, run ids, exit codes, stage names/
+ * statuses, timestamps) stay verbatim; declared provenance paths collapse
+ * into one default-collapsed "Chi tiết kỹ thuật" item per config. No custom
+ * CSS, no utility classes. The remaining inline styles are pure layout
+ * (documented inline).
  */
 
 export interface BuildLauncherEntry {
@@ -84,19 +99,23 @@ const POLL_MS = 1000;
 
 type StageRow = { stage: string; status: string; exitCode: number };
 
+/** Vietnamese display labels; the machine `state` enum stays in logic only. */
 function stateTag(state: BuildJobView["state"], exitCode: number | null) {
   switch (state) {
     case "queued":
+      return <Tag color="processing">trong hàng đợi</Tag>;
     case "running":
-      return <Tag color="processing">{state === "queued" ? "queued" : "running…"}</Tag>;
+      return <Tag color="processing">đang chạy…</Tag>;
     case "exited":
-      return <Tag color={exitCode === 0 ? "success" : "error"}>{`exited ${exitCode ?? "?"}`}</Tag>;
+      return (
+        <Tag color={exitCode === 0 ? "success" : "error"}>{`đã kết thúc (exit ${exitCode ?? "?"})`}</Tag>
+      );
     case "timeout":
-      return <Tag color="error">timed out</Tag>;
+      return <Tag color="error">hết thời gian chờ</Tag>;
     case "spawn-failed":
-      return <Tag color="error">spawn failed</Tag>;
+      return <Tag color="error">không khởi chạy được</Tag>;
     case "interrupted":
-      return <Tag color="error">interrupted</Tag>;
+      return <Tag color="error">bị gián đoạn</Tag>;
   }
 }
 
@@ -128,12 +147,12 @@ function declaredDescriptions(entry: BuildLauncherEntry): DescriptionsProps["ite
 function StageTable({ stages }: { stages: BuildStageLite[] | StudioBuildStageView[] }) {
   const columns: TableColumnsType<StageRow> = [
     {
-      title: "Stage",
+      title: "Giai đoạn",
       dataIndex: "stage",
       render: (_, record: StageRow) => <Typography.Text code>{record.stage}</Typography.Text>,
     },
     {
-      title: "Status",
+      title: "Trạng thái",
       dataIndex: "status",
       render: (_, record: StageRow) =>
         record.status === "failed" ? (
@@ -177,8 +196,8 @@ function JobPanel({ job }: { job: BuildJobView }) {
     >
       <Flex vertical gap={16}>
         <Typography.Text type="secondary">
-          {job.startedAt === null ? "not started" : `started ${job.startedAt}`}
-          {job.finishedAt === null ? " · not finished yet" : ` · finished ${job.finishedAt}`}
+          {job.startedAt === null ? "chưa bắt đầu" : `bắt đầu ${job.startedAt}`}
+          {job.finishedAt === null ? " · chưa kết thúc" : ` · kết thúc ${job.finishedAt}`}
         </Typography.Text>
 
         {job.state === "interrupted" ? (
@@ -186,8 +205,8 @@ function JobPanel({ job }: { job: BuildJobView }) {
             type="error"
             showIcon
             icon={<WarningOutlined aria-hidden="true" />}
-            message="Build interrupted"
-            description="The server restarted while this build was running; the journal recorded no completion. Start a new build — no bundle for this run is trusted."
+            message="Bản dựng bị gián đoạn"
+            description="Server khởi động lại khi bản dựng đang chạy; nhật ký không ghi nhận hoàn tất. Hãy tạo bản dựng mới — không tin bundle nào của lần chạy này."
           />
         ) : null}
 
@@ -196,8 +215,8 @@ function JobPanel({ job }: { job: BuildJobView }) {
             type="error"
             showIcon
             icon={<WarningOutlined aria-hidden="true" />}
-            message="Build timed out"
-            description="The runner sent SIGTERM after the configured timeout. Diagnostics below show what the build reported before termination."
+            message="Bản dựng hết thời gian chờ"
+            description="Runner gửi SIGTERM sau thời hạn cấu hình. Log bên dưới cho thấy những gì bản dựng báo cáo trước khi bị dừng."
           />
         ) : null}
 
@@ -206,8 +225,8 @@ function JobPanel({ job }: { job: BuildJobView }) {
             type="error"
             showIcon
             icon={<WarningOutlined aria-hidden="true" />}
-            message="Runner error — the build never started"
-            description={`${job.spawnError ?? "The det CLI could not be spawned."} This is a runner configuration problem, not a build result.`}
+            message="Lỗi runner — bản dựng chưa khởi chạy được"
+            description={`${job.spawnError ?? "Không khởi chạy được det CLI."} Đây là lỗi cấu hình runner, không phải kết quả bản dựng.`}
           />
         ) : null}
 
@@ -216,16 +235,15 @@ function JobPanel({ job }: { job: BuildJobView }) {
             type="success"
             showIcon
             icon={<ToolOutlined aria-hidden="true" />}
-            message="Build completed (exit 0)"
+            message="Bản dựng hoàn tất (exit 0)"
             description={
               <>
-                The bundle is written and now listed as a live run.{" "}
+                Bundle đã được ghi và liệt kê như một lần chạy thật.{" "}
                 <Typography.Link href={`/runs/${encodeURIComponent(job.runId)}`}>
-                  Open the bundle run
+                  Xem kết quả
                 </Typography.Link>{" "}
-                — artifacts are served only after byte-verification against the build manifest.
-                Native Page Builder HTML stays source/download only; no Magento storefront or Admin
-                preview is claimed.
+                — artifacts chỉ được phục vụ sau khi xác minh byte khớp build manifest; HTML Page
+                Builder native chỉ ở dạng nguồn/tải về.
               </>
             }
           />
@@ -236,14 +254,14 @@ function JobPanel({ job }: { job: BuildJobView }) {
             type="error"
             showIcon
             icon={<WarningOutlined aria-hidden="true" />}
-            message={`Build finished with exit ${job.exitCode} — a stage failed`}
+            message={`Bản dựng kết thúc với exit ${job.exitCode} — có giai đoạn thất bại`}
             description={
               <>
-                The engine still wrote a truthful partial manifest (see the stage table).{" "}
+                Engine vẫn ghi manifest thật (xem bảng giai đoạn).{" "}
                 <Typography.Link href={`/runs/${encodeURIComponent(job.runId)}`}>
-                  Open the partial bundle run
+                  Xem lần chạy một phần
                 </Typography.Link>{" "}
-                — it stays visibly failed there.
+                — nó vẫn hiển thị là thất bại ở đó.
               </>
             }
           />
@@ -253,19 +271,19 @@ function JobPanel({ job }: { job: BuildJobView }) {
           <Flex vertical gap={8}>
             <StageTable stages={job.manifestSummary.stages} />
             <Typography.Text type="secondary">
-              {job.manifestSummary.gaps.length} manifest gap(s) · {job.manifestSummary.outputCount}{" "}
-              declared output(s) · source{" "}
+              {job.manifestSummary.gaps.length} khoảng trống manifest ·{" "}
+              {job.manifestSummary.outputCount} output đã khai báo · nguồn{" "}
               <Typography.Text code>
                 {job.manifestSummary.sourceId}@{job.manifestSummary.revisionId}
               </Typography.Text>{" "}
-              · platform <Typography.Text code>{job.manifestSummary.platformId}</Typography.Text>.
-              Full gap detail and verified downloads live on the run page.
+              · nền tảng <Typography.Text code>{job.manifestSummary.platformId}</Typography.Text>.
+              Chi tiết khoảng trống và tải xuống đã xác minh nằm ở trang lần chạy.
             </Typography.Text>
           </Flex>
         ) : job.state === "exited" ? (
           <Typography.Text type="secondary">
-            No bundle manifest was written (the build stopped before any stage ran — e.g. an
-            invalid config). Nothing is listed as a run for this id.
+            Không ghi được bundle manifest (bản dựng dừng trước khi giai đoạn nào chạy — ví dụ cấu
+            hình không hợp lệ). Không có lần chạy nào được liệt kê cho id này.
           </Typography.Text>
         ) : null}
 
@@ -317,11 +335,11 @@ export function BuildLauncher({
       try {
         const response = await fetch(`/api/builds/${encodeURIComponent(runId)}`, { cache: "no-store" });
         if (response.status === 404) {
-          setError(`Build job ${runId} is no longer readable (HTTP 404).`);
+          setError(`Không còn đọc được bản dựng ${runId} (HTTP 404).`);
           return;
         }
         if (!response.ok) {
-          setError(`Could not read the build job state (HTTP ${response.status}).`);
+          setError(`Không đọc được trạng thái bản dựng (HTTP ${response.status}).`);
           return;
         }
         const body = (await response.json()) as { job: BuildJobView };
@@ -330,7 +348,7 @@ export function BuildLauncher({
           timerRef.current = window.setTimeout(() => void tick(), POLL_MS);
         }
       } catch {
-        if (!stoppedRef.current) setError("Could not reach the build API.");
+        if (!stoppedRef.current) setError("Không kết nối được API bản dựng.");
       }
     };
     void tick();
@@ -353,16 +371,18 @@ export function BuildLauncher({
       if (response.status === 409) {
         const body = (await response.json()) as { active: BuildJobView | null };
         setJob(body.active ?? null);
-        setError("A build is already running — this runner executes one build at a time. Live state shown below.");
+        setError(
+          "Đã có bản dựng đang chạy — mỗi lần chỉ chạy một. Hiển thị trạng thái thật bên dưới."
+        );
         if (body.active !== null && !TERMINAL_STATES.has(body.active.state)) poll(body.active.runId);
         return;
       }
       const body = (await response.json().catch(() => null)) as {
         error?: { message?: string };
       } | null;
-      setError(body?.error?.message ?? `Build start failed (HTTP ${response.status}).`);
+      setError(body?.error?.message ?? `Khởi chạy bản dựng thất bại (HTTP ${response.status}).`);
     } catch {
-      setError("Could not reach the build API.");
+      setError("Không kết nối được API bản dựng.");
     } finally {
       setStarting(null);
     }
@@ -377,14 +397,15 @@ export function BuildLauncher({
           type="error"
           showIcon
           icon={<WarningOutlined aria-hidden="true" />}
-          message="Runner not ready"
+          message="Runner chưa sẵn sàng"
           description={
             <>
-              {runnerReason} Start Studio with <Typography.Text code>npm run dev</Typography.Text>{" "}
-              from the repository root (it defaults STUDIO_DET_RUNS_DIR to{" "}
-              <Typography.Text code>out/studio-runs</Typography.Text>) or set it explicitly —
-              optionally with STUDIO_DET_CLI. See apps/studio/README.md. The catalog below stays
-              read-only until then.
+              {runnerReason} Chạy <Typography.Text code>npm run dev</Typography.Text> từ gốc repo
+              (mặc định <Typography.Text code>STUDIO_DET_RUNS_DIR</Typography.Text> thành{" "}
+              <Typography.Text code>out/studio-runs</Typography.Text>) hoặc đặt biến này — có thể
+              kèm <Typography.Text code>STUDIO_DET_CLI</Typography.Text>. Xem{" "}
+              <Typography.Text code>apps/studio/README.md</Typography.Text>. Danh mục bên dưới vẫn
+              chỉ đọc cho tới khi sẵn sàng.
             </>
           }
         />
@@ -403,7 +424,7 @@ export function BuildLauncher({
           type="warning"
           showIcon
           icon={<WarningOutlined aria-hidden="true" />}
-          message={`${invalid.length} catalog entr${invalid.length === 1 ? "y" : "ies"} failed the listing mirror`}
+          message={`${invalid.length} mục catalog không hợp lệ khi mirror listing`}
           description={
             <List
               size="small"
@@ -422,21 +443,17 @@ export function BuildLauncher({
         size="small"
         title={
           // layout only: neutralize UA heading margins
-          <h2 style={{ margin: 0 }}>Build configs</h2>
+          <h2 style={{ margin: 0 }}>Cấu hình bản dựng</h2>
         }
       >
-        <Typography.Paragraph type="secondary">
-          Committed repository examples (read-only, cataloged in place) plus caller-configured
-          entries from STUDIO_BUILD_PROJECTS_DIR when set. Provenance paths are shown as
-          declared in each config (config-relative); the engine resolves and validates them at
-          build time.
-        </Typography.Paragraph>
         <Flex vertical gap={12}>
           {entries.length === 0 ? (
             <Typography.Text type="secondary">
-              No build-config entries found. Add one subdirectory per entry with a
-              build-config.json under STUDIO_BUILD_PROJECTS_DIR (see apps/studio/README.md and
-              examples/build/project.example.json for the shape).
+              Chưa có mục cấu hình bản dựng nào. Thêm một thư mục con mỗi mục chứa{" "}
+              <Typography.Text code>build-config.json</Typography.Text> dưới{" "}
+              <Typography.Text code>STUDIO_BUILD_PROJECTS_DIR</Typography.Text> (xem{" "}
+              <Typography.Text code>apps/studio/README.md</Typography.Text> và{" "}
+              <Typography.Text code>examples/build/project.example.json</Typography.Text>).
             </Typography.Text>
           ) : (
             entries.map((entry) => (
@@ -445,11 +462,9 @@ export function BuildLauncher({
                   <Flex wrap="wrap" justify="space-between" align="center" gap={8}>
                     <Flex align="center" gap={8} wrap="wrap">
                       <Typography.Text strong>{entry.label}</Typography.Text>
-                      {entry.origin === "repository" ? <Tag>repository example</Tag> : null}
+                      {entry.origin === "repository" ? <Tag>ví dụ có sẵn</Tag> : null}
                       <Tag>{entry.designSource.mode}</Tag>
-                      <Tag>
-                        {entry.inputSource === "capability-probe" ? "capability probe" : "pinned registry"}
-                      </Tag>
+                      <Tag>{entry.inputSource}</Tag>
                     </Flex>
                     <Typography.Text type="secondary" code>
                       {entry.configId}
@@ -458,7 +473,18 @@ export function BuildLauncher({
                   {entry.description !== undefined ? (
                     <Typography.Text type="secondary">{entry.description}</Typography.Text>
                   ) : null}
-                  <Descriptions column={1} size="small" items={declaredDescriptions(entry)} />
+                  <Collapse
+                    size="small"
+                    items={[
+                      {
+                        key: "declared-paths",
+                        label: "Chi tiết kỹ thuật",
+                        children: (
+                          <Descriptions column={1} size="small" items={declaredDescriptions(entry)} />
+                        ),
+                      },
+                    ]}
+                  />
                   <Flex align="center" gap={8}>
                     <Button
                       type="primary"
@@ -468,13 +494,13 @@ export function BuildLauncher({
                       icon={<CaretRightOutlined aria-hidden="true" />}
                       onClick={() => void startBuild(entry.configId)}
                     >
-                      {starting === entry.configId ? "Starting…" : "Build"}
+                      {starting === entry.configId ? "Đang khởi chạy…" : "Build"}
                     </Button>
                     {!runnerReady ? (
-                      <Typography.Text type="secondary">runner not ready</Typography.Text>
+                      <Typography.Text type="secondary">runner chưa sẵn sàng</Typography.Text>
                     ) : busy ? (
                       <Typography.Text type="secondary">
-                        one build at a time — waiting for the active build
+                        mỗi lần chỉ chạy một — đang chờ bản dựng hiện tại
                       </Typography.Text>
                     ) : null}
                   </Flex>

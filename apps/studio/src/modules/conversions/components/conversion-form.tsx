@@ -97,16 +97,16 @@ export function ConversionForm({ profiles, className }: ConversionFormProps) {
 
   return (
     <section aria-labelledby="new-conversion-heading" className={className}>
-      <h2 id="new-conversion-heading">New conversion</h2>
+      <h2 id="new-conversion-heading">Chuyển đổi mới</h2>
       <Typography.Paragraph type="secondary">
-        Point the studio at one Figma frame to convert. Studio only prepares and reviews the
-        request — the det engine performs the conversion.
+        Trỏ Studio vào một frame Figma để chuyển đổi. Studio chỉ chuẩn bị và soát lại yêu cầu —
+        engine det mới thực hiện chuyển đổi.
       </Typography.Paragraph>
 
       <form onSubmit={handleSubmit} noValidate>
         <Flex vertical gap="middle">
           <Flex vertical gap="small">
-            <label htmlFor={SOURCE_INPUT_ID}>Figma design source</label>
+            <label htmlFor={SOURCE_INPUT_ID}>Nguồn thiết kế Figma</label>
             <Input
               id={SOURCE_INPUT_ID}
               name="figmaSource"
@@ -138,8 +138,8 @@ export function ConversionForm({ profiles, className }: ConversionFormProps) {
             ) : null}
             <p id={SOURCE_HELP_ID}>
               <Typography.Text type="secondary">
-                Accepted: a Figma design-file URL including node-id (…?node-id=1-2), or a bare node
-                id like 245:2. A URL without node-id is rejected — the engine needs a node to extract.
+                Chấp nhận: URL file thiết kế Figma kèm node-id (…?node-id=1-2), hoặc node id trần
+                dạng 245:2. URL thiếu node-id sẽ bị từ chối — engine cần một node để trích xuất.
               </Typography.Text>
             </p>
           </Flex>
@@ -147,7 +147,7 @@ export function ConversionForm({ profiles, className }: ConversionFormProps) {
           <Row gutter={16}>
             <Col xs={24} md={12}>
               <Flex vertical gap="small">
-                <label htmlFor={TARGET_SELECT_ID}>Output target</label>
+                <label htmlFor={TARGET_SELECT_ID}>Đích xuất</label>
                 {/* antd Select keeps the id on its inner search input, so the
                     label association above still names the combobox. */}
                 <Select
@@ -167,7 +167,7 @@ export function ConversionForm({ profiles, className }: ConversionFormProps) {
               <Flex vertical gap="small">
                 {profilesConfigured ? (
                   <>
-                    <label htmlFor={PROFILE_SELECT_ID}>Project profile</label>
+                    <label htmlFor={PROFILE_SELECT_ID}>Hồ sơ dự án</label>
                     <Select
                       id={PROFILE_SELECT_ID}
                       // layout only
@@ -185,11 +185,12 @@ export function ConversionForm({ profiles, className }: ConversionFormProps) {
                   // validation error must stay the only alert role here.
                   <div data-testid="profiles-not-configured">
                     <Typography.Text strong>
-                      Profile: NOT CONFIGURED
+                      Hồ sơ: Chưa cấu hình{" "}
+                      <Typography.Text code>NOT_CONFIGURED</Typography.Text>
                     </Typography.Text>
                     <Typography.Paragraph type="secondary">
-                      No project profiles configured — profiles come from
-                      local DET profile configuration.
+                      Chưa có hồ sơ dự án nào được cấu hình — hồ sơ lấy từ cấu hình
+                      profile DET cục bộ.
                     </Typography.Paragraph>
                   </div>
                 )}
@@ -200,19 +201,19 @@ export function ConversionForm({ profiles, className }: ConversionFormProps) {
           <Flex vertical gap="small">
             <Flex wrap="wrap" align="center" gap="small">
               <Button type="primary" htmlType="submit">
-                Review conversion request
+                Xem lại yêu cầu
               </Button>
               <Flex align="center" gap="small">
                 <ApiOutlined aria-hidden="true" />
                 <Typography.Text type="secondary">
-                  Execution not connected — issue [28] owns the engine bridge.
+                  Chưa kết nối phần thực thi — cầu nối engine thuộc [28].
                 </Typography.Text>
               </Flex>
             </Flex>
             <p>
               <Typography.Text type="secondary">
-                Submitting only validates this input and shows a request summary. No conversion runs
-                and nothing is stored.
+                Việc gửi chỉ kiểm tra dữ liệu vừa nhập và hiển thị tóm tắt yêu cầu. Không có
+                chuyển đổi nào chạy và không lưu gì cả.
               </Typography.Text>
             </p>
           </Flex>

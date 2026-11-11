@@ -16,7 +16,8 @@ import { Flex, Typography } from "antd";
 import type { StudioDiagnosticView } from "@/src/shared/contracts";
 import { OriginBadge, SeverityBadge } from "./disposition-badges";
 
-const UNKNOWN = "unknown";
+/** "không rõ" — a fact the run does not carry is shown, never invented ([61] Vietnamese). */
+const UNKNOWN = "không rõ";
 
 function DiagnosticRow({ diagnostic }: { diagnostic: StudioDiagnosticView }) {
   return (
@@ -60,15 +61,15 @@ export function DiagnosticsPanel({
       data-testid="diagnostics-panel"
     >
       <h3>
-        Diagnostics{" "}
+        Chẩn đoán{" "}
         <Typography.Text type="secondary">
-          ({diagnostics.length} recorded)
+          ({diagnostics.length} bản ghi)
         </Typography.Text>
       </h3>
       {diagnostics.length === 0 ? (
         <p data-testid="diagnostics-empty">
           <Typography.Text type="secondary">
-            No diagnostics recorded for this run.
+            Không có chẩn đoán nào được ghi cho lần chạy này.
           </Typography.Text>
         </p>
       ) : (

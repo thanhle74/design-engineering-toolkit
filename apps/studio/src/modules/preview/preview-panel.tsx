@@ -47,13 +47,13 @@ export function PreviewPanel({ preview, mode, label }: PreviewPanelProps) {
     <Card
       size="small"
       data-testid="preview-panel"
-      title={<h2>Preview</h2>}
+      title={<h2>Xem trước</h2>}
       extra={
         mode === "fixture" ? (
           <Tag
             color="gold"
             data-testid="preview-demo-badge"
-            title="DEMO fixture run — illustrative data, not a live conversion."
+            title="Lần chạy DEMO fixture — dữ liệu minh họa, không phải chuyển đổi thật."
           >
             DEMO
           </Tag>
@@ -62,8 +62,8 @@ export function PreviewPanel({ preview, mode, label }: PreviewPanelProps) {
     >
       <Typography.Paragraph type="secondary">
         {preview.status === "available"
-          ? "Resolved from the run's verified, isolated DET Preview Theme output."
-          : "No verified preview is bound to this run."}
+          ? "Đọc từ output DET Preview Theme đã xác minh, cách ly của lần chạy này."
+          : "Chưa có bản xem trước nào đã xác minh được gắn vào lần chạy này."}
       </Typography.Paragraph>
       {preview.status === "unavailable" ? (
         <PreviewUnavailableReason reason={preview.reason} />
@@ -76,7 +76,10 @@ export function PreviewPanel({ preview, mode, label }: PreviewPanelProps) {
 
 /**
  * Calm informational panel for the normal "no verified preview" state.
- * The reader-supplied reason is rendered VERBATIM in its own paragraph.
+ * [61] Vietnamese label ("Không thể xem trước") next to the raw machine code
+ * `PREVIEW_UNAVAILABLE` as an inline `Text code` chip — the raw string stays
+ * visible in the DOM. The reader-supplied reason is rendered VERBATIM in its
+ * own paragraph.
  */
 function PreviewUnavailableReason({ reason }: { reason: string }) {
   return (
@@ -85,8 +88,8 @@ function PreviewUnavailableReason({ reason }: { reason: string }) {
       showIcon
       title={
         <Flex wrap="wrap" align="center" gap="small">
-          Preview unavailable
-          <Tag>PREVIEW_UNAVAILABLE</Tag>
+          Không thể xem trước
+          <Typography.Text code>PREVIEW_UNAVAILABLE</Typography.Text>
         </Flex>
       }
       description={
@@ -94,9 +97,9 @@ function PreviewUnavailableReason({ reason }: { reason: string }) {
           <p data-testid="preview-unavailable-reason">{reason}</p>
           <p>
             <Typography.Text type="secondary">
-              A preview appears only when [28]&rsquo;s verified DET Preview
-              Theme output is bound to this run. This is a normal state, not a
-              failure.
+              Bản xem trước chỉ xuất hiện khi output DET Preview Theme đã xác
+              minh của [28] được gắn vào lần chạy này. Đây là trạng thái bình
+              thường, không phải lỗi.
             </Typography.Text>
           </p>
         </>
@@ -121,9 +124,9 @@ function PreviewAvailableSource({
           color="success"
           data-testid="preview-verified-badge"
           icon={<SafetyCertificateOutlined aria-hidden="true" />}
-          title="Verified by the engine boundary — Studio never invents a preview URL or success."
+          title="Đã xác minh bởi biên giới engine — Studio không bao giờ tự bịa URL xem trước hay tuyên bố thành công."
         >
-          Verified
+          Đã xác minh
         </Tag>
       </Flex>
       <Flex wrap="wrap" align="center" gap="small">
@@ -141,13 +144,13 @@ function PreviewAvailableSource({
           data-testid="preview-new-tab-link"
         >
           <ExportOutlined aria-hidden="true" />
-          Open in new tab
+          Mở tab mới
         </Typography.Link>
       </Flex>
       <Typography.Paragraph type="secondary">
-        The preview is rendered by the engine&rsquo;s isolated DET Preview
-        Theme, outside Studio. Studio shows the verified link only — never a
-        mock screenshot as Magento proof.
+        Bản xem trước do engine render bằng DET Preview Theme cách ly, bên
+        ngoài Studio. Studio chỉ hiển thị link đã xác minh — không bao giờ giả
+        lập ảnh chụp làm bằng chứng Magento.
       </Typography.Paragraph>
     </Flex>
   );

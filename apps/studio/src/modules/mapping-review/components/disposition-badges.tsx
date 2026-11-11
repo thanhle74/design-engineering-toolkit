@@ -69,7 +69,8 @@ export function ReviewDispositionBadge({
 
 export function KindBadge({ kind }: { kind?: StudioNodeKind }) {
   if (!kind) {
-    return <Tag>unknown</Tag>;
+    // "không rõ" — a fact the run does not carry is shown, never invented ([61] Vietnamese).
+    return <Tag>không rõ</Tag>;
   }
   return <Tag>{kind}</Tag>;
 }

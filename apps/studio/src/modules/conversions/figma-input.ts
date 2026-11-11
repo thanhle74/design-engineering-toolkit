@@ -10,7 +10,9 @@
  *  (b) a bare node id — `245:2` (or `245-2`, normalized to `245:2`). No file
  *      key exists in this form, so the result carries `fileKey: null`.
  *
- * Anything else fails with a stable `reason` and an operator-readable message.
+ * Anything else fails with a stable `reason` and an operator-readable message
+ * ([61] messages are natural Vietnamese; machine tokens — URLs, `node-id`,
+ * `fileKey`, example ids like `245:2` — stay verbatim).
  * This helper is pure: no React, no network, no storage, no Figma API access —
  * it only parses what the operator typed.
  */
@@ -56,7 +58,7 @@ function parseBareNodeId(trimmed: string): FigmaInputParseResult {
   if (!match) {
     return failure(
       "not-a-figma-url",
-      "Enter a Figma design-file URL (https://www.figma.com/design/…?node-id=1-2) or a bare node id like 245:2."
+      "Hãy dán URL file thiết kế Figma (https://www.figma.com/design/…?node-id=1-2) hoặc một node id dạng 245:2."
     );
   }
   return { ok: true, fileKey: null, nodeId: `${match[1]}:${match[2]}`, inputKind: "bare" };
@@ -66,7 +68,7 @@ function parseFigmaUrl(url: URL): FigmaInputParseResult {
   if (!FIGMA_HOST_PATTERN.test(url.hostname) || !["http:", "https:"].includes(url.protocol)) {
     return failure(
       "not-a-figma-url",
-      "This is not a figma.com URL. Paste a Figma design-file URL or a bare node id like 245:2."
+      "Đây không phải URL figma.com. Hãy dán URL file thiết kế Figma hoặc một node id dạng 245:2."
     );
   }
 
@@ -75,12 +77,12 @@ function parseFigmaUrl(url: URL): FigmaInputParseResult {
     if (NON_DESIGN_PATH_PREFIXES.some((prefix) => path.startsWith(prefix))) {
       return failure(
         "unsupported-figma-file-type",
-        "Only design-file URLs are supported (/design/…). FigJam boards, slides and legacy /file/ links must be reopened in Figma and copied as a design URL."
+        "Chỉ hỗ trợ URL file thiết kế (/design/…). Link FigJam board, slides và /file/ cũ cần được mở lại trong Figma rồi copy URL dạng design."
       );
     }
     return failure(
       "not-a-figma-url",
-      "This does not look like a Figma design-file URL. Expected https://www.figma.com/design/<fileKey>/<fileName>?node-id=1-2."
+      "URL này không giống URL file thiết kế Figma. Dạng đúng: https://www.figma.com/design/<fileKey>/<fileName>?node-id=1-2."
     );
   }
 
@@ -90,7 +92,7 @@ function parseFigmaUrl(url: URL): FigmaInputParseResult {
   if (!fileKeySegment || !FILE_KEY_PATTERN.test(fileKeySegment)) {
     return failure(
       "missing-file-key",
-      "The URL does not contain a file key after /design/. Open the file in Figma and copy the URL from the editor."
+      "URL không có file key sau /design/. Hãy mở file trong Figma và copy lại URL từ trình soạn thảo."
     );
   }
 
@@ -102,7 +104,7 @@ function parseFigmaUrl(url: URL): FigmaInputParseResult {
     if (!branchKey || !FILE_KEY_PATTERN.test(branchKey)) {
       return failure(
         "missing-file-key",
-        "The branch URL does not contain a branch key after /branch/. Copy the URL from the branch view in Figma."
+        "URL branch không có branch key sau /branch/. Hãy copy URL từ chế độ xem branch trong Figma."
       );
     }
     fileKey = branchKey;
@@ -112,7 +114,7 @@ function parseFigmaUrl(url: URL): FigmaInputParseResult {
   if (rawNodeId === null) {
     return failure(
       "missing-node-id",
-      "The URL is missing a node-id parameter. Select the frame in Figma so the URL includes ?node-id=… (for example node-id=245-2)."
+      "URL thiếu tham số node-id. Hãy chọn frame trong Figma để URL có kèm ?node-id=… (ví dụ node-id=245-2)."
     );
   }
   // URLSearchParams already decodes %3A, so both ?node-id=245-2 and ?node-id=245%3A2 land here.
@@ -120,7 +122,7 @@ function parseFigmaUrl(url: URL): FigmaInputParseResult {
   if (!match) {
     return failure(
       "malformed-node-id",
-      "The node-id parameter must look like 1-2 or 1:2 (numbers separated by a dash or a colon)."
+      "Tham số node-id phải có dạng 1-2 hoặc 1:2 (số, ngăn cách bởi dấu gạch ngang hoặc dấu hai chấm)."
     );
   }
 
@@ -136,7 +138,7 @@ function parseFigmaUrl(url: URL): FigmaInputParseResult {
 export function parseFigmaInput(raw: string): FigmaInputParseResult {
   const trimmed = raw.trim();
   if (!trimmed) {
-    return failure("empty", "Enter a Figma design-file URL or a bare node id like 245:2.");
+    return failure("empty", "Hãy nhập URL file thiết kế Figma hoặc một node id dạng 245:2.");
   }
 
   if (NODE_ID_PATTERN.test(trimmed)) {
@@ -149,7 +151,7 @@ export function parseFigmaInput(raw: string): FigmaInputParseResult {
   } catch {
     return failure(
       "not-a-figma-url",
-      "Enter a Figma design-file URL (https://www.figma.com/design/…?node-id=1-2) or a bare node id like 245:2."
+      "Hãy dán URL file thiết kế Figma (https://www.figma.com/design/…?node-id=1-2) hoặc một node id dạng 245:2."
     );
   }
   return parseFigmaUrl(url);

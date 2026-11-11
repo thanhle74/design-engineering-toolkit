@@ -27,7 +27,8 @@ import {
   ReviewDispositionBadge,
 } from "./disposition-badges";
 
-const UNKNOWN = "unknown";
+/** Muted stand-in for a fact the run does not carry. Never a zero ([61] Vietnamese). */
+const UNKNOWN = "không rõ";
 
 /**
  * antd `onRow` prop bags accept arbitrary DOM attributes, but React's
@@ -112,7 +113,7 @@ const columns: ColumnsType<StudioMappingView> = [
     ),
   },
   {
-    title: "Source locator",
+    title: "Vị trí trong nguồn",
     render: (_, mapping) =>
       mapping.sourceLocator ? (
         <Typography.Text code ellipsis title={mapping.sourceLocator}>
@@ -123,11 +124,11 @@ const columns: ColumnsType<StudioMappingView> = [
       ),
   },
   {
-    title: "Kind",
+    title: "Loại",
     render: (_, mapping) => <KindBadge kind={mapping.kind} />,
   },
   {
-    title: "Semantic class",
+    title: "Lớp ngữ nghĩa",
     render: (_, mapping) => (
       <Typography.Text code type="secondary">
         {mapping.semanticClass ?? UNKNOWN}
@@ -150,11 +151,11 @@ const columns: ColumnsType<StudioMappingView> = [
       ),
   },
   {
-    title: "Target",
+    title: "Đích",
     render: (_, mapping) => <TargetCell mapping={mapping} />,
   },
   {
-    title: "Note / reasons",
+    title: "Ghi chú / lý do",
     render: (_, mapping) => <NotesCell mapping={mapping} />,
   },
 ];
