@@ -1,8 +1,4 @@
 @import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
-
-@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
@@ -49,49 +45,47 @@
 }
 
 /**
- * [52] Dark-only owner direction: `:root` carries the dark tokens directly, so
- * the first server render is already dark — no client class swap, no light
- * flash, no OS/toggle switching. The palette is a calm charcoal-slate neutral
- * ramp (near-zero chroma, one hue family) with a single restrained accent
- * surface; contrast follows the proven shadcn dark envelope. `html.dark`
- * (layout.tsx) stays because the shadcn primitives ship `dark:`-prefixed
- * utilities that key off the class — the tokens above remain the one source
- * of truth for the palette itself.
+ * [61] Light-only owner direction: Ant Design is the single source of component
+ * theming (ConfigProvider in studio-providers.tsx, defaultAlgorithm — there is
+ * no dark fallback, toggle or OS switch). These CSS variables exist only while
+ * the remaining Tailwind token utilities (`bg-background`, `text-muted-foreground`,
+ * …) are still referenced by not-yet-migrated code; the palette is a calm
+ * neutral light ramp with one restrained blue accent.
  */
 :root {
-  color-scheme: dark;
-  --background: oklch(0.165 0.008 260);
-  --foreground: oklch(0.965 0.004 260);
-  --card: oklch(0.21 0.009 260);
-  --card-foreground: oklch(0.965 0.004 260);
-  --popover: oklch(0.22 0.009 260);
-  --popover-foreground: oklch(0.965 0.004 260);
-  --primary: oklch(0.92 0.008 260);
-  --primary-foreground: oklch(0.2 0.009 260);
-  --secondary: oklch(0.27 0.01 260);
-  --secondary-foreground: oklch(0.965 0.004 260);
-  --muted: oklch(0.25 0.009 260);
-  --muted-foreground: oklch(0.715 0.012 260);
-  --accent: oklch(0.28 0.011 260);
-  --accent-foreground: oklch(0.965 0.004 260);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 12%);
-  --input: oklch(1 0 0 / 16%);
-  --ring: oklch(0.58 0.02 260);
-  --chart-1: oklch(0.87 0.01 260);
-  --chart-2: oklch(0.62 0.015 260);
-  --chart-3: oklch(0.48 0.015 260);
-  --chart-4: oklch(0.38 0.012 260);
-  --chart-5: oklch(0.28 0.01 260);
+  color-scheme: light;
+  --background: #f7f8fa;
+  --foreground: #1f2329;
+  --card: #ffffff;
+  --card-foreground: #1f2329;
+  --popover: #ffffff;
+  --popover-foreground: #1f2329;
+  --primary: #1677ff;
+  --primary-foreground: #ffffff;
+  --secondary: #f0f2f5;
+  --secondary-foreground: #1f2329;
+  --muted: #f0f2f5;
+  --muted-foreground: #67707c;
+  --accent: #eef1f5;
+  --accent-foreground: #1f2329;
+  --destructive: #dc2626;
+  --border: #e3e7ec;
+  --input: #d9dde3;
+  --ring: #4096ff;
+  --chart-1: #1677ff;
+  --chart-2: #6aa5ff;
+  --chart-3: #3d4757;
+  --chart-4: #8b95a5;
+  --chart-5: #d3d9e0;
   --radius: 0.625rem;
-  --sidebar: oklch(0.21 0.009 260);
-  --sidebar-foreground: oklch(0.965 0.004 260);
-  --sidebar-primary: oklch(0.92 0.008 260);
-  --sidebar-primary-foreground: oklch(0.2 0.009 260);
-  --sidebar-accent: oklch(0.28 0.011 260);
-  --sidebar-accent-foreground: oklch(0.965 0.004 260);
-  --sidebar-border: oklch(1 0 0 / 12%);
-  --sidebar-ring: oklch(0.58 0.02 260);
+  --sidebar: #ffffff;
+  --sidebar-foreground: #1f2329;
+  --sidebar-primary: #1677ff;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #eef1f5;
+  --sidebar-accent-foreground: #1f2329;
+  --sidebar-border: #e3e7ec;
+  --sidebar-ring: #4096ff;
 }
 
 @layer base {
@@ -104,4 +98,10 @@
   html {
     @apply font-sans;
   }
+}
+
+/** [61] Row highlight for mapping-review rows that need review (attention
+ * amber, never destructive red) — used by antd Table `rowClassName`. */
+.mapping-row-needs-review > td {
+  background: #fffbe6;
 }
