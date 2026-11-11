@@ -2,6 +2,25 @@
 
 A **multi-project, platform-neutral** foundation for design-system contracts, semantic structure, capability resolution and evidence-led conversion. Magento Page Builder + Hyvä is the **first adapter**, not a required core dependency.
 
+## Quick start — one repository, one entrypoint ([58])
+
+Requires Node ≥ 22.13 (Fedora/Linux). From the repository root:
+
+```bash
+npm run setup   # ONCE: installs both committed lockfiles + builds the det core
+npm run dev     # DET Studio → http://localhost:3000/build
+```
+
+Then in the browser: select **"Slaunchpad Homepage — real-derived (Figma rev
+2417494580183108397)"** (the committed repository example, cataloged in place — nothing
+is copied) and click **Build**. The run page shows the honest result: **2 of 12 sections
+compose** into native Page Builder shapes, 10 carry explicit skip records, `PREVIEW_UNAVAILABLE`
+(no Magento render is bound to bundles), and every artifact download is byte-verified
+against `build-manifest.json`. **No Magento CMS/Admin/DB writes happen — output is
+source/download only.** Production-mode local usage: `npm run start`. Headless CLI:
+`node bin/det.js --help` (or `npx det` after setup). Details: the [Studio runbook](docs/runbook-real-derived-studio-build.md)
+and [apps/studio/README.md](apps/studio/README.md).
+
 ## Current work — Modular Monolith CLI engine (`det`)
 
 The reviewed [Issue #5](https://github.com/thanhle74/design-engineering-toolkit/issues/5) architecture is **integrated and executable**: **Capability Registry → Structural Mapping → Functional Round-trip → Visual Fidelity** ship as gated CLI stages with per-gate receipts (G1 #5 · G2 #14 · KB #15 · G3 #23 · G4 #25). These are structural/contract gates — Magento Admin UI round-trip persistence and visual pixel fidelity carry separate operator gates and are proved only inside the per-gate receipts, never by this ladder. Active work runs as issue-numbered tasks (`[N]`); live status lives on GitHub ([issues](https://github.com/thanhle74/design-engineering-toolkit/issues), [pull requests](https://github.com/thanhle74/design-engineering-toolkit/pulls)) and the [Coordinator handoff](specs/CHATGPT-COORDINATOR-HANDOFF.md) — not in this README.

@@ -327,6 +327,11 @@ await registerRegistrySuite(checkAsync);
 const { default: registerRealDerivedSuite } = await import("./real-derived-suite.mjs");
 await registerRealDerivedSuite(checkAsync);
 
+// [58] single-root startup: cwd-independent launcher resolution, in-place canonical
+// catalogue shape, no-write guarantee for the committed example, root script wiring.
+const { default: registerStudioStartupSuite } = await import("./studio-startup-suite.mjs");
+await registerStudioStartupSuite(checkAsync);
+
 // ---- Issue #19 M4 real-source KB gate suites (async) -----------------------------------------
 const { default: registerKbM4LicenseSuite } = await import("./kb-m4-license-suite.mjs");
 await registerKbM4LicenseSuite(checkAsync);

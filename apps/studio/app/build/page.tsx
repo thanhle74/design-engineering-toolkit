@@ -11,12 +11,15 @@ import { BuildLauncher } from "./build-launcher";
 /**
  * [40] Build Control — real UI-triggered offline `det build` runs (S5).
  *
- * Requires BOTH configured env vars: `STUDIO_BUILD_PROJECTS_DIR` (the catalog
- * of caller-configured build-config entries) and `STUDIO_DET_RUNS_DIR` (where
- * the thin local runner writes real bundles). An unconfigured environment
- * renders an explicit not-connected state — NEVER the DEMO fixture: a
- * build-control page must never look like it built something it did not.
- * Builds are offline snapshot builds only; there is no live Figma path.
+ * The catalog is the [58] union of the committed repository examples
+ * (`examples/build`, listed in place, no copying) plus caller-configured
+ * entries from `STUDIO_BUILD_PROJECTS_DIR` when set. The runner additionally
+ * requires `STUDIO_DET_RUNS_DIR` (where real bundles are written — the root
+ * `npm run dev` launcher defaults it to out/studio-runs). Without a usable
+ * catalog/runner the page renders an explicit not-connected/disabled state —
+ * NEVER the DEMO fixture: a build-control page must never look like it built
+ * something it did not. Builds are offline snapshot builds only; there is no
+ * live Figma path.
  */
 export default async function BuildPage() {
   // Catalog/runner state comes from local disk/env per request. fs/env are not
@@ -80,10 +83,12 @@ export default async function BuildPage() {
           <AlertDescription>
             <p>{catalogErrorMessage}</p>
             <p className="mt-2 text-muted-foreground">
-              Set the {STUDIO_BUILD_PROJECTS_DIR_ENV} environment variable to a directory of
-              build-config entries (one subdirectory per entry with a{" "}
-              <span className="font-mono">build-config.json</span>) and STUDIO_DET_RUNS_DIR to the
-              DET output root. See the local build-control setup in{" "}
+              Run Studio from the repository root with{" "}
+              <span className="font-mono">npm run dev</span> (the committed repository examples in{" "}
+              <span className="font-mono">examples/build</span> are then cataloged in place), or
+              set {STUDIO_BUILD_PROJECTS_DIR_ENV} to a directory of build-config entries (one
+              subdirectory per entry with a <span className="font-mono">build-config.json</span>)
+              and STUDIO_DET_RUNS_DIR to the DET output root. See the local build-control setup in{" "}
               <span className="font-mono">apps/studio/README.md</span>. This page intentionally
               shows no demo data: a build-control UI must never look like it built something it
               did not.

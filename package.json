@@ -7,7 +7,11 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "prepack": "npm run build",
-    "test": "npm run build && node tests/run-all.mjs"
+    "test": "npm run build && node tests/run-all.mjs",
+    "setup": "node scripts/setup.mjs",
+    "dev": "node scripts/studio.mjs dev",
+    "start": "node scripts/studio.mjs start",
+    "studio:build": "node scripts/studio.mjs build"
   },
   "bin": {
     "det": "bin/det.js"

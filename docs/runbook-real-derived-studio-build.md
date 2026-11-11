@@ -4,40 +4,35 @@ One labeled **real-derived** Slaunchpad Homepage project (from the committed #18
 read, revision `2417494580183108397`) run through the existing offline engine and the
 existing Studio `/build`. Tested end to end on Fedora (workstation Linux) with Node ≥ 22.13.
 
-Commands below run from the repository root unless stated. One-time setup is marked.
+Since [58] this is the **single-root operator flow**: everything runs from the repository
+root — no `cd` juggling, no env exports, no copying the project into `out/`. The committed
+project is listed in place by the Studio catalogue.
 
-## 1. Build the engine and start Studio
+## 1. One-time setup, then start Studio
 
 ```bash
-# one-time (also required again after pulling engine changes)
-npm ci && npm run build          # compiles dist/ — the det CLI the Studio runner spawns
+npm run setup    # ONCE: installs both lockfiles (root + apps/studio) + builds the det core
 
-# Studio dependencies (one-time; apps/studio has its own lockfile)
-cd apps/studio && npm install && cd ../..
-
-# Studio env: where bundles land + where build-config entries are listed from
-export STUDIO_DET_RUNS_DIR="$PWD/out/studio-runs"
-export STUDIO_BUILD_PROJECTS_DIR="$PWD/out/studio-build-projects"
-mkdir -p "$STUDIO_DET_RUNS_DIR" "$STUDIO_BUILD_PROJECTS_DIR"
-
-# register the real-derived project (self-contained; no path edits needed)
-cp -r examples/build/slaunchpad-home-real-derived "$STUDIO_BUILD_PROJECTS_DIR/"
-
-# start Studio (dev or production build)
-cd apps/studio && npm run dev            # http://localhost:3000
-# …or: npm run build && npm start
+npm run dev      # DET Studio at http://localhost:3000/build
+# production-mode equivalent:  npm run start
 ```
 
-The optional `STUDIO_DATA_DIR` catalogue mode ([50]) is independent of this workflow.
+`npm run dev` also rebuilds the det core when sources changed and defaults
+`STUDIO_DET_RUNS_DIR` to `out/studio-runs` (created on demand). The real-derived project is
+discovered **in place** from `examples/build/slaunchpad-home-real-derived/` — nothing is
+copied, and the committed directory stays read-only. The optional `STUDIO_DATA_DIR`
+catalogue mode ([50]) is independent of this workflow.
 
 ## 2. Run the real-derived build
 
 1. Open **http://localhost:3000/build**.
-2. Two entries are listed (plus any of your own):
-   - **G28 example (fixture demo)** — the shipped fixture build, clearly labeled demo.
-   - **"Slaunchpad Homepage — real-derived (Figma rev 2417494580183108397)"** — the
-     real-source project. Its declared provenance paths are shown as declared; the engine
-     validates them at build time.
+2. The catalogue lists the committed entry (plus any of your own from
+   `STUDIO_BUILD_PROJECTS_DIR`, if you set it):
+   - **"Slaunchpad Homepage — real-derived (Figma rev 2417494580183108397)"** with the
+     **repository example** badge. Its declared provenance paths are shown as declared; the
+     engine validates them at build time.
+   - The old **G28 fixture demo** is not prelisted — it only appears if you create it in
+     your own `STUDIO_BUILD_PROJECTS_DIR` (see `apps/studio/README.md`).
 3. Click **Build** on the real-derived entry. The runner executes the real
    `det build --config` offline (one build at a time; a second concurrent request fails
    with 409).
@@ -91,9 +86,14 @@ Exit 0 = all stages completed; the bundle layout matches what Studio serves abov
 ## Troubleshooting
 
 - **`det: compiled core not found`** — run `npm run build` at the repository root (the
-  Studio runner and CLI both need `dist/`).
-- **The build page shows "not connected"** — the two `STUDIO_*` env vars were not set
-  before starting Studio; set them and restart `npm run dev` / `npm start`.
+  root `npm run dev` launcher does this automatically when `dist/` is missing or stale).
+- **The build page shows "Runner not ready"** — Studio was started without
+  `STUDIO_DET_RUNS_DIR` (e.g. `npm run dev` inside `apps/studio` instead of the root).
+  Use the root launcher (`npm run dev` at the repository root), which defaults the runs
+  dir to `out/studio-runs`, or export `STUDIO_DET_RUNS_DIR` yourself and restart.
+- **The catalogue lists no repository entry** — Studio is not running from a checkout
+  layout (or `examples/build/` was removed); the catalogue then only lists entries from
+  `STUDIO_BUILD_PROJECTS_DIR`.
 - **Port already in use** (e.g. `EADDRINUSE :3000` — a leftover Studio from another
   workspace) — either stop that process or start on another port: `PORT=3100 npm run dev`
   and use http://localhost:3100.

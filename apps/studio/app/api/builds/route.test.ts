@@ -77,11 +77,14 @@ describe("GET /api/builds", () => {
 });
 
 describe("POST /api/builds", () => {
-  it("maps an unconfigured environment to 503", async () => {
+  // [58] with no env at all the canonical repository catalogue still answers:
+  // an unknown id is a catalog-scoped 404, never a fake build start.
+  it("resolves through the repository catalogue when no env is set (unknown id → 404)", async () => {
     const response = await POST(post({ configId: "whatever" }));
-    expect(response.status).toBe(503);
-    const body = (await response.json()) as { error: { code: string } };
-    expect(body.error.code).toBe("not-configured");
+    expect(response.status).toBe(404);
+    const body = (await response.json()) as { error: { code: string; message: string } };
+    expect(body.error.code).toBe("run-not-found");
+    expect(body.error.message).toMatch(/build-config entry/i);
   });
 
   it("rejects a malformed body with 400", async () => {
