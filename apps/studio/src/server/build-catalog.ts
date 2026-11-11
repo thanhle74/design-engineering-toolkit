@@ -151,9 +151,11 @@ interface CatalogRoot {
 
 export class BuildConfigCatalog {
   /**
-   * Configured root FIRST, repository catalogue second: a caller-configured
-   * entry with the same id overrides the repository example, in both
-   * `list()` (first origin wins) and `resolveConfigPath()`.
+   * Configured root FIRST, repository catalogue second: the first root that
+   * contains `<id>/build-config.json` owns the id, in both `list()` (as a
+   * valid entry, or as an invalid notice when malformed — C58-2) and
+   * `resolveConfigPath()`. Listing and resolution can therefore never
+   * disagree about which file an id builds from.
    */
   private readonly roots: CatalogRoot[];
 
@@ -206,12 +208,22 @@ export class BuildConfigCatalog {
     return new BuildConfigCatalog(roots);
   }
 
-  /** List every entry; broken entries surface in `invalid` with a safe reason. */
+  /**
+   * List every entry; broken entries surface in `invalid` with a safe reason.
+   * One consistent precedence rule for listing AND resolution (C58-2): the
+   * first root (configured before repository) that contains
+   * `<id>/build-config.json` OWNS the id — as a buildable entry when valid,
+   * as an explicit invalid notice when malformed. A broken configured copy
+   * therefore shadows the repository example instead of leaving the UI
+   * advertising a repository build whose Build would resolve to the broken
+   * override file.
+   */
   async list(): Promise<BuildConfigCatalogListing> {
     const entries = new Map<string, BuildConfigCatalogEntry>();
     const invalid: BuildConfigCatalogInvalid[] = [];
+    const claimed = new Set<string>();
     for (const root of this.roots) {
-      await this.listRoot(root, entries, invalid);
+      await this.listRoot(root, entries, invalid, claimed);
     }
     const merged = [...entries.values()];
     merged.sort((a, b) => a.configId.localeCompare(b.configId));
@@ -219,11 +231,15 @@ export class BuildConfigCatalog {
     return { entries: merged, invalid };
   }
 
-  /** Scan one root; ids already listed (configured roots run first) are skipped. */
+  /**
+   * Scan one root; ids already claimed by an earlier root (configured roots
+   * run first) are skipped — valid entry or invalid notice.
+   */
   private async listRoot(
     root: CatalogRoot,
     entries: Map<string, BuildConfigCatalogEntry>,
-    invalid: BuildConfigCatalogInvalid[]
+    invalid: BuildConfigCatalogInvalid[],
+    claimed: Set<string>
   ): Promise<void> {
     const rootDir = root.resolved;
     const dirents = await readdir(rootDir, { withFileTypes: true }).catch(() => {
@@ -238,11 +254,12 @@ export class BuildConfigCatalog {
     for (const dirent of dirents) {
       if (!dirent.isDirectory()) continue;
       if (!RUN_ID_PATTERN.test(dirent.name)) continue;
-      if (entries.has(dirent.name)) continue; // configured entry overrides the repository example
+      if (entries.has(dirent.name) || claimed.has(dirent.name)) continue; // earlier root owns this id
       const entryDir = path.join(rootDir, dirent.name);
       const configPath = path.join(entryDir, BUILD_CONFIG_FILE);
       const configInfo = await stat(configPath).catch(() => null);
       if (configInfo === null || !configInfo.isFile()) continue; // no build-config.json → not an entry
+      claimed.add(dirent.name); // the dir claims the id even when the config turns out malformed
 
       try {
         const raw = await readFile(configPath, "utf8");

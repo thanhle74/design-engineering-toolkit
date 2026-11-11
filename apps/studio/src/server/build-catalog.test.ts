@@ -99,6 +99,31 @@ describe("repository catalogue ([58])", () => {
     expect(resolved.startsWith(projectsRoot)).toBe(true);
   });
 
+  // C58-2 regression: a MALFORMED configured copy must claim the id the same
+  // way a valid one does — the listing then surfaces only the invalid notice
+  // and never advertises the repository example as buildable, while
+  // resolution still resolves to that same (rejected) configured file.
+  // Listing and resolution can never silently disagree about the config.
+  it("an invalid configured duplicate claims the id: no repo entry is advertised for a build that would read the broken override", async () => {
+    const dupDir = path.join(projectsRoot, "slaunchpad-home-real-derived");
+    await mkdir(dupDir, { recursive: true });
+    await writeFile(path.join(dupDir, "build-config.json"), "{broken json", "utf8");
+
+    const catalog = await BuildConfigCatalog.open(projectsRoot);
+    const listing = await catalog.list();
+    // the listing never offers a buildable entry whose Build would resolve to the invalid override
+    expect(listing.entries.some((e) => e.configId === "slaunchpad-home-real-derived")).toBe(false);
+    // the malformed configured copy is surfaced explicitly, with a safe reason
+    const surfaced = listing.invalid.find((e) => e.configId === "slaunchpad-home-real-derived");
+    expect(surfaced).toBeDefined();
+    expect(surfaced!.reason).toContain("build-config.json");
+    expect(surfaced!.reason).not.toContain(projectsRoot);
+    // resolution stays consistent with the listing: the id resolves to the SAME
+    // rejected configured file, never silently to the repository copy
+    const resolved = await catalog.resolveConfigPath("slaunchpad-home-real-derived");
+    expect(resolved.startsWith(projectsRoot)).toBe(true);
+  });
+
   it("still resolves other entries and stays fail-closed on ids across the union", async () => {
     await writeJson(path.join(projectsRoot, "g28-example", "build-config.json"), VALID_CONFIG);
     const catalog = await BuildConfigCatalog.open(projectsRoot);
