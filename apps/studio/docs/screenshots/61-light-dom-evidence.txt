@@ -1,28 +1,62 @@
-[61] Light-only Ant Design DOM evidence — captured 2026-11-11
-Server: production Studio (`npm run start` from the repo root, port 3100 — 3000 was
-occupied by an unrelated local server), commit at capture: [61] C61-2 sweep + docs.
-Method: scoped DOM checks on the server-rendered HTML (curl) + headless Chrome
-`--dump-dom --virtual-time-budget=10000` for the post-hydration state.
+[61] Stock Ant Design light DOM evidence — correction round, captured 2026-11-11
+Server: production Studio (`next start`, port 3100 — 3000 occupied by an unrelated
+local server), commit at capture: [61] C61-4 (be3a2fd) — ANT DESIGN DEFAULT ONLY
+(Coordinator CORRECTION_REQUIRED correction on PR #64).
+Method: scoped DOM checks on the served HTML (curl) + the served CSS bundle +
+headless Chrome `--screenshot --virtual-time-budget=10000` for the rendered UI.
 
-1. Root element carries NO dark class and no dark plumbing:
-   <html lang="en" class="…_variable …_variable …_variable font-sans antialiased">
-   — no `dark` class (the [52] dark-only shell rendered `class="… dark"`).
+1. Root element carries NO classes at all — no dark class, no font plumbing:
+   <html lang="en">
+   (next/font was removed with the correction; the [52] dark-only shell rendered
+   `class="… dark"`; the pre-correction [61] draft rendered font-variable classes.)
 
-2. Ant Design present on all routes (/, /build, /catalog, /runs/<runId>):
-   - `.ant-layout` ×3, `.ant-menu` (horizontal nav) in every served page;
-   - SSR-injected antd CSS-variable theme (`:where(.css-i19pbt)…`) in the document
-     head — AntdRegistry server style injection, first paint already styled (no FOUC).
+2. The ENTIRE DET-authored stylesheet is one 153-byte bundle
+   (/_next/static/chunks/0indn8i55jgak.css). Its complete contents:
+     :root{--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light}
+     .studio-content{width:100%;max-width:1152px;margin-inline:auto;padding:24px}
+   — the light-only declaration plus the ONE documented geometry exception
+   (centered max-width column; Ant Design has no such primitive). Nothing else:
+   0 hits for 44px, control-height override, mapping-row, @tailwind, tailwind,
+   `tw-`, #001529, font-family. All appearance is Ant Design's own injected
+   cssinjs styles (`<style id="antd-cssinjs">`, via AntdRegistry — first paint
+   already styled, no FOUC).
 
-3. Honest states on the real-derived run page (build-1794385166500):
-   - `PREVIEW_UNAVAILABLE` rendered verbatim (no simulated storefront);
-   - stage table `capability-probe: reused / extraction: completed / composition: completed`;
+3. No Tailwind anywhere in the served HTML: 0 class attributes carry utility
+   tokens (gap-/text-/bg-/px-/py-/p-/m-/w-/h-<number> patterns). The only
+   "flex" matches are Ant Design's own `ant-flex …` classes from the stock
+   Flex primitive.
+
+4. No theme switch, no token overrides: STUDIO_ANTD_THEME is deleted; Studio
+   renders no ConfigProvider and no ThemeConfig (grep over apps/studio source:
+   the only "ConfigProvider" occurrence is the comment saying there intentionally
+   is none). Controls use antd default sizes (no 44px forcing — retracted by the
+   Owner correction). Dark mode is retired: `color-scheme: light` and antd's
+   default (light) algorithm are the only light statements, and there is no dark
+   algorithm or dark token anywhere in Studio source.
+
+5. Stock antd primitives present on /, /build, /catalog, /runs/<runId>:
+   ant-layout / ant-menu (horizontal nav) / ant-card / ant-typography /
+   ant-table / ant-tag / ant-alert classes only — plus content links rendered
+   as Typography.Link (`.ant-typography` anchors, antd's own link color), not
+   bare browser-blue `<a>` elements. The shell Menu keeps next/link items —
+   Menu styles its own items; that is the standard antd + Next.js pattern.
+
+6. Honest states on the fresh correction-round run (build-1794387796247):
+   - Build POST /api/builds → 202 → state exited, exit code 0;
+     stages `capability-probe: reused / extraction: completed / composition: completed`;
    - gaps verbatim: COMPOSITION_SKIPS_PRESENT · 10, COMPOSITION_GAPS_PRESENT · 12,
-     PREVIEW_INSTALL_OPERATOR_GATED, PREVIEW_ASSETS_NOT_GENERATED.
+     PREVIEW_INSTALL_OPERATOR_GATED, PREVIEW_ASSETS_NOT_GENERATED;
+   - PREVIEW_UNAVAILABLE rendered verbatim (no simulated storefront);
+   - artifact download re-verified: native-content.html = 3288 bytes,
+     sha256 6362c6a943e061dcadacaf4f12597b460a1f425e11c123c7492458b692893bdf —
+     byte-identical to the manifest-declared hash.
 
-4. Light-only note: antd's own injected library stylesheet contains internal
-   `.ant-menu-dark` variant rules (part of the antd component CSS, unused by this UI).
-   Studio source has zero dark tokens/classes; the dark theming is retired.
+7. Ant Design's own injected library stylesheet contains internal `.ant-menu-dark`
+   variant rules (part of the antd component CSS, unused by this UI). Studio
+   source has zero dark tokens/classes; the dark theming is retired.
 
-5. Screenshots (same commit): 61-overview-desktop/narrow, 61-build-desktop/narrow,
-   61-catalog-desktop/narrow, 61-run-detail-desktop/narrow, 61-run-not-found-desktop.
-   Historical [52] dark assets are preserved untouched alongside.
+8. Screenshots (same commit be3a2fd, corrected stock-antd light UI):
+   61-overview-desktop/narrow, 61-build-desktop/narrow, 61-catalog-desktop/narrow,
+   61-run-detail-desktop/narrow (run build-1794387796247), 61-run-not-found-desktop.
+   Pre-correction versions of these same filenames live in git history; historical
+   [52] dark assets are preserved untouched alongside.
