@@ -8,10 +8,11 @@
 // What it does, in order, all resolved from the REPOSITORY ROOT (this file's
 // own location — never the caller's accidental cwd):
 //   1. asserts Node >= 22.13 (Studio/Next 16 engine requirement);
-//   2. installs Studio dependencies once if missing (`npm ci` in apps/studio,
-//      deterministic against the committed lockfile);
-//   3. rebuilds the root `det` dist/ when missing or stale vs src//adapters/
-//      (the CLI that both `node bin/det.js` and the Studio build runner use);
+//   2. installs workspace dependencies once if missing (one root `npm ci`
+//      against the single root lockfile, [60] — covers @det/core + Studio);
+//   3. rebuilds the `det` dist/ when missing or stale vs src//adapters/
+//      (packages/core; the CLI that both `node bin/det.js` and the Studio
+//      build runner use);
 //   4. defaults STUDIO_DET_RUNS_DIR to <root>/out/studio-runs (created on
 //      demand) ONLY when unset — every explicit STUDIO_* env value is passed
 //      through untouched. The build-config catalogue needs no env at all:
@@ -30,7 +31,8 @@ import { fileURLToPath } from "node:url";
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(SCRIPT_DIR, "..");
 const STUDIO_DIR = path.join(ROOT, "apps", "studio");
-const DET_DIST_ENTRY = path.join(ROOT, "dist", "src", "core", "cli", "main.js");
+const CORE_DIR = path.join(ROOT, "packages", "core");
+const DET_DIST_ENTRY = path.join(CORE_DIR, "dist", "src", "core", "cli", "main.js");
 const RUNS_DIR_DEFAULT = path.join(ROOT, "out", "studio-runs");
 // Node engines floor of apps/studio (Next 16); the root core itself needs >=20.
 const MIN_NODE = [22, 13, 0];
@@ -82,20 +84,25 @@ function newestMtime(dirs, pattern) {
   return newest;
 }
 
-/** dist/ is considered stale when any source .ts is newer than every dist .js. */
+/** packages/core/dist/ is stale when any package source .ts is newer than every dist .js. */
 function isCoreDistFresh() {
   if (!existsSync(DET_DIST_ENTRY)) return false;
   const srcNewest = newestMtime(
-    [path.join(ROOT, "src"), path.join(ROOT, "adapters")],
+    [path.join(CORE_DIR, "src"), path.join(CORE_DIR, "adapters")],
     /\.ts$/
   );
-  const distNewest = newestMtime([path.join(ROOT, "dist")], /\.js$/);
+  const distNewest = newestMtime([path.join(CORE_DIR, "dist")], /\.js$/);
   if (srcNewest === 0) return true;
   return distNewest >= srcNewest;
 }
 
+// npm workspaces ([60]) hoist Studio deps into the ROOT node_modules; accept either
+// location so the self-install stays correct under any hoisting outcome.
 function studioDepsInstalled() {
-  return existsSync(path.join(STUDIO_DIR, "node_modules", "next", "package.json"));
+  return (
+    existsSync(path.join(ROOT, "node_modules", "next", "package.json")) ||
+    existsSync(path.join(STUDIO_DIR, "node_modules", "next", "package.json"))
+  );
 }
 
 function npmRun(args, cwd, label) {
@@ -151,7 +158,7 @@ function printEnv() {
 function startStudio(mode) {
   assertNodeVersion();
   if (!studioDepsInstalled()) {
-    npmRun(["ci"], STUDIO_DIR, "first run: installing Studio dependencies");
+    npmRun(["ci"], ROOT, "first run: installing workspace dependencies");
   }
   if (!isCoreDistFresh()) {
     npmRun(["run", "build"], ROOT, "building the det core");

@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 // [58] One-time setup — `npm run setup` at the repository root.
 //
-// Installs BOTH committed lockfiles deterministically (root `npm ci` +
-// apps/studio `npm ci` — the Studio app keeps its own lockfile, so the
-// existing isolated Studio CI is untouched) and compiles the det core dist/.
-// Afterwards the operator only ever needs `npm run dev` (see
-// scripts/studio.mjs, which also self-installs when something is missing).
+// Installs ALL workspace dependencies deterministically via ONE root `npm ci`
+// against the single committed root lockfile ([60]: @det/core + apps/studio
+// are npm workspaces; apps/studio has no lockfile of its own anymore) and
+// compiles the det core dist/. Afterwards the operator only ever needs
+// `npm run dev` (see scripts/studio.mjs, which also self-installs when
+// something is missing).
 
 import { spawnSync } from "node:child_process";
 import path from "node:path";
@@ -13,7 +14,6 @@ import { fileURLToPath } from "node:url";
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(SCRIPT_DIR, "..");
-const STUDIO_DIR = path.join(ROOT, "apps", "studio");
 const MIN_NODE = [22, 13, 0];
 
 function fail(message) {
@@ -41,8 +41,7 @@ function npmCi(cwd, label) {
   if (result.status !== 0) fail(`${label} failed with exit code ${result.status ?? "signal"}.`);
 }
 
-npmCi(ROOT, "installing core dependencies");
-npmCi(STUDIO_DIR, "installing Studio dependencies");
+npmCi(ROOT, "installing workspace dependencies (one root lockfile)");
 
 log("building the det core (npm run build in .) …");
 const build = spawnSync("npm", ["run", "build"], { cwd: ROOT, stdio: "inherit" });
