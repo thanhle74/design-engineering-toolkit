@@ -48,6 +48,7 @@ import {
    BUTTON_ITEM_ID,
    entryBaseOf,
    hasDecisionRole,
+   normalizeComposerRole,
    HEADING_APPEARANCE,
    HEADING_ID,
    ROW_APPEARANCE,
@@ -83,7 +84,7 @@ export const headerBandHandler = {
             continue; // pre-excluded subtree; accounted below
          if (node.kind === "media") return null;
          if (loc && ctx.mediaByRef.has(loc)) return null;
-         const role = ctx.resolveComposerRole(node);
+         const role = normalizeComposerRole(ctx.resolveComposerRole(node));
          if (role === "content-lead") leads.push(node);
          else if (role === "heading") heads.push(node);
          else if (role === "cta") ctas.push(node);

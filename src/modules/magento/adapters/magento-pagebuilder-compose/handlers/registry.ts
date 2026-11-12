@@ -16,6 +16,18 @@
 //
 // An empty array is byte-identical to the pre-#72 dispatcher (the handler loop no-ops).
 // Populated by the #72 handler lanes through the Integrator's registration step.
+//
+// W-B registration (step 4): the three structural handlers, in the contract order above —
+// every one of them silently declines any subtree carrying a projected decision role, so the
+// dispatcher's projected legacy shapes ahead of this loop and this loop agree by construction.
+// W-C's projected products / slider-slide handlers slot in AHEAD of these (order rule 1).
+import { cardGridHandler } from "./card-grid.js";
+import { headerBandHandler } from "./header-band.js";
+import { headingSectionHandler } from "./heading.js";
 import type { SectionShapeHandler } from "../handler-context.js";
 
-export const SECTION_SHAPE_HANDLERS: SectionShapeHandler[] = [];
+export const SECTION_SHAPE_HANDLERS: SectionShapeHandler[] = [
+   headingSectionHandler,
+   headerBandHandler,
+   cardGridHandler,
+];

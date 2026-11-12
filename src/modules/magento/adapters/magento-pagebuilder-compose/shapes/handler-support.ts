@@ -68,6 +68,21 @@ export function hasDecisionRole(
    return found;
 }
 
+// Role values from the dispatcher-provided resolver are the SAME vocabulary as the projection
+// schema for every projection-assigned role — EXCEPT one: the legacy SLOT naming table yields
+// 'contentLead' (its pre-#72 camelCase value) where the unified ComposerRole vocabulary says
+// 'content-lead'. The legacy composers' switch on that raw value is pinned behavior (their
+// compose bytes are byte-pinned by the G3/G4/G28 suites), so the table itself is NOT this
+// lane's to change; handlers consume the unified vocabulary through this single documented
+// seam adapter instead. Every other role value passes through untouched.
+export function normalizeComposerRole(
+   role: string | undefined,
+): ComposerRole | undefined {
+   return role === "contentLead"
+      ? "content-lead"
+      : (role as ComposerRole | undefined);
+}
+
 // ---- Node helpers -----------------------------------------------------------------------------
 
 export function visibleChildren(ctx: HandlerContext, id: string): NodeIRNode[] {

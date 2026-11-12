@@ -79,6 +79,7 @@ import {
    entryBaseOf,
    fixedWidthOf,
    hasDecisionRole,
+   normalizeComposerRole,
    HEADING_APPEARANCE,
    HEADING_ID,
    IMAGE_APPEARANCE,
@@ -211,7 +212,7 @@ export const cardGridHandler = {
                   ctx.ctaSubtreeLocators.has(loc))
             )
                continue;
-            const role = ctx.resolveComposerRole(node);
+            const role = normalizeComposerRole(ctx.resolveComposerRole(node));
             if (role === "heading") groupHasHeading = true;
             if (role === "cta") {
                const label = loc ? ctx.textByRef.get(loc) : undefined;
@@ -328,7 +329,7 @@ export const cardGridHandler = {
                );
                continue;
             }
-            const role = ctx.resolveComposerRole(node);
+            const role = normalizeComposerRole(ctx.resolveComposerRole(node));
             if (role === "cta") {
                flushRuns();
                accounted.add(node.nodeId);

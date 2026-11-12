@@ -39,6 +39,7 @@ import {
    accountUnsupported,
    entryBaseOf,
    hasDecisionRole,
+   normalizeComposerRole,
    HEADING_APPEARANCE,
    HEADING_ID,
    ROW_APPEARANCE,
@@ -112,7 +113,7 @@ export const headingSectionHandler = {
             continue; // pre-excluded subtree; accounted separately below
          if (node.kind === "media") return null;
          if (loc && ctx.mediaByRef.has(loc)) return null;
-         const role = ctx.resolveComposerRole(node);
+         const role = normalizeComposerRole(ctx.resolveComposerRole(node));
          if (role === "heading") headingNodes.push(node);
          else if (role !== undefined && OTHER_TEXT_ROLES.has(role)) return null;
       }
