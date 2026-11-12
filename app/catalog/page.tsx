@@ -10,7 +10,7 @@ import {
    type CatalogStats,
 } from "@/src/modules/studio/server/catalog/studio-catalog";
 
-import { CatalogScreen } from "@/src/modules/studio/modules/catalog";
+import { CatalogScreen } from "@/src/modules/studio/catalog";
 
 export const metadata: Metadata = { title: "Dự án & lần chạy" };
 

@@ -11,12 +11,12 @@
 import { Col, Flex, Row } from "antd";
 
 import type { StudioRunView } from "@/src/modules/studio/shared/contracts";
-import { DesignTree } from "@/src/modules/studio/modules/design-tree";
+import { DesignTree } from "@/src/modules/studio/design-tree";
 import {
    MappingReview,
    ProvenanceFooter,
-} from "@/src/modules/studio/modules/mapping-review";
-import { PreviewPanel } from "@/src/modules/studio/modules/preview";
+} from "@/src/modules/studio/mapping-review";
+import { PreviewPanel } from "@/src/modules/studio/preview";
 
 import { ClientArtifactManifest } from "../components/client-artifact-manifest";
 import { BuildBundleSection } from "../components/build-bundle-section";

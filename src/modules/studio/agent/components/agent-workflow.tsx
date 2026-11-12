@@ -30,7 +30,7 @@ import type {
 } from "@/src/modules/studio/shared/contracts";
 import type { ApprovalPreview } from "@/src/modules/studio/server/claude-agent/plan-materializer";
 import type { ClaudeAgentPreflight } from "@/src/modules/studio/server/claude-agent/claude-detect";
-import { parseFigmaInput } from "@/src/modules/studio/modules/conversions/figma-input";
+import { parseFigmaInput } from "@/src/modules/studio/conversions/figma-input";
 import { agentOutcomeCopy, agentStatusCopy } from "../agent-reasons";
 import { AgentPlanView } from "./agent-plan-view";
 

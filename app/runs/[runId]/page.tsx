@@ -8,7 +8,7 @@ import { getDetRunReader } from "@/src/modules/studio/server/det-run-reader-fact
 import {
    ReaderProblemState,
    RunScreen,
-} from "@/src/modules/studio/modules/run-detail";
+} from "@/src/modules/studio/run-detail";
 
 interface RunPageProps {
    params: Promise<{ runId: string }>;

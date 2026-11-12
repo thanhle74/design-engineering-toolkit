@@ -7,7 +7,7 @@ import {
    STUDIO_BUILD_PROJECTS_DIR_ENV,
 } from "@/src/modules/studio/server/build-catalog";
 
-import { AgentWorkflow } from "@/src/modules/studio/modules/agent";
+import { AgentWorkflow } from "@/src/modules/studio/agent";
 
 export const metadata: Metadata = { title: "Phân tích Figma bằng AI" };
 

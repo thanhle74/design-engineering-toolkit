@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { Flex, Typography } from "antd";
 
-import { ArtifactManifest } from "@/src/modules/studio/modules/artifacts";
+import { ArtifactManifest } from "@/src/modules/studio/artifacts";
 import type { StudioArtifactView } from "@/src/modules/studio/shared/contracts";
 
 /**

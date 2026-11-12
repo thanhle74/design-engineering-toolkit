@@ -6,7 +6,7 @@ import {
 } from "@/src/modules/studio/shared/contracts";
 import { getDetRunReader } from "@/src/modules/studio/server/det-run-reader-factory";
 
-import { OverviewScreen } from "@/src/modules/studio/modules/overview";
+import { OverviewScreen } from "@/src/modules/studio/overview";
 
 export default async function OverviewPage() {
    // Runs are read from local disk/env per request. fs/env are not tracked as

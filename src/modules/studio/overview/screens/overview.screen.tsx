@@ -9,11 +9,11 @@ import {
 import { Alert, Button, Card, Flex, Typography } from "antd";
 
 import type { DetRunSummary } from "@/src/modules/studio/shared/contracts";
-import { RunModeBadge } from "@/src/modules/studio/modules/mapping-review";
+import { RunModeBadge } from "@/src/modules/studio/mapping-review";
 import {
    ConversionForm,
    DEMO_PROFILES,
-} from "@/src/modules/studio/modules/conversions";
+} from "@/src/modules/studio/conversions";
 
 /**
  * [61] Client view child for the Overview server page: stock antd light

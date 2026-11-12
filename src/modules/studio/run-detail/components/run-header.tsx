@@ -4,7 +4,7 @@ import { ArrowLeftOutlined } from "@ant-design/icons";
 import { Button, Flex, Typography } from "antd";
 
 import type { StudioRunMode } from "@/src/modules/studio/shared/contracts";
-import { RunModeBadge } from "@/src/modules/studio/modules/mapping-review";
+import { RunModeBadge } from "@/src/modules/studio/mapping-review";
 
 /**
  * [61] Client view child for the run page header: the back-to-overview

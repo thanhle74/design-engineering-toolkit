@@ -21,7 +21,7 @@ import {
 import {
    FILE_KEY_PATTERN,
    NODE_ID_PATTERN,
-} from "@/src/modules/studio/modules/conversions/figma-input";
+} from "@/src/modules/studio/conversions/figma-input";
 import {
    getAgentAnalysisRunner,
    AgentBusyError,

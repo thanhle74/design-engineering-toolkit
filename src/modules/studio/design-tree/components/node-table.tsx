@@ -21,7 +21,7 @@ import {
    ComposeDispositionBadge,
    KindBadge,
    ReviewDispositionBadge,
-} from "@/src/modules/studio/modules/mapping-review";
+} from "@/src/modules/studio/mapping-review";
 
 /** "không rõ" — a fact the run does not carry is shown, never invented ([61] Vietnamese). */
 const UNKNOWN = "không rõ";

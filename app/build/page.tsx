@@ -7,7 +7,7 @@ import {
 } from "@/src/modules/studio/server/build-catalog";
 import { getBuildRunner } from "@/src/modules/studio/server/build-runner";
 
-import { BuildScreen } from "@/src/modules/studio/modules/build-control";
+import { BuildScreen } from "@/src/modules/studio/build-control";
 
 /**
  * [40] Build Control — real UI-triggered offline `det build` runs (S5).

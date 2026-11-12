@@ -19,10 +19,12 @@
   `src/modules/studio/shared/contracts`. `actions/` roles are Route Handlers under
   `app/api/**` (thin; they delegate to `server/`). `permissions/` is deliberately absent —
   single local operator tool, auth is a future gate.
-- **Screens.** Page-level composition lives in `modules/{lane}/screens/*.screen.tsx`;
+- **Screens.** Page-level composition lives in `src/modules/studio/{lane}/screens/*.screen.tsx`;
   `app/**/page.tsx` keeps only routing, metadata, `connection()`, request-time reads and
-  failure mapping. Lanes: `overview`, `build-control`, `catalog`, `run-detail`,
-  `conversions`, `design-tree`, `mapping-review`, `preview`, `artifacts`, `agent`.
+  failure mapping. Feature lanes sit DIRECTLY under `src/modules/studio/` (no nested
+  `modules/` level inside the studio module): `overview`, `build-control`, `catalog`,
+  `run-detail`, `conversions`, `design-tree`, `mapping-review`, `preview`, `artifacts`,
+  `agent`. Each lane is one standard module (index.ts public API, components/, screens/, types/…).
 - **Deviation kept on purpose.** Tests stay co-located with their code (`*.test.tsx`
   beside the component, suites in module `__tests__/`) per the [68] doctrine — the
   standard's `__tests__/`-only rule is satisfied in spirit (tests beside code, kebab
