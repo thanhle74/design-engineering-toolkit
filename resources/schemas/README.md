@@ -48,7 +48,7 @@ Conventions, store layout and version history: [`kb/README.md`](kb/README.md).
 
 ## Validation strategy
 
-1. **CI (live since the issue #5 architecture pass — ADR-005-015):** `.github/workflows/validate.yml` runs `pnpm test` — every schema and every example/fixture validates with [`ajv`](https://ajv.js.org/) (Draft 2020-12), the 30-check contract suite (incl. the T-01..T-14 negative plan) runs, and the neutrality guard greps neutral surfaces. Failing validation fails the build. The orchestrator runtime itself remains P1.
+1. **Repo test gate (live since the issue #5 architecture pass — ADR-005-015; run locally, the repo has no GitHub Actions workflow since 2026-11-12):** `pnpm test` — every schema and every example/fixture validates with [`ajv`](https://ajv.js.org/) (Draft 2020-12), the contract suite (incl. the negative plans) runs, and the neutrality guard greps neutral surfaces. Failing validation fails the run. The orchestrator runtime itself remains P1.
 2. **Runtime (S0/S3):** the orchestrator validates inputs/outputs with the same schemas before a stage's checkpoint will pass. Invalid contract output blocks the pipeline — it is never "fixed forward".
 3. **Semantic checks beyond JSON Schema** (encoded in the orchestrator, not the schemas): alias references resolve to declared primitives; every `illustrative` provenance entry blocks S4; `diagnostics` with severity `error` block S4; profile `gates` may tighten but not loosen defaults.
 4. **Until P1 lands**, examples are hand-checked against the schemas; this PR's review is that check.

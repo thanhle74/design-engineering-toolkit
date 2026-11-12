@@ -5,7 +5,7 @@ description: Run the toolkit's deterministic det CLI (validate/inspect/plan/extr
 
 # det CLI operations
 
-The toolkit's deterministic logic lives in the **`det` CLI**, never in prompts. Claude Code (or any agent) invokes it; a human terminal or CI runs the identical commands without an agent. Do NOT reimplement profile parsing, capability scanning, binding validation, structural mapping or diagnostics in a prompt — call the CLI and read its JSON.
+The toolkit's deterministic logic lives in the **`det` CLI**, never in prompts. Claude Code (or any agent) invokes it; a human terminal runs the identical commands without an agent. Do NOT reimplement profile parsing, capability scanning, binding validation, structural mapping or diagnostics in a prompt — call the CLI and read its JSON.
 
 ## Setup
 

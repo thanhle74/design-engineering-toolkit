@@ -256,6 +256,6 @@ codes, paths, env var names, HTTP codes, CLI flags, artifact names and the
 
 Tests: `pnpm exec vitest run <path>` for a lane; `pnpm test` for the whole studio
 suite. The `[40]` build-control tests drive the REAL `det CLI` — build the
-repo root first (`pnpm install && pnpm run build` at the checkout root, see the CI
-`studio` job). Screenshots used for the [29]/[40] receipts live in
+repo root first (`pnpm install && pnpm run build` at the checkout root — the same
+commands the removed CI `studio` job used; gates now run locally). Screenshots used for the [29]/[40] receipts live in
 `docs/screenshots/`.
