@@ -1,9 +1,11 @@
 #!/usr/bin/env node
-// det — Design Engineering Toolkit CLI shim (checkout-root compatibility wrapper, [60]).
-// The implementation lives in the @det/core workspace package (packages/core), compiled by
-// `npm run build` to packages/core/dist/; this committed shim keeps the historical
-// `node bin/det.js` (and `npm exec det`) invocation working from the checkout root.
-const entry = new URL("../packages/core/dist/src/core/cli/main.js", import.meta.url);
+// det — Design Engineering Toolkit CLI entrypoint ([63] single application).
+// The engine is the headless core module compiled by `npm run build` (tsconfig.core.json)
+// to <root>/dist/; this committed shim keeps the historical `node bin/det.js`
+// (and `npm exec det`) invocation working from the checkout root — and from any cwd,
+// because every path the compiled core resolves anchors to this repository root,
+// never to the caller's cwd.
+const entry = new URL("../dist/src/core/cli/main.js", import.meta.url);
 
 try {
   const { main } = await import(entry.href);

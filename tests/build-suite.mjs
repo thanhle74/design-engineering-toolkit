@@ -8,8 +8,8 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { main } from "../packages/core/dist/src/core/cli/main.js";
-import { validateContract } from "../packages/core/dist/src/core/schema-registry.js";
+import { main } from "../dist/src/core/cli/main.js";
+import { validateContract } from "../dist/src/core/schema-registry.js";
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
 const EXAMPLE_CONFIG = path.join(ROOT, "examples/build/project.example.json");
@@ -80,7 +80,7 @@ export default async function registerBuildSuite(checkAsync) {
     const bytes = fs.readFileSync(path.join(bundleDir, "03-composition", "native-content.html"));
     assert.equal(nc.contentHash, crypto.createHash("sha256").update(bytes).digest("hex"), "native-content contentHash is the EXACT file-byte sha256");
     // The closed tool-run contract itself carries the additive roles (schema/source parity).
-    const toolRunSchema = JSON.parse(fs.readFileSync(path.join(ROOT, "packages/core/schemas/cli/tool-run.schema.json"), "utf8"));
+    const toolRunSchema = JSON.parse(fs.readFileSync(path.join(ROOT, "schemas/cli/tool-run.schema.json"), "utf8"));
     const roleEnum = toolRunSchema.properties.artifacts.items.properties.role.enum;
     for (const role of ["compose-report", "native-content", "build-manifest"]) assert.ok(roleEnum.includes(role), `tool-run role enum carries ${role}`);
     const commandEnum = toolRunSchema.properties.command.enum;
@@ -174,7 +174,7 @@ export default async function registerBuildSuite(checkAsync) {
       if (m) hits.push(`${rel}: ${[...new Set(m)].join(",")}`);
     };
     for (const f of ["build-config.schema.json", "build-manifest.schema.json"]) {
-      scan(`schemas/cli/${f}`, fs.readFileSync(path.join(ROOT, "packages/core/schemas/cli", f), "utf8"));
+      scan(`schemas/cli/${f}`, fs.readFileSync(path.join(ROOT, "schemas/cli", f), "utf8"));
     }
     scan("examples/build/project.example.json", fs.readFileSync(path.join(ROOT, "examples/build/project.example.json"), "utf8"));
     scan("examples/build/README.md", fs.readFileSync(path.join(ROOT, "examples/build/README.md"), "utf8"));

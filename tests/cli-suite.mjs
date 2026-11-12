@@ -5,9 +5,9 @@ import assert from "node:assert";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { main } from "../packages/core/dist/src/core/cli/main.js";
-import { runAdapter, validateAdapterEntry } from "../packages/core/dist/src/core/adapter-runtime.js";
-import { stableContentHash } from "../packages/core/dist/src/core/canonical.js";
+import { main } from "../dist/src/core/cli/main.js";
+import { runAdapter, validateAdapterEntry } from "../dist/src/core/adapter-runtime.js";
+import { stableContentHash } from "../dist/src/core/canonical.js";
 
 const FIX = path.join(path.dirname(new URL(import.meta.url).pathname), "fixtures");
 const MAGENTO_LIKE = path.join(FIX, "synthetic-magento-like");
@@ -319,7 +319,7 @@ export default async function registerCliSuite(checkAsync) {
         scopes: { include: ["app/code/Example"], exclude: ["app/code/Example/EmailOnly"] },
       },
     };
-    const run = await runAdapter(path.join(process.cwd(), "packages", "core"), descriptor, input);
+    const run = await runAdapter(process.cwd(), descriptor, input);
     assert.ok(run.ok, `adapter run failed: ${JSON.stringify(run.diagnostics)}`);
     const reg = run.payload;
     assert.ok(!reg.capabilities.some((c) => c.provider === "Example_EmailOnly"), "explicit exclude must remove the module's scan surfaces from the inventory");
@@ -346,7 +346,7 @@ export default async function registerCliSuite(checkAsync) {
   });
 
   checkAsync("T-22a", "F4: descriptor entry traversal rejected (schema pattern + runtime containment)", async () => {
-    assert.equal(validateAdapterEntry(path.join(process.cwd(), "packages", "core"), "dist/adapters/magento-pagebuilder/inspect.js").ok, true, "legit entry accepted");
+    assert.equal(validateAdapterEntry(process.cwd(), "dist/adapters/magento-pagebuilder/inspect.js").ok, true, "legit entry accepted");
     for (const bad of ["tests/../../malicious.js", "src/../evil.js", "a/b/../../c.js", "/abs/path.js"]) {
       const res = validateAdapterEntry(process.cwd(), bad);
       assert.ok(!res.ok, `entry '${bad}' must be rejected: ${JSON.stringify(res)}`);
@@ -398,13 +398,12 @@ export default async function registerCliSuite(checkAsync) {
     };
     // Neutral core: no platform literals in compiled core or the bin shim.
     const neutralTerms = /magento|secomm|pagebuilder|hyva|slaunch|\/home\/thanhle|figma/i;
-    scanDir(path.join(process.cwd(), "packages/core/dist/src"), neutralTerms, new Set(), true);
+    scanDir(path.join(process.cwd(), "dist/src"), neutralTerms, new Set(), true);
     scanDir(path.join(process.cwd(), "bin"), neutralTerms);
-    scanDir(path.join(process.cwd(), "packages/core/bin"), neutralTerms);
-    scanDir(path.join(process.cwd(), "packages/core/schemas/cli"), neutralTerms);
+    scanDir(path.join(process.cwd(), "schemas/cli"), neutralTerms);
     // Shipped code and committed data must never embed the owner's machine path.
     const ownerPath = /\/home\/thanhle/;
-    for (const dir of ["packages/core/src", "packages/core/adapters", "packages/core/schemas", "packages/core/bin", "bin", "tests/fixtures", "examples", "profiles"]) scanDir(path.join(process.cwd(), dir), ownerPath);
+    for (const dir of ["src/core", "adapters", "schemas", "bin", "tests/fixtures", "examples", "profiles"]) scanDir(path.join(process.cwd(), dir), ownerPath);
     // Adapters must not ship licensed Hyvä source: only thin declaration scanning exists.
     const adapterFiles = [];
     const collect = (d) => {
@@ -414,7 +413,7 @@ export default async function registerCliSuite(checkAsync) {
         else if (/\.(ts|js|json)$/.test(e.name)) adapterFiles.push(p);
       }
     };
-    collect(path.join(process.cwd(), "packages/core/adapters"));
+    collect(path.join(process.cwd(), "adapters"));
     for (const f of adapterFiles) {
       const text = readFileSync(f, "utf8");
       assert.ok(!/\.phtml|tailwind\.config|alpine/i.test(text.replace(/alpine\.js/i, "")), `${f} must not embed theme template/CSS/JS sources`);

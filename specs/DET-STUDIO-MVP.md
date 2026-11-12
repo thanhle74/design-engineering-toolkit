@@ -1,6 +1,6 @@
 # DET Studio MVP — UI and Module Contract
 
-> **SUPERSEDED (implementation stack only) — 2026-11-11, Issue [#61](https://github.com/thanhle74/design-engineering-toolkit/issues/61):** Owner GO replaced the shadcn/ui + Radix + Lucide stack prescribed below with **Ant Design 6 (antd 6.7.0), LIGHT mode only** — light-only is an invariant (no dark fallback, toggle or OS-following); shadcn/ui, Radix wrappers, cva, cn, tw-animate-css and lucide-react are removed, and Tailwind remains only for layout utilities inside Studio. The affected implementation-stack passages are §1 "Owner-selected stack", the §2 layout tree (`components/ui/`, `components.json`), §4 UI principles (shadcn primitives/Lucide), §6 item 1 and the §7 shadcn-doctrine provenance bullets. All functional requirements — the Engine/Studio boundary, data honesty and truthful states (§3, §4, §5, §6, §8) — remain in force. **Owner correction (2026-11-11):** that correction also supersedes any custom-theme/44px wording in this document — **stock antd light** (default theme, sizes and fonts used as-is; no `ConfigProvider` theme or token overrides; Studio Tailwind removed entirely) is the implementation standard.
+> **SUPERSEDED (implementation stack only) — 2026-11-11, Issue [#61](https://github.com/thanhle74/design-engineering-toolkit/issues/61):** Owner GO replaced the shadcn/ui + Radix + Lucide stack prescribed below with **Ant Design 6 (antd 6.7.0), LIGHT mode only** — light-only is an invariant (no dark fallback, toggle or OS-following); shadcn/ui, Radix wrappers, cva, cn, tw-animate-css and lucide-react are removed, and Tailwind remains only for layout utilities inside Studio. The affected implementation-stack passages are §1 "Owner-selected stack", the §2 layout tree (`components/ui/`, `components.json`), §4 UI principles (shadcn primitives/Lucide), §6 item 1 and the §7 shadcn-doctrine provenance bullets. All functional requirements — the Engine/Studio boundary, data honesty and truthful states (§3, §4, §5, §6, §8) — remain in force. **Owner correction (2026-11-11):** that correction also supersedes any custom-theme/44px wording in this document — **stock antd light** (default theme, sizes and fonts used as-is; no `ConfigProvider` theme or token overrides; Studio Tailwind removed entirely) is the implementation standard. **Layout superseded (2026-11-11, Issue [#63](https://github.com/thanhle74/design-engineering-toolkit/issues/63)):** the repository is ONE Node.js/Next.js application — the §2 layout tree moved to the repository root (`app/`, `components/`, `src/studio/{modules,server,shared}`); there is no `apps/studio/` any more (see the current [receipt](../docs/converter/RECEIPT-ISSUE63-SINGLE-APPLICATION.md)).
 
 **Status:** implementation contract for [#29](https://github.com/thanhle74/design-engineering-toolkit/issues/29) · 2026-11-09.
 **Authority:** current `specs/PRODUCT-ARCHITECTURE-AND-SCOPE.md`, `specs/MODULAR-ARCHITECTURE-AND-ADAPTERS.md`, live Issue [28]/[29] and actual `det` schemas/source. This document is *not* an authorization to change Engine behavior.
@@ -21,23 +21,20 @@ The boundary is nonnegotiable:
 Prefer the smallest practical structure; keep Next.js routes as composition only:
 
 ```text
-apps/studio/
-  app/                         # App Router pages/layout and thin server route handlers
-  components/ui/               # installed shadcn components; avoid hand-rolled equivalents
-  components/layout/           # one shared Studio shell/navigation
-  src/modules/
-    conversions/               # New conversion form and run/result summary
-    design-tree/               # source tree and section inventory
-    mapping-review/            # MAPPED / GAP / EXCLUDED / NEEDS_REVIEW views
-    preview/                   # honest resolved-preview state or unavailable
-    artifacts/                 # manifest and safe export/download views
-  src/server/
-    det-run-reader.ts           # server-only typed reader for versioned DET outputs
-    artifact-access.ts         # allowlisted local path resolution
-  src/shared/
-    contracts/                 # read-model validation; conform to actual Engine JSON
-    ui/                        # shared non-shadcn UI compositions only if reused
-  components.json
+(2026-11-11, [63]: historical [29] layout — the tree now lives at the REPOSITORY ROOT)
+app/                          # App Router pages/layout and thin server route handlers
+components/layout/            # one shared Studio shell/navigation (components/ui/ removed with shadcn in [61])
+src/studio/modules/
+  conversions/                # New conversion form and run/result summary
+  design-tree/                # source tree and section inventory
+  mapping-review/             # MAPPED / GAP / EXCLUDED / NEEDS_REVIEW views
+  preview/                    # honest resolved-preview state or unavailable
+  artifacts/                  # manifest and safe export/download views
+src/studio/server/
+  det-run-reader-factory.ts   # server-only typed reader for versioned DET outputs
+  artifact-access.ts          # allowlisted local path resolution
+src/studio/shared/
+  contracts/                  # read-model validation; conform to actual Engine JSON
 ```
 
 This is a **guide, not mandatory empty-folder scaffolding**. Only create modules actually needed by [29]. A feature owns its components/hooks/types; cross-feature access goes through explicitly exported small public interfaces. Don't create per-feature backend services, registries or one-off wrappers without real reuse.
