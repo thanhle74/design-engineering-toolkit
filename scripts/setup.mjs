@@ -1,10 +1,11 @@
 #!/usr/bin/env node
-// [58] One-time setup — `npm run setup` at the repository root.
+// [58] One-time setup — `pnpm run setup` at the repository root.
 //
-// Installs ALL dependencies deterministically via ONE root `npm ci` against
-// the single committed root lockfile ([63]: one package, one lockfile — no
-// workspaces, no subordinate manifests) and compiles the det core dist/.
-// Afterwards the operator only ever needs `npm run dev` (see
+// Installs ALL dependencies deterministically via ONE root
+// `pnpm install --frozen-lockfile` against the single committed pnpm lockfile
+// ([63]: one package, one lockfile — no workspaces, no subordinate manifests)
+// and compiles the det core dist/.
+// Afterwards the operator only ever needs `pnpm run dev` (see
 // scripts/studio.mjs, which also self-installs when something is missing).
 
 import { spawnSync } from "node:child_process";
@@ -33,21 +34,21 @@ if (maj < rMaj || (maj === rMaj && (min < rMin || (min === rMin && pat < rPat)))
   );
 }
 
-function npmCi(cwd, label) {
-  log(`${label} (npm ci in ${path.relative(ROOT, cwd) || "."}) …`);
-  const result = spawnSync("npm", ["ci"], { cwd, stdio: "inherit" });
-  if (result.error !== undefined) fail(`${label} could not start npm: ${result.error.message}`);
+function pnpmInstall(cwd, label) {
+  log(`${label} (pnpm install --frozen-lockfile in ${path.relative(ROOT, cwd) || "."}) …`);
+  const result = spawnSync("pnpm", ["install", "--frozen-lockfile"], { cwd, stdio: "inherit" });
+  if (result.error !== undefined) fail(`${label} could not start pnpm: ${result.error.message}`);
   if (result.status !== 0) fail(`${label} failed with exit code ${result.status ?? "signal"}.`);
 }
 
-npmCi(ROOT, "installing workspace dependencies (one root lockfile)");
+pnpmInstall(ROOT, "installing workspace dependencies (one root lockfile)");
 
-log("building the det core (npm run build in .) …");
-const build = spawnSync("npm", ["run", "build"], { cwd: ROOT, stdio: "inherit" });
+log("building the det core (pnpm run build in .) …");
+const build = spawnSync("pnpm", ["run", "build"], { cwd: ROOT, stdio: "inherit" });
 if (build.status !== 0) fail(`core build failed with exit code ${build.status ?? "signal"}.`);
 
 log("setup complete.");
 process.stderr.write(
-  "\nNext step:  npm run dev        # starts DET Studio at http://localhost:3000/build\n" +
-    "            (production mode:  npm run start)\n\n"
+  "\nNext step:  pnpm run dev        # starts DET Studio at http://localhost:3000/build\n" +
+    "            (production mode:  pnpm run start)\n\n"
 );

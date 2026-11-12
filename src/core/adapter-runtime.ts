@@ -61,7 +61,7 @@ const ENTRY_PATTERN = /^(?!\/)(?!.*(^|\/)\.\.(\/|$))[A-Za-z0-9._/-]+$/;
 export function validateAdapterEntry(repoRoot: string, entry: string): { ok: true; abs: string } | { ok: false; reason: string } {
   if (!ENTRY_PATTERN.test(entry)) return { ok: false, reason: `entry '${entry}' must be a repo-relative path without traversal segments` };
   const abs = path.join(repoRoot, entry);
-  if (!fs.existsSync(abs)) return { ok: false, reason: `entry '${entry}' does not exist — run the build (npm run build) before inspecting` };
+  if (!fs.existsSync(abs)) return { ok: false, reason: `entry '${entry}' does not exist — run the build (pnpm run build) before inspecting` };
   try {
     const rootReal = fs.realpathSync(repoRoot);
     const entryReal = fs.realpathSync(abs);

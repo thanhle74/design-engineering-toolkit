@@ -47,8 +47,8 @@ Since [58] the short form is the single-root operator flow — this project is c
 **in place** by Studio (no copying, no exports):
 
 ```bash
-npm run setup    # once: one root npm ci (single npm-workspaces lockfile, [60]) + builds the det core
-npm run dev      # http://localhost:3000/build
+pnpm run setup    # once: one root pnpm install --frozen-lockfile (single root pnpm lockfile) + builds the det core
+pnpm run dev      # http://localhost:3000/build
 ```
 
 Then on `/build`: choose **"Slaunchpad Homepage — real-derived (Figma rev

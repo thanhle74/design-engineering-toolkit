@@ -108,7 +108,7 @@ export default async function registerStudioStartupSuite(checkAsync) {
     );
   });
 
-  checkAsync("R58-T5", "root scripts wired: setup once, then npm run dev/start at the repository root", () => {
+  checkAsync("R58-T5", "root scripts wired: setup once, then pnpm run dev/start at the repository root", () => {
     const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, "package.json"), "utf8"));
     assert.equal(pkg.scripts.setup, "node scripts/setup.mjs");
     assert.equal(pkg.scripts.dev, "node scripts/studio.mjs dev");

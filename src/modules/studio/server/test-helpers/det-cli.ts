@@ -51,7 +51,7 @@ export function requireDetCli(): void {
   }
   if (!existsSync(path.join(REPO_ROOT, "dist"))) {
     throw new Error(
-      "det CLI dist/ is missing (expected at <root>/dist — [63] single-application layout): run `npm ci && npm run build` at the REPO ROOT before the studio test suite (see docs/studio/README.md → Local build-control setup). The [40] build-control tests drive the real CLI."
+      "det CLI dist/ is missing (expected at <root>/dist — [63] single-application layout): run `pnpm install && pnpm run build` at the REPO ROOT before the studio test suite (see docs/studio/README.md → Local build-control setup). The [40] build-control tests drive the real CLI."
     );
   }
 }

@@ -1,0 +1,7 @@
+# pnpm settings for the [63] ONE root application (single package — this is
+# pnpm 11+ settings home, NOT an npm-style workspace manifest: no `packages:`
+# entries, no subordinate package.json files exist).
+allowBuilds:
+  # @swc/core's postinstall places its native binding (@vitejs/plugin-react-swc
+  # needs it for the Studio vitest suite); everything else stays scriptless.
+  "@swc/core": true

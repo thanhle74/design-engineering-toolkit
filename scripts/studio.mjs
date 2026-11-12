@@ -1,23 +1,24 @@
 #!/usr/bin/env node
 // [58] DET Studio root launcher — the ONE operator entrypoint ([63] single application).
 //
-//   npm run dev     → node scripts/studio.mjs dev    (Next dev server)
-//   npm run start   → node scripts/studio.mjs start  (next build + next start)
-//   npm run studio:build → node scripts/studio.mjs build (production build only)
+//   pnpm run dev     → node scripts/studio.mjs dev    (Next dev server)
+//   pnpm run start   → node scripts/studio.mjs start  (next build + next start)
+//   pnpm run studio:build → node scripts/studio.mjs build (production build only)
 //
 // What it does, in order, all resolved from the REPOSITORY ROOT (this file's
 // own location — never the caller's accidental cwd):
 //   1. asserts Node >= 22.13 (Studio/Next 16 engine requirement);
-//   2. installs dependencies once if missing (one root `npm ci` against the
-//      single root lockfile — [63] there is exactly one package/lockfile);
+//   2. installs dependencies once if missing (one root
+//      `pnpm install --frozen-lockfile` against the single root pnpm lockfile
+//      — [63] there is exactly one package/lockfile);
 //   3. rebuilds the `det` dist/ when missing or stale vs src/core//src/modules engine sources/
-//      (`npm run build:core`; the CLI that both `node bin/det.js` and the
+//      (`pnpm run build:core`; the CLI that both `node bin/det.js` and the
 //      Studio build runner use);
 //   4. defaults STUDIO_DET_RUNS_DIR to <root>/out/studio-runs (created on
 //      demand) ONLY when unset — every explicit STUDIO_* env value is passed
 //      through untouched. The build-config catalogue needs no env at all:
 //      committed examples are discovered in place by the Studio server;
-//   5. runs `npm run app:dev|app:start` at the repository root in the
+//   5. runs `pnpm run app:dev|app:start` at the repository root in the
 //      foreground with the merged environment (signals forwarded, exit code
 //      propagated).
 //
@@ -100,11 +101,11 @@ function depsInstalled() {
   return existsSync(path.join(ROOT, "node_modules", "next", "package.json"));
 }
 
-function npmRun(args, label) {
-  log(`${label} (npm ${args.join(" ")} at the repository root) …`);
-  const result = spawnSync("npm", args, { cwd: ROOT, stdio: "inherit" });
+function pnpmRun(args, label) {
+  log(`${label} (pnpm ${args.join(" ")} at the repository root) …`);
+  const result = spawnSync("pnpm", args, { cwd: ROOT, stdio: "inherit" });
   if (result.error !== undefined) {
-    fail(`${label} could not start npm: ${result.error.message}`);
+    fail(`${label} could not start pnpm: ${result.error.message}`);
   }
   if (result.status !== 0) {
     fail(`${label} failed with exit code ${result.status ?? "signal"}.`);
@@ -153,10 +154,10 @@ function printEnv() {
 function startStudio(mode) {
   assertNodeVersion();
   if (!depsInstalled()) {
-    npmRun(["ci"], "first run: installing dependencies (one root lockfile)");
+    pnpmRun(["install", "--frozen-lockfile"], "first run: installing dependencies (one root lockfile)");
   }
   if (!isCoreDistFresh()) {
-    npmRun(["run", "build:core"], "building the det core");
+    pnpmRun(["run", "build:core"], "building the det core");
   }
   const { env, resolved } = resolveEnv({ createDirs: true });
   log(`repository root: ${ROOT}`);
@@ -164,11 +165,11 @@ function startStudio(mode) {
     `runs dir: ${resolved.STUDIO_DET_RUNS_DIR.value} (${resolved.STUDIO_DET_RUNS_DIR.source === "default" ? "default — set STUDIO_DET_RUNS_DIR to override" : "from STUDIO_DET_RUNS_DIR"})`
   );
   if (mode === "start" || mode === "build") {
-    npmRun(["run", "build:app"], "building the Studio production bundle");
+    pnpmRun(["run", "build:app"], "building the Studio production bundle");
     if (mode === "build") return;
   }
   log(`starting Studio (${mode}) at the repository root — http://localhost:${env.PORT ?? 3000}${mode === "dev" ? "/build" : ""}`);
-  const child = spawn("npm", ["run", mode === "dev" ? "app:dev" : "app:start"], {
+  const child = spawn("pnpm", ["run", mode === "dev" ? "app:dev" : "app:start"], {
     cwd: ROOT,
     env,
     stdio: "inherit",

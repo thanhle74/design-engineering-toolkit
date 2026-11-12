@@ -11,13 +11,13 @@ project is listed in place by the Studio catalogue.
 ## 1. One-time setup, then start Studio
 
 ```bash
-npm run setup    # ONCE: one root npm ci (single npm-workspaces lockfile, [60]) + builds the det core
+pnpm run setup    # ONCE: one root pnpm install --frozen-lockfile (single pnpm lockfile) + builds the det core
 
-npm run dev      # DET Studio at http://localhost:3000/build
-# production-mode equivalent:  npm run start
+pnpm run dev      # DET Studio at http://localhost:3000/build
+# production-mode equivalent:  pnpm run start
 ```
 
-`npm run dev` also rebuilds the det core when sources changed and defaults
+`pnpm run dev` also rebuilds the det core when sources changed and defaults
 `STUDIO_DET_RUNS_DIR` to `out/studio-runs` (created on demand). The real-derived project is
 discovered **in place** from `resources/examples/build/slaunchpad-home-real-derived/` — nothing is
 copied, and the committed directory stays read-only. The optional `STUDIO_DATA_DIR`
@@ -68,7 +68,7 @@ On the run page:
   provider revision, not a fixture revision.
 - The extraction inventory in the bundle is **stable-hash identical** to the committed
   `docs/evidence/issue-18/live-read-verified/node-ir.json` (locked by `tests/real-derived-suite.mjs`,
-  checks R56-T1…T6; run `npm test` to re-verify the whole chain offline).
+  checks R56-T1…T6; run `pnpm test` to re-verify the whole chain offline).
 - Media URLs in the composed HTML are **labeled offline placeholders**; supply real assets
   via the project's `content-manifest.json` before any CMS use (writes are separately
   gated regardless).
@@ -85,18 +85,18 @@ Exit 0 = all stages completed; the bundle layout matches what Studio serves abov
 
 ## Troubleshooting
 
-- **`det: compiled core not found`** — run `npm run build` at the repository root (compiles
-  `dist/` in the [63] single-application layout; the root `npm run dev` launcher does
+- **`det: compiled core not found`** — run `pnpm run build` at the repository root (compiles
+  `dist/` in the [63] single-application layout; the root `pnpm run dev` launcher does
   this automatically when the core dist is missing or stale).
 - **The build page shows "Runner not ready"** — Studio was started without
   `STUDIO_DET_RUNS_DIR` (e.g. `next dev` started directly without the root launcher).
-  Use the root launcher (`npm run dev` at the repository root), which defaults the runs
+  Use the root launcher (`pnpm run dev` at the repository root), which defaults the runs
   dir to `out/studio-runs`, or export `STUDIO_DET_RUNS_DIR` yourself and restart.
 - **The catalogue lists no repository entry** — Studio is not running from a checkout
   layout (or `resources/examples/build/` was removed); the catalogue then only lists entries from
   `STUDIO_BUILD_PROJECTS_DIR`.
 - **Port already in use** (e.g. `EADDRINUSE :3000` — a leftover Studio from another
-  workspace) — either stop that process or start on another port: `PORT=3100 npm run dev`
+  workspace) — either stop that process or start on another port: `PORT=3100 pnpm run dev`
   and use http://localhost:3100.
 - **409 on Build** — one build at a time per Studio process; wait for the current job.
 - **A download is refused** — the bundle's bytes no longer match `build-manifest.json`

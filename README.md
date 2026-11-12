@@ -4,11 +4,11 @@ A **multi-project, platform-neutral** foundation for design-system contracts, se
 
 ## Quick start — ONE application, one entrypoint ([58], [60], [63])
 
-Requires Node ≥ 22.13 (Fedora/Linux). From the repository root:
+Requires Node ≥ 22.13 (Fedora/Linux) and pnpm ≥ 12 (`npm install -g pnpm`, pinned in `package.json` `packageManager`). From the repository root:
 
 ```bash
-npm run setup   # ONCE: one root npm ci (ONE package.json + ONE package-lock.json — [63] no workspaces) + builds the det core
-npm run dev     # DET Studio → http://localhost:3000/build
+pnpm run setup   # ONCE: one root pnpm install --frozen-lockfile (ONE package.json + ONE pnpm-lock.yaml — [63] no workspaces) + builds the det core
+pnpm run dev     # DET Studio → http://localhost:3000/build
 ```
 
 DET is **ONE Node.js / Next.js application rooted at the repository root** ([63]), organized as a modular monolith ([68]): the headless engine is `src/core` plus bounded feature modules `src/modules/{figma,magento,knowledge,studio}` — adapters live INSIDE their owning module (`src/modules/**/adapters/`), tests and fixtures beside their code (`__tests__/`), and the engine core stays React-free (callable via `node bin/det.js` from any cwd). The Next.js App Router (`app/`) is only the Studio UI module's routing layer. Committed data lives in `resources/{schemas,knowledge,examples,profiles,projects}`; specs and receipts in `docs/`. There are no npm workspaces, no `apps/`, no `packages/`, no internal package manifests.
@@ -19,8 +19,8 @@ is copied) and click **Build**. The run page shows the honest result: **2 of 12 
 compose** into native Page Builder shapes, 10 carry explicit skip records, `PREVIEW_UNAVAILABLE`
 (no Magento render is bound to bundles), and every artifact download is byte-verified
 against `build-manifest.json`. **No Magento CMS/Admin/DB writes happen — output is
-source/download only.** Production-mode local usage: `npm run start`. Headless CLI:
-`node bin/det.js --help` (or `npx det` after setup). Details: the [Studio runbook](docs/runbook-real-derived-studio-build.md)
+source/download only.** Production-mode local usage: `pnpm run start`. Headless CLI:
+`node bin/det.js --help` (or `pnpm exec det` after setup). Details: the [Studio runbook](docs/runbook-real-derived-studio-build.md)
 and [docs/studio/README.md](docs/studio/README.md).
 
 ## Current work — Modular Monolith CLI engine (`det`)
@@ -32,7 +32,7 @@ The reviewed [Issue #5](https://github.com/thanhle74/design-engineering-toolkit/
 The deterministic engine is real code now (TypeScript on Node per [TECH-ADR](docs/specs/knowledge-foundation/TECH-ADR.md) ADR-1), equally runnable by an agent, a human terminal or CI — no AI required:
 
 ```bash
-npm ci && npm run build
+pnpm install && pnpm run build
 node bin/det.js validate --profile resources/profiles/magento-pagebuilder.example.json --project /path/to/magento --json
 node bin/det.js inspect  --profile resources/profiles/magento-pagebuilder.example.json --project /path/to/magento --out out/
 node bin/det.js plan     --profile <p> --registry out/capability-registry.json --bindings <map.json> --input <structure.json> --out out/
@@ -49,7 +49,7 @@ Start here:
 - [Accepted/proposed decisions](docs/converter/DECISIONS.md) (ADR-005-001..016)
 - [OSS source selection](docs/research/oss-adoption-for-pagebuilder.md) · [Agent skills selection](docs/research/agent-skills-adoption.md) — verified live against sources
 - [Repo hygiene baseline](docs/converter/REPO-HYGIENE-BASELINE.md) (incl. [5] TIP audit addendum)
-- **Test gate:** `npm test` — 195 checks (build + schema validation for the V1/converter/CLI/KB families, the T-01..T-22 negative/CLI plan, the KB-01..KB-29 knowledge-engine plan, the G2/G3/G4 converter-gate suites, the #41 schema-registry SSOT suite, determinism, neutrality + deny-list scans, and the [63] foreign-cwd root path-resolution suite — the [60] packed-`@det/core` artifact no longer exists and is deliberately not claimed). Also runs in CI (`.github/workflows/validate.yml`). Studio module gate: `npm run test:studio` (225 checks) + `npm run typecheck` + `npm run lint` + `npm run build`.
+- **Test gate:** `pnpm test` — 195 checks (build + schema validation for the V1/converter/CLI/KB families, the T-01..T-22 negative/CLI plan, the KB-01..KB-29 knowledge-engine plan, the G2/G3/G4 converter-gate suites, the #41 schema-registry SSOT suite, determinism, neutrality + deny-list scans, and the [63] foreign-cwd root path-resolution suite — the [60] packed-`@det/core` artifact no longer exists and is deliberately not claimed). Also runs in CI (`.github/workflows/validate.yml`). Studio module gate: `pnpm run test:studio` (225 checks) + `pnpm run typecheck` + `pnpm run lint` + `pnpm run build`.
 - [Agent rules](AGENTS.md), [Claude Code entry](CLAUDE.md), `.claude/skills/` and `.claude/agents/`
 
 **Task naming:** `[<issue number>] <task title>`; `[5]` is this task's GitHub issue number, **not a version**.

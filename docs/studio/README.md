@@ -14,22 +14,22 @@ deployment (auth, per-run isolation and trust boundaries are future gates).
 **Primary operator path ([58]):** from the REPOSITORY ROOT (not this dir):
 
 ```bash
-npm run setup   # once: one root npm ci (ONE package.json + ONE lockfile, [63] single application) + builds the det core
-npm run dev     # http://localhost:3000/build — repository examples are cataloged in place
+pnpm run setup   # once: one root pnpm install --frozen-lockfile (ONE package.json + ONE pnpm lockfile, [63] single application) + builds the det core
+pnpm run dev     # http://localhost:3000/build — repository examples are cataloged in place
 ```
 
-`npm run dev` at the root launches this app with `STUDIO_DET_RUNS_DIR`
+`pnpm run dev` at the root launches this app with `STUDIO_DET_RUNS_DIR`
 defaulted to `<root>/out/studio-runs` (created on demand) and the root `det`
-dist built. `npm run start` at the root is the production-mode equivalent
+dist built. `pnpm run start` at the root is the production-mode equivalent
 (`next build` + `next start`). This dir's own scripts stay for Studio
 development:
 
 ```bash
-npm run dev     # http://localhost:3000 (needs the env vars from [40] below)
+pnpm run dev     # http://localhost:3000 (needs the env vars from [40] below)
 ```
 
-Other commands: `npm run build` · `npm start` (serve the production build) ·
-`npm test` (vitest) · `npm run lint` · `npm run typecheck`.
+Other commands: `pnpm run build` · `pnpm start` (serve the production build) ·
+`pnpm test` (vitest) · `pnpm run lint` · `pnpm run typecheck`.
 
 ## Data modes
 
@@ -137,7 +137,7 @@ thin server-only local runner and serves the resulting bundle artifacts
 download-verified against `build-manifest.json`.
 
 **Default local operation needs NO env setup** — start it from the repository
-root with `npm run dev` (one-time `npm run setup` first). Then:
+root with `pnpm run dev` (one-time `pnpm run setup` first). Then:
 
 - **Catalogue (in place, [58]).** The build-config catalogue is the union of
   the committed repository examples (`resources/examples/build/*` — the revision-pinned
@@ -148,7 +148,7 @@ root with `npm run dev` (one-time `npm run setup` first). Then:
   repository example. Repository entries carry a "repository example" badge;
   the engine resolves and validates every config at build time.
 - **`STUDIO_DET_RUNS_DIR`** — where finished bundles land (one subdirectory
-  per run/bundle). Required by the runner; the root `npm run dev`/`npm run
+  per run/bundle). Required by the runner; the root `pnpm run dev`/`pnpm run
   start` launchers default it to `<root>/out/studio-runs` and create it, so
   operators normally never export it. An unset env renders the honest
   not-ready state — the build page never shows demo data.
@@ -254,8 +254,8 @@ codes, paths, env var names, HTTP codes, CLI flags, artifact names and the
 - `src/server/` — server-only boundary: `DetRunReader` implementations (fixture + directory), the `[40]` build-bundle reader, build-config catalog, local build runner, path guards
 - `src/shared/contracts/` — frozen `StudioRunView` read model derived from `resources/schemas/cli/*` + `resources/schemas/converter/*` (with the `[40]` additive optional `build` block)
 
-Tests: `npx vitest run <path>` for a lane; `npm test` for the whole studio
+Tests: `pnpm exec vitest run <path>` for a lane; `pnpm test` for the whole studio
 suite. The `[40]` build-control tests drive the REAL `det CLI` — build the
-repo root first (`npm ci && npm run build` at the checkout root, see the CI
+repo root first (`pnpm install && pnpm run build` at the checkout root, see the CI
 `studio` job). Screenshots used for the [29]/[40] receipts live in
 `docs/screenshots/`.

@@ -24,7 +24,7 @@ drafts). Spec lineage: [`docs/specs/knowledge-foundation/`](../../docs/specs/kno
 ## Commands (read-only core; nothing is written without `--out`)
 
 ```bash
-npm run build   # once per checkout
+pnpm run build   # once per checkout
 
 # 1. Deterministic ingest from a manifest (the ONLY way records enter a store)
 node bin/det.js kb ingest --manifest resources/examples/kb/manifest.json \

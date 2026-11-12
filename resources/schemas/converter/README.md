@@ -69,7 +69,7 @@ Every enum below is **closed**: adding a value is a breaking change (new major +
 
 ## Validation strategy
 
-1. **Repo test gate:** `npm test` (Node ≥ 20, `ajv` devDependency) validates all schemas + examples + fixtures, runs the 14-case negative/semantic test plan (unknown capability, appearance mismatch, missing variant, wrong nesting, ambiguous/duplicate binding, missing project source, wrong schemaVersion, determinism, neutrality guard, synthetic profile, summary consistency, evidence overclaim, disabled capability, family independence), and fails the run on any violation. CI runs the same gate (`.github/workflows/validate.yml`).
+1. **Repo test gate:** `pnpm test` (Node ≥ 20, `ajv` devDependency) validates all schemas + examples + fixtures, runs the 14-case negative/semantic test plan (unknown capability, appearance mismatch, missing variant, wrong nesting, ambiguous/duplicate binding, missing project source, wrong schemaVersion, determinism, neutrality guard, synthetic profile, summary consistency, evidence overclaim, disabled capability, family independence), and fails the run on any violation. CI runs the same gate (`.github/workflows/validate.yml`).
 2. **Runtime:** each stage validates its output with the same schemas before its checkpoint passes; invalid output blocks the stage — never "fixed forward".
 3. **Semantic checks beyond JSON Schema** (in the test gate now, in the future resolver): summary/counts consistency; (id, appearanceId) uniqueness; proof-level evidence justification (`registered` needs `config-declaration` evidence; G1/G2 payloads claiming `admin-roundtrip-verified` are rejected); binding target existence/appearance/enablement; parents/children declaration agreement.
 

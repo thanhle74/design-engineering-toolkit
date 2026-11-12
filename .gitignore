@@ -22,7 +22,7 @@ tmp/
 /coverage/
 next-env.d.ts
 *.tsbuildinfo
-npm-debug.log*
+pnpm-debug.log*
 
 # Per-project local notes/overrides
 projects/*/*.local.*

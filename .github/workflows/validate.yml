@@ -2,7 +2,7 @@
 # runs the contract suite (T-01..T-22 #9 CLI/adapter/deny-list/determinism + G2-T23..T-28 #14
 # design-source extraction: accountability, chrome exclusion, stable ids, negative graphs,
 # scope escapes, plan-on-PageStructure, source neutrality) the KB-01..KB-29 engine tests, and the portability scans.
-# npm test = tsc core build + the contract suites (discovered module-owned at
+# pnpm test = tsc core build + the contract suites (discovered module-owned at
 # src/**/__tests__/*-suite.mjs by scripts/run-contract-tests.mjs, [68]) incl. the [63]
 # foreign-cwd root path-resolution suite (ONE root package + ONE root lockfile; src/core and
 # the feature modules src/modules/** with module-owned adapters are internal dirs — the [60]
@@ -23,15 +23,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # Installs the pnpm version pinned in package.json `packageManager`.
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-          cache-dependency-path: package-lock.json
+          cache: pnpm
       # [63] one root install covers the whole single application (core + Studio module).
       - name: Install (single root lockfile)
-        run: npm ci
-      - run: npm test
+        run: pnpm install --frozen-lockfile
+      - run: pnpm test
       - name: CLI invocation smoke (direct terminal, no agent)
         run: node bin/det.js --version
       - name: JSON parse sanity (all committed JSON)
@@ -44,23 +45,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-          cache-dependency-path: package-lock.json
-      # [63] single root npm ci; npm run build = build:core (det CLI dist) + build:app (Next).
+          cache: pnpm
+      # [63] single root pnpm install; pnpm run build = build:core (det CLI dist) + build:app (Next).
       - name: Install (single root lockfile)
-        run: npm ci
+        run: pnpm install --frozen-lockfile
       - name: Build (core det CLI dist + Studio production bundle)
-        run: npm run build
+        run: pnpm run build
         env:
           NEXT_TELEMETRY_DISABLED: 1
       # [40] the studio build-control tests drive the REAL det CLI — core dist exists after
       # the build above; the vitest suite covers real det-output interop + real det build E2E.
       - name: Tests (Studio vitest suite incl. real det-output interop + real det build E2E)
-        run: npm run test:studio
+        run: pnpm run test:studio
       - name: Typecheck
-        run: npm run typecheck
+        run: pnpm run typecheck
       - name: Lint
-        run: npm run lint
+        run: pnpm run lint
