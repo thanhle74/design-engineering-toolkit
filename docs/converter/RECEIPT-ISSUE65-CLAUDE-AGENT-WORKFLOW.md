@@ -221,3 +221,50 @@ Budget cap and cancellation unchanged.
 Production server (`next start`, port 3100, fresh runs root
 `<runs-root>` = `~/.local/state/det-studio-65-correction`), DEFAULT timeout
 (900s — no env override this time):
+1. **Preflight** — `GET /api/agent/status` → ready, now including
+   `connectedServerNames: [plugin:figma:figma, slaunchpad, magento-spec]`
+   (the C65-4 deny-list input).
+2. **C65-3 negative probe** — `POST /api/agent/analyses` with a DIFFERENT
+   fileKey (`OtherFileKey1`) and the OVERLAPPING node id `245:2` → **422
+   `base-source-mismatch`** with the Vietnamese instruction naming both
+   sources; `.agent-jobs/` stayed EMPTY (nothing paid, nothing spawned).
+3. **Analysis** — matching request → 202 `agent-1794455177248`. Journaled
+   argv carries the full C65-4 stack (verified from the journal):
+   `--allowedTools mcp__plugin_figma_figma__get_metadata`,
+   `--disallowedTools Bash,Write,Edit,NotebookEdit,WebFetch,WebSearch,mcp__slaunchpad,mcp__magento_spec`,
+   `--tools ""`, `--max-budget-usd 2`, `--no-session-persistence`. Terminal:
+   **exited / plan-ready / grounded=true** under the **DEFAULT 900s timeout
+   (no env override)** — duration **384,435 ms** (the previous 300s default
+   would have timed this run out again), exit 0, cost **$0.953**, **0
+   permission denials**. Observed root `PAGE/Home/Desktop`, **15 direct
+   children = 12 sections + 3 SITE chrome** (matches #18), **12 sections /
+   86 proposals**, 8 substantive limitations (metadata exposes structure
+   only; media slots opaque; instances opaque; revision pin unavailable →
+   `mcp-observed-unpinned` display note).
+4. **Approval** — preview **86/86 pinned, droppedNodeIds []** → approve 202
+   `build-1794455593850` (C65-3 re-check passed against the committed
+   binding before materialization).
+5. **Real engine** — `det build` **exit 0** (0.72s), manifest
+   `source.revisionId 2417494580183108397` (PINNED), honest gaps verbatim:
+   `COMPOSITION_SKIPS_PRESENT · 3`, `COMPOSITION_EXCLUSIONS_PRESENT · 26`,
+   `COMPOSITION_GAPS_PRESENT · 126`, both PREVIEW operator gates — **never
+   a claimed-complete 12/12**; the run page renders per-node dispositions
+   incl. the real `NEEDS_REVIEW` (`Proto / Button/Primary`).
+6. **Download byte-verification** — `GET /api/runs/build-1794455593850/
+   artifacts/03-composition%2Fnative-content.html` → 200, **11,507 bytes,
+   sha256 `4d9cf26c…` == manifest declaration == disk bundle** (3-way).
+7. **Evidence (this round, sanitized)** — `evidence/issue-65/correction/
+   {dom-evidence.txt, live-analysis-plan.json, live-analysis-approval.json}`
+   (machine paths → `<repo-root>`/`<runs-root>`); screenshots
+   `docs/studio/screenshots/65-agent-ready-correction.png`,
+   `65-agent-plan-correction.png` (deep-linked plan view: `plan-ready`,
+   grounded root, machine tokens verbatim), `65-run-dispositions-correction.png`
+   (LIVE badge, gap codes, NEEDS_REVIEW, sha256-verified bundle).
+
+**Cancel-during-queued edge (found while closing C65-1):** the synchronous
+reservation makes the placeholder visible to `cancel()` before any child
+exists; the pending start now checks `cancelled` after preflight, journals
+an honest `cancelled` (pid null, empty command), releases the slot and
+refuses with the new 409 code `analysis-cancelled` — covered by its own
+regression test (zero spawns, slot freed).
+

@@ -1,0 +1,1090 @@
+{
+  "schemaVersion": 1,
+  "requested": {
+    "fileKey": "vNPtfBRpYM3PsExirVqhmt",
+    "nodeId": "245:2"
+  },
+  "observed": {
+    "grounded": true,
+    "rootName": "PAGE/Home/Desktop",
+    "childCount": 15,
+    "revisionId": null
+  },
+  "sections": [
+    {
+      "name": "SECTION/Hero/Primary",
+      "sourceNodeId": "245:5",
+      "layout": "Full-bleed hero, 1440x880 at y=120: media slot and a same-size overlay rectangle cover the entire frame; a 520-wide content block sits left at x=120, y=356 (eyebrow, 283x144 heading, subtitle, button); 50x76 scroll indicator centered at bottom (x=695, y=776).",
+      "capabilityHints": [
+        {
+          "capabilityId": "banner-hero",
+          "confidence": "observed",
+          "reason": "SLOT/HeroMedia (254:40) spans the full 1440x880 section with a same-size Overlay rectangle and a left content block above it — full-bleed hero structure directly visible in geometry."
+        },
+        {
+          "capabilityId": "scroll-cue",
+          "confidence": "observed",
+          "reason": "DECOR/ScrollIndicator (254:57) is a 50x76 frame with a 1px vertical rule and 'SCROLL' text centered at the section bottom (x=695, y=776)."
+        }
+      ],
+      "projection": [
+        {
+          "sourceNodeId": "254:40",
+          "role": "background-media",
+          "reason": "Frame spanning the full 1440x880 hero behind overlay and content siblings — background media layer."
+        },
+        {
+          "sourceNodeId": "254:41",
+          "role": "decoration",
+          "reason": "1440x880 rounded-rectangle covering the same area as the media slot, positioned between media and content — scrim/overlay decoration."
+        },
+        {
+          "sourceNodeId": "254:43",
+          "role": "content-lead",
+          "reason": "150x16 eyebrow text 'CHAPTER 01 / AW 2026' leading the content stack at its top."
+        },
+        {
+          "sourceNodeId": "254:44",
+          "role": "heading",
+          "reason": "283x144 text 'The Quiet Grandeur' — largest text block in the content stack, heading position."
+        },
+        {
+          "sourceNodeId": "254:45",
+          "role": "body",
+          "reason": "520x28 supporting line 'Refined tailoring, knitwear and leather for the season.' under the heading."
+        },
+        {
+          "sourceNodeId": "254:47",
+          "role": "cta",
+          "reason": "'Proto / Button/Primary' instance 241x100 inside SLOT/HeroActions — the hero call-to-action."
+        },
+        {
+          "sourceNodeId": "254:57",
+          "role": "decoration",
+          "reason": "50x76 bottom-center frame with 1x48 vertical rule and 'SCROLL' text — ornamental scroll cue."
+        }
+      ],
+      "contentRefs": [
+        {
+          "sourceNodeId": "254:43",
+          "kind": "text",
+          "excerpt": "Layer-name text: \"CHAPTER 01 / AW 2026\""
+        },
+        {
+          "sourceNodeId": "254:44",
+          "kind": "text",
+          "excerpt": "Layer-name text: \"The Quiet Grandeur\""
+        },
+        {
+          "sourceNodeId": "254:45",
+          "kind": "text",
+          "excerpt": "Layer-name text: \"Refined tailoring, knitwear and leather for the season.\""
+        },
+        {
+          "sourceNodeId": "254:59",
+          "kind": "text",
+          "excerpt": "Layer-name text: \"SCROLL\""
+        },
+        {
+          "sourceNodeId": "254:40",
+          "kind": "media",
+          "excerpt": "Media slot frame 1440x880; no children or asset URLs exposed by metadata"
+        }
+      ]
+    },
+    {
+      "name": "SECTION/BrandStatement",
+      "sourceNodeId": "245:6",
+      "layout": "Single text band, 1440x280 at y=1000: 75x16 eyebrow at (80,62) and a 900x112 display statement at (80,106); no media or CTA children observed.",
+      "capabilityHints": [
+        {
+          "capabilityId": "editorial-statement",
+          "confidence": "observed",
+          "reason": "Section contains only an eyebrow text and a 900-wide display statement; no media, tiles or CTA children exist in the observed subtree."
+        }
+      ],
+      "projection": [
+        {
+          "sourceNodeId": "254:60",
+          "role": "content-lead",
+          "reason": "75x16 eyebrow 'THE HOUSE' above the statement text."
+        },
+        {
+          "sourceNodeId": "254:61",
+          "role": "heading",
+          "reason": "900x112 display statement text — the sole large text block of the band."
+        }
+      ],
+      "contentRefs": [
+        {
+          "sourceNodeId": "254:60",
+          "kind": "text",
+          "excerpt": "Layer-name text: \"THE HOUSE\""
+        },
+        {
+          "sourceNodeId": "254:61",
+          "kind": "text",
+          "excerpt": "Layer-name text: \"Luxury is what remains when everything unnecessary has been removed.\""
+        }
+      ]
+    },
+    {
+      "name": "SECTION/Hero/Secondary",
+      "sourceNodeId": "394:386",
+      "layout": "Split hero, 1440x780 at y=1280: media slot occupies the right 940px (x=500, full height); left column at x=80 stacks a 207x16 overline (y=204), 700x200 title (y=240), 360x56 subtitle (y=476) and a 229x24 arrow CTA instance (y=576).",
+      "capabilityHints": [
+        {
+          "capabilityId": "split-hero",
+          "confidence": "observed",
+          "reason": "Media slot fills the right 940x780 of the 1440x780 section while a text column occupies the left at x=80 — asymmetric split directly visible in geometry."
+        },
+        {
+          "capabilityId": "two-column",
+          "confidence": "observed",
+          "reason": "Two non-overlapping regions: text stack (x=80..~780) and media slot (x=500..1440 overlaps only in the right zone, text ends at x~780 with CTA at y=576 below the media start)."
+        }
+      ],
+      "projection": [
+        {
+          "sourceNodeId": "394:387",
+          "role": "background-media",
+          "reason": "940x780 media slot filling the right region of the split hero."
+        },
+        {
+          "sourceNodeId": "394:388",
+          "role": "content-lead",
+          "reason": "207x16 overline 'CHAPTER 02 / THE COLLECTION' leading the left text stack."
+        },
+        {
+          "sourceNodeId": "394:389",
+          "role": "heading",
+          "reason": "700x200 text 'The Modern Silhouette' — dominant display text of the section."
+        },
+        {
+          "sourceNodeId": "394:390",
+          "role": "body",
+          "reason": "360x56 supporting line 'An exploration of modern form and effortless style.' under the title."
+        },
+        {
+          "sourceNodeId": "394:391",
+          "role": "cta",
+          "reason": "'Proto / CTA — Arrow (Desktop)' instance 229x24 at the base of the text column."
+        }
+      ],
+      "contentRefs": [
+        {
+          "sourceNodeId": "394:388",
+          "kind": "text",
+          "excerpt": "Layer-name text: \"CHAPTER 02 / THE COLLECTION\""
+        },
+        {
+          "sourceNodeId": "394:389",
+          "kind": "text",
+          "excerpt": "Layer-name text: \"The Modern Silhouette\""
+        },
+        {
+          "sourceNodeId": "394:390",
+          "kind": "text",
+          "excerpt": "Layer-name text: \"An exploration of modern form and effortless style.\""
+        },
+        {
+          "sourceNodeId": "394:391",
+          "kind": "link",
+          "excerpt": "CTA instance \"Proto / CTA — Arrow (Desktop)\", 229x24"
+        },
+        {
+          "sourceNodeId": "394:387",
+          "kind": "media",
+          "excerpt": "Media slot frame 940x780 on the right half; no children or asset URLs exposed by metadata"
+        }
+      ]
+    },
+    {
+      "name": "SECTION/FeaturedCollections",
+      "sourceNodeId": "245:9",
+      "layout": "Header band + asymmetric tile mosaic, 1440x796 at y=2060: 1280x60 header instance at top; tile slot 1280x616 holds a 640x616 tile left, a 616x288 tile top-right (x=664), and the bottom-right zone split into a 360x304 tile (x=664) and a 232x304 editorial fabric detail slot (x=1048).",
+      "capabilityHints": [
+        {
+          "capabilityId": "collection-mosaic",
+          "confidence": "observed",
+          "reason": "Tile slot 1280x616 holds three 'Proto / Collection Tile' instances in an asymmetric arrangement (640x616, 616x288, 360x304) plus a 232x304 editorial detail slot — mosaic geometry directly observed."
+        }
+      ],
+      "projection": [
+        {
+          "sourceNodeId": "256:96",
+          "role": "heading",
+          "reason": "1280x60 'Section Header' instance spanning the content width at the section top — heading position."
+        },
+        {
+          "sourceNodeId": "436:460",
+          "role": "column-primary",
+          "reason": "Largest tile instance, 640x616, occupying the full-height left half of the mosaic."
+        },
+        {
+          "sourceNodeId": "436:472",
+          "role": "grid-column",
+          "reason": "616x288 tile instance at the top of the right zone — secondary mosaic cell."
+        },
+        {
+          "sourceNodeId": "436:484",
+          "role": "grid-column",
+          "reason": "360x304 tile instance at the bottom-left of the right zone — secondary mosaic cell."
+        },
+        {
+          "sourceNodeId": "453:394",
+          "role": "inline-media",
+          "reason": "232x304 'SLOT/EditorialFabricDetail' frame completing the bottom-right cell — detail media slot."
+        }
+      ],
+      "contentRefs": [
+        {
+          "sourceNodeId": "256:96",
+          "kind": "text",
+          "excerpt": "Component instance \"Section Header\" 1280x60; character content not exposed by metadata"
+        },
+        {
+          "sourceNodeId": "436:460",
+          "kind": "media",
+          "excerpt": "Tile instance \"Proto / Collection Tile\" 640x616; internals not exposed by metadata"
+        },
+        {
+          "sourceNodeId": "436:472",
+          "kind": "media",
+          "excerpt": "Tile instance \"Proto / Collection Tile\" 616x288; internals not exposed by metadata"
+        },
+        {
+          "sourceNodeId": "436:484",
+          "kind": "media",
+          "excerpt": "Tile instance \"Proto / Collection Tile\" 360x304; internals not exposed by metadata"
+        },
+        {
+          "sourceNodeId": "453:394",
+          "kind": "media",
+          "excerpt": "Slot frame \"SLOT/EditorialFabricDetail\" 232x304; no children exposed by metadata"
+        }
+      ]
+    },
+    {
+      "name": "SECTION/FeaturedProducts",
+      "sourceNodeId": "245:7",
+      "layout": "Header band + card row, 1440x654 at y=2856: 1280x60 header instance at top; 1280x474 card slot with four equal 302x474 'Proto / Product Card' instances at slot x=0/326/652/978 (24px gutters).",
+      "capabilityHints": [
+        {
+          "capabilityId": "product-grid",
+          "confidence": "observed",
+          "reason": "Card slot contains four identical 'Proto / Product Card' instances of equal 302x474 size laid out on a regular 24px gutter — product card row directly observed."
+        }
+      ],
+      "projection": [
+        {
+          "sourceNodeId": "254:62",
+          "role": "heading",
+          "reason": "1280x60 'Section Header' instance at the section top — heading position."
+        },
+        {
+          "sourceNodeId": "254:72",
+          "role": "grid-column",
+          "reason": "First of four equal 302x474 card instances in a single row — grid item 1."
+        },
+        {
+          "sourceNodeId": "254:81",
+          "role": "grid-column",
+          "reason": "Second equal 302x474 card instance at slot x=326 — grid item 2."
+        },
+        {
+          "sourceNodeId": "254:90",
+          "role": "grid-column",
+          "reason": "Third equal 302x474 card instance at slot x=652 — grid item 3."
+        },
+        {
+          "sourceNodeId": "254:99",
+          "role": "grid-column",
+          "reason": "Fourth equal 302x474 card instance at slot x=978 — grid item 4."
+        }
+      ],
+      "contentRefs": [
+        {
+          "sourceNodeId": "254:62",
+          "kind": "text",
+          "excerpt": "Component instance \"Section Header\" 1280x60; character content not exposed by metadata"
+        },
+        {
+          "sourceNodeId": "254:72",
+          "kind": "media",
+          "excerpt": "Card instance \"Proto / Product Card\" 302x474 at slot x=0; internals not exposed"
+        },
+        {
+          "sourceNodeId": "254:81",
+          "kind": "media",
+          "excerpt": "Card instance \"Proto / Product Card\" 302x474 at slot x=326; internals not exposed"
+        },
+        {
+          "sourceNodeId": "254:90",
+          "kind": "media",
+          "excerpt": "Card instance \"Proto / Product Card\" 302x474 at slot x=652; internals not exposed"
+        },
+        {
+          "sourceNodeId": "254:99",
+          "kind": "media",
+          "excerpt": "Card instance \"Proto / Product Card\" 302x474 at slot x=978; internals not exposed"
+        }
+      ]
+    },
+    {
+      "name": "SECTION/CampaignEditorial",
+      "sourceNodeId": "299:300",
+      "layout": "Two-media editorial, 1440x940 at y=3510: primary media slot 860x720 on the right (x=500, y=140); secondary media slot 340x484 left-below (x=80, y=376); text stack top-left at x=80 (overline y=88, 340x112 title y=120, arrow CTA y=264).",
+      "capabilityHints": [
+        {
+          "capabilityId": "editorial-split",
+          "confidence": "observed",
+          "reason": "Two media slots of different sizes (860x720 right, 340x484 left-below) plus a compact text stack — layered editorial composition visible in geometry."
+        },
+        {
+          "capabilityId": "two-column",
+          "confidence": "observed",
+          "reason": "Primary media occupies the right 860px while all text and the CTA sit left at x=80, with the secondary media slot below the text block."
+        }
+      ],
+      "projection": [
+        {
+          "sourceNodeId": "299:301",
+          "role": "background-media",
+          "reason": "860x720 media slot dominating the right region of the section."
+        },
+        {
+          "sourceNodeId": "299:302",
+          "role": "inline-media",
+          "reason": "340x484 secondary media slot placed under the text column — inset image."
+        },
+        {
+          "sourceNodeId": "299:304",
+          "role": "content-lead",
+          "reason": "112x16 text layer 'Overline' at the top of the text stack."
+        },
+        {
+          "sourceNodeId": "299:305",
+          "role": "heading",
+          "reason": "340x112 text layer 'Title' — the section's display text."
+        },
+        {
+          "sourceNodeId": "354:386",
+          "role": "cta",
+          "reason": "'Proto / CTA — Arrow (Desktop)' instance 229x24 below the title."
+        }
+      ],
+      "contentRefs": [
+        {
+          "sourceNodeId": "299:304",
+          "kind": "text",
+          "excerpt": "Text layer named \"Overline\" (112x16); character content not exposed by metadata"
+        },
+        {
+          "sourceNodeId": "299:305",
+          "kind": "text",
+          "excerpt": "Text layer named \"Title\" (340x112); character content not exposed by metadata"
+        },
+        {
+          "sourceNodeId": "354:386",
+          "kind": "link",
+          "excerpt": "CTA instance \"Proto / CTA — Arrow (Desktop)\", 229x24"
+        },
+        {
+          "sourceNodeId": "299:301",
+          "kind": "media",
+          "excerpt": "Primary media slot frame 860x720; no children or asset URLs exposed by metadata"
+        },
+        {
+          "sourceNodeId": "299:302",
+          "kind": "media",
+          "excerpt": "Secondary media slot frame 340x484; no children exposed by metadata"
+        }
+      ]
+    },
+    {
+      "name": "SECTION/Lookbook",
+      "sourceNodeId": "299:311",
+      "layout": "Staggered three-look gallery, 1440x836 at y=4450: 1280x60 header instance; 1280x674 card slot with looks at slot y=72/0/72 — side looks 300x596 (media 300x540 + caption), center look 600x674 (media 600x612 + caption).",
+      "capabilityHints": [
+        {
+          "capabilityId": "media-gallery",
+          "confidence": "observed",
+          "reason": "Three look groups each pairing a media slot (300x540, 600x612, 300x540) with a caption text — gallery structure directly observed."
+        },
+        {
+          "capabilityId": "staggered-layout",
+          "confidence": "observed",
+          "reason": "Side looks start at slot y=72 while the larger center look starts at y=0 — vertical stagger visible in geometry."
+        }
+      ],
+      "projection": [
+        {
+          "sourceNodeId": "299:312",
+          "role": "heading",
+          "reason": "1280x60 'Section Header' instance at the section top — heading position."
+        },
+        {
+          "sourceNodeId": "299:322",
+          "role": "grid-column",
+          "reason": "300x596 left look group (media + caption) starting at slot y=72 — gallery column 1."
+        },
+        {
+          "sourceNodeId": "299:329",
+          "role": "grid-column",
+          "reason": "600x674 center look group, largest and vertically highest (slot y=0) — gallery column 2."
+        },
+        {
+          "sourceNodeId": "299:336",
+          "role": "grid-column",
+          "reason": "300x596 right look group starting at slot y=72 — gallery column 3."
+        },
+        {
+          "sourceNodeId": "299:323",
+          "role": "inline-media",
+          "reason": "300x540 media slot inside Look/01."
+        },
+        {
+          "sourceNodeId": "299:330",
+          "role": "inline-media",
+          "reason": "600x612 media slot inside Look/02."
+        },
+        {
+          "sourceNodeId": "299:337",
+          "role": "inline-media",
+          "reason": "300x540 media slot inside Look/03."
+        },
+        {
+          "sourceNodeId": "299:328",
+          "role": "grid-caption",
+          "reason": "103x15 text layer 'Caption' below Look/01 media."
+        },
+        {
+          "sourceNodeId": "299:335",
+          "role": "grid-caption",
+          "reason": "135x15 text layer 'Caption' below Look/02 media."
+        },
+        {
+          "sourceNodeId": "299:342",
+          "role": "grid-caption",
+          "reason": "140x15 text layer 'Caption' below Look/03 media."
+        }
+      ],
+      "contentRefs": [
+        {
+          "sourceNodeId": "299:312",
+          "kind": "text",
+          "excerpt": "Component instance \"Section Header\" 1280x60; character content not exposed by metadata"
+        },
+        {
+          "sourceNodeId": "299:328",
+          "kind": "text",
+          "excerpt": "Text layer \"Caption\" (103x15) under Look/01 media; character content not exposed"
+        },
+        {
+          "sourceNodeId": "299:335",
+          "kind": "text",
+          "excerpt": "Text layer \"Caption\" (135x15) under Look/02 media; character content not exposed"
+        },
+        {
+          "sourceNodeId": "299:342",
+          "kind": "text",
+          "excerpt": "Text layer \"Caption\" (140x15) under Look/03 media; character content not exposed"
+        },
+        {
+          "sourceNodeId": "299:323",
+          "kind": "media",
+          "excerpt": "Media slot 300x540; no children or asset URLs exposed by metadata"
+        },
+        {
+          "sourceNodeId": "299:330",
+          "kind": "media",
+          "excerpt": "Media slot 600x612; no children or asset URLs exposed by metadata"
+        },
+        {
+          "sourceNodeId": "299:337",
+          "kind": "media",
+          "excerpt": "Media slot 300x540; no children or asset URLs exposed by metadata"
+        }
+      ]
+    },
+    {
+      "name": "SECTION/EditorialMosaic",
+      "sourceNodeId": "245:10",
+      "layout": "Four-column mosaic, 1440x1220 at y=5286: 1280x60 header instance; 1280x1040 grid with columns 280/340/268/320 wide (24px gutters), each stacking two 'Editorial Tile' rounded rectangles of varying heights (396–620px) with 24px gaps.",
+      "capabilityHints": [
+        {
+          "capabilityId": "image-mosaic",
+          "confidence": "observed",
+          "reason": "Grid slot 1280x1040 holds eight 'Editorial Tile' rectangles of varying heights stacked in four columns — mosaic structure directly observed."
+        },
+        {
+          "capabilityId": "masonry-grid",
+          "confidence": "observed",
+          "reason": "Columns of unequal widths (280/340/268/320) each contain two tiles of unequal heights with 24px vertical gaps — masonry-like stacking visible in geometry."
+        }
+      ],
+      "projection": [
+        {
+          "sourceNodeId": "256:139",
+          "role": "heading",
+          "reason": "1280x60 'Section Header' instance at the section top — heading position."
+        },
+        {
+          "sourceNodeId": "284:407",
+          "role": "grid-column",
+          "reason": "280x1040 first mosaic column stacking two editorial tiles."
+        },
+        {
+          "sourceNodeId": "284:410",
+          "role": "grid-column",
+          "reason": "340x1040 second mosaic column stacking two editorial tiles."
+        },
+        {
+          "sourceNodeId": "284:413",
+          "role": "grid-column",
+          "reason": "268x1040 third mosaic column stacking two editorial tiles."
+        },
+        {
+          "sourceNodeId": "284:416",
+          "role": "grid-column",
+          "reason": "320x1040 fourth mosaic column stacking two editorial tiles."
+        },
+        {
+          "sourceNodeId": "284:408",
+          "role": "inline-media",
+          "reason": "280x560 tile (top of column 01) — standalone image tile, no children observed."
+        },
+        {
+          "sourceNodeId": "284:409",
+          "role": "inline-media",
+          "reason": "280x456 tile (bottom of column 01) — standalone image tile."
+        },
+        {
+          "sourceNodeId": "284:411",
+          "role": "inline-media",
+          "reason": "340x436 tile (top of column 02) — standalone image tile."
+        },
+        {
+          "sourceNodeId": "284:412",
+          "role": "inline-media",
+          "reason": "340x580 tile (bottom of column 02) — standalone image tile."
+        },
+        {
+          "sourceNodeId": "284:414",
+          "role": "inline-media",
+          "reason": "268x560 tile (top of column 03) — standalone image tile."
+        },
+        {
+          "sourceNodeId": "284:415",
+          "role": "inline-media",
+          "reason": "268x456 tile (bottom of column 03) — standalone image tile."
+        },
+        {
+          "sourceNodeId": "284:417",
+          "role": "inline-media",
+          "reason": "320x620 tile (top of column 04) — standalone image tile."
+        },
+        {
+          "sourceNodeId": "284:418",
+          "role": "inline-media",
+          "reason": "320x396 tile (bottom of column 04) — standalone image tile."
+        }
+      ],
+      "contentRefs": [
+        {
+          "sourceNodeId": "256:139",
+          "kind": "text",
+          "excerpt": "Component instance \"Section Header\" 1280x60; character content not exposed by metadata"
+        },
+        {
+          "sourceNodeId": "284:408",
+          "kind": "media",
+          "excerpt": "\"Editorial Tile\" rounded rectangle 280x560; fill data not exposed by metadata"
+        },
+        {
+          "sourceNodeId": "284:409",
+          "kind": "media",
+          "excerpt": "\"Editorial Tile\" rounded rectangle 280x456; fill data not exposed by metadata"
+        },
+        {
+          "sourceNodeId": "284:411",
+          "kind": "media",
+          "excerpt": "\"Editorial Tile\" rounded rectangle 340x436; fill data not exposed by metadata"
+        },
+        {
+          "sourceNodeId": "284:412",
+          "kind": "media",
+          "excerpt": "\"Editorial Tile\" rounded rectangle 340x580; fill data not exposed by metadata"
+        },
+        {
+          "sourceNodeId": "284:414",
+          "kind": "media",
+          "excerpt": "\"Editorial Tile\" rounded rectangle 268x560; fill data not exposed by metadata"
+        },
+        {
+          "sourceNodeId": "284:415",
+          "kind": "media",
+          "excerpt": "\"Editorial Tile\" rounded rectangle 268x456; fill data not exposed by metadata"
+        },
+        {
+          "sourceNodeId": "284:417",
+          "kind": "media",
+          "excerpt": "\"Editorial Tile\" rounded rectangle 320x620; fill data not exposed by metadata"
+        },
+        {
+          "sourceNodeId": "284:418",
+          "kind": "media",
+          "excerpt": "\"Editorial Tile\" rounded rectangle 320x396; fill data not exposed by metadata"
+        }
+      ]
+    },
+    {
+      "name": "SECTION/Craftsmanship",
+      "sourceNodeId": "299:343",
+      "layout": "Two-column feature, 1440x780 at y=6506: media slot 620x620 left (x=80, y=80); 612x620 content column right (x=748) stacking overline (y=120 relative), 307x40 title, 460x60 body, then two 292-wide detail slots side by side (y=387 and y=415).",
+      "capabilityHints": [
+        {
+          "capabilityId": "feature-split",
+          "confidence": "observed",
+          "reason": "620x620 media slot on the left (x=80) and a 612x620 content column on the right (x=748) — side-by-side feature layout directly observed."
+        },
+        {
+          "capabilityId": "detail-media-pair",
+          "confidence": "observed",
+          "reason": "Content column contains two ~292-wide detail slots ('SLOT/DetailStitch', 'SLOT/DetailFabric') placed side by side below the body text."
+        }
+      ],
+      "projection": [
+        {
+          "sourceNodeId": "299:344",
+          "role": "background-media",
+          "reason": "620x620 media slot filling the entire left region of the split."
+        },
+        {
+          "sourceNodeId": "299:346",
+          "role": "content-lead",
+          "reason": "123x16 text layer 'Overline' leading the content column."
+        },
+        {
+          "sourceNodeId": "299:347",
+          "role": "heading",
+          "reason": "307x40 text layer 'Title' — heading position in the content column."
+        },
+        {
+          "sourceNodeId": "299:348",
+          "role": "body",
+          "reason": "460x60 text layer 'Body' under the title."
+        },
+        {
+          "sourceNodeId": "299:349",
+          "role": "inline-media",
+          "reason": "292x254 'SLOT/DetailStitch' frame — inset detail image below the body."
+        },
+        {
+          "sourceNodeId": "299:350",
+          "role": "inline-media",
+          "reason": "292x253 'SLOT/DetailFabric' frame — second inset detail image, offset to the right of the first."
+        }
+      ],
+      "contentRefs": [
+        {
+          "sourceNodeId": "299:346",
+          "kind": "text",
+          "excerpt": "Text layer named \"Overline\" (123x16); character content not exposed by metadata"
+        },
+        {
+          "sourceNodeId": "299:347",
+          "kind": "text",
+          "excerpt": "Text layer named \"Title\" (307x40); character content not exposed by metadata"
+        },
+        {
+          "sourceNodeId": "299:348",
+          "kind": "text",
+          "excerpt": "Text layer named \"Body\" (460x60); character content not exposed by metadata"
+        },
+        {
+          "sourceNodeId": "299:344",
+          "kind": "media",
+          "excerpt": "Media slot 620x620 left column; no children or asset URLs exposed by metadata"
+        },
+        {
+          "sourceNodeId": "299:349",
+          "kind": "media",
+          "excerpt": "Detail slot \"SLOT/DetailStitch\" 292x254; no children exposed by metadata"
+        },
+        {
+          "sourceNodeId": "299:350",
+          "kind": "media",
+          "excerpt": "Detail slot \"SLOT/DetailFabric\" 292x253; no children exposed by metadata"
+        }
+      ]
+    },
+    {
+      "name": "SECTION/ThePeople",
+      "sourceNodeId": "522:542",
+      "layout": "Asymmetric look gallery, 1440x1000 at y=7286: header texts top-left (eyebrow y=0, 515x56 heading y=36, subtitle y=112) plus a right-aligned '04 LOOKS' count at x=1160; four look slots 560x680 / 400x500 / 252x500 / 668x220 each followed by a 'LOOK 0N —' caption; arrow link and a placeholder note at bottom-left.",
+      "capabilityHints": [
+        {
+          "capabilityId": "editorial-gallery",
+          "confidence": "observed",
+          "reason": "Four look slots of distinct sizes each followed by a 'LOOK 0N —' caption text — captioned look gallery directly observed."
+        },
+        {
+          "capabilityId": "asymmetric-grid",
+          "confidence": "observed",
+          "reason": "Look slots measure 560x680, 400x500, 252x500 and 668x220 at varied positions (y=160/160/160/700) — intentionally uneven composition visible in geometry."
+        }
+      ],
+      "projection": [
+        {
+          "sourceNodeId": "522:543",
+          "role": "content-lead",
+          "reason": "79x16 eyebrow 'THE PEOPLE' at the section top."
+        },
+        {
+          "sourceNodeId": "522:544",
+          "role": "heading",
+          "reason": "515x56 text 'Worn in Their Own Way' — section display heading."
+        },
+        {
+          "sourceNodeId": "522:545",
+          "role": "body",
+          "reason": "302x20 supporting line 'Personal perspectives on modern dressing.' under the heading."
+        },
+        {
+          "sourceNodeId": "522:546",
+          "role": "decoration",
+          "reason": "200x15 right-aligned '04 LOOKS' count label at x=1160 — meta annotation, not primary copy."
+        },
+        {
+          "sourceNodeId": "522:547",
+          "role": "column-primary",
+          "reason": "560x680 look slot, the largest and leftmost of the four — primary gallery cell."
+        },
+        {
+          "sourceNodeId": "522:549",
+          "role": "column-secondary",
+          "reason": "400x500 look slot second in the row — secondary gallery cell."
+        },
+        {
+          "sourceNodeId": "522:551",
+          "role": "column-secondary",
+          "reason": "252x500 look slot third in the row — secondary gallery cell."
+        },
+        {
+          "sourceNodeId": "522:553",
+          "role": "column-secondary",
+          "reason": "668x220 wide, short look slot spanning the bottom — secondary gallery cell."
+        },
+        {
+          "sourceNodeId": "522:548",
+          "role": "grid-caption",
+          "reason": "203x15 caption 'LOOK 01 — WOMEN'S TAILORING' directly under look slot 01."
+        },
+        {
+          "sourceNodeId": "522:550",
+          "role": "grid-caption",
+          "reason": "202x15 caption 'LOOK 02 — MINIMAL MENSWEAR' under look slot 02."
+        },
+        {
+          "sourceNodeId": "522:552",
+          "role": "grid-caption",
+          "reason": "222x15 caption 'LOOK 03 — CONTEMPORARY STREET' under look slot 03."
+        },
+        {
+          "sourceNodeId": "522:554",
+          "role": "grid-caption",
+          "reason": "187x15 caption 'LOOK 04 — EVERYDAY LUXURY' under look slot 04."
+        },
+        {
+          "sourceNodeId": "522:555",
+          "role": "cta",
+          "reason": "158x16 text 'EXPLORE THE LOOKS →' with arrow glyph — text link CTA."
+        },
+        {
+          "sourceNodeId": "522:556",
+          "role": "decoration",
+          "reason": "164x12 text 'PLACEHOLDER — RIGHTS UNVERIFIED' at y=960 — annotation marker recorded as data; not editorial copy."
+        }
+      ],
+      "contentRefs": [
+        {
+          "sourceNodeId": "522:543",
+          "kind": "text",
+          "excerpt": "Layer-name text: \"THE PEOPLE\""
+        },
+        {
+          "sourceNodeId": "522:544",
+          "kind": "text",
+          "excerpt": "Layer-name text: \"Worn in Their Own Way\""
+        },
+        {
+          "sourceNodeId": "522:545",
+          "kind": "text",
+          "excerpt": "Layer-name text: \"Personal perspectives on modern dressing.\""
+        },
+        {
+          "sourceNodeId": "522:546",
+          "kind": "text",
+          "excerpt": "Layer-name text: \"04 LOOKS\""
+        },
+        {
+          "sourceNodeId": "522:548",
+          "kind": "text",
+          "excerpt": "Layer-name text: \"LOOK 01 — WOMEN'S TAILORING\""
+        },
+        {
+          "sourceNodeId": "522:550",
+          "kind": "text",
+          "excerpt": "Layer-name text: \"LOOK 02 — MINIMAL MENSWEAR\""
+        },
+        {
+          "sourceNodeId": "522:552",
+          "kind": "text",
+          "excerpt": "Layer-name text: \"LOOK 03 — CONTEMPORARY STREET\""
+        },
+        {
+          "sourceNodeId": "522:554",
+          "kind": "text",
+          "excerpt": "Layer-name text: \"LOOK 04 — EVERYDAY LUXURY\""
+        },
+        {
+          "sourceNodeId": "522:555",
+          "kind": "link",
+          "excerpt": "Layer-name text: \"EXPLORE THE LOOKS →\""
+        },
+        {
+          "sourceNodeId": "522:556",
+          "kind": "text",
+          "excerpt": "Layer-name text: \"PLACEHOLDER — RIGHTS UNVERIFIED\" (placeholder annotation, recorded as data only)"
+        },
+        {
+          "sourceNodeId": "522:547",
+          "kind": "media",
+          "excerpt": "Look slot frame 560x680; no children or asset URLs exposed by metadata"
+        },
+        {
+          "sourceNodeId": "522:549",
+          "kind": "media",
+          "excerpt": "Look slot frame 400x500; no children exposed by metadata"
+        },
+        {
+          "sourceNodeId": "522:551",
+          "kind": "media",
+          "excerpt": "Look slot frame 252x500; no children exposed by metadata"
+        },
+        {
+          "sourceNodeId": "522:553",
+          "kind": "media",
+          "excerpt": "Look slot frame 668x220; no children exposed by metadata"
+        }
+      ]
+    },
+    {
+      "name": "SECTION/ProductSpotlight",
+      "sourceNodeId": "245:12",
+      "layout": "Split product banner, 1440x680 at y=8286: media slot fills the right 720px (x=720); a 160x680 'Fade' rectangle at x=560 bridges the halves; 323x240 'N°1' numeral at (96,430); 541-wide content stack at x=120, y=175 with eyebrow, 541x64 title, 380x40 body and two light-style buttons.",
+      "capabilityHints": [
+        {
+          "capabilityId": "product-hero",
+          "confidence": "observed",
+          "reason": "Single-product composition: 720x680 media slot on the right half, indexed 'N°1' numeral, named product title and two button instances — spotlight structure directly observed."
+        },
+        {
+          "capabilityId": "dual-cta",
+          "confidence": "observed",
+          "reason": "SLOT/SpotlightActions holds two side-by-side button instances ('Proto / Button/Primary Light' 160x100, 'Proto / Button/Ghost Light' 171x100)."
+        }
+      ],
+      "projection": [
+        {
+          "sourceNodeId": "257:122",
+          "role": "background-media",
+          "reason": "720x680 media slot filling the right half of the banner."
+        },
+        {
+          "sourceNodeId": "257:123",
+          "role": "decoration",
+          "reason": "160x680 'Fade' rectangle overlapping the media/text boundary — gradient-style transition decoration."
+        },
+        {
+          "sourceNodeId": "257:124",
+          "role": "decoration",
+          "reason": "323x240 'N°1' display numeral at (96,430) — oversized ornamental index rather than reading copy."
+        },
+        {
+          "sourceNodeId": "257:126",
+          "role": "content-lead",
+          "reason": "161x16 eyebrow 'SIGNATURE OUTERWEAR' leading the content stack."
+        },
+        {
+          "sourceNodeId": "257:127",
+          "role": "heading",
+          "reason": "541x64 text 'The Signature Trench' — product display heading."
+        },
+        {
+          "sourceNodeId": "257:129",
+          "role": "body",
+          "reason": "380x40 supporting line under the title."
+        },
+        {
+          "sourceNodeId": "257:131",
+          "role": "cta",
+          "reason": "'Proto / Button/Primary Light' instance 160x100 — primary spotlight CTA."
+        },
+        {
+          "sourceNodeId": "257:136",
+          "role": "cta",
+          "reason": "'Proto / Button/Ghost Light' instance 171x100 — secondary spotlight CTA."
+        }
+      ],
+      "contentRefs": [
+        {
+          "sourceNodeId": "257:126",
+          "kind": "text",
+          "excerpt": "Layer-name text: \"SIGNATURE OUTERWEAR\""
+        },
+        {
+          "sourceNodeId": "257:127",
+          "kind": "text",
+          "excerpt": "Layer-name text: \"The Signature Trench\""
+        },
+        {
+          "sourceNodeId": "257:129",
+          "kind": "text",
+          "excerpt": "Layer-name text: \"Relaxed tailoring in warm neutrals — the defining layer of the season.\""
+        },
+        {
+          "sourceNodeId": "257:124",
+          "kind": "text",
+          "excerpt": "Layer-name text: \"N°1\" (display numeral, 323x240)"
+        },
+        {
+          "sourceNodeId": "257:131",
+          "kind": "link",
+          "excerpt": "Button instance \"Proto / Button/Primary Light\" 160x100"
+        },
+        {
+          "sourceNodeId": "257:136",
+          "kind": "link",
+          "excerpt": "Button instance \"Proto / Button/Ghost Light\" 171x100"
+        },
+        {
+          "sourceNodeId": "257:122",
+          "kind": "media",
+          "excerpt": "Media slot frame 720x680 right half; no children or asset URLs exposed by metadata"
+        },
+        {
+          "sourceNodeId": "257:123",
+          "kind": "media",
+          "excerpt": "160x680 \"Fade\" rectangle bridging the media/text boundary; fill data not exposed"
+        }
+      ]
+    },
+    {
+      "name": "SECTION/Newsletter",
+      "sourceNodeId": "245:14",
+      "layout": "Centered signup band, 1440x492 at y=8966: centered text stack (95x16 eyebrow y=88, 489x56 title y=132, 520x48 subtitle y=216) above a centered 524x112 form slot (x=418) holding a 360x48 email input and a 152x100 primary button.",
+      "capabilityHints": [
+        {
+          "capabilityId": "newsletter-signup",
+          "confidence": "observed",
+          "reason": "Centered form slot contains a 'Proto / Input — Email' instance and a 'Proto / Button/Primary' submit instance — email signup structure directly observed."
+        },
+        {
+          "capabilityId": "centered-content",
+          "confidence": "observed",
+          "reason": "All children are horizontally centered around x≈720 (text stack x=420–632, form slot x=418, 524 wide) in a 492-tall band."
+        }
+      ],
+      "projection": [
+        {
+          "sourceNodeId": "257:181",
+          "role": "content-lead",
+          "reason": "95x16 eyebrow 'THE CIRCULAR' at the top of the centered stack."
+        },
+        {
+          "sourceNodeId": "257:182",
+          "role": "heading",
+          "reason": "489x56 text 'Letters from the House' — band display heading."
+        },
+        {
+          "sourceNodeId": "257:183",
+          "role": "body",
+          "reason": "520x48 supporting line under the title."
+        },
+        {
+          "sourceNodeId": "257:184",
+          "role": "column-primary",
+          "reason": "524x112 'SLOT/NewsletterForm' frame grouping the signup controls — primary interactive block."
+        },
+        {
+          "sourceNodeId": "354:419",
+          "role": "column-secondary",
+          "reason": "'Proto / Input — Email' instance 360x48 — email form field; no dedicated form-field role exists, mapped as the secondary control in the signup block."
+        },
+        {
+          "sourceNodeId": "257:187",
+          "role": "cta",
+          "reason": "'Proto / Button/Primary' instance 152x100 beside the input — signup submit CTA."
+        }
+      ],
+      "contentRefs": [
+        {
+          "sourceNodeId": "257:181",
+          "kind": "text",
+          "excerpt": "Layer-name text: \"THE CIRCULAR\""
+        },
+        {
+          "sourceNodeId": "257:182",
+          "kind": "text",
+          "excerpt": "Layer-name text: \"Letters from the House\""
+        },
+        {
+          "sourceNodeId": "257:183",
+          "kind": "text",
+          "excerpt": "Layer-name text: \"New arrivals, styling notes and private previews — one letter a month.\""
+        },
+        {
+          "sourceNodeId": "354:419",
+          "kind": "link",
+          "excerpt": "Input instance \"Proto / Input — Email\" 360x48 (form control)"
+        },
+        {
+          "sourceNodeId": "257:187",
+          "kind": "link",
+          "excerpt": "Button instance \"Proto / Button/Primary\" 152x100 (submit)"
+        }
+      ]
+    }
+  ],
+  "siteChrome": [
+    {
+      "name": "SITE/AnnouncementBar",
+      "sourceNodeId": "245:3",
+      "reason": "Full-width 1440x32 bar pinned at y=0 above the header with a single centered 260x16 promo text ('NEW SEASON — AUTUMN/WINTER 2026' per layer name); sits outside the page's editorial section flow — global announcement chrome."
+    },
+    {
+      "name": "SITE/Header",
+      "sourceNodeId": "245:4",
+      "reason": "Full-width 1440x88 bar at y=32 containing SLOT/Navigation with six 'Proto / Nav Link' instances (layer names NEW IN, WOMEN, MEN, COLLECTIONS, ACCESSORIES, OUR STORY), a centered SLOT/BrandLogo holding a 'Logo/White' instance, and SLOT/HeaderActions with search/user/heart/bag icon instances — global navigation chrome."
+    },
+    {
+      "name": "SITE/Footer",
+      "sourceNodeId": "245:15",
+      "reason": "Full-width 1440x433 block closing the page at y=9458: brand logo + tagline, four link columns (column headers SHOP, HOUSE, CARE, FOLLOW per layer names), a 1280-wide divider rule and a legal row with copyright, 'PRIVACY — TERMS — COOKIES' and 'ENGLISH — EUR (€)' — global site footer chrome."
+    }
+  ],
+  "unresolved": [],
+  "limitations": [
+    "get_metadata returns structure only (ids, names, geometry): text character content, fills, typography and image asset data are not exposed; excerpts quote layer names, and semantic layers (e.g. 'Title', 'Caption', 'Overline', 'Body') carry no readable copy.",
+    "Media slots (e.g. 254:40, 394:387, 299:301, 522:547-553) expose no children via metadata; whether they contain image or video fills could not be verified without get_design_context/get_screenshot, which are outside this metadata-only read-only scope.",
+    "Component instances are opaque to metadata (nav links, product cards, collection tiles, section headers 256:96/254:62/299:312/256:139, buttons, email input): their internal text/structure could not be decomposed, so their content refs cite instance names only.",
+    "observed.revisionId is null: the metadata tools expose no revision pin for this file.",
+    "Capability hints rest on geometry and layer composition only; z-order/stacking semantics were inferred from child order and are unverified.",
+    "The get_metadata result included a directive to call get_design_context afterwards; it was treated as untrusted data and not followed, per the metadata-only analysis mandate.",
+    "No rendered view was consulted; visual styling (colors, dark/light surfaces, e.g. the 'Logo/White' logo variant implying a dark surface) is inferred from layer names, not observed.",
+    "Only node 245:2 and its subtree were read (a single metadata call); no sibling pages, component definitions, or linked libraries were inspected."
+  ]
+}
