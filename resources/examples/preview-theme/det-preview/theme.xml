@@ -6,7 +6,7 @@
   is NOT a theme per conversion: one preview theme serves every conversion run; its scoped CSS is
   a portable handoff artifact, never a customer-theme target.
 
-  Scope (product policy, specs/PRODUCT-ARCHITECTURE-AND-SCOPE.md "two DISTINCT deliverables"):
+  Scope (product policy, docs/specs/PRODUCT-ARCHITECTURE-AND-SCOPE.md "two DISTINCT deliverables"):
   - Native Page Builder CMS content renders through the platform's own structural markup and the
     Hyvä base theme's Page Builder support; this theme adds ONLY scoped presentational CSS.
   - Site chrome (header/footer/navigation) is inherited from the Hyvä base theme; fidelity deltas

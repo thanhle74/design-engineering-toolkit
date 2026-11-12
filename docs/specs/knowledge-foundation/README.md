@@ -24,7 +24,7 @@ Requirements → Platform/UI Audit → Capability Registry → UX Architecture
 
 This package governs the **knowledge foundation + decision/design gates only**. The roadmap above is
 the single reference for every milestone in [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md); stages
-that already have artifacts from V1 (Figma Design pipeline, [docs/ARCHITECTURE.md](../../docs/ARCHITECTURE.md))
+that already have artifacts from V1 (Figma Design pipeline, [docs/ARCHITECTURE.md](../../ARCHITECTURE.md))
 are consumers of this foundation, not replacements for it.
 
 ## The three knowledge repositories
@@ -42,8 +42,8 @@ Logical domains with shared contracts — **not** three mandatory physical datab
 | Document | Answers |
 |---|---|
 | [KNOWLEDGE-ARCHITECTURE.md](KNOWLEDGE-ARCHITECTURE.md) | Domain boundaries, ingestion/query architecture, knowledge lifecycle, cross-project protections, dependency diagram |
-| [CONTRACTS.md](CONTRACTS.md) | The nine architectural contracts: identity/taxonomy, evidence/proof, relations graph, lifecycle, search/query, cross-boundary ports, UX-planning contract, privacy/license/security, portability |
-| [schemas/](schemas/README.md) | Example schema drafts: KB-1 capability, KB-2 UI component, KB-3 project record, cross-KB relations — Draft 2020-12, compatible with the V1 schema family |
+| [CONTRACTS.md](CONTRACTS.md) | The nine architectural contracts: identity/taxonomy, docs/evidence/proof, relations graph, lifecycle, search/query, cross-boundary ports, UX-planning contract, privacy/license/security, portability |
+| [resources/schemas/](../../../resources/schemas/README.md) | Example schema drafts: KB-1 capability, KB-2 UI component, KB-3 project record, cross-KB relations — Draft 2020-12, compatible with the V1 schema family |
 | [SOURCE-INVENTORY.md](SOURCE-INVENTORY.md) | Evidence-based inventory of every source this foundation reuses (toolkit docs, local Slaunchpad checkout, Hyvä UI package, issue receipts) + reuse matrix, **no proprietary code** |
 | [TECH-ADR.md](TECH-ADR.md) | Technology selection with evidence: language/runtime, serialization/validation, storage/query, ingestion, packaging — each as Chosen / Alternatives / Trade-offs / Evidence / When-to-revisit |
 | [UX-CAPABILITY-PLANNING.md](UX-CAPABILITY-PLANNING.md) | The future UX-planning contract: requirements → ranked reusable-section plan, missing-feature handling (`GAP` / `CUSTOM_REQUIRED` / `UNKNOWN`), synthetic walkthrough on a **non-Magento** project |

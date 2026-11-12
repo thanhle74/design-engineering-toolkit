@@ -1,8 +1,8 @@
 # Knowledge Foundation — Contracts
 
-> **Status:** DRAFT for review (issue [#7](https://github.com/thanhle74/design-engineering-toolkit/issues/7)). Normative for the three knowledge bases and their boundaries. Companion documents: [KNOWLEDGE-ARCHITECTURE.md](KNOWLEDGE-ARCHITECTURE.md) (how these contracts are inhabited), (schema drafts: removed in [68] as superseded by the frozen [`resources/schemas/kb/`](../../../resources/schemas/kb/) family — git history at `specs/knowledge-foundation/schemas/`), [TECH-ADR.md](TECH-ADR.md) (technology that will enforce them).
+> **Status:** DRAFT for review (issue [#7](https://github.com/thanhle74/design-engineering-toolkit/issues/7)). Normative for the three knowledge bases and their boundaries. Companion documents: [KNOWLEDGE-ARCHITECTURE.md](KNOWLEDGE-ARCHITECTURE.md) (how these contracts are inhabited), (schema drafts: removed in [68] as superseded by the frozen [`resources/schemas/kb/`](../../../resources/schemas/kb/) family — git history at the pre-[68] path `specs/knowledge-foundation/schemas/`), [TECH-ADR.md](TECH-ADR.md) (technology that will enforce them).
 >
-> **These are contracts, not implementations.** Nothing here implies a running engine. The V1 contract family in [`schemas/`](../../schemas/) (issue #1) stays valid; this document **generalizes** its conventions and adds the knowledge layer on top.
+> **These are contracts, not implementations.** Nothing here implies a running engine. The V1 contract family in [`resources/schemas/`](../../../resources/schemas) (issue #1) stays valid; this document **generalizes** its conventions and adds the knowledge layer on top.
 
 ## 0. Conventions inherited from V1 (normative)
 
@@ -90,7 +90,7 @@ Three vocabularies exist across the toolkit's history. They describe different a
 | Vocabulary | Axis | Where used | Mapping |
 |---|---|---|---|
 | `DETECTED / ASSUMED / TESTED / UNKNOWN` | **Proof**: how well-established a claim is | KB records (this document) | canonical for the knowledge layer |
-| `observed / derived / illustrative` | **Extraction method**: how a design value was obtained | V1 Figma contracts (`schemas/*`) | `observed`→DETECTED; `derived`→DETECTED (method=derived); `illustrative`→ASSUMED |
+| `observed / derived / illustrative` | **Extraction method**: how a design value was obtained | V1 Figma contracts (`resources/schemas/*`) | `observed`→DETECTED; `derived`→DETECTED (method=derived); `illustrative`→ASSUMED |
 | `DISCOVERED → REGISTERED → STRUCTURALLY_MAPPED → ADMIN_ROUNDTRIP_VERIFIED → VISUALLY_VERIFIED` | **Converter stage**: how far a capability has progressed through the #5 pipeline | Converter records (issue #5, PR #6) | stage ≤ proof level: `DISCOVERED`/`REGISTERED` require DETECTED; `STRUCTURALLY_MAPPED` requires DETECTED on the mapping; `ADMIN_ROUNDTRIP_VERIFIED`/`VISUALLY_VERIFIED` require TESTED |
 
 Rule: a converter-stage status may never claim more than the record's proof level supports (a capability cannot be `ADMIN_ROUNDTRIP_VERIFIED` on `ASSUMED` evidence). The two ladders coexist by axis; neither replaces the other.
@@ -222,12 +222,12 @@ External tools (Figma MCP, Magento runtime, Hyvä packages, vendor CLIs) are **o
 | `ProjectSourceAdapter` | Bind a project's source roots to the toolkit (per-project, local config) | `bind(profile) → SourceBinding{roots, denyGlobs, digests}`; refuses absolute defaults |
 | `PlatformCapabilityAdapter` | KB-1 ingestion for a platform (Magento adapter is the first; Shopify et al. later) | `scan(binding) → {capabilities[], dataProviders[], relations[], observed}` |
 | `UIInventoryAdapter` | KB-2 ingestion per UI source (hyva-ui / secomm-uiwidget / page-builder-native / future others) | `scan(binding) → {components[], variants[], relations[], observed}`; metadata-only for licensed sources |
-| `RequirementsSourceAdapter` | KB-3 ingestion from specs/tickets/approved notes | `scan(binding) → {requirements[], uxIntents[], decisions[], relations[], observed}` |
+| `RequirementsSourceAdapter` | KB-3 ingestion from docs/specs/tickets/approved notes | `scan(binding) → {requirements[], uxIntents[], decisions[], relations[], observed}` |
 | `KnowledgeStore` | Durable, versioned, per-project-isolated record storage | `put(record)`, `get(id, at?)`, `diff(sinceRev)`, `listStates()`, `archive(id)`; enforces §1.2/§3.2/§8.2 at write time |
 | `KnowledgeQuery` | Deterministic filtered reads (§5) | `query(filter) → {hits[{record, evidence, score?}], diagnostics[]}` |
 | `CapabilityMatcher` | Match a need statement to candidate capabilities/components | `match(needRef) → {candidates[{record, viaEdges, evidence}], gaps[{needRef, classification}]}` |
 
-Port rules: ports are **interfaces, not processes** — they may be satisfied by CLI commands, library calls, or agent skills; no port may hardcode a platform; adapter registration is data (profiles/registry files), not code changes to core.
+Port rules: ports are **interfaces, not processes** — they may be satisfied by CLI commands, library calls, or agent skills; no port may hardcode a platform; adapter registration is data (resources/profiles/registry files), not code changes to core.
 
 ---
 
@@ -306,7 +306,7 @@ On denial: emit diagnostic `DENIED_PATH_SKIPPED {path}` and continue — fail-op
 
 ## Schema drafts
 
-Machine-checkable drafts for the record shapes these contracts describe live in [schemas/](schemas/README.md):
+Machine-checkable drafts for the record shapes these contracts describe live in [resources/schemas/](../../../resources/schemas/README.md):
 
 | Schema | Covers |
 |---|---|

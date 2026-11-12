@@ -1,8 +1,8 @@
-# Converter contract family (`schemas/converter/`)
+# Converter contract family (`resources/schemas/converter/`)
 
 Versioned, **platform-neutral** contracts for the converter pipeline
-(*Capability Registry → Structural Mapping → Functional Round-trip → Visual Fidelity*, [Issue #5](https://github.com/thanhle74/design-engineering-toolkit/issues) #5 spec: [`specs/ISSUE-5-converter-architecture.md`](../../specs/ISSUE-5-converter-architecture.md)).
-Field definitions and the G2 materialization record for `NodeIR`, `PageStructure`, `SourceReview` and the `DesignSourcePort` interface live in [`docs/converter/CONTRACTS.md`](../../docs/converter/CONTRACTS.md).
+(*Capability Registry → Structural Mapping → Functional Round-trip → Visual Fidelity*, [Issue #5](https://github.com/thanhle74/design-engineering-toolkit/issues) #5 spec: [`docs/specs/ISSUE-5-converter-architecture.md`](../../../docs/specs/ISSUE-5-converter-architecture.md)).
+Field definitions and the G2 materialization record for `NodeIR`, `PageStructure`, `SourceReview` and the `DesignSourcePort` interface live in [`docs/converter/CONTRACTS.md`](../../../docs/converter/CONTRACTS.md).
 
 ## Schemas (all Draft 2020-12)
 
@@ -17,12 +17,12 @@ Field definitions and the G2 materialization record for `NodeIR`, `PageStructure
 | [`source-review.schema.json`](source-review.schema.json) | `det extract` (G2 accountability report) | Humans reviewing classification/exclusions; gate evidence |
 | [`common.defs.json`](common.defs.json) | — | Shared `$defs` for the whole family |
 
-Worked examples: [`examples/converter/`](../../examples/converter/) (a real-platform registry derived from the [5] W-B audit, and a resolver report) and `src/core/__tests__/fixtures/synthetic-flatcms/` (a synthetic second platform proving core neutrality). The V1 family ([`../`](../)) stays frozen at its own major — the families are independent (ADR-005-011).
+Worked examples: [`resources/examples/converter/`](../../examples/converter) (a real-platform registry derived from the [5] W-B audit, and a resolver report) and `src/core/__tests__/fixtures/synthetic-flatcms/` (a synthetic second platform proving core neutrality). The V1 family ([`../`](../)) stays frozen at its own major — the families are independent (ADR-005-011).
 
 ## Versioning
 
 - Payloads carry `schemaVersion` (integer, **major** only — currently `1`). Unknown majors are rejected (`SCHEMA_VERSION_UNSUPPORTED`), never best-effort parsed.
-- Additive minors are tracked here. Breaking changes (including **any new enum value** — see closed enums below) require a new major + migration ADR in [`docs/converter/DECISIONS.md`](../../docs/converter/DECISIONS.md).
+- Additive minors are tracked here. Breaking changes (including **any new enum value** — see closed enums below) require a new major + migration ADR in [`docs/converter/DECISIONS.md`](../../../docs/converter/DECISIONS.md).
 
 ### Version history
 
@@ -75,10 +75,10 @@ Every enum below is **closed**: adding a value is a breaking change (new major +
 
 ## Neutrality rules (normative)
 
-- These schemas contain **no platform name, no platform id grammar, and no filesystem path**. The repo test gate greps `schemas/converter/*.json` for platform literals, Figma-style node-id patterns and absolute/home paths — zero matches is the pass condition.
+- These schemas contain **no platform name, no platform id grammar, and no filesystem path**. The repo test gate greps `resources/schemas/converter/*.json` for platform literals, Figma-style node-id patterns and absolute/home paths — zero matches is the pass condition.
 - Payload **values** may name platforms (e.g. the Magento example registry); the schemas must not.
 - `source://`-scheme locators make absolute paths unrepresentable. The `sourceId → local path` binding lives only in the per-run profile/env/CLI.
-- Exempt from the grep guard: the V1 family (legitimately Figma-typed), `examples/converter/*.json` (sample payload values), docs, specs and `.claude/` policy files. The exemption list is explicit in the test.
+- Exempt from the grep guard: the V1 family (legitimately Figma-typed), `resources/examples/converter/*.json` (sample payload values), docs, specs and `.claude/` policy files. The exemption list is explicit in the test.
 
 ## Integration notes (reconciliation decisions, issue #5)
 

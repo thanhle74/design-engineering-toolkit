@@ -21,7 +21,7 @@ source is bundled in this repository — the theme directory carries only toolki
 
 ```bash
 # 1. Copy into the checkout (never into a customer theme):
-cp -r examples/preview-theme/det-preview <magento-checkout>/app/design/frontend/DET/preview
+cp -r resources/examples/preview-theme/det-preview <magento-checkout>/app/design/frontend/DET/preview
 
 # 2. Register + flush:
 bin/magento setup:upgrade && bin/magento cache:flush

@@ -1,6 +1,6 @@
 # Isolated local preview — guarded install runbook (issue #28 / C3)
 
-The one-shot `det build --config` (see `examples/build/`) is **offline computation only**: it
+The one-shot `det build --config` (see `resources/examples/build/`) is **offline computation only**: it
 never writes to any Magento checkout, CMS, store configuration or theme — that boundary is
 recorded as the `PREVIEW_INSTALL_OPERATOR_GATED` gap in every build manifest. The steps below
 are the **operator-executed, guarded** preparation that turns a build bundle into the isolated
@@ -25,11 +25,11 @@ form).
 
 ```bash
 # 0. Build the content bundle offline (no checkout access happens here):
-node bin/det.js build --config examples/build/project.example.json --out out/build-sample
+node bin/det.js build --config resources/examples/build/project.example.json --out out/build-sample
 #    → 03-composition/native-content.html (+ build-manifest.json; read its gaps first)
 
-# 1. Install the preview theme source (examples/preview-theme/det-preview/ — see its README):
-cp -r examples/preview-theme/det-preview <checkout>/app/design/frontend/DET/preview
+# 1. Install the preview theme source (resources/examples/preview-theme/det-preview/ — see its README):
+cp -r resources/examples/preview-theme/det-preview <checkout>/app/design/frontend/DET/preview
 cd <checkout> && bin/magento setup:upgrade && bin/magento cache:flush
 #    note the theme_id assigned for DET/preview (bin/magento currently has no list output; check
 #    the theme table or Admin) — put it into the setup script's CONFIG block ($themeId).

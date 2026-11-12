@@ -1,6 +1,6 @@
 # [5] Converter architecture & contract specification
 
-**Status:** INTEGRATED_FOR_G1_REVIEW — architecture pass executed 2026-11-03 (workers W-A..W-D receipts + one integrator; see [docs/converter/RECEIPT-ISSUE5-G1.md](../docs/converter/RECEIPT-ISSUE5-G1.md)). **Target:** [Issue #5](https://github.com/thanhle74/design-engineering-toolkit/issues/5). **No Figma access authorized in this stage.** Approved designs remain frozen.
+**Status:** INTEGRATED_FOR_G1_REVIEW — architecture pass executed 2026-11-03 (workers W-A..W-D receipts + one integrator; see [docs/converter/RECEIPT-ISSUE5-G1.md](../converter/RECEIPT-ISSUE5-G1.md)). **Target:** [Issue #5](https://github.com/thanhle74/design-engineering-toolkit/issues/5). **No Figma access authorized in this stage.** Approved designs remain frozen.
 
 ## 1. Outcomes
 
@@ -26,10 +26,10 @@ core/
   sources/             DesignSourcePort (future implementation; current G1 no source calls)
   normalize/           semantic NodeIR normalization (future)
   resolve/             CapabilityRegistry, ComponentBindingMap, structural solver
-  reports/             ResolutionReport, evidence/diagnostics, deterministic serialization
+  reports/             ResolutionReport, docs/evidence/diagnostics, deterministic serialization
 adapters/
   magento-pagebuilder/ Page Builder capability probe, appearances/master format/importer (G1 read-only probe)
-profiles/
+resources/profiles/
   project-profile.*    project-specific source refs, local checkout location, mapping overlays
 ```
 
@@ -46,18 +46,18 @@ These are **conceptual boundaries**, not an instruction to create empty folders.
 - `NodeIR` (future): stable semantic `nodeId`, `kind`, `children`, `layout{direction, positioning, constraints, relativeSizes, overflow}`, `contentSlots`, `sourceRef`. Do not confuse visual pixels with component semantics.
 - `ComponentBindingMap`: versioned mapping `{sourceComponentId, variantConditions, targetCapabilityId, propsTransform, fallbackPolicy}`. Unmatched variants produce `UNSUPPORTED`, not guessed CSS.
 - `PageStructure` (future): `sections[]` with stable IDs, content and media references, responsive composition, capability resolution, source refs. **PageStructure is an intermediate artifact, not raw `cms_page.content`**.
-- `ResolutionReport`: per-section status, candidate/selected capabilities, unsupported reasons, mapping confidence, evidence/pin, missing contracts; summary coverage `native/widget/custom-required/unsupported/chrome` (one vocabulary with the registry `category` enum).
+- `ResolutionReport`: per-section status, candidate/selected capabilities, unsupported reasons, mapping confidence, docs/evidence/pin, missing contracts; summary coverage `native/widget/custom-required/unsupported/chrome` (one vocabulary with the registry `category` enum).
 
 **Proof-level ladder:** `DISCOVERED` → `REGISTERED` → `STRUCTURALLY_MAPPED` → `ADMIN_ROUNDTRIP_VERIFIED` → `VISUALLY_VERIFIED`. Promotion needs evidence for that specific step.
 
-All output types must have explicit schema major/version, stable identifiers, deterministic ordering and provenance. G1 materialized these as a **separate family `schemas/converter/`** (own integer major; V1 `schemas/*` stays frozen at major 1 — see [schemas/converter/README.md](../schemas/converter/README.md) and ADR-005-011): `capability-registry`, `component-binding-map`, `resolution-report`, `converter-profile` (+ shared `common.defs.json`), validated against real and synthetic payloads by the repo test gate (`npm test`, 30 checks incl. the T-01..T-14 negative plan). `NodeIR`/`PageStructure` field drafts and the `DesignSourcePort` interface are documented in [docs/converter/CONTRACTS.md](../docs/converter/CONTRACTS.md) and materialize at their gates (ADR-005-013). Breaking changes need a new major + migration ADR ([docs/converter/DECISIONS.md](../docs/converter/DECISIONS.md)).
+All output types must have explicit schema major/version, stable identifiers, deterministic ordering and provenance. G1 materialized these as a **separate family `resources/schemas/converter/`** (own integer major; V1 `resources/schemas/*` stays frozen at major 1 — see [resources/schemas/converter/README.md](../../resources/schemas/converter/README.md) and ADR-005-011): `capability-registry`, `component-binding-map`, `resolution-report`, `converter-profile` (+ shared `common.defs.json`), validated against real and synthetic payloads by the repo test gate (`npm test`, 30 checks incl. the T-01..T-14 negative plan). `NodeIR`/`PageStructure` field drafts and the `DesignSourcePort` interface are documented in [docs/converter/CONTRACTS.md](../converter/CONTRACTS.md) and materialize at their gates (ADR-005-013). Breaking changes need a new major + migration ADR ([docs/converter/DECISIONS.md](../converter/DECISIONS.md)).
 
 ## 4. Magento/Hyvä adapter contract
 
 Check source at local path supplied by project profile and **read-only** during G1:
 - Native Page Builder registered content types: start with `Row, Columns, Tabs, Text, Heading, Buttons, Divider, HTML Code, Image, Video, Banner, Slider, Map, Block, Products` but validate the installed version/enablement.
 - Enumerate appearances, master/preview templates, form fields, allowed parents/children, nested structures, responsive properties, data bindings and editor persistence. **A palette screenshot is not source evidence**.
-- `Secomm_UiWidget`: read `.ai/specs/SPEC-FEAT-J06WXZ-secomm-ui-widgets.md`, eligibility matrix, solution design, and live `app/code/Secomm/UiWidget` registry. Approved B1 matrix lists 21 IDs; verify actual enablement rather than assuming all work.
+- `Secomm_UiWidget`: read `.ai/docs/specs/SPEC-FEAT-J06WXZ-secomm-ui-widgets.md`, eligibility matrix, solution design, and live `app/code/Secomm/UiWidget` registry. Approved B1 matrix lists 21 IDs; verify actual enablement rather than assuming all work.
 - Page Builder master content is HTML and uses content-type definitions; don't persist the converter JSON directly into `cms_page.content`.
 - Dynamic product/category data, pricing, inventory and wishlist must resolve against Magento context. Neither Figma demo data nor mock prices is a production source.
 - Magento/Hyvä presentation skill references in the local project: `hyva-ui-component`, `hyva-alpine-component`, `hyva-compile-tailwind-css`, `hyva-global-style-foundation`, `magento-module-analysis`.

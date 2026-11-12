@@ -17,7 +17,7 @@
 
 | | |
 |---|---|
-| Scope | This `specs/knowledge-foundation/` package: contracts, schema drafts, source inventory, tech ADR, planning contract, this plan, integration receipt |
+| Scope | This `docs/specs/knowledge-foundation/` package: contracts, schema drafts, source inventory, tech ADR, planning contract, this plan, integration receipt |
 | Exit criteria | Package reviewable in a draft PR; exit status `READY_FOR_KNOWLEDGE_FOUNDATION_ARCHITECTURE_REVIEW` recorded on issue #7 |
 | Estimate | done (this package) |
 | Next gate | **GO-1 (Owner)**: approve architecture + technology selection → creates implementation scope. No code before GO-1. |
@@ -26,7 +26,7 @@
 
 | | |
 |---|---|
-| Scope | Promote schema drafts to frozen `schemas/kb-*.schema.json` (or adjust per review, then freeze); ajv (Draft 2020-12) CI validating schemas + synthetic fixture records; negative fixtures; decide `OPEN_DECISION` #2 (typing strategy) with one measured iteration |
+| Scope | Promote schema drafts to frozen `resources/schemas/kb-*.schema.json` (or adjust per review, then freeze); ajv (Draft 2020-12) CI validating schemas + synthetic fixture records; negative fixtures; decide `OPEN_DECISION` #2 (typing strategy) with one measured iteration |
 | Depends | GO-1 |
 | Exit criteria | CI red/green on positive + negative fixtures; frozen contracts documented in schemas README version history |
 | Estimate | small (days) |
@@ -56,7 +56,7 @@
 
 | | |
 |---|---|
-| Scope | Out-of-process adapters against the owner's authorized local checkout (root supplied via local config; path never committed): `adapter-magento` (KB-1), `adapter-hyva-ui` (KB-2 metadata-only), `adapter-uiwidget` (KB-2 + `adaptedFrom` edges), `adapter-pagebuilder-native`, `adapter-requirements` (KB-3 seed from existing specs/pilot materials per [SOURCE-INVENTORY.md](SOURCE-INVENTORY.md) §sufficiency) |
+| Scope | Out-of-process adapters against the owner's authorized local checkout (root supplied via local config; path never committed): `adapter-magento` (KB-1), `adapter-hyva-ui` (KB-2 metadata-only), `adapter-uiwidget` (KB-2 + `adaptedFrom` edges), `adapter-pagebuilder-native`, `adapter-requirements` (KB-3 seed from existing docs/specs/pilot materials per [SOURCE-INVENTORY.md](SOURCE-INVENTORY.md) §sufficiency) |
 | Depends | GO-2 + M2 |
 | Exit criteria | Real KBs built for the pilot project: counts reconcile with the audited inventory (528 tracked modules, 21 widgets, 20 PB content types, 36/70 Hyvä variants); every record carries evidence; re-audit trigger dry-run (touch a digest ⇒ STALE propagates); license separation audit (zero Hyvä source bytes in store — asserted by fixture-comparison test) |
 | Estimate | medium |

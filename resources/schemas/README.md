@@ -1,12 +1,12 @@
 # Schemas
 
-Versioned, platform-neutral JSON contracts for the Design Engineering Toolkit (V1 architecture: [docs/ARCHITECTURE.md](../docs/ARCHITECTURE.md)).
+Versioned, platform-neutral JSON contracts for the Design Engineering Toolkit (V1 architecture: [docs/ARCHITECTURE.md](../../docs/ARCHITECTURE.md)).
 
 ## Contracts
 
 | Schema | Payload produced by | Consumed by |
 |---|---|---|
-| [`project-profile.schema.json`](project-profile.schema.json) | Written per project (see [`../profiles/`](../profiles/)) | S0 Preflight — validates project inputs & permissions |
+| [`project-profile.schema.json`](project-profile.schema.json) | Written per project (see [`../resources/profiles/`](../profiles)) | S0 Preflight — validates project inputs & permissions |
 | [`source-manifest.schema.json`](source-manifest.schema.json) | S2 Audit | S3 Normalize; humans reviewing what was included/excluded |
 | [`design-tokens.schema.json`](design-tokens.schema.json) | S3 Normalize | S4 Compose; future platform adapters |
 | [`component-defs.schema.json`](component-defs.schema.json) | S3 Normalize | S4 Compose; future platform adapters |

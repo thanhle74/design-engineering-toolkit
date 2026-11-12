@@ -43,7 +43,7 @@ Single-root flow ([58] runbook): `npm run start` from the repo root (port 3100; 
 - Build triggered exactly as the UI button does — `POST /api/builds {"configId":"slaunchpad-home-real-derived"}` → **202** `build-1794385166500` → **exit 0** (0.93s); stages `capability-probe: reused / extraction: completed / composition: completed`.
 - Run page: gaps verbatim (`COMPOSITION_SKIPS_PRESENT · 10`, `COMPOSITION_GAPS_PRESENT · 12`, both PREVIEW boundaries), source design tree renders all 12 real sections with per-node Compose vs Review tags (mapped=green, gap=gold, NEEDS_REVIEW=gold+warning, PARTIAL amber band), provenance footer, **`PREVIEW_UNAVAILABLE` rendered verbatim — not simulated**.
 - Download integrity: `GET /api/runs/<runId>/artifacts/03-composition%2Fnative-content.html` → 200, **3288 bytes, sha256 `6362c6a9…893bdf` == build-manifest output hash** (byte-verified).
-- Sanitized committed evidence: `evidence/issue-61/operator-run.antd-light.json` (machine paths replaced with `<repo-root>` per the evidence-path rule).
+- Sanitized committed evidence: `docs/evidence/issue-61/operator-run.antd-light.json` (machine paths replaced with `<repo-root>` per the evidence-path rule).
 - 409 single-build semantics unchanged (api route tests cover it; the live race was not exercised because the real build finishes in ~1s).
 
 ## 5. Visual evidence (light UI, this commit)

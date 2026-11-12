@@ -15,7 +15,7 @@ without edits. No credentials, no provider identifiers, no machine-specific abso
 
 | File | Role | Provenance |
 |---|---|---|
-| `snapshot-project/figma-home-desktop.245-2.tree.json` | offline design-source tree document (fixture transport) | derived **verbatim** from `evidence/issue-18/live-read-verified/node-ir.json` by `tools/derive-snapshot-tree.mjs`; revision pinned inside (`2417494580183108397`) |
+| `snapshot-project/figma-home-desktop.245-2.tree.json` | offline design-source tree document (fixture transport) | derived **verbatim** from `docs/evidence/issue-18/live-read-verified/node-ir.json` by `tools/derive-snapshot-tree.mjs`; revision pinned inside (`2417494580183108397`) |
 | `profile.json` | converter profile (`slaunchpad-fashion`, `magento-pagebuilder`) | design source = the committed tree document; platform-checkout path stays a placeholder sentinel |
 | `capability-registry.json` | pinned capability evidence for the build | produced by **one read-only `det inspect`** of the Owner's local checkout at git HEAD `933b36e78211e571e4fab9a78866a02dc1b5e054` (80 capabilities; `source://slaunch-checkout/...` locators, no absolute paths). Committed so the build is portable and re-runnable |
 | `component-bindings.json` | binding map — deliberately **zero** bindings | pinned to the registry revision; no component binding is provable from the committed evidence (28 instances stay `NEEDS_REVIEW`/custom-required) |
@@ -42,7 +42,7 @@ without edits. No credentials, no provider identifiers, no machine-specific abso
 
 ## Run it
 
-Operator runbook (Studio on Fedora): [docs/runbook-real-derived-studio-build.md](../../../docs/runbook-real-derived-studio-build.md).
+Operator runbook (Studio on Fedora): [docs/runbook-real-derived-studio-build.md](../../../../docs/runbook-real-derived-studio-build.md).
 Since [58] the short form is the single-root operator flow — this project is cataloged
 **in place** by Studio (no copying, no exports):
 
@@ -62,7 +62,7 @@ directory stays read-only):
 
 ```bash
 node bin/det.js build \
-  --config examples/build/slaunchpad-home-real-derived/build-config.json \
+  --config resources/examples/build/slaunchpad-home-real-derived/build-config.json \
   --out out/det-bundles/slaunchpad-home-real-derived
 ```
 
@@ -76,7 +76,7 @@ node bin/det.js build \
   before any CMS write (which is separately gated anyway).
 - Capability evidence comes from the pinned registry produced against the Owner's checkout
   at the pinned commit; the separately committed
-  `examples/converter/capability-registry.magento-pagebuilder.example.json` ([54],
+  `resources/examples/converter/capability-registry.magento-pagebuilder.example.json` ([54],
   dash-id namespace) remains the plan-side declaration evidence and is unchanged.
 - Regenerating the registry requires the Owner's local checkout (read-only
   `det inspect`); everything else in this directory re-derives from committed artifacts.

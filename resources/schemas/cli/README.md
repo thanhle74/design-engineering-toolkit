@@ -1,4 +1,4 @@
-# CLI runtime contract family (`schemas/cli/`)
+# CLI runtime contract family (`resources/schemas/cli/`)
 
 Versioned, **platform-neutral** contracts for the `det` CLI runtime (issue [#9](https://github.com/thanhle74/design-engineering-toolkit/issues/9)): adapter registration, the adapter input transport, and the per-run tool envelope. The converter pipeline contracts stay in [`../converter/`](../converter/) — that family is untouched by this one (families keep independent majors, per the convention in [`../converter/README.md`](../converter/README.md) / ADR-005-011).
 

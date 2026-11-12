@@ -7,9 +7,9 @@
 
 ## 1. What shipped (source-implemented, gate-tested)
 
-- **Repaired example registry (in place):** `examples/converter/capability-registry.magento-pagebuilder.example.json` — the #9 registry now passes `validateRegistry` with **0 errors**: 55 native/widget entries carry **verified `config-declaration` evidence** from the platform's own registration surfaces; 6 theme-chrome entries are **honestly demoted to `discovered`**. The registry's source revision pin is unchanged (`66aff1e`), all 114 original `source-file` evidence records are untouched.
-- **Reviewer-rerunnable plan inputs:** `profiles/slaunchpad-fashion.example.json` (placeholder paths — `det plan` is pure computation and never resolves them) + `examples/converter/component-binding-map.slaunchpad-fashion.example.json` (empty bindings, pinned to registry revision `66aff1e`).
-- **Committed sanitized evidence:** `evidence/issue-54/live-plan-verified/resolution-report.json` + `evidence/issue-54/live-plan-verified.tool-run.json` + `evidence/issue-54/registration-surface-digests.json` (no owner paths, no credentials, no source bytes).
+- **Repaired example registry (in place):** `resources/examples/converter/capability-registry.magento-pagebuilder.example.json` — the #9 registry now passes `validateRegistry` with **0 errors**: 55 native/widget entries carry **verified `config-declaration` evidence** from the platform's own registration surfaces; 6 theme-chrome entries are **honestly demoted to `discovered`**. The registry's source revision pin is unchanged (`66aff1e`), all 114 original `source-file` evidence records are untouched.
+- **Reviewer-rerunnable plan inputs:** `resources/profiles/slaunchpad-fashion.example.json` (placeholder paths — `det plan` is pure computation and never resolves them) + `resources/examples/converter/component-binding-map.slaunchpad-fashion.example.json` (empty bindings, pinned to registry revision `66aff1e`).
+- **Committed sanitized evidence:** `docs/evidence/issue-54/live-plan-verified/resolution-report.json` + `docs/evidence/issue-54/live-plan-verified.tool-run.json` + `docs/evidence/issue-54/registration-surface-digests.json` (no owner paths, no credentials, no source bytes).
 - **CI regression lock (REG-09):** `tests/registry-suite.mjs` now re-runs the exact acceptance — example registry validates, then the exact committed plan inputs resolve the revision-pinned live-derived #18 `PageStructure` offline (12 sections, coverage honestly 0, zero errors). **`npm test` = 180/180** (179 baseline + REG-09).
 
 ## 2. The exact 61 failures, proven and classified
@@ -23,7 +23,7 @@ Classification by provider: `Magento_PageBuilder` 34 (native), `Secomm_UiWidget`
 **No fabricated evidence.** Every grafted record was verified against the Owner's local Magento checkout (path resolved per the local gitignored profile only — never committed; read-only `git show`/`git diff`/`ls`; the checkout itself was never written):
 
 1. **Enablement at the pinned revision** (tracked `app/etc/config.php` @ `66aff1e`): `Magento_PageBuilder => 1`, `Secomm_UiWidget => 1`, `Magento_Cms => 1`.
-2. **Actual installed vendor state (Coordinator correction, §11):** `vendor/` is untracked — **git history does not pin vendor bytes, and `composer.lock` pins intended resolution, not the installed tree.** Install proof is therefore taken from the composer *installed-time* record `vendor/composer/installed.json` (independent of the lock): it records `magento/module-page-builder 2.2.6-p5` and `magento/module-page-builder-image-attribute 1.7.5` as **installed**, and every registration-surface file read is digest-pinned (per-file sha256) in the committed manifest `evidence/issue-54/registration-surface-digests.json` at checkout state `933b36e`. Native evidence is pinned to that read state — never to `66aff1e`. (`composer.lock` byte-identity across `66aff1e`→`933b36e` is recorded as context only, not as proof of installed bytes.)
+2. **Actual installed vendor state (Coordinator correction, §11):** `vendor/` is untracked — **git history does not pin vendor bytes, and `composer.lock` pins intended resolution, not the installed tree.** Install proof is therefore taken from the composer *installed-time* record `vendor/composer/installed.json` (independent of the lock): it records `magento/module-page-builder 2.2.6-p5` and `magento/module-page-builder-image-attribute 1.7.5` as **installed**, and every registration-surface file read is digest-pinned (per-file sha256) in the committed manifest `docs/evidence/issue-54/registration-surface-digests.json` at checkout state `933b36e`. Native evidence is pinned to that read state — never to `66aff1e`. (`composer.lock` byte-identity across `66aff1e`→`933b36e` is recorded as context only, not as proof of installed bytes.)
 3. **Tracked registration files byte-identical** between `66aff1e` and `933b36e`, worktree clean for `app/code/Secomm/UiWidget/`: `etc/widget.xml` (single umbrella widget `secomm_ui`) and `etc/di.xml` (`Secomm\UiWidget\Model\Component\Registry` items, e.g. `accordion_a → AccordionADefinition` — the module's own component registration surface).
 4. **Registration-surface scans by the shipped `det inspect` adapter** (`adapters/magento-pagebuilder/inspect.ts`, tested by the #9 suites), run read-only against the real checkout with a local gitignored profile (`sourceId: slaunch-checkout`): per-file `view/adminhtml/pagebuilder/content_type/*.xml` declarations (20 files), DI Registry items (21/21 example widgets matched), `di.xml` config arguments. Every native locator is cross-checked against the digest manifest (locator path ↔ digested file).
 5. **`root-container`** (the only native type with no `content_type/*.xml` file) is declared on a platform surface: `vendor/magento/module-page-builder/etc/adminhtml/di.xml` → `<type name="Magento\PageBuilder\Model\Stage\Config">` / `<argument name="rootContainerConfig">` (consumed by `Model/Stage/Config.php`).
@@ -43,10 +43,10 @@ Deterministic graft onto the existing registry: for each native/widget capabilit
 
 ```
 node bin/det.js plan \
-  --profile profiles/slaunchpad-fashion.example.json \
-  --registry examples/converter/capability-registry.magento-pagebuilder.example.json \
-  --bindings examples/converter/component-binding-map.slaunchpad-fashion.example.json \
-  --input evidence/issue-18/live-read-verified/page-structure.json \
+  --profile resources/profiles/slaunchpad-fashion.example.json \
+  --registry resources/examples/converter/capability-registry.magento-pagebuilder.example.json \
+  --bindings resources/examples/converter/component-binding-map.slaunchpad-fashion.example.json \
+  --input docs/evidence/issue-18/live-read-verified/page-structure.json \
   --out out/issue-54-plan --json
 ```
 
@@ -88,21 +88,21 @@ Read-only Magento inspections only (no CMS/Admin/source writes; the checkout was
 ```bash
 npm ci && npm run build
 node bin/det.js plan \
-  --profile profiles/slaunchpad-fashion.example.json \
-  --registry examples/converter/capability-registry.magento-pagebuilder.example.json \
-  --bindings examples/converter/component-binding-map.slaunchpad-fashion.example.json \
-  --input evidence/issue-18/live-read-verified/page-structure.json \
+  --profile resources/profiles/slaunchpad-fashion.example.json \
+  --registry resources/examples/converter/capability-registry.magento-pagebuilder.example.json \
+  --bindings resources/examples/converter/component-binding-map.slaunchpad-fashion.example.json \
+  --input docs/evidence/issue-18/live-read-verified/page-structure.json \
   --out out/issue-54-plan --json   # expect exit 0; report: 12 sections, coverage.total 0, counts.errors 0
 npm test                            # expect 180/180 incl. REG-09
 ```
 
-To re-verify registry evidence against the real checkout (read-only): re-run `det inspect` with a local gitignored profile (`sourceId: slaunch-checkout`) and compare locators; recompute the digest manifest inputs (`sha256sum` over the 21 files listed in `evidence/issue-54/registration-surface-digests.json` + `vendor/composer/installed.json`); check `git diff 66aff1e..HEAD -- app/code/Secomm/UiWidget` and `app/etc/config.php` module enablement at `66aff1e`.
+To re-verify registry evidence against the real checkout (read-only): re-run `det inspect` with a local gitignored profile (`sourceId: slaunch-checkout`) and compare locators; recompute the digest manifest inputs (`sha256sum` over the 21 files listed in `docs/evidence/issue-54/registration-surface-digests.json` + `vendor/composer/installed.json`); check `git diff 66aff1e..HEAD -- app/code/Secomm/UiWidget` and `app/etc/config.php` module enablement at `66aff1e`.
 
 ## 11. Coordinator correction record — provenance split (2026-11-10, same PR)
 
 Coordinator review of head `11930be` returned **`CORRECTION_REQUIRED`** with one bounded provenance finding: the original §3/§7 claimed `composer.lock` byte-identity + locked-version equality proved the untracked `vendor/` content corresponded to the old checkout revision `66aff1e` — an invalid inference (a lock pins intended resolution, not installation state; vendor files may be patched, stale or modified). Correction applied on this same branch:
 
-1. **Installed-state proof replaced the inference:** `vendor/composer/installed.json` (composer installed-time record) verifies `magento/module-page-builder 2.2.6-p5` / `magento/module-page-builder-image-attribute 1.7.5` as actually installed; all 20 `content_type/*.xml` + `etc/adminhtml/di.xml` + the installed metadata are sha256-digested into the committed sanitized manifest `evidence/issue-54/registration-surface-digests.json` (relative paths only, verification time recorded, no source bytes). Every native locator is cross-checked against the manifest.
+1. **Installed-state proof replaced the inference:** `vendor/composer/installed.json` (composer installed-time record) verifies `magento/module-page-builder 2.2.6-p5` / `magento/module-page-builder-image-attribute 1.7.5` as actually installed; all 20 `content_type/*.xml` + `etc/adminhtml/di.xml` + the installed metadata are sha256-digested into the committed sanitized manifest `docs/evidence/issue-54/registration-surface-digests.json` (relative paths only, verification time recorded, no source bytes). Every native locator is cross-checked against the manifest.
 2. **Evidence pins split by class:** 34 native entries re-pinned from `66aff1e` → `933b36e` (the checkout state actually read; canonical evidenceIds recomputed; notes rewritten to say git history does not pin vendor bytes). 21 widget entries keep the `66aff1e` git-identity pin (tracked `di.xml`, byte-identity exactly provable). Registry source pin, summary, chrome demotions, plan inputs: unchanged.
 3. **Receipt/ADR corrected** (§3, §4, §7 above): the four provenance classes are now kept distinct — Git-tracked checkout revision, composer *lock* (context only), actual installed vendor file digests, observed declaration.
 4. **Gates re-run on the corrected head:** `det plan` byte-identical report (sha256 `617b5c0a…` — committed evidence artifacts remain valid), `npm test` 180/180, Studio green; CI recorded on the PR for the new SHA (see the correction comment on issue #54).

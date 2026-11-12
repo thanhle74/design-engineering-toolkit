@@ -1,6 +1,6 @@
 # Knowledge Foundation — Architecture
 
-> **Status:** DRAFT for review (issue [#7](https://github.com/thanhle74/design-engineering-toolkit/issues/7)). Companion documents: [CONTRACTS.md](CONTRACTS.md) (the nine contracts — normative), [schemas/](schemas/README.md) (example record shapes), [TECH-ADR.md](TECH-ADR.md) (technology), [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) (how this gets built).
+> **Status:** DRAFT for review (issue [#7](https://github.com/thanhle74/design-engineering-toolkit/issues/7)). Companion documents: [CONTRACTS.md](CONTRACTS.md) (the nine contracts — normative), [resources/schemas/](../../../resources/schemas/README.md) (example record shapes), [TECH-ADR.md](TECH-ADR.md) (technology), [IMPLEMENTATION-PLAN.md](IMPLEMENTATION-PLAN.md) (how this gets built).
 >
 > **Specification only.** No engine, store, or adapter exists yet; this document describes the architecture a future GO would implement.
 
@@ -13,7 +13,7 @@ Requirements → Platform/UI Audit → Capability Registry → UX Architecture
 → Figma Design → Structural Mapping → Functional Round-trip → Visual Fidelity
 ```
 
-- The **V1 pipeline** ([docs/ARCHITECTURE.md](../../docs/ARCHITECTURE.md), issue #1/#2) already covers *Figma Design* through *Visual QA* as contracts + a manual pilot.
+- The **V1 pipeline** ([docs/ARCHITECTURE.md](../../ARCHITECTURE.md), issue #1/#2) already covers *Figma Design* through *Visual QA* as contracts + a manual pilot.
 - **Issue #5** (running, untouched) specifies the *Capability Registry → Structural Mapping → Functional Round-trip → Visual Fidelity* converter path; its open research PR #6 defines `NodeIR`, `CapabilityRegistry`, `ResolutionReport`, and the converter stage ladder.
 - **This foundation** supplies everything to the **left** of that: Requirements, Platform/UI Audit inputs, and the Capability Registry as a *shared, evidence-backed knowledge layer* — plus the evidence model all stages consume.
 
@@ -147,7 +147,7 @@ One repository, language/runtime per [TECH-ADR.md](TECH-ADR.md) (TypeScript/Node
 | This document depends on | Fed by |
 |---|---|
 | [CONTRACTS.md](CONTRACTS.md) | issue #7 requirements; W-A/W-B/W-C receipts |
-| [schemas/](schemas/README.md) | CONTRACTS.md; V1 schema family |
+| [resources/schemas/](../../../resources/schemas/README.md) | CONTRACTS.md; V1 schema family |
 | [SOURCE-INVENTORY.md](SOURCE-INVENTORY.md) | W-A (platform), W-B (UI/licensing), W-C (project materials), W-D (repo/stack facts) |
 | [TECH-ADR.md](TECH-ADR.md) | W-D ADR recommendation; PR #6 alignment; repo state |
 | [UX-CAPABILITY-PLANNING.md](UX-CAPABILITY-PLANNING.md) | CONTRACTS §7; synthetic walkthrough |

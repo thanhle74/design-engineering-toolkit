@@ -6,7 +6,7 @@
 
 ## 1. What changed (and what deliberately did not)
 
-**Moved as ONE deployable unit into `packages/core` (`@det/core` 0.1.0, private):** `src/` → `packages/core/src`, `adapters/`, `schemas/`, `bin/det.js` — `git mv`, no content edits in any moved engine file. Forced by source evidence: adapter descriptors carry root-relative `entry` values validated by realpath containment inside the engine's anchor (`adapter-runtime.ts`), five adapters import across into `src/core`, one tsconfig `rootDir: "."` mirrors both trees to `dist/src/core/**` + `dist/adapters/**`, and the packed tarball contract (#38) ships schemas + descriptors at package root.
+**Moved as ONE deployable unit into `packages/core` (`@det/core` 0.1.0, private):** `src/` → `packages/core/src`, `adapters/`, `resources/schemas/`, `bin/det.js` — `git mv`, no content edits in any moved engine file. Forced by source evidence: adapter descriptors carry root-relative `entry` values validated by realpath containment inside the engine's anchor (`adapter-runtime.ts`), five adapters import across into `src/core`, one tsconfig `rootDir: "."` mirrors both trees to `dist/src/core/**` + `dist/adapters/**`, and the packed tarball contract (#38) ships schemas + descriptors at package root.
 
 **Preserved compiled-path shape = zero engine edits.** `packages/core/tsconfig.json` is the old root tsconfig + `declaration: true`; the two `import.meta.url` `REPO_ROOT` anchors (`schema-registry.ts:23`, `cli/main.ts:21`) now resolve to `packages/core` — identical layout inside the checkout and inside the npm tarball. No `"exports"` map: deep dist imports stay open for the test harness and the REG-07 foreign-cwd probe. `main`/`types` point at `dist/src/core/cli/main.*`.
 
@@ -18,7 +18,7 @@
 
 ## 2. New regression gate — `tests/pack-portability-suite.mjs` (T-60-1..4)
 
-1. `npm pack --workspace @det/core --json` → tarball layout contract: ships `bin/`, `dist/src/core/cli/main.js`+`schema-registry.js`, `schemas/registry.json`, all 5 `adapters/*/descriptor.json`; never `src/`, `tests/`, `node_modules` (124 files).
+1. `npm pack --workspace @det/core --json` → tarball layout contract: ships `bin/`, `dist/src/core/cli/main.js`+`schema-registry.js`, `resources/schemas/registry.json`, all 5 `adapters/*/descriptor.json`; never `src/`, `tests/`, `node_modules` (124 files).
 2. Consumer flow: `tar -xzf` + `npm install --omit=dev` in the extracted dir (the tarball deliberately bundles no deps), then `--help` exit 0 and `--version` from a foreign cwd == the package version — the CLI's silent `0.0.0` fallback would expose a broken version anchor (the only prior test asserted the semver *shape*).
 3. Package-root schema resolution: the packed CLI resolves the committed #54 plan inputs offline → exit 0, 12 sections, 0 errors.
 4. Fail-closed negative: missing profile → non-zero exit with a structured error diagnostic (CLI contract: JSON on stdout, stderr silent).
@@ -35,12 +35,12 @@ REG-04 re-pointed to the honest new anchor lock: `REPO_ROOT === <root>/packages/
 | CLI wrapper | `node bin/det.js --version` / `--help` | `0.1.0` / usage, exit 0 |
 | Studio tests | `cd apps/studio && npm test` | **222/222** vitest (incl. real-CLI build-control E2E through the wrapper) |
 | Studio typecheck / lint / prod build | `npm run typecheck && npm run lint && NEXT_TELEMETRY_DISABLED=1 npm run build` | all exit 0, routes compiled |
-| Operator E2E (no browser) | root `npm run dev`, NO env → `/api/build-configs` → POST `/api/builds` → poll → artifact download | **10/10 steps** (`evidence/issue-60/operator-run.root-dev.json`): canonical entry origin=repository, build exit 0, journal `command[1] = <root>/bin/det.js`, second POST **409**, `native-content.html` byte-verified 3-way (run-view sha256 == manifest outputs sha256 == downloaded bytes), 10 skips / 12 gaps / `PREVIEW_INSTALL_OPERATOR_GATED` intact, `git status examples/` clean |
+| Operator E2E (no browser) | root `npm run dev`, NO env → `/api/build-configs` → POST `/api/builds` → poll → artifact download | **10/10 steps** (`docs/evidence/issue-60/operator-run.root-dev.json`): canonical entry origin=repository, build exit 0, journal `command[1] = <root>/bin/det.js`, second POST **409**, `native-content.html` byte-verified 3-way (run-view sha256 == manifest outputs sha256 == downloaded bytes), 10 skips / 12 gaps / `PREVIEW_INSTALL_OPERATOR_GATED` intact, `git status resources/examples/` clean |
 | Hoisting sanity | `npm ls @types/node typescript` | `typescript 5.9.3` single copy; `@types/node` 22.20.5 hoisted (core) + 26.6.6 nested (studio) — types-only, both resolve |
 
 ## 4. Boundaries / negative side effects
 
-Figma reads/writes: **NO**. Magento CMS/Admin/DB/store/theme writes: **NO**. Live customer assets/secrets: **NO**. Studio component library: **UNTOUCHED** (the Ant Design Light replacement is explicitly a separate issue — this PR is its clean base). Historical receipts/ADR rows: **UNTOUCHED** (append-only: new ADR-060-001 + handoff checkpoint). Engine behavior/schema/ABI: **unchanged** — all committed-example content locks (byte equality) pass unchanged. `kb/`, `profiles/`, `projects/`, `examples/`, `evidence/` stayed at root; no project catalogue duplication; no accidental customer writes (R58-T4 no-write lock passes).
+Figma reads/writes: **NO**. Magento CMS/Admin/DB/store/theme writes: **NO**. Live customer assets/secrets: **NO**. Studio component library: **UNTOUCHED** (the Ant Design Light replacement is explicitly a separate issue — this PR is its clean base). Historical receipts/ADR rows: **UNTOUCHED** (append-only: new ADR-060-001 + handoff checkpoint). Engine behavior/schema/ABI: **unchanged** — all committed-example content locks (byte equality) pass unchanged. `kb/`, `resources/profiles/`, `resources/projects/`, `resources/examples/`, `docs/evidence/` stayed at root; no project catalogue duplication; no accidental customer writes (R58-T4 no-write lock passes).
 
 ## 5. Known gaps / notes
 

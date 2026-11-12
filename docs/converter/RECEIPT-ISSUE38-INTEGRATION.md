@@ -24,10 +24,10 @@ Changed-file sets are pairwise disjoint (#34↔#37, #34↔#33, #37↔#33 all emp
 ### 3.1 Root contract gate
 - `npm ci` → clean install, 0 vulnerabilities.
 - `npm test` → **123/123 checks PASS** (expected ≥123 baseline after [28]; G2/G3/G4/G28 suites all green on the integrated tree).
-- `node bin/det.js build --config examples/build/project.example.json --out out/build-sample` → exit 0; stages `capability-probe: completed, extraction: completed, composition: completed`; `build-manifest.json` schemaVersion 1: 9 outputs, 5 inputs, **4 truthful gaps** (`COMPOSITION_EXCLUSIONS_PRESENT`, `COMPOSITION_GAPS_PRESENT`, `PREVIEW_INSTALL_OPERATOR_GATED`, `PREVIEW_ASSETS_NOT_GENERATED`); `native-content.html` sha256 recomputed over exact file bytes → **MATCH** (33146 bytes). Omitting `--out`/`outputDir` fails closed (exit 2, explicit diagnostic) as designed.
+- `node bin/det.js build --config resources/examples/build/project.example.json --out out/build-sample` → exit 0; stages `capability-probe: completed, extraction: completed, composition: completed`; `build-manifest.json` schemaVersion 1: 9 outputs, 5 inputs, **4 truthful gaps** (`COMPOSITION_EXCLUSIONS_PRESENT`, `COMPOSITION_GAPS_PRESENT`, `PREVIEW_INSTALL_OPERATOR_GATED`, `PREVIEW_ASSETS_NOT_GENERATED`); `native-content.html` sha256 recomputed over exact file bytes → **MATCH** (33146 bytes). Omitting `--out`/`outputDir` fails closed (exit 2, explicit diagnostic) as designed.
 
 ### 3.2 Portability gate (critical; issue step 3)
-- `npm pack` on the integrated tip → `design-engineering-toolkit-0.1.0.tgz` (75 files: `bin/`, `dist/` 36 files, `schemas/`, 3× `adapters/*/descriptor.json`; `prepack` runs the TS build; **no repo-absolute path leakage in the tarball**).
+- `npm pack` on the integrated tip → `design-engineering-toolkit-0.1.0.tgz` (75 files: `bin/`, `dist/` 36 files, `resources/schemas/`, 3× `adapters/*/descriptor.json`; `prepack` runs the TS build; **no repo-absolute path leakage in the tarball**).
 - Clean temp consumer (`/tmp/det38-portability/consumer`, fresh `npm init`): `npm install --omit=dev <tarball>` → clean, 0 vulnerabilities, ajv resolved as the shipped runtime dependency.
 - Caller fixtures copied **outside the packed package** (`/tmp/det38-portability/fixtures/`); caller build config `project.consumer.json` written with paths relative to the config directory only.
 - Real packed CLI invoked from the consumer cwd: `node node_modules/design-engineering-toolkit/bin/det.js build --config ../fixtures/project.consumer.json --out ../out/build-consumer` → exit 0; 3 stages completed; **9/9 output byte-hashes recomputed and MATCH**; native Page Builder content on disk (`data-content-type` present).
@@ -42,17 +42,17 @@ Changed-file sets are pairwise disjoint (#34↔#37, #34↔#33, #37↔#33 all emp
 
 ## 4. Documented boundaries (issue step 5)
 
-- Schema `$id` values may be URIs, but schemas are **loaded locally** from the packed `schemas/` directory — no network schema resolution.
+- Schema `$id` values may be URIs, but schemas are **loaded locally** from the packed `resources/schemas/` directory — no network schema resolution.
 - **No automatic Figma read** anywhere in the engine: design-source input is a caller-supplied snapshot document; Figma access stays a separate later gate.
 - **No Magento Admin editability or live-preview claim** is made by this integration: the bundle records `PREVIEW_INSTALL_OPERATOR_GATED`; Admin-UI click-through remains owner-pending from [28], unchanged.
-- [35] Phase 2 still requires the local `schemas/registry.json` SSOT task — not started here.
+- [35] Phase 2 still requires the local `resources/schemas/registry.json` SSOT task — not started here.
 - [36] will add the server-only build runner/UI; Studio in this tree is still the honest read-only MVP.
 - No enterprise auth/DB/queues/services introduced; the toolkit remains a trusted local internal tool.
 
 ## 5. Known non-blockers / truthful notes
 
 - Build config without `--out` exits 2 by design (stdout-only build is not representable); the example README documents `--out`.
-- The consumer-proof used the same fixtures as the root gate (relocated copies); a real consumer project substitutes its own inputs, as `examples/build/README.md` states.
+- The consumer-proof used the same fixtures as the root gate (relocated copies); a real consumer project substitutes its own inputs, as `resources/examples/build/README.md` states.
 - `/tmp/det38-portability/` artifacts are ephemeral evidence; this receipt is the durable record.
 
 ## 6. Downstream handoff

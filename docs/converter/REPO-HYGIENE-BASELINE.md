@@ -6,8 +6,8 @@
 
 | Area | Evidence | Disposition |
 |---|---|---|
-| V1 architecture, safety, schemas/examples | `docs/ARCHITECTURE.md`, `docs/safety-and-scope.md`, `schemas/*`, `examples/*` | **KEEP**: stable historical contracts; future V2 must migrate/extend deliberately |
-| Manual Figma pilot | `projects/slaunchpad-fashion/pilot/*`, `evidence/*.png`, `state-slaunch-v1-pilot.json` | **KEEP**: review/evidence assets are not dead merely because the pilot was manual |
+| V1 architecture, safety, resources/schemas/examples | `docs/ARCHITECTURE.md`, `docs/safety-and-scope.md`, `resources/schemas/*`, `resources/examples/*` | **KEEP**: stable historical contracts; future V2 must migrate/extend deliberately |
+| Manual Figma pilot | `resources/projects/slaunchpad-fashion/pilot/*`, `docs/evidence/*.png`, `state-slaunch-v1-pilot.json` | **KEEP**: review/evidence assets are not dead merely because the pilot was manual |
 | Root README stale status | Says architecture is DRAFT/awaiting review, while architecture PR #3 was merged and issues #1/#2 closed | **UPDATE CANDIDATE** after reconciling authoritative V1 state; preserve pilot's explicitly unverified gates |
 | Runtime source/scripts/test/CI | None present in the 41-entry main tree snapshot | **NO DELETE CLAIM**: there is no runtime code to prove dead; implementation is not yet a working converter |
 | `.claude/` and agent entrypoints | Absent on baseline | **ADD minimally in #5**, no copied Slaunchpad `.ai/` framework |
@@ -39,9 +39,9 @@ Tree audited at `7c1508b` (44 tracked files) plus the [5] architecture-integrati
 | F3 | `docs/research/oss-adoption-for-pagebuilder.md:54` said `FigmaBindingMap` vs spec's `ComponentBindingMap` | **APPLIED**: aligned to `ComponentBindingMap` with links to the materialized family |
 | F4 | `docs/safety-and-scope.md:39` described issue #2 as blocked on PR approval (both closed/merged) | **APPLIED**: dated past-tense note; invariants untouched |
 | F5 | Pilot files said PR #3 "DRAFT/unmerged" | **APPLIED**: dated parentheticals; **all NOT_VERIFIED/BLOCKED gate labels preserved verbatim** |
-| F6a | `profiles/commerce-promotional.example.json:29` embeds the real PL fileKey in a committed example | **KEPT**: baseline-era read-only archive reference, not a secret; noted for Owner judgment |
-| F6b | `schemas/project-profile.schema.json:135` `$comment` named platform-specific future adapters | **APPLIED**: `$comment` generalized; enum unchanged (`figma-only`); neutrality scan now 0 hits on V1 schemas for platform names |
-| F6c | `.gitignore` missing `projects/*/*.local.*` | **APPLIED**: pattern added |
+| F6a | `resources/profiles/commerce-promotional.example.json:29` embeds the real PL fileKey in a committed example | **KEPT**: baseline-era read-only archive reference, not a secret; noted for Owner judgment |
+| F6b | `resources/schemas/project-profile.schema.json:135` `$comment` named platform-specific future adapters | **APPLIED**: `$comment` generalized; enum unchanged (`figma-only`); neutrality scan now 0 hits on V1 schemas for platform names |
+| F6c | `.gitignore` missing `resources/projects/*/*.local.*` | **APPLIED**: pattern added |
 | F7 | No CI existed (deliberate deferral in ARCHITECTURE/schemas README) | **SUPERSEDED by ADR-005-015**: minimal gate `.github/workflows/validate.yml` added (ajv schema+example validation, 30-check contract suite, neutrality guard); orchestrator implementation remains P1 |
 
 ### Grep verdicts (unchanged by integration, re-verified by the test gate)
@@ -52,4 +52,4 @@ Tree audited at `7c1508b` (44 tracked files) plus the [5] architecture-integrati
 
 ### NO DELETE (unchanged)
 
-`projects/slaunchpad-fashion/**` (12 files, incl. zero-inbound-ref `project-profile.md` and `slaunch-logo.svg`) stays: pilot evidence, protected by ADR-005-008 and the evidence-led-repo-hygiene skill. All V1 docs/schemas/examples/profiles KEEP. Nothing qualified for REMOVE_CANDIDATE; no runtime code exists to prove dead.
+`resources/projects/slaunchpad-fashion/**` (12 files, incl. zero-inbound-ref `project-profile.md` and `slaunch-logo.svg`) stays: pilot evidence, protected by ADR-005-008 and the evidence-led-repo-hygiene skill. All V1 docs/schemas/resources/examples/profiles KEEP. Nothing qualified for REMOVE_CANDIDATE; no runtime code exists to prove dead.

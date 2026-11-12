@@ -17,7 +17,7 @@
 
 - Test page **45** `det-pb-roundtrip-46` matched the #46 state: content sha256 `78b3ad118a3d8a29e1e3db0a963f562d399b49bd50f1dda5347287a82afa34f4` (33 146 B) = the #46 composed bundle byte-for-byte; stores `[5]`; merchant pages 2/36 (48 KB each) and page 42 untouched.
 - Residue found & normalized in Phase B: page 45 `title` was `title-bulk-2` (left by #46 §3's own title-probe — #46's `restore` restored *content* only); set back to `DET PB Roundtrip 46 (Local Only)` via the service layer (content sha unchanged by that step).
-- Pre-write backup `var/backups/det46-pre-roundtrip-20261110.sql.gz` (4.0 MB gz) present; guarded runbook in repo (`examples/local-preview/` — collision/ownership/sha refusal guards); admin users exactly the original 15.
+- Pre-write backup `var/backups/det46-pre-roundtrip-20261110.sql.gz` (4.0 MB gz) present; guarded runbook in repo (`resources/examples/local-preview/` — collision/ownership/sha refusal guards); admin users exactly the original 15.
 - SELinux `Enforcing` (targeted); nginx 1.30.6, `user thanhle;` (workers `thanhle:thanhle`, required because the PHP-FPM pool runs as `thanhle` — socket + `/home/thanhle` traversal); `/var/lib/nginx` = `root:nginx 770`; **no** `client_body*`/`client_max*` overrides anywhere (`nginx.conf` + all `conf.d/*.conf`); no dynamic nginx modules.
 
 ## 2. ROOT_CAUSE_CONFIRMED — nginx request-body temp spill blocked by directory DAC

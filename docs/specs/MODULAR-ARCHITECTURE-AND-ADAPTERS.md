@@ -3,7 +3,7 @@
 **Status:** OWNER-DIRECTED ARCHITECTURAL INTENT / SPEC ONLY · 2026-11-03  
 **Architecture style:** **Modular Monolith + bounded pluggable adapters + contract-driven pipeline**. This is a product design, not a statement that executable modules already exist. Technology selection remains subject to the evidence-based #7 ADR.  
 **Reference:** [PRODUCT-ARCHITECTURE-AND-SCOPE.md](PRODUCT-ARCHITECTURE-AND-SCOPE.md), [Figma naming contract](FIGMA-NODE-SEMANTICS-AND-NAMING.md).  
-**Inspiration (selected principles only):** [SEO Writer Engine bounded extension points](https://github.com/thanhle74/seo-writer-engine/blob/main/specs/architecture/BOUNDED-EXTENSION-POINTS.md), [Integration Control Plane](https://github.com/thanhle74/seo-writer-engine/blob/main/specs/architecture/INTEGRATION-CONTROL-PLANE.md), [Engine modular structure](https://github.com/thanhle74/seo-writer-engine/tree/main/src/modules).
+**Inspiration (selected principles only):** [SEO Writer Engine bounded extension points](https://github.com/thanhle74/seo-writer-engine/blob/main/docs/specs/architecture/BOUNDED-EXTENSION-POINTS.md), [Integration Control Plane](https://github.com/thanhle74/seo-writer-engine/blob/main/docs/specs/architecture/INTEGRATION-CONTROL-PLANE.md), [Engine modular structure](https://github.com/thanhle74/seo-writer-engine/tree/main/src/modules).
 
 ## 1. Decision and non-goals
 
@@ -75,7 +75,7 @@ adapters/
   targets/magento-hyva-theme/  # FUTURE, no implementation yet
 cli/
 skills/
-specs/
+docs/specs/
 ```
 
 Refine actual names to match the *implemented* #5/#7 interfaces rather than creating duplicate contracts.
@@ -110,7 +110,7 @@ The chosen Figma frame is inventoried recursively (including header/footer) to p
 ## 5. Test strategy and integration gates
 
 **First valuable code proof** (once #5/#7 architecture is reconciled and #9 receives explicit GO):
-1. A direct CLI command runs with no Claude Code, MCP, Figma credentials or Magento installation and validates synthetic profiles/contracts.
+1. A direct CLI command runs with no Claude Code, MCP, Figma credentials or Magento installation and validates synthetic resources/profiles/contracts.
 2. Module and adapter contract tests establish correct input/output versions and **no hidden side effects**.
 3. A synthetic Figma-like node tree contains a real Header, Hero 40/60, nested Collection and Footer; all nodes are accounted for in the mapping report, only CMS sections mapped; unknowns are flagged.
 4. Registry resolution records actual proof state, compatibility and source version; unsupported product/variant behavior yields a structured GAP, not invented code.

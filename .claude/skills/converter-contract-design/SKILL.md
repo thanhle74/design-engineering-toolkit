@@ -5,7 +5,7 @@ description: Design versioned platform-neutral contracts for design-source extra
 
 # Converter contract design
 
-Read `AGENTS.md`, `specs/ISSUE-5-converter-architecture.md`, existing `schemas/*` and relevant ADRs first.
+Read `AGENTS.md`, `docs/specs/ISSUE-5-converter-architecture.md`, existing `resources/schemas/*` and relevant ADRs first.
 
 1. Define who owns each contract: **core vs project profile vs backend adapter**. Keep generic schemas free of Magento/Page Builder classes, Secomm names, fixed Figma IDs and home-directory paths.
 2. Model `CapabilityRegistry` first: stable ID, props, variants/appearance, allowed children, nesting, responsive policy, editor restrictions, provenance and **evidence-based proof level**.

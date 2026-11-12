@@ -1,6 +1,6 @@
 # INTEGRATION-RECEIPT — [7] knowledge foundation package
 
-> **[68] layout note:** the `specs/` tree now lives at `docs/specs/`, and the schema draft files listed in §5 below were removed as superseded by the frozen `resources/schemas/kb/` contract family (git history at `specs/knowledge-foundation/schemas/` keeps the review record). All other paths in this receipt are historical.
+> **[68] layout note:** the `specs/` tree now lives at `docs/specs/`, and the schema draft files listed in §5 below were removed as superseded by the frozen `resources/schemas/kb/` contract family (git history at the pre-[68] path `specs/knowledge-foundation/schemas/` keeps the review record). All other paths in this receipt are historical.
 
 > Integrator: single-writer session (branch `thanhle74/7-architecture-three-knowledge-bases-requirement`, base `main` @ `82c9129`). Dispatch model per issue [#7](https://github.com/thanhle74/design-engineering-toolkit/issues/7): four parallel read-only workers → one integrator. All worker audits executed 2026-11-03. **Draft PR only — no auto-merge.**
 
@@ -18,19 +18,19 @@ Full receipts preserved in the session log; their load-bearing content is integr
 ## 2. Affected files (BASE `82c9129` → this branch)
 
 ```
-specs/knowledge-foundation/README.md                     (new — A: scope + navigable index + exact roadmap text)
-specs/knowledge-foundation/KNOWLEDGE-ARCHITECTURE.md     (new — B: boundaries, ingestion/query, lifecycle, isolation, diagram)
-specs/knowledge-foundation/CONTRACTS.md                  (new — C: nine contracts)
-specs/knowledge-foundation/schemas/README.md             (new — C: schema family doc)
-specs/knowledge-foundation/schemas/kb-capability.schema.json      (new — C: KB-1 draft)
-specs/knowledge-foundation/schemas/kb-ui-component.schema.json    (new — C: KB-2 draft, license-bounded)
-specs/knowledge-foundation/schemas/kb-project-record.schema.json  (new — C: KB-3 draft, tenant-isolated)
-specs/knowledge-foundation/schemas/kb-relations.schema.json       (new — C: cross-KB edges)
-specs/knowledge-foundation/SOURCE-INVENTORY.md           (new — D: evidence-based inventory + reuse matrix)
-specs/knowledge-foundation/TECH-ADR.md                   (new — E: ADR-1..5 + OPEN_DECISIONS)
-specs/knowledge-foundation/UX-CAPABILITY-PLANNING.md     (new — F: planning contract + synthetic non-Magento walkthrough)
-specs/knowledge-foundation/IMPLEMENTATION-PLAN.md        (new — G: M0–M5 + GO gates + test strategy)
-specs/knowledge-foundation/INTEGRATION-RECEIPT.md        (new — H: this receipt)
+docs/specs/knowledge-foundation/README.md                     (new — A: scope + navigable index + exact roadmap text)
+docs/specs/knowledge-foundation/KNOWLEDGE-ARCHITECTURE.md     (new — B: boundaries, ingestion/query, lifecycle, isolation, diagram)
+docs/specs/knowledge-foundation/CONTRACTS.md                  (new — C: nine contracts)
+docs/specs/knowledge-foundation/schemas/README.md             (new — C: schema family doc)
+docs/specs/knowledge-foundation/schemas/kb-capability.schema.json      (new — C: KB-1 draft)
+docs/specs/knowledge-foundation/schemas/kb-ui-component.schema.json    (new — C: KB-2 draft, license-bounded)
+docs/specs/knowledge-foundation/schemas/kb-project-record.schema.json  (new — C: KB-3 draft, tenant-isolated)
+docs/specs/knowledge-foundation/schemas/kb-relations.schema.json       (new — C: cross-KB edges)
+docs/specs/knowledge-foundation/SOURCE-INVENTORY.md           (new — D: evidence-based inventory + reuse matrix)
+docs/specs/knowledge-foundation/TECH-ADR.md                   (new — E: ADR-1..5 + OPEN_DECISIONS)
+docs/specs/knowledge-foundation/UX-CAPABILITY-PLANNING.md     (new — F: planning contract + synthetic non-Magento walkthrough)
+docs/specs/knowledge-foundation/IMPLEMENTATION-PLAN.md        (new — G: M0–M5 + GO gates + test strategy)
+docs/specs/knowledge-foundation/INTEGRATION-RECEIPT.md        (new — H: this receipt)
 README.md                                                (modified — link to the package)
 ```
 

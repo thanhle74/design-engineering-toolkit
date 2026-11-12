@@ -20,7 +20,7 @@ Every move is a `git mv` — file bytes preserved unless explicitly listed in §
 | `apps/studio/{package.json,tsconfig.json,.gitignore,eslint.config.mjs,next.config.ts,vitest.config.ts,vitest.setup.ts}` | deleted / moved to root | root `tsconfig.json` (Next), root `eslint.config.mjs`, root `vitest.*`, root `next.config.ts` (content unchanged: `cacheComponents` + `partialPrefetching`); subordinate manifest + studio gitignore deleted |
 | `packages/core/src/core/**` | `src/core/**` | engine source bytes preserved (see §2) |
 | `packages/core/adapters/**` | `adapters/**` (root) | **required by descriptor resolution** — see §2 |
-| `packages/core/schemas/**` | `schemas/**` (root) | also makes the descriptor `inputContract`/`outputContract` GitHub raw URLs (`…/main/schemas/cli/…`) factually correct for the first time |
+| `packages/core/schemas/**` | `resources/schemas/**` (root) | also makes the descriptor `inputContract`/`outputContract` GitHub raw URLs (`…/main/schemas/cli/…`) factually correct for the first time |
 | `packages/core/{package.json,tsconfig.json,bin/det.js}` | deleted | replaced by root `tsconfig.core.json`; root `bin/det.js` is the one entrypoint |
 | `tests/pack-portability-suite.mjs` | `tests/cli-path-resolution-suite.mjs` | content replaced — see §4 |
 
@@ -38,7 +38,7 @@ Compiling via root `tsconfig.core.json` (`rootDir: "."`, `include: ["src/core/**
 
 | Anchor | Old target (packages/core) | New target (root) |
 |---|---|---|
-| `src/core/schema-registry.ts` `REPO_ROOT` (3 ups from `dist/src/core/`) | `packages/core` (schemas lived there) | checkout root (`schemas/` now lives there) |
+| `src/core/schema-registry.ts` `REPO_ROOT` (3 ups from `dist/src/core/`) | `packages/core` (schemas lived there) | checkout root (`resources/schemas/` now lives there) |
 | `src/core/cli/main.ts` `REPO_ROOT` (4 ups from `dist/src/core/cli/`) | `packages/core` (version read from its `package.json`, 0.1.0) | checkout root (version read from the root `package.json`, same 0.1.0) |
 
 REG-04's anchor lock (`tests/registry-suite.mjs`) was re-pointed accordingly: `REPO_ROOT === <checkout root>`.
@@ -48,7 +48,7 @@ REG-04's anchor lock (`tests/registry-suite.mjs`) was re-pointed accordingly: `R
 - `bin/det.js` — entry string `../packages/core/dist/…` → `../dist/…` (+ comment). Messages/exit codes unchanged.
 - `src/studio/server/test-helpers/det-cli.ts` — helper depth 5 → 4 ups; dist presence check `<root>/dist`; message updated.
 - `src/studio/server/build-runner.ts` — `STUDIO_APP_ROOT` = `src/studio` (1 up from `server/`; the default `../../bin/det.js` still names `<root>/bin/det.js`); comments.
-- `src/studio/server/build-catalog.ts` — root candidates: module-dir walk (4 ups = root) + `process.cwd()` (Next runs at root now); shape validation (package.json + examples/build) unchanged.
+- `src/studio/server/build-catalog.ts` — root candidates: module-dir walk (4 ups = root) + `process.cwd()` (Next runs at root now); shape validation (package.json + resources/examples/build) unchanged.
 - `@/src/…` → `@/src/studio/…` across app/components/src (alias `@/*` → `./*` at root, one authoritative `tsconfig.json`).
 - Comment/doc-pointer updates: `det-payload-parsing.ts`, `catalog/migrations.ts`, `catalog/sqlite-driver.ts`, `catalog/studio-catalog.test.ts`, UI copy in `build-launcher.tsx`/`build-view.tsx` (`apps/studio/README.md` → `docs/studio/README.md`).
 - `scripts/studio.mjs` — re-anchored (root = checkout root; dist entry `<root>/dist/...`; freshness walk `src/core` + `adapters`; spawns `npm run app:dev|app:start` at root so the launcher never re-enters itself); `print-env` JSON keys preserved (`studioDir` now names `src/studio`). `scripts/setup.mjs` — comments only; behavior identical (one `npm ci` + core build).
@@ -59,7 +59,7 @@ REG-04's anchor lock (`tests/registry-suite.mjs`) was re-pointed accordingly: `R
 The `npm pack --workspace @det/core` artifact **no longer exists and is not pretended**: a distributable root CLI package is explicitly NOT a supported artifact (the root `package.json` is `private: true` and the application tree — app/, src/studio — is not part of any claimed distributable). What the [60] checks actually protected — the CLI resolving its contracts OUTSIDE the caller's cwd — is preserved as `tests/cli-path-resolution-suite.mjs`, registered in `tests/run-all.mjs`:
 
 - **T-63-1** foreign-cwd `--help` exit 0; `--version` equals the root package version (the `0.0.0` fallback would mean a broken version anchor).
-- **T-63-2** foreign-cwd `plan` over the committed #54 inputs → exit 0, 12 sections, 0 errors (schemas/registry resolved from the checkout root).
+- **T-63-2** foreign-cwd `plan` over the committed #54 inputs → exit 0, 12 sections, 0 errors (resources/schemas/registry resolved from the checkout root).
 - **T-63-3** the five committed `adapters/<id>/descriptor.json` files + their `dist/adapters` entries resolve against the root; foreign-cwd `inspect` discovers them and runs `magento-pagebuilder` out-of-process (13 capabilities audited).
 - **T-63-4** foreign-cwd fail-closed negative: missing profile → non-zero exit + structured error diagnostic.
 
@@ -80,12 +80,12 @@ The `npm pack --workspace @det/core` artifact **no longer exists and is not pret
 3. `POST /api/builds {"configId":"slaunchpad-home-real-derived"}` → 202 (`build-1794394206354` dev; `build-1794394513557` production) → **exit 0**; stages `capability-probe=reused / extraction=completed / composition=completed` (all exit 0); runner invoked **the same root `bin/det.js`** (sanitized journal `command[1] = <repo-root>/bin/det.js`).
 4. Gaps verbatim (unchanged truth): `COMPOSITION_SKIPS_PRESENT (10)`, `COMPOSITION_GAPS_PRESENT (12)`, `PREVIEW_INSTALL_OPERATOR_GATED`, `PREVIEW_ASSETS_NOT_GENERATED` — still honestly **2/12 composed, 10 skipped, zero proven bindings, `PREVIEW_UNAVAILABLE`**.
 5. `GET /api/runs/<id>/artifacts/03-composition/native-content.html` → **3288 bytes, sha256 `6362c6a9…93bdf` == build-manifest declared sha256** — byte-identical across the dev run, the production run, and every pre-migration round (deterministic engine untouched).
-6. Committed example project not mutated (`git status` clean on `examples/`); outputs only under the gitignored `out/studio-runs` default.
-7. Evidence committed: `docs/studio/screenshots/63-*` (7 screenshots: overview/build/run-detail/catalog desktop 1440px, overview/build narrow 480px, run-not-found) + `63-light-dom-evidence.txt` + sanitized `evidence/issue-63/operator-run.single-application.json`.
+6. Committed example project not mutated (`git status` clean on `resources/examples/`); outputs only under the gitignored `out/studio-runs` default.
+7. Evidence committed: `docs/studio/screenshots/63-*` (7 screenshots: overview/build/run-detail/catalog desktop 1440px, overview/build narrow 480px, run-not-found) + `63-light-dom-evidence.txt` + sanitized `docs/evidence/issue-63/operator-run.single-application.json`.
 
 ## 7. Docs updated (historical artifacts never rewritten)
 
-`README.md` (quick start + gate list), `AGENTS.md` (navigation + Next agent-rules block + gate list), `docs/runbook-real-derived-studio-build.md`, `.claude/skills/det-cli/SKILL.md`, `docs/converter/CONTRACTS.md` (port.ts path), `docs/converter/DECISIONS.md` (new ADR-063-001; ADR-060-001 kept as history), `specs/DET-STUDIO-MVP.md` (banner + §2 layout marked superseded-by-[63], functional contract untouched), `docs/studio/README.md` + spike/data-model notes. `specs/DET-STUDIO-PARALLEL-WORKERS.md` and dated receipts/evidence stay historical verbatim.
+`README.md` (quick start + gate list), `AGENTS.md` (navigation + Next agent-rules block + gate list), `docs/runbook-real-derived-studio-build.md`, `.claude/skills/det-cli/SKILL.md`, `docs/converter/CONTRACTS.md` (port.ts path), `docs/converter/DECISIONS.md` (new ADR-063-001; ADR-060-001 kept as history), `docs/specs/DET-STUDIO-MVP.md` (banner + §2 layout marked superseded-by-[63], functional contract untouched), `docs/studio/README.md` + spike/data-model notes. `docs/specs/DET-STUDIO-PARALLEL-WORKERS.md` and dated receipts/evidence stay historical verbatim.
 
 ## 8. Boundaries honored
 

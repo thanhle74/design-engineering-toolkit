@@ -1,9 +1,9 @@
 # [30] DET Long-term Storage + Reusable Knowledge Architecture
 
 **Status:** PROPOSED — architecture review only, not implementation approval · 2026-11-09
-**Owner direction:** DET is **one standalone tool**, runnable through CLI without Claude Code or via Next.js Studio. Store projects/config/history durably in SQLite; store reusable Magento/Hyvä understanding in existing **versioned JSON/JSONL knowledge**, not ad-hoc AI chat memory. Preserve large generated artifacts as files.
+**Owner direction:** DET is **one standalone tool**, runnable through CLI without Claude Code or via Next.js Studio. Store resources/projects/config/history durably in SQLite; store reusable Magento/Hyvä understanding in existing **versioned JSON/JSONL knowledge**, not ad-hoc AI chat memory. Preserve large generated artifacts as files.
 **Scope:** https://github.com/thanhle74/design-engineering-toolkit/issues/30
-**Authority:** `specs/PRODUCT-ARCHITECTURE-AND-SCOPE.md`, `specs/MODULAR-ARCHITECTURE-AND-ADAPTERS.md`, existing `det kb ingest/sync/query/validate`, `specs/knowledge-foundation/TECH-ADR.md` ADR-3, and actual KB JSON schemas. Running [28] and [29] retain exclusive code ownership.
+**Authority:** `docs/specs/PRODUCT-ARCHITECTURE-AND-SCOPE.md`, `docs/specs/MODULAR-ARCHITECTURE-AND-ADAPTERS.md`, existing `det kb ingest/sync/query/validate`, `docs/specs/knowledge-foundation/TECH-ADR.md` ADR-3, and actual KB JSON schemas. Running [28] and [29] retain exclusive code ownership.
 
 ## 1. One engine; three persistent concerns, not three engines
 
@@ -22,7 +22,7 @@
                              ^
                              |
              Studio SQLite catalogue (metadata)
-             projects/configs/sources/runs/
+             resources/projects/configs/sources/runs/
              KB snapshot refs/artifact hashes
 ```
 
@@ -42,7 +42,7 @@ Use existing knowledge contracts:
 
 | Knowledge | Canonical JSON/JSONL records | Reuse/isolation |
 | --- | --- | --- |
-| **KB-1 Platform** | Magento/Adobe Commerce version; enabled/configured modules; Page Builder native types/appearances; module capabilities, source paths, prerequisites, evidence/proof levels | Version- and fingerprint-matched reusable public-safe facts; installed/configured/runtime claims still scoped to the actual target project |
+| **KB-1 Platform** | Magento/Adobe Commerce version; enabled/configured modules; Page Builder native types/appearances; module capabilities, source paths, prerequisites, docs/evidence/proof levels | Version- and fingerprint-matched reusable public-safe facts; installed/configured/runtime claims still scoped to the actual target project |
 | **KB-2 UI** | Hyvä UI / Page Builder / Secomm_UiWidget component names, variants, slots, usage notes, compatibility, license class and source provenance | Reuse only safe metadata; licensed source/template bytes remain in the authorized local installation, not the shared repo/export |
 | **KB-3 Project** | Approved requirements, design-to-component mapping choices, reviewer decisions, exclusions, client-specific constraints and their source revisions | Strict project/tenant access boundaries; never publish project-private context as generic reusable knowledge |
 
@@ -83,7 +83,7 @@ $DET_DATA_HOME/
     inputs/     # config/source revisions
     source/     # Figma snapshot, NodeIR, PageStructure
     output/     # native PB HTML, PHTML, CSS/assets
-    evidence/   # receipts, allowed screenshots
+    docs/evidence/   # receipts, allowed screenshots
   backups/      # privately stored; not exposed via Studio file routes
 ```
 

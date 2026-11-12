@@ -9,8 +9,8 @@
 | Fact | Value | Source |
 |---|---|---|
 | Toolkit repo state | 11 `.md`, 10 `.json`, 5 `.svg`, 5 `.png`; **zero code files**; no package manifest, no CI | repo census, HEAD `82c9129` |
-| Existing technology precedent | "JSON Schema via `ajv` in CI once implementation phase P1 lands" — deferred to P1, never frozen | [docs/ARCHITECTURE.md](../../docs/ARCHITECTURE.md) §5 |
-| Canonical artifacts | JSON Schema **Draft 2020-12**, integer-major versioning, `additionalProperties: false`, string aliases ("contracts stay pure JSON") | [schemas/README.md](../../schemas/README.md) |
+| Existing technology precedent | "JSON Schema via `ajv` in CI once implementation phase P1 lands" — deferred to P1, never frozen | [docs/ARCHITECTURE.md](../../ARCHITECTURE.md) §5 |
+| Canonical artifacts | JSON Schema **Draft 2020-12**, integer-major versioning, `additionalProperties: false`, string aliases ("contracts stay pure JSON") | [resources/schemas/README.md](../../../resources/schemas/README.md) |
 | Audited platform stack | Magento CE 2.4.8-p5 (PHP `~8.2||~8.3||~8.4` declared), Hyvä default theme 1.5.2, Tailwind CSS v4.3.2, Alpine 3 + CSP build, Hyvä UI 2.8.0 (require-dev, commercial) | composer.json/lock, theme files (W-A/W-B receipts) |
 | Knowledge scale | hundreds–low-thousands of records per project (118 `app/code` modules, 921 `etc/*.xml`, 36 Hyvä UI component families/70 variants, 21 widgets, ~55 KB-3 records for the pilot) | W-A/W-B/W-C receipts |
 | Operator machine | Node v24.22.2 + npm 11.19.1 present (Claude Code depends on Node); Python 3.14.8 present; `uv` absent; PHP 8.3.36 present | machine check (W-D) |
@@ -32,7 +32,7 @@
 - *Agent-friendliness (the primary operator is an AI agent):* `tsc --noEmit` is a single deterministic gate agents re-run cheaply; TS has fewer untyped escape hatches, which measurably constrains hallucinated APIs; MCP reference SDK is TypeScript-first if the KB is ever exposed as an MCP server; snapshot-style determinism tests (PR #6's gate) are simplest in vitest.
 - *Honest framing:* this is a **low-regret** decision at this scale — both ecosystems can do the work. TS wins on evidence alignment (SSOT precedent + installed runtime + agent ecosystem), and the regret cost is bounded because the contract layer is language-neutral JSON Schema (ADR-2), so a future rewrite orphans zero data.
 
-**Evidence:** facts table above; `docs/ARCHITECTURE.md` §5; `schemas/README.md`; W-D machine checks.
+**Evidence:** facts table above; `docs/ARCHITECTURE.md` §5; `resources/schemas/README.md`; W-D machine checks.
 
 **When-to-revisit:** (a) a committed hosted-service/daemon requirement appears (out of scope per issue #7's no-services rule); (b) a proven KB capability requires PHP AST *in core* (it belongs in an adapter); (c) owner's secondary machines lack Node but have Python; (d) a required integration exists only as a Python SDK. Revisit = new ADR row, append-only.
 
@@ -40,13 +40,13 @@
 
 ## ADR-2 — Canonical serialization & validation
 
-**Chosen: JSON Schema Draft 2020-12 stays the canonical, language-neutral contract layer** (existing `schemas/*` untouched in format; KB drafts in [schemas/](schemas/README.md) follow the same conventions). Records serialize as **canonical JSON/JSONL** (pretty JSON for profiles/contracts; JSONL for KB corpora — one record per line, git-diffable, append-friendly). Validation via ajv 8 in CI when implementation lands. **Keep integer-major + additive-minor versioning.**
+**Chosen: JSON Schema Draft 2020-12 stays the canonical, language-neutral contract layer** (existing `resources/schemas/*` untouched in format; KB drafts in [resources/schemas/](../../../resources/schemas/README.md) follow the same conventions). Records serialize as **canonical JSON/JSONL** (pretty JSON for resources/profiles/contracts; JSONL for KB corpora — one record per line, git-diffable, append-friendly). Validation via ajv 8 in CI when implementation lands. **Keep integer-major + additive-minor versioning.**
 
 **Alternatives:** pydantic/TypeBox models as source of truth (rejected: makes reviewed schema files a generated artifact, orphans the contracts); relaxing `additionalProperties` (rejected: unknown fields are how provenance silently erodes — the schemas README explicitly forbids smuggling).
 
 **Trade-offs:** language-neutrality is what makes ADR-1 low-regret; the canonical-serialization rule (sorted keys, stable array order by stable ID, documented hash) adopts PR #6's determinism gate and makes freshness checks cheap hash compares instead of semantic diffs. Superseded records are a record *lifecycle* concern (`supersedes` + history), not a schema-version concern — the existing versioning rule handles the KBs without modification.
 
-**Evidence:** `schemas/README.md` (all quoted rules), `schemas/source-manifest.schema.json` (2020-12 + `$id` + strictness verified), `docs/ARCHITECTURE.md` §5/§10, PR #6 determinism gate.
+**Evidence:** `resources/schemas/README.md` (all quoted rules), `resources/schemas/source-manifest.schema.json` (2020-12 + `$id` + strictness verified), `docs/ARCHITECTURE.md` §5/§10, PR #6 determinism gate.
 
 **When-to-revisit:** a record type proves unexpressible in 2020-12 (e.g. large recursive graph references) → add a separate 2020-12 schema with `$dynamicRef`/anchors before ever changing format.
 
@@ -94,11 +94,11 @@
 
 ## ADR-5 — Multi-project packaging & distribution
 
-**Chosen: one repository, workspace packaging: `core` (CLI `det` + ports + validation + store/index), `adapters/*` (optional, separately installable, out-of-process, registered by JSON descriptor — never core imports), `profiles/` (data). Distribution V1 = `npx` from the repo/package.**
+**Chosen: one repository, workspace packaging: `core` (CLI `det` + ports + validation + store/index), `adapters/*` (optional, separately installable, out-of-process, registered by JSON descriptor — never core imports), `resources/profiles/` (data). Distribution V1 = `npx` from the repo/package.**
 
 **Trade-offs:** adapter registration as data keeps core platform-free and lets an adapter be written in any language (the eventual PHP-AST adapter would be a PHP script); per-project roots follow CLI flag → env var → local git-ignored profile precedence, with `PROJECT_SOURCE_NOT_CONFIGURED/NOT_FOUND/NOT_READABLE` diagnostics (PR #6 §9 vocabulary, adopted). **The owner's local absolute paths never appear as defaults anywhere** — committed examples use placeholders; CI includes a clean-clone synthetic project proving portability (IMPLEMENTATION-PLAN M3).
 
-**Evidence:** issue #7 §portability; PR #6 portability checklist; V1 two-profile neutrality precedent (`profiles/`).
+**Evidence:** issue #7 §portability; PR #6 portability checklist; V1 two-profile neutrality precedent (`resources/profiles/`).
 
 **When-to-revisit:** first evidence of a consumer without Node (`OPEN_DECISION` single-binary below).
 

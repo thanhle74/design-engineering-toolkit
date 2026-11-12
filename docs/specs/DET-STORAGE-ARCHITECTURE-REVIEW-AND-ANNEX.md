@@ -1,9 +1,9 @@
 # [30] Independent Review + Annex — DET Studio SQLite & Artifact Architecture
 
 **Status:** INDEPENDENT-REVIEW RECEIPT + AMENDMENT ANNEX — docs only, no DB implementation, no code changes to [28] or [29] · 2026-11-09 · **R2:** coordinator corrections **C1–C3** applied (see [PR #32 review](https://github.com/thanhle74/design-engineering-toolkit/pull/32#issuecomment-6732338324), all evidence re-verified against `main` source before editing)
-**Reviewed target:** Draft [PR #31](https://github.com/thanhle74/design-engineering-toolkit/pull/31) — `specs/DET-PERSISTENCE-AND-KNOWLEDGE-ARCHITECTURE.md` @ `d8f80e9` on `docs/30-studio-sqlite-artifact-architecture` (one commit on `main` `9495f43`).
+**Reviewed target:** Draft [PR #31](https://github.com/thanhle74/design-engineering-toolkit/pull/31) — `docs/specs/DET-PERSISTENCE-AND-KNOWLEDGE-ARCHITECTURE.md` @ `d8f80e9` on `docs/30-studio-sqlite-artifact-architecture` (one commit on `main` `9495f43`).
 **Scope:** [Issue #30](https://github.com/thanhle74/design-engineering-toolkit/issues/30) — architecture decision only.
-**Authority refs (read and verified in this session):** `specs/knowledge-foundation/TECH-ADR.md` (ADR-1..5, OPEN_DECISIONS #1/#6), `schemas/cli/tool-run.schema.json`, `schemas/project-profile.schema.json`, `schemas/kb/kb-ingest-manifest.schema.json`, `schemas/kb/kb-store.schema.json`, `schemas/cli/content-manifest.schema.json`, `schemas/README.md` (Draft 2020-12, integer-major versioning, `additionalProperties: false`), `specs/DET-STUDIO-MVP.md` (on `origin/task/29-det-studio-nextjs-mvp`), `.github/workflows/validate.yml` (Node 22), `package.json` (`engines.node: ">=20"`).
+**Authority refs (read and verified in this session):** `docs/specs/knowledge-foundation/TECH-ADR.md` (ADR-1..5, OPEN_DECISIONS #1/#6), `resources/schemas/cli/tool-run.schema.json`, `resources/schemas/project-profile.schema.json`, `resources/schemas/kb/kb-ingest-manifest.schema.json`, `resources/schemas/kb/kb-store.schema.json`, `resources/schemas/cli/content-manifest.schema.json`, `resources/schemas/README.md` (Draft 2020-12, integer-major versioning, `additionalProperties: false`), `docs/specs/DET-STUDIO-MVP.md` (on `origin/task/29-det-studio-nextjs-mvp`), `.github/workflows/validate.yml` (Node 22), `package.json` (`engines.node: ">=20"`).
 
 ---
 
@@ -22,8 +22,8 @@
 
 **Two factual corrections for the record:**
 
-1. **`schemas/cli/content-manifest.schema.json` is NOT the run artifact manifest.** It is the caller-supplied *literal content* manifest from [23]/G3 (`valueRef`→text/media/link entries pinned to a `sourceRevisionId`). Any persistence implementation that treats "content manifest" as the artifact index will conflate two different contracts. The *per-command* artifact index is `tool-run.json` → `artifacts[]` — which itself is not yet the complete build-bundle manifest (Annex A.1).
-2. **Live branch state (measured 2026-11-09):** `origin/task/28-det-preview-theme-figma-homepage` is **0 commits ahead of `main`** (tip = `9495f43`); `origin/task/29-det-studio-nextjs-mvp` is **2 commits ahead, specs only** (`specs/DET-STUDIO-MVP.md`, `specs/DET-STUDIO-PARALLEL-WORKERS.md`), no app code. `DetRunReader` and [28]'s one-shot `det build` + artifact bundle are therefore **contracted, not built**. The phased sequence in §7 must not assume either surface exists yet; "DetRunReader" seam statements below map to the *spec'd contract*, not shipped code.
+1. **`resources/schemas/cli/content-manifest.schema.json` is NOT the run artifact manifest.** It is the caller-supplied *literal content* manifest from [23]/G3 (`valueRef`→text/media/link entries pinned to a `sourceRevisionId`). Any persistence implementation that treats "content manifest" as the artifact index will conflate two different contracts. The *per-command* artifact index is `tool-run.json` → `artifacts[]` — which itself is not yet the complete build-bundle manifest (Annex A.1).
+2. **Live branch state (measured 2026-11-09):** `origin/task/28-det-preview-theme-figma-homepage` is **0 commits ahead of `main`** (tip = `9495f43`); `origin/task/29-det-studio-nextjs-mvp` is **2 commits ahead, specs only** (`docs/specs/DET-STUDIO-MVP.md`, `docs/specs/DET-STUDIO-PARALLEL-WORKERS.md`), no app code. `DetRunReader` and [28]'s one-shot `det build` + artifact bundle are therefore **contracted, not built**. The phased sequence in §7 must not assume either surface exists yet; "DetRunReader" seam statements below map to the *spec'd contract*, not shipped code.
 
 ---
 
@@ -33,7 +33,7 @@
 
 ### A.1 What exists today: the per-command `ToolRun` envelope (current facts, verified)
 
-Every `det` invocation emits `tool-run.json` (`schemas/cli/tool-run.schema.json`, major 1): required `schemaVersion, tool, command, exitCode, generatedAt, runDiagnostics`; optional `profileId, platformId, adapter, artifacts[], converterDiagnostics, counts, wroteFiles`. Its `artifacts[]` entries are `{role (closed additive enum), file (relative path under --out, optional), schemaRef ($id), contentHash}`.
+Every `det` invocation emits `tool-run.json` (`resources/schemas/cli/tool-run.schema.json`, major 1): required `schemaVersion, tool, command, exitCode, generatedAt, runDiagnostics`; optional `profileId, platformId, adapter, artifacts[], converterDiagnostics, counts, wroteFiles`. Its `artifacts[]` entries are `{role (closed additive enum), file (relative path under --out, optional), schemaRef ($id), contentHash}`.
 
 **This envelope is a per-command execution record — it is NOT yet a complete, schema-valid build-bundle manifest.** Verified gaps (as of `main` `9495f43`):
 
@@ -48,7 +48,7 @@ Every `det` invocation emits `tool-run.json` (`schemas/cli/tool-run.schema.json`
 
 - **Complete:** every file written by the run appears in the manifest — including `native-content.html` and any preview-theme output; an unindexed written file is a contract violation.
 - **Byte-verifiable:** every indexed file carries a hash of its **literal on-disk bytes** (SHA-256), distinct from the payload `contentHash` semantics above; file-less informational entries stay expressible.
-- **Schema-conformant, no silent major-1 change:** closing the `compose-report` enum drift and adding byte-hash/byte-size fields must go through the family's own additive-versioning rules (`schemas/cli/README.md`), never by hand-editing a closed major.
+- **Schema-conformant, no silent major-1 change:** closing the `compose-report` enum drift and adding byte-hash/byte-size fields must go through the family's own additive-versioning rules (`resources/schemas/cli/README.md`), never by hand-editing a closed major.
 - **Deterministic:** same inputs ⇒ same manifest (ADR-2 canonical rules).
 
 [30] does not design this schema here — designing or implementing it is [28]'s task.
@@ -72,7 +72,7 @@ artifacts/<projectId>/<runId>/
 
 ## 3. Annex B — canonical config schema and stable IDs — corrected per C3
 
-1. **Canonical project config document = the whole validated `schemas/project-profile.schema.json` envelope.** The schema's top level requires `schemaVersion` and `profile` (`profile` carrying required `id, name, businessContext, sources, aesthetic, targets, content, platform, safety`; optional `description, gates`). The `projects` table stores and hashes the **whole validated envelope document** — not only the nested `profile` — so schema version and validation context stay authoritative with the data:
+1. **Canonical project config document = the whole validated `resources/schemas/project-profile.schema.json` envelope.** The schema's top level requires `schemaVersion` and `profile` (`profile` carrying required `id, name, businessContext, sources, aesthetic, targets, content, platform, safety`; optional `description, gates`). The `projects` table stores and hashes the **whole validated envelope document** — not only the nested `profile` — so schema version and validation context stay authoritative with the data:
    - `profileId` = `document.profile.id` (schema pattern `^[a-z0-9][a-z0-9-]*$`) — the human-stable identifier used in every CLI call, artifact path segment and export;
    - `configHash` = SHA-256 over the **entire envelope document** (`{schemaVersion, profile}`) serialized by the existing canonical rules (ADR-2, sorted keys) — the pin a run freezes;
    - `configSchemaVersion` = `document.schemaVersion`, stored as its own column so a future envelope-major bump is visible in listings without re-parsing JSON.
@@ -152,7 +152,7 @@ This formalizes TECH-ADR **OPEN_DECISION #1** (`better-sqlite3` vs `node:sqlite`
 
 | Seam | Contract today (verified) | Persistence slice maps it by | Change to [28]/[29] |
 | --- | --- | --- | --- |
-| [29] `DetRunReader` | Spec'd in `specs/DET-STUDIO-MVP.md` §3: typed boundary over real `tool-run.json` + NodeIR/PageStructure/SourceReview/compose-output; explicit DEMO/FIXTURE mode; "preview unavailable" when unverified; no invented IDs/status | Later, Studio's reader gains a second implementation backed by the SQLite catalogue (`listProjects/runs/artifacts`) with **identical view models**; fixture mode remains for demo | none — additive consumer |
+| [29] `DetRunReader` | Spec'd in `docs/specs/DET-STUDIO-MVP.md` §3: typed boundary over real `tool-run.json` + NodeIR/PageStructure/SourceReview/compose-output; explicit DEMO/FIXTURE mode; "preview unavailable" when unverified; no invented IDs/status | Later, Studio's reader gains a second implementation backed by the SQLite catalogue (`listProjects/runs/artifacts`) with **identical view models**; fixture mode remains for demo | none — additive consumer |
 | [29] file-route security | Spec'd §5: configured DET output roots only, `realpath` containment, symlink traversal blocked, extension/MIME/size validation, no absolute paths exposed | Download/preview routes keep the same guard and additionally resolve only through `artifacts` rows (path comes from the DB index, then is `realpath`-contained) | none |
 | [28] one-shot `det build` + artifact bundle | Contracted in issue #28; **branch has no code yet** (0 ahead of main). Envelope + `artifacts[]` already exist on `main` | Persistence slice consumes whatever bundle [28] emits **iff** it is a `tool-run` envelope with hash-verified files; anything else is `UNSUPPORTED_BUNDLE`, not guessed | none — [28] keeps schema ownership |
 | KB engine (`det kb ingest/sync/query/validate`) | Shipped (issue #15): JSONL records + `kb-store.json` descriptor (`storeId, generator, platforms, projects, counts`) + per-namespace ingest manifests | `kb_snapshots` rows reference manifests by relative path + `content_hash` + `source_fingerprint`; refresh compares fingerprints exactly as PR #31 §2 describes | none — no second knowledge engine |

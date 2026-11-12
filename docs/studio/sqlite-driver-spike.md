@@ -2,7 +2,7 @@
 
 **Status:** EXECUTED — decision recorded · 2026-11-10
 **Scope:** issue #50 bounded implementation step 1 (no migration code before this; nothing
-installed). Formalizes Annex D of `specs/DET-STORAGE-ARCHITECTURE-REVIEW-AND-ANNEX.md`
+installed). Formalizes Annex D of `docs/specs/DET-STORAGE-ARCHITECTURE-REVIEW-AND-ANNEX.md`
 against today's actual runtimes.
 
 ## Measured facts (probes run this session, read-only)

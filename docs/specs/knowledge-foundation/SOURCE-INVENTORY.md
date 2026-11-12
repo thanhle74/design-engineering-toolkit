@@ -11,11 +11,11 @@ Audit basis: four parallel read-only worker audits executed 2026-11-03 (W-A plat
 | Source | Location | Facts it supplies | Proof | Reused by |
 |---|---|---|---|---|
 | V1 architecture SSOT | `docs/ARCHITECTURE.md` | Pipeline, layers, gates G1–G5, decision log, ajv precedent | VERIFIED (read) | KNOWLEDGE-ARCHITECTURE, TECH-ADR |
-| V1 schema family | `schemas/*.schema.json`, `schemas/README.md` | Draft 2020-12 conventions, provenance/diagnostic shapes, versioning rule | VERIFIED (read) | CONTRACTS §0, all kb schemas |
+| V1 schema family | `resources/schemas/*.schema.json`, `resources/schemas/README.md` | Draft 2020-12 conventions, provenance/diagnostic shapes, versioning rule | VERIFIED (read) | CONTRACTS §0, all kb schemas |
 | Safety invariants | `docs/safety-and-scope.md` | 8 invariants incl. fail-closed, deletes-unrepresentable | VERIFIED (read) | CONTRACTS §3/§4/§8 |
 | Quality gates | `docs/quality-gates.md` | Gate measurement patterns (provenance as gate) | VERIFIED (read) | IMPLEMENTATION-PLAN §2 |
-| Pilot materials | `projects/slaunchpad-fashion/**` | KB-3 seed: profile, audit, pilot plan, state JSON (evidence ledger), approvals (2 attested-only), risks, deviations | VERIFIED (read) | SOURCE-INVENTORY §5, CONTRACTS §4.5, KB-3 schema enums |
-| Example profiles & payloads | `profiles/*.json`, `examples/*.json` | Synthetic fixture precedents; approval-slot design; `PATTERN_NOT_COMPONENT_IN_SOURCE` precedent | VERIFIED (read) | kb-project-record schema, UX-CAPABILITY-PLANNING |
+| Pilot materials | `resources/projects/slaunchpad-fashion/**` | KB-3 seed: profile, audit, pilot plan, state JSON (evidence ledger), approvals (2 attested-only), risks, deviations | VERIFIED (read) | SOURCE-INVENTORY §5, CONTRACTS §4.5, KB-3 schema enums |
+| Example profiles & payloads | `resources/profiles/*.json`, `resources/examples/*.json` | Synthetic fixture precedents; approval-slot design; `PATTERN_NOT_COMPONENT_IN_SOURCE` precedent | VERIFIED (read) | kb-project-record schema, UX-CAPABILITY-PLANNING |
 | Sibling research (open) | PR [#6](https://github.com/thanhle74/design-engineering-toolkit/pull/6) (`research/5-oss-selective-adoption`) | Determinism gate, diagnostics vocabulary, portability checklist, proof-stage ladder | VERIFIED (read via `gh pr view/diff`) | TECH-ADR alignment, CONTRACTS §2.2.1 |
 | Governing issue | [#7](https://github.com/thanhle74/design-engineering-toolkit/issues/7) | Normative scope, deliverables, KB definitions | VERIFIED | everything |
 | Sibling issue (untouched) | [#5](https://github.com/thanhle74/design-engineering-toolkit/issues/5) (OPEN) | Converter pipeline, stage ladder, worker model | VERIFIED (read-only) | CONTRACTS §2.2.1, README roadmap mapping |
@@ -51,7 +51,7 @@ Classification: all facts `DETECTED` by file inspection on 2026-11-03; **runtime
 |---|---|---|
 | Widget declaration | `app/code/Secomm/UiWidget/etc/widget.xml` declares **one** widget `secomm_ui` (5 params incl. required `component` select) | VERIFIED |
 | Component registry | **21 component definitions** injected via `etc/di.xml` → `Model/Component/Registry`; all `schemaVersion=1`, `group=content`, `enabled=true`, `sourceVersion='2.8.0'` | VERIFIED |
-| Live vs documented | B1 matrix (`.ai/specs/FEAT-J06WXZ-component-eligibility-matrix.md`, approved 2026-08-24) documents 21 B1 IDs — **exact match, zero discrepancy**; B2 (11) and DEFER/EXCLUDE (~38 rows) not implemented, consistent | VERIFIED |
+| Live vs documented | B1 matrix (`.ai/docs/specs/FEAT-J06WXZ-component-eligibility-matrix.md`, approved 2026-08-24) documents 21 B1 IDs — **exact match, zero discrepancy**; B2 (11) and DEFER/EXCLUDE (~38 rows) not implemented, consistent | VERIFIED |
 | Structural lesson | A KB parsing only `widget.xml` would undercount 21→1 — adapters must parse **both** declaration and registry layers | VERIFIED (finding) |
 | Templates | 21 module templates (1:1 with definitions) + 2 theme overrides (`launchpad` theme: `accordion/a`, `categories/a`) | VERIFIED (names) |
 | Guards | CSP whitelist (YouTube/Vimeo frames); widget-parameter validation plugins; per-definition fail-closed enablement | VERIFIED |
@@ -107,7 +107,7 @@ License fact: "HYVÄ SOFTWARE USER LICENSE" (commercial; license file + hyva.io 
 
 ## 7. Sufficiency assessment (KB-3 seed for the pilot project)
 
-From existing documents **only, zero new Figma reads**: ~55 evidence-backed records are creatable today (≈12 source documents, ≈20 requirements, ≈12 UX intents, ≈15 decisions, 4 approvals — 2 of them `attested`-only, ≈18 risks, ≈14 open questions, ≈20 constraints) plus a rich evidence ledger (pilot state JSON). Creatable-as-inferred (must be marked): 5 UNKNOWN LC/FC mappings, candidate render-owner intents. **Not honestly creatable**: authoritative BA definitions for LC-03/04/16, FC-04/07, LA coverage; measured gate values; real offer data policy. Conclusion: the "project info from existing specs/tickets/approved notes" requirement passes.
+From existing documents **only, zero new Figma reads**: ~55 evidence-backed records are creatable today (≈12 source documents, ≈20 requirements, ≈12 UX intents, ≈15 decisions, 4 approvals — 2 of them `attested`-only, ≈18 risks, ≈14 open questions, ≈20 constraints) plus a rich evidence ledger (pilot state JSON). Creatable-as-inferred (must be marked): 5 UNKNOWN LC/FC mappings, candidate render-owner intents. **Not honestly creatable**: authoritative BA definitions for LC-03/04/16, FC-04/07, LA coverage; measured gate values; real offer data policy. Conclusion: the "project info from existing docs/specs/tickets/approved notes" requirement passes.
 
 ## 8. Gaps & unknowns carried forward
 

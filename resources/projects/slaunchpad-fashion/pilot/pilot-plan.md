@@ -35,7 +35,7 @@ From reference `37:2` ↔ `38:30`: 1440→390 container; gutters 72px→24px; he
 1. Load `/figma-use` skill; `create_new_file` (Owner-approved name/team); `create_session`.
 2. Rebuild Foundation boards + local component sets (`use_figma`), binding the audited token values.
 3. Compose desktop page, then mobile page, from those components with editable overrides.
-4. QA loop: `get_screenshot` both pages → side-by-side vs `evidence/ref-pl-homepage-*.png` and style-guide hero → fix diffs (layout/spacing/type/media) until within tolerance.
+4. QA loop: `get_screenshot` both pages → side-by-side vs `docs/evidence/ref-pl-homepage-*.png` and style-guide hero → fix diffs (layout/spacing/type/media) until within tolerance.
 5. Evidence receipt (below) + PR with updated docs. **No self-declared design signoff** — Owner acceptance requested exactly once.
 
 ## Evidence receipt (to be filled after build)
@@ -44,11 +44,11 @@ From reference `37:2` ↔ `38:30`: 1440→390 container; gutters 72px→24px; he
 |---|---|
 | Source style guide | `eVxx3KKeZnS81cOAU09ytg` (pages `1:3`, `3:2`, `1:4`, `121:14313`) |
 | PL archive (verified intact 2026-10-27, re-verified post-build) | `vNPtfBRpYM3PsExirVqhmt` — six pages (`35:2`, `152:44`–`152:48`), untouched, zero writes |
-| Reference screenshots | `pilot/evidence/ref-pl-homepage-desktop.png`, `ref-pl-homepage-mobile.png` |
+| Reference screenshots | `pilot/docs/evidence/ref-pl-homepage-desktop.png`, `ref-pl-homepage-mobile.png` |
 | New target file | **`kFTfnFix9N6MUd1ojiRgkR`** — "SLAUNCH — V1 Pilot (Toolkit)", SECOMM team, created 2026-10-27 after explicit go. https://www.figma.com/design/kFTfnFix9N6MUd1ojiRgkR |
 | Component/instance IDs | Components: `button` set `6:32`, `Announcement Bar` `9:6`, `Input Field` `9:7`, `Product Card` `9:9`, `Category Tile` `9:13`, `Header/Branding` set `10:68`. Pages: Cover `0:1`, Foundation `1:2`, Components `1:3`, Desktop `1:4` (frame `18:2`, hero image `18:4`), Mobile `1:5` (frame `22:2`, hero image `22:4`). Board IDs: color `15:2`, spacing `15:74`, typography `15:121`. Full ledger: token/component IDs in `pilot/state-slaunch-v1-pilot.json` |
 | Variant verification | `button` 15 variants (Hierarchy × State, Default state used on pages); `Header/Branding` 2 variants — `Theme=dark,BG=transparent` `10:2` (desktop hero overlay) + `Theme=light,BG=white` `10:35`; `Announcement Bar` dark/light; all page content = instances with text overrides (tiles `18:49/55/61`, cards `18:75/79/83/87`; mobile tiles `22:30/36/42`, cards `22:56/60/64/68`) — no flattened screenshots |
-| QA evidence | `pilot/evidence/qa-homepage-desktop-final.png` (pass), `qa-homepage-mobile-final.png` (pass after fix), `qa-components.png`. Mobile fix: 9 copy blocks were auto-width and clipped at 390 → clamped to 342px + `HEIGHT` auto-resize (`22:23`, `22:28`, `22:76`, `22:81`, `22:82`, `22:87`, `22:90`, `22:95`, `22:118`); post-fix sweep found zero overflowing texts |
+| QA evidence | `pilot/docs/evidence/qa-homepage-desktop-final.png` (pass), `qa-homepage-mobile-final.png` (pass after fix), `qa-components.png`. Mobile fix: 9 copy blocks were auto-width and clipped at 390 → clamped to 342px + `HEIGHT` auto-resize (`22:23`, `22:28`, `22:76`, `22:81`, `22:82`, `22:87`, `22:90`, `22:95`, `22:118`); post-fix sweep found zero overflowing texts |
 | Deviations & limitations | (1) All page copy beyond PL's verbatim strings is **authored sample content**: announcement text, product names/prices ("Wool tailored coat € 890"…), tile subtitles, editorial meta, legal lines — flagged for Owner review. (2) Button set trimmed to Hierarchy × State (Style=Label, Size=S/M used) — full 4-axis matrix not rebuilt. (3) Open Sans **Medium unavailable** in the file's fonts → `label/*` styles use Regular (weight diff vs source). (4) Derived tokens added where source bindings were unobservable headlessly: `hairline/100`, `muted/100`, `spacing/md`, `spacing/xl`, `spacing/8xl`. (5) PL reference brand ("MAISON / FORM", cream/olive) replaced by style-guide identity (SLAUNCH ink/white, Merriweather+Open Sans); PL contributes structure + verbatim strings only. (6) Imagery: hero photo reused as-is from source `171:4146` (**license UNKNOWN** — flagged in source audit); all other imagery = `mist` placeholder rects + disclaimer caption, no new external assets. (7) Footer is simple stacked columns, not the PL accordion rows (accordion = prototype interaction, out of V1 static scope). |
 
 | Verification status (G1–G5) | **NOT measured to gate definitions** — see "Verification status" below |

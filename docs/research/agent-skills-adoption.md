@@ -40,6 +40,6 @@ Before claiming the skills are deployable, test that:
 - A task for another issue gets that issue number, **not hardcoded `[5]`**.
 - A clean clone with no `/home/thanhle` path works for generic contract tasks.
 - A non-Magento profile is not forced to load Magento dependencies.
-- Read-only workers cannot write to shared specs/branch.
+- Read-only workers cannot write to shared docs/specs/branch.
 - A missing capability, variant, evidence source or optional local source yields `NOT_VERIFIED`/`UNSUPPORTED` diagnostics, not fabricated PASS.
 - No source design or production CMS is accessed in the current G1.
