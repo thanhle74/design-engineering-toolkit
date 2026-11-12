@@ -305,7 +305,7 @@ export default async function registerCliSuite(checkAsync) {
       schemaVersion: 1,
       id: "magento-pagebuilder",
       platformIds: ["magento-pagebuilder"],
-      entry: "dist/adapters/magento-pagebuilder/inspect.js",
+      entry: "dist/src/modules/magento/adapters/magento-pagebuilder/inspect.js",
       outputContract: "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/capability-registry.schema.json",
       permissions: { readOnly: true },
     };
@@ -346,7 +346,7 @@ export default async function registerCliSuite(checkAsync) {
   });
 
   checkAsync("T-22a", "F4: descriptor entry traversal rejected (schema pattern + runtime containment)", async () => {
-    assert.equal(validateAdapterEntry(process.cwd(), "dist/adapters/magento-pagebuilder/inspect.js").ok, true, "legit entry accepted");
+    assert.equal(validateAdapterEntry(process.cwd(), "dist/src/modules/magento/adapters/magento-pagebuilder/inspect.js").ok, true, "legit entry accepted");
     for (const bad of ["tests/../../malicious.js", "src/../evil.js", "a/b/../../c.js", "/abs/path.js"]) {
       const res = validateAdapterEntry(process.cwd(), bad);
       assert.ok(!res.ok, `entry '${bad}' must be rejected: ${JSON.stringify(res)}`);
@@ -396,14 +396,17 @@ export default async function registerCliSuite(checkAsync) {
         }
       }
     };
-    // Neutral core: no platform literals in compiled core or the bin shim.
+    // Neutral core: no platform literals in compiled core/KB-engine output or the bin shim.
+    // ([68] compiled adapters under dist/src/modules/**/adapters/ are platform-owned by
+    // design — magento/figma tokens are their purpose — and are guarded at their SOURCE by
+    // the owner-path sweep and the theme-source ban below, as before the module move.)
     const neutralTerms = /magento|secomm|pagebuilder|hyva|slaunch|\/home\/thanhle|figma/i;
-    scanDir(path.join(process.cwd(), "dist/src"), neutralTerms, new Set(), true);
+    scanDir(path.join(process.cwd(), "dist/src"), neutralTerms, new Set(["adapters"]), true);
     scanDir(path.join(process.cwd(), "bin"), neutralTerms);
     scanDir(path.join(process.cwd(), "schemas/cli"), neutralTerms);
     // Shipped code and committed data must never embed the owner's machine path.
     const ownerPath = /\/home\/thanhle/;
-    for (const dir of ["src/core", "adapters", "schemas", "bin", "tests/fixtures", "examples", "profiles"]) scanDir(path.join(process.cwd(), dir), ownerPath);
+    for (const dir of ["src/core", "src/modules", "schemas", "bin", "tests/fixtures", "examples", "profiles"]) scanDir(path.join(process.cwd(), dir), ownerPath);
     // Adapters must not ship licensed Hyvä source: only thin declaration scanning exists.
     const adapterFiles = [];
     const collect = (d) => {
@@ -413,7 +416,7 @@ export default async function registerCliSuite(checkAsync) {
         else if (/\.(ts|js|json)$/.test(e.name)) adapterFiles.push(p);
       }
     };
-    collect(path.join(process.cwd(), "adapters"));
+    for (const m of ["figma", "magento", "knowledge"]) collect(path.join(process.cwd(), "src", "modules", m, "adapters"));
     for (const f of adapterFiles) {
       const text = readFileSync(f, "utf8");
       assert.ok(!/\.phtml|tailwind\.config|alpine/i.test(text.replace(/alpine\.js/i, "")), `${f} must not embed theme template/CSS/JS sources`);

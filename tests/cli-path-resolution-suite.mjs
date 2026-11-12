@@ -4,7 +4,7 @@
 // the #60 workspace layout; a distributable root CLI package is NOT a supported artifact
 // and is deliberately not claimed). What must stay portable INSIDE the checkout is the
 // committed `node <root>/bin/det.js` entrypoint: invoked from a foreign cwd it resolves
-// its schema registry (schemas/), adapter descriptors (adapters/ + dist/adapters/) and
+// its schema registry (schemas/), adapter descriptors (src/modules/**/adapters/ + dist entries) and
 // version from the REPOSITORY ROOT — never from the caller's cwd — and it fails closed
 // with structured diagnostics on bad input. Closest prior art: REG-07 (foreign-cwd
 // import probe), [60] foreign-cwd CLI checks, REG-09 (committed plan inputs).
@@ -61,18 +61,31 @@ export default async function registerCliPathResolutionSuite(checkAsync) {
     return "root CLI resolved the registry + schemas from the checkout root (12 sections, 0 errors)";
   });
 
-  checkAsync("T-63-3", "root CLI loads adapters/<id>/descriptor.json + their dist/adapters entries from the checkout root from a foreign cwd", () => {
-    // Static half: the five committed descriptors stay at <root>/adapters/<id>/ and every
-    // declared entry compiles to <root>/dist/adapters/... (the [60] tarball layout contract,
-    // now asserted in place — descriptors and dist shape are byte-preserved by [63]).
-    const ids = fs
-      .readdirSync(path.join(ROOT, "adapters"), { withFileTypes: true })
-      .filter((d) => d.isDirectory() && fs.existsSync(path.join(ROOT, "adapters", d.name, "descriptor.json")))
-      .map((d) => d.name)
-      .sort();
-    assert.equal(ids.length, 5, `five committed adapters: ${ids.join(",")}`);
-    for (const id of ids) {
-      const desc = JSON.parse(fs.readFileSync(path.join(ROOT, "adapters", id, "descriptor.json"), "utf8"));
+  checkAsync("T-63-3", "root CLI loads src/modules/**/adapters/<id>/descriptor.json + their dist entries from the checkout root from a foreign cwd", () => {
+    // Static half: the five committed adapters are owned by their feature modules under
+    // src/modules/**/adapters/<id>/ ([68]) and every declared entry compiles to <root>/dist/...
+    // and resolves against the checkout root (the [60] portability contract, now asserted in
+    // place — [63] kept descriptors+dist byte-preserved, [68] moved them under src/modules).
+    const skip = new Set(["__tests__", "__fixtures__", "node_modules", "dist"]);
+    const found = [];
+    const walkModules = (d) => {
+      for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+        if (!e.isDirectory() || skip.has(e.name)) continue;
+        const p = path.join(d, e.name);
+        if (e.name === "adapters") {
+          for (const a of fs.readdirSync(p, { withFileTypes: true })) {
+            if (a.isDirectory() && fs.existsSync(path.join(p, a.name, "descriptor.json"))) found.push({ id: a.name, file: path.join(p, a.name, "descriptor.json") });
+          }
+          continue;
+        }
+        walkModules(p);
+      }
+    };
+    walkModules(path.join(ROOT, "src", "modules"));
+    found.sort((x, y) => x.id.localeCompare(y.id));
+    assert.equal(found.length, 5, `five committed adapters: ${found.map((f) => f.id).join(",")}`);
+    for (const { id, file } of found) {
+      const desc = JSON.parse(fs.readFileSync(file, "utf8"));
       assert.ok(
         fs.existsSync(path.join(ROOT, desc.entry)),
         `${id} entry ${desc.entry} resolves against the checkout root`

@@ -4,7 +4,7 @@
   "platformIds": [
     "magento"
   ],
-  "entry": "dist/adapters/magento-kb-source/scan.js",
+  "entry": "dist/src/modules/knowledge/adapters/magento-kb-source/scan.js",
   "inputContract": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-source-scan-request.schema.json",
   "outputContract": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-source-scan.schema.json",
   "permissions": {

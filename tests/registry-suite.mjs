@@ -117,7 +117,7 @@ export default async function registerRegistrySuite(checkAsync) {
       assert.ok(ajv.getSchema(id), `Ajv has the schema registered for '${alias}' (${id})`);
       n++;
     }
-    assert.equal(REPO_ROOT, ROOT, "REPO_ROOT resolves to the checkout root ([63] single-application layout: schemas/ + adapters/ are root dirs)");
+    assert.equal(REPO_ROOT, ROOT, "REPO_ROOT resolves to the checkout root ([63] single-application layout: schemas/ is a root dir, adapters live under src/modules/**/adapters/)");
     return `${n} $ids registered in Ajv`;
   });
 
@@ -133,20 +133,32 @@ export default async function registerRegistrySuite(checkAsync) {
 
   checkAsync("REG-06", "shipped adapter descriptors reference only registered contract $ids", async () => {
     const ids = new Set(Object.values(GOLDEN_IDS));
-    const adapterDirs = fs
-      .readdirSync(path.join(ROOT, "adapters"), { withFileTypes: true })
-      .filter((e) => e.isDirectory())
-      .map((e) => e.name);
-    assert.ok(adapterDirs.length >= 3, `found ${adapterDirs.length} adapter directories`);
-    for (const dir of adapterDirs) {
-      const p = path.join(ROOT, "adapters", dir, "descriptor.json");
-      if (!fs.existsSync(p)) continue;
+    // [68] adapters are owned by their feature module: src/modules/**/adapters/<id>/descriptor.json.
+    const skip = new Set(["__tests__", "__fixtures__", "node_modules", "dist"]);
+    const descriptorFiles = [];
+    const collectAdapters = (d) => {
+      for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+        if (!e.isDirectory() || skip.has(e.name)) continue;
+        const p = path.join(d, e.name);
+        if (e.name === "adapters") {
+          for (const a of fs.readdirSync(p, { withFileTypes: true }).sort((x, y) => x.name.localeCompare(y.name))) {
+            if (a.isDirectory() && fs.existsSync(path.join(p, a.name, "descriptor.json"))) descriptorFiles.push(path.join(p, a.name, "descriptor.json"));
+          }
+          continue;
+        }
+        collectAdapters(p);
+      }
+    };
+    collectAdapters(path.join(ROOT, "src", "modules"));
+    assert.ok(descriptorFiles.length >= 3, `found ${descriptorFiles.length} adapter descriptors`);
+    for (const p of descriptorFiles) {
+      const rel = path.relative(ROOT, p);
       const d = JSON.parse(fs.readFileSync(p, "utf8"));
       for (const key of ["inputContract", "outputContract"]) {
-        assert.ok(ids.has(d[key]), `adapters/${dir}/descriptor.json ${key} must be a registered contract $id, got ${d[key]}`);
+        assert.ok(ids.has(d[key]), `${rel} ${key} must be a registered contract $id, got ${d[key]}`);
       }
     }
-    return `${adapterDirs.length} descriptors checked against ${ids.size} registered $ids`;
+    return `${descriptorFiles.length} descriptors checked against ${ids.size} registered $ids`;
   });
 
   checkAsync("REG-07", "registry resolves from the install/package root, not the process cwd", async () => {

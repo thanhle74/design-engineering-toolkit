@@ -18,7 +18,7 @@
 //   plugin host, and it deliberately contains no provider-specific knowledge.
 import fs from "node:fs";
 import path from "node:path";
-import { validateContract } from "../../src/core/schema-registry.js";
+import { validateContract } from "../../../../core/schema-registry.js";
 
 const MAX_NODES = 100_000;
 

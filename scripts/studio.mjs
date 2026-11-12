@@ -10,7 +10,7 @@
 //   1. asserts Node >= 22.13 (Studio/Next 16 engine requirement);
 //   2. installs dependencies once if missing (one root `npm ci` against the
 //      single root lockfile — [63] there is exactly one package/lockfile);
-//   3. rebuilds the `det` dist/ when missing or stale vs src/core//adapters/
+//   3. rebuilds the `det` dist/ when missing or stale vs src/core//src/modules engine sources/
 //      (`npm run build:core`; the CLI that both `node bin/det.js` and the
 //      Studio build runner use);
 //   4. defaults STUDIO_DET_RUNS_DIR to <root>/out/studio-runs (created on
@@ -88,7 +88,7 @@ function newestMtime(dirs, pattern) {
 function isCoreDistFresh() {
   if (!existsSync(DET_DIST_ENTRY)) return false;
   const srcNewest = newestMtime(
-    [path.join(ROOT, "src", "core"), path.join(ROOT, "adapters")],
+    [path.join(ROOT, "src", "core"), path.join(ROOT, "src", "modules", "figma"), path.join(ROOT, "src", "modules", "magento"), path.join(ROOT, "src", "modules", "knowledge")],
     /\.ts$/
   );
   const distNewest = newestMtime([path.join(ROOT, "dist")], /\.js$/);

@@ -7,11 +7,11 @@
 // fresh observation. Invalid records are refused, never fixed forward.
 import fs from "node:fs";
 import crypto from "node:crypto";
-import { validateContract } from "../schema-registry.js";
+import { validateContract } from "../../core/schema-registry.js";
 import type { KbCapabilityRecord, KbIngestManifest, KbDiagnostic, KbProjectRecord, KbRecord, KbRelationRecord, KbStoreData, KbUiComponentRecord, ManifestInput, StoreDescriptor } from "./types.js";
 import { digestKey } from "./types.js";
 import { resolveManifestInput, resolveRootAliases, ResolvedInput } from "./path-gateway.js";
-import type { CapabilityRegistry } from "../types.js";
+import type { CapabilityRegistry } from "../../core/types.js";
 import { bridgeRegistryToKb } from "./bridge.js";
 import { buildSemanticContext, duplicateRecordCheck, semanticChecks } from "./semantic.js";
 import { readDescriptor } from "./store.js";

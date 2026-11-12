@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "magento-pagebuilder",
   "platformIds": ["magento-pagebuilder"],
-  "entry": "dist/adapters/magento-pagebuilder/inspect.js",
+  "entry": "dist/src/modules/magento/adapters/magento-pagebuilder/inspect.js",
   "inputContract": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/adapter-input.schema.json",
   "outputContract": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/capability-registry.schema.json",
   "permissions": { "readOnly": true },

@@ -46,9 +46,9 @@
 import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
-import { BASELINE_DENY_GLOBS, globToRegExp } from "../../src/core/kb/path-gateway.js";
-import { slugify } from "../../src/core/kb/ids.js";
-import { getAjv } from "../../src/core/schema-registry.js";
+import { BASELINE_DENY_GLOBS, globToRegExp } from "../../path-gateway.js";
+import { slugify } from "../../ids.js";
+import { getAjv } from "../../../../core/schema-registry.js";
 
 // Output contract $id (schemas/kb/kb-source-scan.schema.json). Validated by $id — the schema
 // file is registered in the shared ajv instance by the schema-registry directory scan.

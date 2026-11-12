@@ -14,9 +14,9 @@
 // "nothing written on failure" holds by construction.
 import fs from "node:fs";
 import path from "node:path";
-import { canonicalStringify } from "../canonical.js";
-import { loadAdapters, runAdapter, sortRunDiagnostics, type RunDiagnostic } from "../adapter-runtime.js";
-import { contractId, validateContract, REPO_ROOT } from "../schema-registry.js";
+import { canonicalStringify } from "../../core/canonical.js";
+import { loadAdapters, runAdapter, sortRunDiagnostics, type RunDiagnostic } from "../../core/adapter-runtime.js";
+import { contractId, validateContract, REPO_ROOT } from "../../core/schema-registry.js";
 import { BASELINE_DENY_GLOBS, resolveRootAliases } from "./path-gateway.js";
 import { LICENSED_TEXT_LIMIT, recordSafetyViolations } from "./safety.js";
 import type { KbDiagnostic, KbExtractManifest, KbRecord, KbScanKind, KbSourceScanPayload } from "./types.js";
@@ -92,7 +92,7 @@ export const realScanRunner: KbScanRunner = async (input) => {
         {
           code: "ADAPTER_NOT_FOUND",
           severity: "error",
-          message: `No adapter whose outputContract is the kb-source-scan payload contract is registered under adapters/ (descriptor + build entry required); nothing was scanned.`,
+          message: `No adapter whose outputContract is the kb-source-scan payload contract is registered under src/modules/**/adapters/ (descriptor + build entry required); nothing was scanned.`,
           subject: { type: "adapter", id: "kb-source-scanner" },
         },
       ],

@@ -4,7 +4,7 @@
 // descriptor must never lie about the partitions next to it).
 
 
-import { canonicalStringify } from "../canonical.js";
+import { canonicalStringify } from "../../core/canonical.js";
 import type { KbDiagnostic, KbRecord, KbStoreData, KbUiComponentRecord, StoreDescriptor } from "./types.js";
 import { isProjectRecord } from "./types.js";
 import { buildSemanticContext, duplicateRecordCheck, semanticChecks } from "./semantic.js";

@@ -4,7 +4,7 @@
   "platformIds": [
     "magento-pagebuilder"
   ],
-  "entry": "dist/adapters/magento-pagebuilder-compose/compose.js",
+  "entry": "dist/src/modules/magento/adapters/magento-pagebuilder-compose/compose.js",
   "inputContract": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/compose-input.schema.json",
   "outputContract": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/compose-output.schema.json",
   "permissions": {

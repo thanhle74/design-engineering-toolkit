@@ -2,7 +2,7 @@
 // The JSON Schemas in schemas/kb/ stay the canonical validation layer (ajv); these structural
 // types exist so the TypeScript core is type-checked against the shapes it validates at runtime.
 // Platform-neutral: platform/source identifiers appear as VALUES, never as structure.
-import type { RunDiagnostic } from "../adapter-runtime.js";
+import type { RunDiagnostic } from "../../core/adapter-runtime.js";
 
 // KB domain diagnostics are process-level/open-vocabulary (tool-run runDiagnostics lane) —
 // they never extend the closed converter diagnostic registry.

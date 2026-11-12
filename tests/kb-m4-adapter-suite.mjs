@@ -12,7 +12,7 @@ import os from "node:os";
 import path from "node:path";
 import { runAdapter } from "../dist/src/core/adapter-runtime.js";
 import { validateContract, getAjv } from "../dist/src/core/schema-registry.js";
-import { idGrammarError } from "../dist/src/core/kb/ids.js";
+import { idGrammarError } from "../dist/src/modules/knowledge/ids.js";
 import { main } from "../dist/src/core/cli/main.js";
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
@@ -22,7 +22,7 @@ const EXTRACT_MANIFEST = path.join(FIX, "extract-manifest.json");
 const INGEST_MANIFEST = path.join(FIX, "ingest-manifest.json");
 const KB_SOURCE_SCAN_ID = "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-source-scan.schema.json";
 const KB_EXTRACT_MANIFEST_ID = "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-extract-manifest.schema.json";
-const DESCRIPTOR = JSON.parse(fs.readFileSync(path.join(ROOT, "adapters", "magento-kb-source", "descriptor.json"), "utf8"));
+const DESCRIPTOR = JSON.parse(fs.readFileSync(path.join(ROOT, "src", "modules", "knowledge", "adapters", "magento-kb-source", "descriptor.json"), "utf8"));
 
 // Fixture markers that must NEVER appear in any payload (denied surfaces, bodies, dummies).
 const NEVER_EMIT_MARKERS = [

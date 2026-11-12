@@ -3,15 +3,15 @@
 // gitignored .toolkit/local.json), out-inside-source-root refusal, adapter-runtime failures
 // (exit 3), payload contract + record-safety + digest/counts fail-closed gates, report-only /
 // dry-run behavior, the happy-path write with an INJECTED deterministic scan-runner double (the
-// real scanner adapter lands separately in adapters/), dedupe/conflict merge rules, null output
+// real scanner adapter lands separately under src/modules/**/adapters/), dedupe/conflict merge rules, null output
 // targets and byte-level determinism. Every failure assertion also checks "nothing was written".
 import assert from "node:assert";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { validateContract } from "../dist/src/core/schema-registry.js";
-import { resolveRootAliases, expandTildePath, BASELINE_DENY_GLOBS } from "../dist/src/core/kb/path-gateway.js";
-import { runExtract, KB_SOURCE_SCAN_CONTRACT_ID } from "../dist/src/core/kb/extract.js";
+import { resolveRootAliases, expandTildePath, BASELINE_DENY_GLOBS } from "../dist/src/modules/knowledge/path-gateway.js";
+import { runExtract, KB_SOURCE_SCAN_CONTRACT_ID } from "../dist/src/modules/knowledge/extract.js";
 import { main } from "../dist/src/core/cli/main.js";
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "design-source-figma-live",
   "platformIds": ["figma"],
-  "entry": "dist/adapters/design-source-figma-live/extract.js",
+  "entry": "dist/src/modules/figma/adapters/design-source-figma-live/extract.js",
   "inputContract": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/adapter-input.schema.json",
   "outputContract": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/design-source-snapshot.schema.json",
   "permissions": { "readOnly": true },

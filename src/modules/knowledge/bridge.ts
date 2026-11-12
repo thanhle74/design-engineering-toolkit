@@ -5,7 +5,7 @@
 // declaration-inspection levels -> DETECTED; not-verified -> UNKNOWN; later-stage claims
 // (admin-roundtrip/visual) cannot come from a G1-ceiling registry and fail closed instead of
 // being silently downgraded.
-import type { CapabilityRegistry, Capability, SourceEvidence } from "../types.js";
+import type { CapabilityRegistry, Capability, SourceEvidence } from "../../core/types.js";
 import type { KbCapabilityRecord, KbDiagnostic, KbSourceRef } from "./types.js";
 import { deriveCapabilityId } from "./ids.js";
 

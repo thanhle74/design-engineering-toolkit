@@ -4,8 +4,8 @@
 // compact) one per line, sorted by id — deterministic bytes for git-versioned storage.
 import fs from "node:fs";
 import path from "node:path";
-import { canonicalStringify, sha256Hex } from "../canonical.js";
-import { validateContract } from "../schema-registry.js";
+import { canonicalStringify, sha256Hex } from "../../core/canonical.js";
+import { validateContract } from "../../core/schema-registry.js";
 import type { KbDiagnostic, KbProjectRecord, KbRecord, KbStoreData, StoreDescriptor, StoredRecord } from "./types.js";
 import { isProjectRecord, isRelationRecord } from "./types.js";
 

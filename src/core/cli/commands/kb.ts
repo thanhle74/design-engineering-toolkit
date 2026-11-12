@@ -8,13 +8,22 @@
 import fs from "node:fs";
 import { artifact, toolVersion, type ArtifactRole } from "../../run-envelope.js";
 import { canonicalize, canonicalStringify, sha256Hex } from "../../canonical.js";
-import { runIngest } from "../../kb/ingest.js";
-import { runSync } from "../../kb/sync.js";
-import { runQuery, type KbQueryKb, type KbQuerySpec } from "../../kb/query.js";
-import { runValidate } from "../../kb/validate.js";
-import { runExtract } from "../../kb/extract.js";
-import { readDescriptor, readStore, serializeDescriptor, projectFile, STORE_FILES } from "../../kb/store.js";
-import type { KbStoreData, StoreDescriptor } from "../../kb/types.js";
+import {
+  runExtract,
+  runIngest,
+  runQuery,
+  runSync,
+  runValidate,
+  readDescriptor,
+  readStore,
+  serializeDescriptor,
+  projectFile,
+  STORE_FILES,
+  type KbQueryKb,
+  type KbQuerySpec,
+  type KbStoreData,
+  type StoreDescriptor,
+} from "../../../modules/knowledge/index.js";
 import { serializeJson, type CommandIO } from "../io.js";
 import { requireValue } from "../args.js";
 import { emit } from "./emit.js";

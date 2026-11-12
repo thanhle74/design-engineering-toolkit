@@ -73,29 +73,63 @@ export function validateAdapterEntry(repoRoot: string, entry: string): { ok: tru
   return { ok: true, abs };
 }
 
-// Discover adapters: adapters/<id>/descriptor.json, each validated against the descriptor schema.
-// Invalid descriptors are skipped with an error diagnostic — a broken registration must never
-// silently vanish, nor take the whole CLI down.
+// Discover adapters: src/modules/**/adapters/<id>/descriptor.json ([68] adapter implementations
+// are owned by their feature module under src/modules/), each validated against the descriptor
+// schema. Discovery skips test/generated trees, walks deterministically and stops descending at
+// an adapters/ directory (its children are adapter ids). Invalid descriptors are skipped with an
+// error diagnostic — a broken registration must never silently vanish, nor take the whole CLI down.
+const ADAPTER_WALK_SKIP = new Set(["__tests__", "__fixtures__", "node_modules", "dist"]);
+
+function collectAdapterDescriptorFiles(repoRoot: string): string[] {
+  const modulesRoot = path.join(repoRoot, "src", "modules");
+  if (!fs.existsSync(modulesRoot)) return [];
+  const adaptersDirs: string[] = [];
+  const walk = (dir: string): void => {
+    for (const ent of fs.readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+      if (!ent.isDirectory() || ADAPTER_WALK_SKIP.has(ent.name)) continue;
+      const child = path.join(dir, ent.name);
+      if (ent.name === "adapters") {
+        adaptersDirs.push(child);
+        continue; // children of adapters/ are adapter ids, not further module tree
+      }
+      walk(child);
+    }
+  };
+  walk(modulesRoot);
+  const files: string[] = [];
+  for (const dir of adaptersDirs) {
+    for (const ent of fs.readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+      if (!ent.isDirectory()) continue;
+      const file = path.join(dir, ent.name, "descriptor.json");
+      if (fs.existsSync(file)) files.push(file);
+    }
+  }
+  // Order by adapter id (the descriptor's directory name) first — matching the pre-[68]
+  // single-root discovery order, which findAdapterForPlatform relies on when two adapters
+  // declare the same platform (the probe wins over its composer sibling) — then by path.
+  return files.sort(
+    (a, b) =>
+      path.basename(path.dirname(a)).localeCompare(path.basename(path.dirname(b))) ||
+      a.localeCompare(b)
+  );
+}
+
 export function loadAdapters(repoRoot: string): { adapters: AdapterDescriptor[]; diagnostics: RunDiagnostic[] } {
   const adapters: AdapterDescriptor[] = [];
   const diagnostics: RunDiagnostic[] = [];
-  const dir = path.join(repoRoot, "adapters");
-  if (!fs.existsSync(dir)) return { adapters, diagnostics };
-  const entries = fs.readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name));
-  for (const ent of entries) {
-    if (!ent.isDirectory()) continue;
-    const file = path.join(dir, ent.name, "descriptor.json");
-    if (!fs.existsSync(file)) continue;
+  const files = collectAdapterDescriptorFiles(repoRoot);
+  for (const file of files) {
+    const entName = path.basename(path.dirname(file));
     let parsed: unknown;
     try {
       parsed = JSON.parse(fs.readFileSync(file, "utf8"));
     } catch (e) {
-      diagnostics.push(rd("ADAPTER_DESCRIPTOR_INVALID", "error", `Adapter descriptor '${ent.name}' is not valid JSON: ${(e as Error).message}`, { type: "adapter", id: ent.name }));
+      diagnostics.push(rd("ADAPTER_DESCRIPTOR_INVALID", "error", `Adapter descriptor '${entName}' is not valid JSON: ${(e as Error).message}`, { type: "adapter", id: entName }));
       continue;
     }
     const check = validateContract("adapter-descriptor", parsed);
     if (!check.valid) {
-      diagnostics.push(rd("ADAPTER_DESCRIPTOR_INVALID", "error", `Adapter descriptor '${ent.name}' fails the adapter-descriptor contract: ${check.errors[0] ?? "unknown"}`, { type: "adapter", id: ent.name }));
+      diagnostics.push(rd("ADAPTER_DESCRIPTOR_INVALID", "error", `Adapter descriptor '${entName}' fails the adapter-descriptor contract: ${check.errors[0] ?? "unknown"}`, { type: "adapter", id: entName }));
       continue;
     }
     const desc = parsed as AdapterDescriptor;

@@ -334,7 +334,7 @@ await registerStudioStartupSuite(checkAsync);
 
 // [63] CLI foreign-cwd / root path-resolution (the [60] packed-package portability contract
 // migrated: no @det/core tarball exists anymore — the committed root bin/det.js must resolve
-// schemas/adapters/version from the checkout root from ANY caller cwd, and fail closed).
+// schemas / module-owned adapter descriptors / version from the checkout root from ANY caller cwd, and fail closed).
 const { default: registerCliPathResolutionSuite } = await import("./cli-path-resolution-suite.mjs");
 await registerCliPathResolutionSuite(checkAsync);
 

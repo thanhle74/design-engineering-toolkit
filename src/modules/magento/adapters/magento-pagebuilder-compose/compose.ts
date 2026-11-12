@@ -59,9 +59,9 @@
 // - Proof ceiling: this output is STRUCTURAL composition evidence only.
 import fs from "node:fs";
 import { createHash } from "node:crypto";
-import { validateContract } from "../../src/core/schema-registry.js";
-import { sortDiagnostics } from "../../src/core/canonical.js";
-import type { Capability, Diagnostic, NodeIRNode, PageStructureSection } from "../../src/core/types.js";
+import { validateContract } from "../../../../core/schema-registry.js";
+import { sortDiagnostics } from "../../../../core/canonical.js";
+import type { Capability, Diagnostic, NodeIRNode, PageStructureSection } from "../../../../core/types.js";
 
 // ---- Input ----------------------------------------------------------------------------------
 interface ManifestEntry {

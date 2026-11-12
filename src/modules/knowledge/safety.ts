@@ -2,7 +2,7 @@
 // helpers every consumer (ingest refusal, store validation, QUERY trust gate) runs on each
 // record. One code path: schema shape (ajv) + licensed free-text caps + secret-pattern scan.
 // Violations carry KINDS and field PATHS only — never field values (no content echo).
-import { validateContract } from "../schema-registry.js";
+import { validateContract } from "../../core/schema-registry.js";
 import { scanForSecrets, scanForOversizedStrings } from "./path-gateway.js";
 import type { KbRecord, KbUiComponentRecord } from "./types.js";
 

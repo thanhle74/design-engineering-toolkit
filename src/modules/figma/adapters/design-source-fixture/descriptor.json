@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "design-source-fixture",
   "platformIds": ["fixture-tree"],
-  "entry": "dist/adapters/design-source-fixture/extract.js",
+  "entry": "dist/src/modules/figma/adapters/design-source-fixture/extract.js",
   "inputContract": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/adapter-input.schema.json",
   "outputContract": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/design-source-snapshot.schema.json",
   "permissions": { "readOnly": true },
