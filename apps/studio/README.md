@@ -56,6 +56,53 @@ Other commands: `npm run build` · `npm start` (serve the production build) ·
   `docs/catalog-data-model.md` for the schema, backup/restore and recovery
   behavior.
 
+## AI workflow ([65]) — local Claude Code + Figma MCP, read-only
+
+The `/agent` page ("Phân tích AI") runs the local **Claude Code CLI** (with
+its **Figma MCP** server) as a *planning* agent: it reads one Figma node you
+choose — read-only, via `mcp__<figma-server>__get_metadata` only — and returns
+a structured section/role proposal. The proposal is advisory only; approving
+it deterministically materializes the pinned-source-matching role assignments
+into a **copy** of the chosen base build project and runs the ordinary
+`det build` engine (single-slot runner, genuine MAPPED/GAP dispositions on the
+ordinary run page). The AI never writes Figma or Magento, never issues engine
+verdicts, and untrusted Figma text is treated as data, never as instructions.
+
+- **Visible preflight.** `/agent` shows `Claude Code: Đã kết nối/Chưa sẵn
+  sàng` + `Figma MCP: …` with a `Kiểm tra lại` button. Detection = CLI
+  present (`claude --version`), authenticated (`claude auth status`), Figma
+  MCP listed AND connected (`claude mcp list` — a listed-but-failed server
+  still blocks), runs root configured. An authoritative recheck runs again
+  server-side before every analysis spawn; a missing/blocked environment
+  renders the Vietnamese instruction — no demo fallback, no credential
+  capture, no auto-install/login.
+- **Invocation (verified against claude 2.1.322):** `claude -p <task>
+  --output-format json --json-schema <draft-07 derivation of the zod
+  contract> --permission-prompts none --allowedTools
+  mcp__<figma-server>__get_metadata --disallowedTools
+  Bash,Write,Edit,NotebookEdit,WebFetch,WebSearch --max-budget-usd 2
+  --no-session-persistence --append-system-prompt <read-only mandate>`, in a
+  fresh per-run cwd. No invented flags; `--restricted` is NOT used (it
+  removes plugin MCP tools entirely — verified live).
+- **Honest outcomes.** `plan-ready` (grounded observation, echo-checked node
+  ids, schema-valid) → operator review; `plan-ungrounded` (schema-valid but
+  the agent reports no real observation — never approvable);
+  `schema-failed` / `output-missing` / `claude-error` / `envelope-invalid` /
+  `stdout-truncated` — each rendered verbatim with its machine code. One
+  analysis at a time (409 `analysis-busy` with the active id); cancellation
+  SIGTERMs the child.
+- **Approval is deterministic.** Proposals are filtered against the pinned
+  snapshot tree: only node ids present in the pinned source are materialized
+  (`design://<namespace>/<nodeId>`, sourceRevisionId = pinned revision);
+  dropped proposals are counted and reported; zero survivors → 409
+  `no-pinned-assignments`. Content refs and capability hints are
+  recommendations only and are never materialized.
+- **Env:** requires `STUDIO_DET_RUNS_DIR` (same as build control).
+  `STUDIO_AGENT_TIMEOUT_MS` (default 300000, min 1000), 
+  `STUDIO_AGENT_MAX_BUDGET_USD` (default `"2"`), `STUDIO_CLAUDE_CLI`
+  (default `claude` on PATH). No server ever captures credentials or
+  triggers installs/logins.
+
 ## Local build control ([40], single-root operator flow [58])
 
 Cấu hình build (`/build`) triggers **real** offline `det build` runs through a

@@ -1,0 +1,24 @@
+# [65] DOM evidence — production server PORT=3100, 2026-11-12T02:25:21Z
+## /agent (ready environment)
+Phân tích AI
+      2 Đã kết nối
+plugin:figma:figma
+2.1.322
+0
+0
+Kiểm tra lại
+## /agent?analysis=agent-1794449651983 (live plan)
+plan-ready
+PAGE/Home/Desktop
+      1 mcp-observed-unpinned
+SECTION/Hero/Primary
+Duyệt kế hoạch và chạy bản dựng "det build"
+Chi tiết kỹ thuật
+0
+## /runs/build-1794450088363 (deterministic engine truth)
+COMPOSITION_SKIPS_PRESENT
+COMPOSITION_EXCLUSIONS_PRESENT
+COMPOSITION_GAPS_PRESENT
+NEEDS_REVIEW
+DECORATION_MERGED
+LIVE
