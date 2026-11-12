@@ -1,7 +1,7 @@
 import { connection } from "next/server";
 
-import { DetRunReaderError, type DetRunSummary } from "@/src/studio/shared/contracts";
-import { getDetRunReader } from "@/src/studio/server/det-run-reader-factory";
+import { DetRunReaderError, type DetRunSummary } from "@/src/modules/studio/shared/contracts";
+import { getDetRunReader } from "@/src/modules/studio/server/det-run-reader-factory";
 
 import { OverviewView } from "./overview-view";
 

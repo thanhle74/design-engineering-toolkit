@@ -16,7 +16,7 @@ import {
 } from "antd";
 import type { DescriptionsProps, TableColumnsType } from "antd";
 
-import type { StudioBuildStageView } from "@/src/studio/shared/contracts";
+import type { StudioBuildStageView } from "@/src/modules/studio/shared/contracts";
 
 /**
  * [40] Build launcher — the client half of Build Control. Starts real builds

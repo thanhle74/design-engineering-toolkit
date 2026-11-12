@@ -7,9 +7,9 @@
  * along (stage table + gaps + verified output count). Unknown ids → 404
  * run-not-found. The journal is never downloadable source.
  */
-import { DetRunReaderError } from "@/src/studio/shared/contracts";
-import { buildControlErrorResponse } from "@/src/studio/server/api-error";
-import { getBuildRunner } from "@/src/studio/server/build-runner";
+import { DetRunReaderError } from "@/src/modules/studio/shared/contracts";
+import { buildControlErrorResponse } from "@/src/modules/studio/server/api-error";
+import { getBuildRunner } from "@/src/modules/studio/server/build-runner";
 
 export async function GET(
   request: Request,

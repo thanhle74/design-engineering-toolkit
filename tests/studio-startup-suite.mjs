@@ -19,7 +19,7 @@ const STUDIO_SCRIPT = path.join(ROOT, "scripts", "studio.mjs");
 const SETUP_SCRIPT = path.join(ROOT, "scripts", "setup.mjs");
 const PROJECT = path.join(ROOT, "examples", "build", "slaunchpad-home-real-derived");
 const CANONICAL_ID = "slaunchpad-home-real-derived";
-// src/studio/server/artifact-access.ts RUN_ID_PATTERN (same id space).
+// src/modules/studio/server/artifact-access.ts RUN_ID_PATTERN (same id space).
 const RUN_ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/;
 
 function runLauncher(args, opts = {}) {
@@ -50,7 +50,7 @@ export default async function registerStudioStartupSuite(checkAsync) {
     assert.equal(fromTmp.status, 0, `launcher failed from tmp cwd: ${fromTmp.stderr}`);
     const tmp = JSON.parse(fromTmp.stdout);
     assert.equal(tmp.root, ROOT);
-    assert.equal(tmp.studioDir, path.join(ROOT, "src", "studio"));
+    assert.equal(tmp.studioDir, path.join(ROOT, "src", "modules", "studio"));
     assert.equal(tmp.env.STUDIO_DET_RUNS_DIR.value, path.join(ROOT, "out", "studio-runs"));
     assert.equal(tmp.env.STUDIO_DET_RUNS_DIR.source, "default");
     assert.equal(tmp.env.STUDIO_BUILD_PROJECTS_DIR.source, "unset");

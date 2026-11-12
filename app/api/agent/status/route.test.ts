@@ -7,8 +7,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 
 const detectMock = vi.fn();
-vi.mock("@/src/studio/server/claude-agent/claude-detect", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src/studio/server/claude-agent/claude-detect")>();
+vi.mock("@/src/modules/studio/server/claude-agent/claude-detect", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/src/modules/studio/server/claude-agent/claude-detect")>();
   return { ...actual, detectClaudeAgentStatus: (...args: unknown[]) => detectMock(...args) };
 });
 

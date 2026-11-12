@@ -13,8 +13,8 @@ import path from "node:path";
 
 vi.mock("server-only", () => ({}));
 
-import { STUDIO_DET_RUNS_DIR_ENV } from "@/src/studio/server/det-run-reader-factory";
-import { getStudioCatalog, STUDIO_DATA_DIR_ENV } from "@/src/studio/server/catalog/studio-catalog";
+import { STUDIO_DET_RUNS_DIR_ENV } from "@/src/modules/studio/server/det-run-reader-factory";
+import { getStudioCatalog, STUDIO_DATA_DIR_ENV } from "@/src/modules/studio/server/catalog/studio-catalog";
 
 import { GET } from "./route";
 

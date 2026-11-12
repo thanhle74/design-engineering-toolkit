@@ -11,9 +11,9 @@
  * still re-verifies live bytes on every artifact read); catalogue failures
  * map through the shared reader-error responses (503 not-configured etc.).
  */
-import { detRunErrorResponse } from "@/src/studio/server/api-error";
-import { STUDIO_DET_RUNS_DIR_ENV } from "@/src/studio/server/det-run-reader-factory";
-import { getStudioCatalog, STUDIO_DATA_DIR_ENV } from "@/src/studio/server/catalog/studio-catalog";
+import { detRunErrorResponse } from "@/src/modules/studio/server/api-error";
+import { STUDIO_DET_RUNS_DIR_ENV } from "@/src/modules/studio/server/det-run-reader-factory";
+import { getStudioCatalog, STUDIO_DATA_DIR_ENV } from "@/src/modules/studio/server/catalog/studio-catalog";
 
 export async function GET(request: Request): Promise<Response> {
   void request.headers.get("accept");

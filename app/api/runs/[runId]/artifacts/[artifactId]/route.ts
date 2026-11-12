@@ -6,8 +6,8 @@
  * reader re-validates path containment, extension allowlist and size before
  * any bytes leave the server. Always served as an attachment.
  */
-import { getDetRunReader } from "@/src/studio/server/det-run-reader-factory";
-import { detRunErrorResponse } from "@/src/studio/server/api-error";
+import { getDetRunReader } from "@/src/modules/studio/server/det-run-reader-factory";
+import { detRunErrorResponse } from "@/src/modules/studio/server/api-error";
 
 
 export async function GET(

@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import { connection } from "next/server";
 
-import { DetRunReaderError } from "@/src/studio/shared/contracts";
+import { DetRunReaderError } from "@/src/modules/studio/shared/contracts";
 import {
   getStudioCatalog,
   STUDIO_DATA_DIR_ENV,
   type CatalogProjectView,
   type CatalogRunView,
   type CatalogStats,
-} from "@/src/studio/server/catalog/studio-catalog";
+} from "@/src/modules/studio/server/catalog/studio-catalog";
 
 import { CatalogView } from "./catalog-view";
 

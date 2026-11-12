@@ -1,9 +1,9 @@
 import { Suspense } from "react";
 import "./globals.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
-import { StudioProviders } from "@/components/layout/studio-providers";
-import { studioMetadata } from "@/components/layout/studio-metadata";
-import { StudioShell } from "@/components/layout/studio-shell";
+import { StudioProviders } from "@/src/modules/studio/components/layout/studio-providers";
+import { studioMetadata } from "@/src/modules/studio/components/layout/studio-metadata";
+import { StudioShell } from "@/src/modules/studio/components/layout/studio-shell";
 
 export const metadata = studioMetadata;
 

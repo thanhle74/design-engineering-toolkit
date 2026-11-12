@@ -9,10 +9,10 @@
  * the listing mirror surface in `invalid`, they do not hide the rest of the
  * catalog.
  */
-import { DetRunReaderError } from "@/src/studio/shared/contracts";
-import { detRunErrorResponse } from "@/src/studio/server/api-error";
-import { BuildConfigCatalog, STUDIO_BUILD_PROJECTS_DIR_ENV } from "@/src/studio/server/build-catalog";
-import { getBuildRunner } from "@/src/studio/server/build-runner";
+import { DetRunReaderError } from "@/src/modules/studio/shared/contracts";
+import { detRunErrorResponse } from "@/src/modules/studio/server/api-error";
+import { BuildConfigCatalog, STUDIO_BUILD_PROJECTS_DIR_ENV } from "@/src/modules/studio/server/build-catalog";
+import { getBuildRunner } from "@/src/modules/studio/server/build-runner";
 
 export async function GET(request: Request): Promise<Response> {
   // Reading any request header marks this route request-time (Cache

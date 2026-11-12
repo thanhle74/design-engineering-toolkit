@@ -9,14 +9,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 
 const detectMock = vi.fn();
-vi.mock("@/src/studio/server/claude-agent/claude-detect", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src/studio/server/claude-agent/claude-detect")>();
+vi.mock("@/src/modules/studio/server/claude-agent/claude-detect", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/src/modules/studio/server/claude-agent/claude-detect")>();
   return { ...actual, detectClaudeAgentStatus: (...args: unknown[]) => detectMock(...args) };
 });
 
 const startMock = vi.fn();
-vi.mock("@/src/studio/server/claude-agent/analysis-runner", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/src/studio/server/claude-agent/analysis-runner")>();
+vi.mock("@/src/modules/studio/server/claude-agent/analysis-runner", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/src/modules/studio/server/claude-agent/analysis-runner")>();
   return {
     ...actual,
     getAgentAnalysisRunner: vi.fn(async () => ({
@@ -26,7 +26,7 @@ vi.mock("@/src/studio/server/claude-agent/analysis-runner", async (importOrigina
 });
 
 import { POST } from "./route";
-import { AgentBusyError } from "@/src/studio/server/claude-agent/analysis-runner";
+import { AgentBusyError } from "@/src/modules/studio/server/claude-agent/analysis-runner";
 
 const READY_STATUS = {
   claudeCode: { ready: true, version: "2.1.322", reasonCode: "ok" },
@@ -134,7 +134,7 @@ describe("POST /api/agent/analyses", () => {
       ready: false,
       allowedFigmaTool: null,
     });
-    const { AgentWorkflowError } = await import("@/src/studio/server/claude-agent/agent-errors");
+    const { AgentWorkflowError } = await import("@/src/modules/studio/server/claude-agent/agent-errors");
     startMock.mockImplementation(() => {
       throw new AgentWorkflowError("agent-not-ready", "blocked");
     });

@@ -14,12 +14,12 @@
  * analysis; the child is the installed `claude` CLI in non-interactive mode,
  * restricted by the verified flag stack (see analysis-runner).
  */
-import { BuildConfigCatalog, STUDIO_BUILD_PROJECTS_DIR_ENV } from "@/src/studio/server/build-catalog";
-import { FILE_KEY_PATTERN, NODE_ID_PATTERN } from "@/src/studio/modules/conversions/figma-input";
-import { getAgentAnalysisRunner, AgentBusyError } from "@/src/studio/server/claude-agent/analysis-runner";
-import { agentErrorResponse, AgentWorkflowError } from "@/src/studio/server/claude-agent/agent-errors";
-import { detectClaudeAgentStatus } from "@/src/studio/server/claude-agent/claude-detect";
-import { assertRequestMatchesSourceIdentity } from "@/src/studio/server/claude-agent/source-identity";
+import { BuildConfigCatalog, STUDIO_BUILD_PROJECTS_DIR_ENV } from "@/src/modules/studio/server/build-catalog";
+import { FILE_KEY_PATTERN, NODE_ID_PATTERN } from "@/src/modules/studio/modules/conversions/figma-input";
+import { getAgentAnalysisRunner, AgentBusyError } from "@/src/modules/studio/server/claude-agent/analysis-runner";
+import { agentErrorResponse, AgentWorkflowError } from "@/src/modules/studio/server/claude-agent/agent-errors";
+import { detectClaudeAgentStatus } from "@/src/modules/studio/server/claude-agent/claude-detect";
+import { assertRequestMatchesSourceIdentity } from "@/src/modules/studio/server/claude-agent/source-identity";
 
 interface AnalysisStartBody {
   fileKey?: unknown;

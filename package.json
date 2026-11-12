@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Modular monolith CLI engine (det): deterministic profile validation, read-only capability inspection and structural mapping, per schemas/converter + schemas/cli contracts. Tech ADR-1: TypeScript on Node; core is platform-neutral, adapters are out-of-process. [63] ONE Node.js/Next.js application rooted at the repository root: ONE package.json + ONE lockfile, the Next.js App Router (app/) is the Studio UI module's routing layer, and the engine (src/core), adapters (adapters/) and Studio module (src/studio) are internal modules of the same project — no npm workspaces, no apps/, no packages/.",
+  "description": "Modular monolith CLI engine (det): deterministic profile validation, read-only capability inspection and structural mapping, per schemas/converter + schemas/cli contracts. Tech ADR-1: TypeScript on Node; core is platform-neutral, adapters are out-of-process. [63] ONE Node.js/Next.js application rooted at the repository root: ONE package.json + ONE lockfile, the Next.js App Router (app/) is the Studio UI module's routing layer, and the engine (src/core), the feature modules (src/modules — figma, magento, knowledge, studio with module-owned adapters) are internal modules of the same project — no npm workspaces, no apps/, no packages/.",
   "scripts": {
     "build": "npm run build:core && npm run build:app",
     "build:core": "tsc -p tsconfig.core.json",
@@ -13,7 +13,7 @@
     "test": "npm run build:core && node tests/run-all.mjs",
     "test:studio": "vitest run",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint app components src/studio next.config.ts vitest.config.ts vitest.setup.ts eslint.config.mjs",
+    "lint": "eslint app src/modules/studio next.config.ts vitest.config.ts vitest.setup.ts eslint.config.mjs",
     "setup": "node scripts/setup.mjs",
     "dev": "node scripts/studio.mjs dev",
     "start": "node scripts/studio.mjs start",

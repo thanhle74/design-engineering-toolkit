@@ -4,8 +4,8 @@ import { useState } from "react";
 
 import { Flex, Typography } from "antd";
 
-import { ArtifactManifest } from "@/src/studio/modules/artifacts";
-import type { StudioArtifactView } from "@/src/studio/shared/contracts";
+import { ArtifactManifest } from "@/src/modules/studio/modules/artifacts";
+import type { StudioArtifactView } from "@/src/modules/studio/shared/contracts";
 
 /**
  * Integrator-owned client bridge between the presentational ArtifactManifest

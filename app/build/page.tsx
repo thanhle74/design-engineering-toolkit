@@ -1,8 +1,8 @@
 import { connection } from "next/server";
 
-import { DetRunReaderError } from "@/src/studio/shared/contracts";
-import { BuildConfigCatalog, STUDIO_BUILD_PROJECTS_DIR_ENV } from "@/src/studio/server/build-catalog";
-import { getBuildRunner } from "@/src/studio/server/build-runner";
+import { DetRunReaderError } from "@/src/modules/studio/shared/contracts";
+import { BuildConfigCatalog, STUDIO_BUILD_PROJECTS_DIR_ENV } from "@/src/modules/studio/server/build-catalog";
+import { getBuildRunner } from "@/src/modules/studio/server/build-runner";
 
 import { BuildView } from "./build-view";
 

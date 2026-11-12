@@ -11,8 +11,8 @@
  * list`; actual reachability is only ever proven by a bounded read-only call
  * inside a real analysis (the plan's `observed.grounded`).
  */
-import { detectClaudeAgentStatus } from "@/src/studio/server/claude-agent/claude-detect";
-import { agentErrorResponse } from "@/src/studio/server/claude-agent/agent-errors";
+import { detectClaudeAgentStatus } from "@/src/modules/studio/server/claude-agent/claude-detect";
+import { agentErrorResponse } from "@/src/modules/studio/server/claude-agent/agent-errors";
 
 export async function GET(request: Request): Promise<Response> {
   // Request-time marker (Cache Components): fs/env are not tracked dynamic APIs.

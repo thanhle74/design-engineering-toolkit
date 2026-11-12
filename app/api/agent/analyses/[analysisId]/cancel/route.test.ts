@@ -14,8 +14,8 @@ import path from "node:path";
 
 vi.mock("server-only", () => ({}));
 
-import { STUDIO_DET_RUNS_DIR_ENV } from "@/src/studio/server/det-run-reader-factory";
-import type { AgentAnalysisSnapshot } from "@/src/studio/shared/contracts";
+import { STUDIO_DET_RUNS_DIR_ENV } from "@/src/modules/studio/server/det-run-reader-factory";
+import type { AgentAnalysisSnapshot } from "@/src/modules/studio/shared/contracts";
 
 import { POST } from "./route";
 

@@ -11,9 +11,9 @@ import path from "node:path";
 
 vi.mock("server-only", () => ({}));
 
-import { STUDIO_DET_RUNS_DIR_ENV } from "@/src/studio/server/det-run-reader-factory";
-import { REPO_ROOT } from "@/src/studio/server/test-helpers/det-cli";
-import { VALID_AGENT_PLAN } from "@/src/studio/shared/contracts/agent-plan.test";
+import { STUDIO_DET_RUNS_DIR_ENV } from "@/src/modules/studio/server/det-run-reader-factory";
+import { REPO_ROOT } from "@/src/modules/studio/server/test-helpers/det-cli";
+import { VALID_AGENT_PLAN } from "@/src/modules/studio/shared/contracts/agent-plan.test";
 
 import { GET } from "./route";
 

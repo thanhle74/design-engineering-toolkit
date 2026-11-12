@@ -14,12 +14,12 @@
  * survives the pinned-source check / the build slot is busy; 404 unknown id;
  * 503 when build control is not configured.
  */
-import { getBuildRunner } from "@/src/studio/server/build-runner";
-import { agentErrorResponse, AgentWorkflowError } from "@/src/studio/server/claude-agent/agent-errors";
-import { getAgentAnalysisRunner } from "@/src/studio/server/claude-agent/analysis-runner";
-import { materializeApprovedInputs } from "@/src/studio/server/claude-agent/plan-materializer";
-import { assertRequestMatchesSourceIdentity } from "@/src/studio/server/claude-agent/source-identity";
-import { isApprovableOutcome } from "@/src/studio/shared/contracts";
+import { getBuildRunner } from "@/src/modules/studio/server/build-runner";
+import { agentErrorResponse, AgentWorkflowError } from "@/src/modules/studio/server/claude-agent/agent-errors";
+import { getAgentAnalysisRunner } from "@/src/modules/studio/server/claude-agent/analysis-runner";
+import { materializeApprovedInputs } from "@/src/modules/studio/server/claude-agent/plan-materializer";
+import { assertRequestMatchesSourceIdentity } from "@/src/modules/studio/server/claude-agent/source-identity";
+import { isApprovableOutcome } from "@/src/modules/studio/shared/contracts";
 import path from "node:path";
 import { mkdir } from "node:fs/promises";
 

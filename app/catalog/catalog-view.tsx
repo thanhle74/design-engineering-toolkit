@@ -10,7 +10,7 @@ import type {
   CatalogRunStatus,
   CatalogRunView,
   CatalogStats,
-} from "@/src/studio/server/catalog/studio-catalog";
+} from "@/src/modules/studio/server/catalog/studio-catalog";
 
 /**
  * [61] Client view child for the Catalogue server page: stock antd light
