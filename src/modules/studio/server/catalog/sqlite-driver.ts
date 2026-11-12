@@ -53,7 +53,11 @@ export interface CatalogDatabase {
  * resolver treats a literal "node:sqlite" as bundleable and fails the whole
  * suite ("Cannot bundle Node.js built-in"). A computed dynamic import is left
  * to the runtime loader by Vite (@vite-ignore) and Turbopack alike, and Node
- * resolves it identically on 22 and 24.
+ * resolves it identically on 22 and 24. The `turbopackIgnore` pragma is
+ * load-bearing in Next 16 production builds: without it Turbopack wraps the
+ * dynamic import in its `trackDynamicImport` runtime helper, which cannot
+ * resolve a build-time-unknown builtin specifier and fails at request time
+ * ("node:sqlite module is unavailable" while plain Node imports it fine).
  */
 const SQLITE_MODULE_SPECIFIER = ["node", "sqlite"].join(":") as "node:sqlite";
 
@@ -69,7 +73,7 @@ export type SqliteImport = () => Promise<NodeSqliteModule>;
 /** Production import; tests may inject a failure to prove the honest error path. */
 const defaultImport: SqliteImport = async () =>
    (await import(
-      /* @vite-ignore */ SQLITE_MODULE_SPECIFIER
+      /* @vite-ignore */ /* turbopackIgnore: true */ SQLITE_MODULE_SPECIFIER
    )) as unknown as NodeSqliteModule;
 
 function driverUnavailableError(reason: string): DetRunReaderError {
