@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "profile": {
+    "id": "slaunchpad-fashion",
+    "name": "slaunchpad fashion project (real-derived Studio build)",
+    "platformId": "magento-pagebuilder",
+    "projectSources": [
+      {
+        "sourceId": "figma-home-desktop",
+        "kind": "fixture-tree",
+        "path": "snapshot-project",
+        "notes": "Offline materialization of the issue #18 live Figma read (root 245:2, provider revision 2417494580183108397); the tree document is derived verbatim from the committed live-read NodeIR."
+      },
+      {
+        "sourceId": "slaunch-checkout",
+        "kind": "platform-checkout",
+        "path": "/path/to/magento-checkout",
+        "notes": "Placeholder sentinel \u2014 resolved per run via CLI/env/local override only. The pinned capability-registry.json was produced by one read-only det inspect of the Owner's local checkout at git HEAD 933b36e78211e571e4fab9a78866a02dc1b5e054 and is committed as the portable pinned artifact."
+      }
+    ],
+    "scopes": [
+      {
+        "sourceId": "figma-home-desktop",
+        "include": [
+          "app/code"
+        ],
+        "exclude": []
+      },
+      {
+        "sourceId": "slaunch-checkout",
+        "include": [
+          "app/code",
+          "vendor/magento/module-page-builder",
+          "vendor/magento/module-page-builder-image-attribute"
+        ],
+        "exclude": []
+      }
+    ],
+    "gates": {
+      "responsiveDeterministicRequired": false
+    },
+    "safety": {
+      "approvedWriteTargets": [],
+      "notes": "Offline builds only; no CMS/store/theme write targets."
+    }
+  }
+}

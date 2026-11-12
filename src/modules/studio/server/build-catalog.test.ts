@@ -190,8 +190,10 @@ describe("listing", () => {
       const listing = await catalog.list();
       expect(listing.invalid).toHaveLength(0);
       // [58] the committed repository catalogue rides alongside the configured dir
+      // ([72] adds the offline-only extended-variants entry)
       expect(listing.entries.map((e) => e.configId).sort()).toEqual([
          "g28-example",
+         "slaunchpad-home-72-extended",
          "slaunchpad-home-real-derived",
       ]);
       const entry = listing.entries.find((e) => e.configId === "g28-example")!;
@@ -254,6 +256,7 @@ describe("listing", () => {
       const listing = await catalog.list();
       expect(listing.entries.map((e) => e.configId)).toEqual([
          "good",
+         "slaunchpad-home-72-extended",
          "slaunchpad-home-real-derived",
       ]);
       expect(listing.invalid.map((e) => e.configId).sort()).toEqual([

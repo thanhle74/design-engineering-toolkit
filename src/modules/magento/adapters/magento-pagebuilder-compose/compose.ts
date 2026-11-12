@@ -2942,10 +2942,44 @@ function composeSection(
       );
       if (fragment !== null) return fragment;
    }
+   // [#72] Recorded-decision flags (self-contained section walk — this runs before the
+   // eligibility scan builds its own scope). Band decisions say "this text is a header/title
+   // band"; a media node found beneath them is page structure (tile/card imagery), never that
+   // text's background — composing the section as a banner would map it to the wrong component.
+   // Both pinned hero fixtures (G3/G28) project background-media explicitly, so pinned bytes are
+   // unchanged; a loose unprojected hero keeps the first-media fallback exactly as before.
+   const bandDecisionFlags = (): {
+      bandRoles: boolean;
+      backgroundMedia: boolean;
+      visibleMedia: boolean;
+   } => {
+      let bandRoles = false;
+      let backgroundMedia = false;
+      let visibleMedia = false;
+      walkSubtree(sectionNodeId, (n) => {
+         if (n.visible === false) return;
+         const loc = locatorOf(n);
+         if (loc !== null) {
+            const role = roleByLocator.get(loc);
+            if (role === "content-lead" || role === "heading") bandRoles = true;
+            if (role === "background-media") backgroundMedia = true;
+         }
+         if (n.kind === "media" && (loc === null || !excludedLocators.has(loc)))
+            visibleMedia = true;
+      });
+      return { bandRoles, backgroundMedia, visibleMedia };
+   };
    // Band guard: a direct-child container that carries its own manifest media entry, or that
    // contains structured (non-CTA) role-resolved text, marks a hero/column-shaped section — the
    // band shape must not silently flatten it. Such sections honestly skip instead.
    const textBandBlocked = (): string | null => {
+      // [#72] the same recorded-decision guard feeds the band guard: band-projected text with
+      // visible media structure beneath it (and no recorded background-media decision) is a
+      // mixed band+cards section no #72 shape composes — a band-only output would drop the
+      // cards, so the section honestly skips with the recorded reason.
+      const flags = bandDecisionFlags();
+      if (flags.bandRoles && !flags.backgroundMedia && flags.visibleMedia)
+         return "visible media structure under recorded band decisions without a recorded background-media decision (no dedicated band+cards shape composes it)";
       for (const child of directVisibleChildren) {
          if (child.kind !== "container" && child.kind !== "component") continue;
          const childLoc = locatorOf(child);
@@ -3019,7 +3053,19 @@ function composeSection(
       const role = resolveRole(n);
       return role !== undefined && role !== "background-media";
    });
-   if (bgCandidates.length === 0 || textCandidates.length === 0) {
+   // [#72] recorded-decision hero guard (see bandDecisionFlags above): band-projected text
+   // without a recorded background-media decision never composes as a hero banner — the media
+   // beneath a band is structure, not background. The section then falls to the guarded
+   // text-band attempt (pure band) or the honest skip below (mixed band+media structure).
+   const heroDeclinedByBandDecision = (() => {
+      const flags = bandDecisionFlags();
+      return flags.bandRoles && !flags.backgroundMedia;
+   })();
+   if (
+      heroDeclinedByBandDecision ||
+      bgCandidates.length === 0 ||
+      textCandidates.length === 0
+   ) {
       // Issue #28: guarded text-band attempt before the honest skip (no background media and no
       // blocking container structure — loose role-resolved text/CTA content only).
       if (!bandBlocker) {

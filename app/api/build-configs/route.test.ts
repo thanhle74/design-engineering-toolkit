@@ -123,9 +123,11 @@ describe("GET /api/build-configs", () => {
          invalid: Array<{ configId: string; reason: string }>;
          runnerReady: boolean;
       };
-      // the configured entry rides alongside the committed repository catalogue ([58])
+      // the configured entry rides alongside the committed repository catalogue ([58];
+      // [72] adds the offline-only extended-variants entry)
       expect(body.entries.map((e) => e.configId)).toEqual([
          "good-entry",
+         "slaunchpad-home-72-extended",
          "slaunchpad-home-real-derived",
       ]);
       const good = body.entries.find((e) => e.configId === "good-entry")!;

@@ -21,12 +21,21 @@
 // every one of them silently declines any subtree carrying a projected decision role, so the
 // dispatcher's projected legacy shapes ahead of this loop and this loop agree by construction.
 // W-C's projected products / slider-slide handlers slot in AHEAD of these (order rule 1).
+// [#72] Integrator registration: products (recorded products-grid/carousel decisions) and
+// slider-slide (recorded slide decisions) registered ahead of the structural handlers per
+// order rule 1; the standalone heading unit keeps its first-of-structural position (it
+// declines any subtree carrying projected decision roles, so the products/slider decisions
+// always outrank it by construction).
 import { cardGridHandler } from "./card-grid.js";
 import { headerBandHandler } from "./header-band.js";
 import { headingSectionHandler } from "./heading.js";
+import { productsHandler } from "./products.js";
+import { sliderSlideHandler } from "./slider-slide.js";
 import type { SectionShapeHandler } from "../handler-context.js";
 
 export const SECTION_SHAPE_HANDLERS: SectionShapeHandler[] = [
+   productsHandler,
+   sliderSlideHandler,
    headingSectionHandler,
    headerBandHandler,
    cardGridHandler,
