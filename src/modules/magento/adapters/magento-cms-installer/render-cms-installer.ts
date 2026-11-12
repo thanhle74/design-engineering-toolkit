@@ -170,10 +170,16 @@ function padLabel(label: string): string {
  * - Install location `<magento-root>/det-install/`; Magento root resolved as
  *   `realpath(__DIR__ . '/..')`; a missing `<magentoRoot>/app/bootstrap.php` is a STDERR
  *   message + exit 1 — never a fatal on wrong placement.
- * - Boots Magento exactly like the platform documents CLI scripts do:
- *   `\Magento\Framework\App\Bootstrap::create(BP, $_SERVER)` + a REAL
- *   `\Magento\Framework\AppInterface` implementation (`DetCmsInstallerApp`) whose
- *   `launch()` performs the work and returns a result for `renderResult()`.
+ * - Boots Magento exactly like the platform's own CLI applications do
+ *   (`\Magento\Framework\App\Bootstrap::create(BP, $_SERVER)`) and implements a REAL
+ *   `\Magento\Framework\AppInterface` (`DetCmsInstallerApp`) in the shape of the platform's
+ *   own `\Magento\Framework\App\Cron`: `launch()` sets the `crontab` area, loads the area
+ *   config, performs the work and returns the constructor-injected
+ *   `\Magento\Framework\App\Console\Response` — a REAL `\Magento\Framework\App\ResponseInterface`
+ *   whose `sendResponse()` exists and is invoked by `Bootstrap::run()`
+ *   (`$response = $application->launch(); $response->sendResponse();`). A controller Result
+ *   object is NEVER returned: Result objects expose `renderResult()`, NOT `sendResponse()`,
+ *   so `Bootstrap::run()` would fatal AFTER the CMS write ([70] C70-1, fixed here).
  * - CMS write through the supported service layer ONLY: `\Magento\Cms\Api\PageRepositoryInterface`
  *   for save; the existing-page lookup goes through
  *   `\Magento\Cms\Model\ResourceModel\Page\Collection` with `addFieldToFilter` on the
@@ -261,9 +267,13 @@ declare(strict_types=1);
  *    run reports action=updated with the same page id.
  *  - PARTIAL COVERAGE: the bundle's mapping-and-gaps.json lists every mapping
  *    gap and exclusion. Partial composition coverage is NOT pixel-perfect.
- *  - PROOF CEILING: generated evidence, UNPROVEN against a live Magento until
- *    an authorized, isolated-store operator run. No credentials of any kind are
- *    embedded and none are needed.
+ *  - RUNTIME PROOF: the emitted runtime shape (AppInterface launch -> a REAL
+ *    ResponseInterface with sendResponse(), service-layer write, idempotent
+ *    create-or-update of the SAME page id, scope-conflict refusal) was executed
+ *    against a real isolated Magento test store during the [70] correction
+ *    proof. On YOUR installation it is still your operator duty to run
+ *    \`--dry-run\` first. No credentials of any kind are embedded and none are
+ *    needed.
  */
 
 // ---- Declared target: the single source of truth for every code path ------------------------
@@ -336,48 +346,101 @@ if (in_array('--dry-run', $argv, true)) {
 require $magentoRoot . '/app/bootstrap.php';
 
 /**
- * A REAL \Magento\Framework\AppInterface implementation: launch() performs the
- * CMS write through the service layer and returns a result for renderResult();
- * catchException() reports failures on STDERR and exits non-zero. This is the
- * runnable shape the platform's CLI-script documentation sketches (its example
- * class is explicitly not runnable — this one is). Declared after a successful
- * bootstrap require (see the placement guard above).
+ * A REAL \\Magento\\Framework\\AppInterface implementation in the platform's own
+ * CLI-application shape (the shape \\Magento\\Framework\\App\\Cron uses): launch()
+ * sets the crontab area, loads the area config, performs the CMS write through
+ * the service layer and returns the constructor-injected
+ * \\Magento\\Framework\\App\\Console\\Response — a REAL
+ * \\Magento\\Framework\\App\\ResponseInterface whose sendResponse() EXISTS and is
+ * invoked by \\Magento\\Framework\\App\\Bootstrap::run()
+ * ($response = $application->launch(); $response->sendResponse();).
+ *
+ * A controller Result object is NEVER returned here: Result objects expose
+ * renderResult(), NOT sendResponse(), so Bootstrap::run() would fatal AFTER the
+ * CMS write ([70] C70-1, fixed). Declared after a successful bootstrap require
+ * (see the placement guard above).
  */
 final class DetCmsInstallerApp implements \\Magento\\Framework\\AppInterface
 {
+    public const EXIT_OK = 0;
+    public const EXIT_FAILURE = 1;
+
+    /** @var \\Magento\\Framework\\App\\State */
+    private $state;
+
+    /** @var \\Magento\\Framework\\App\\Console\\Response — the CLI ResponseInterface the platform's own cron application returns */
+    private $response;
+
     /** @var \\Magento\\Framework\\ObjectManagerInterface */
     private $objectManager;
 
-    public function __construct(\\Magento\\Framework\\ObjectManagerInterface $objectManager)
-    {
+    /** @var int recorded outcome, read via getExitCode() after Bootstrap::run() returns */
+    private $exitCode = self::EXIT_OK;
+
+    public function __construct(
+        \\Magento\\Framework\\App\\State $state,
+        \\Magento\\Framework\\App\\Console\\Response $response,
+        \\Magento\\Framework\\ObjectManagerInterface $objectManager
+    ) {
+        $this->state = $state;
+        $this->response = $response;
         $this->objectManager = $objectManager;
     }
 
     public function launch()
     {
+        // Area/boot semantics of the platform's own CLI application
+        // (\\Magento\\Framework\\App\\Cron::launch()): crontab area + area config.
+        $area = \\Magento\\Framework\\App\\Area::AREA_CRONTAB;
+        $this->state->setAreaCode($area);
+        /** @var \\Magento\\Framework\\ObjectManager\\ConfigLoaderInterface $configLoader */
+        $configLoader = $this->objectManager->get(
+            \\Magento\\Framework\\ObjectManager\\ConfigLoaderInterface::class
+        );
+        $this->objectManager->configure($configLoader->load($area));
         try {
             $this->execute();
+            $this->response->setCode(self::EXIT_OK);
         } catch (\\Throwable $e) {
-            fwrite(STDERR, 'det-cms-installer: ' . $e->getMessage() . PHP_EOL);
-            exit(1);
+            $this->failWith($e);
         }
-        /** @var \\Magento\\Framework\\Controller\\Result\\Raw $result */
-        $result = $this->objectManager
-            ->create(\\Magento\\Framework\\Controller\\ResultFactory::class)
-            ->create(\\Magento\\Framework\\Controller\\ResultFactory::TYPE_RAW);
-        return $result;
+        // A REAL \\Magento\\Framework\\App\\ResponseInterface — Bootstrap::run()
+        // invokes sendResponse() on it, which (for this CLI response) exits the
+        // process with the recorded code.
+        return $this->response;
     }
 
     public function catchException(\\Magento\\Framework\\App\\Bootstrap $bootstrap, \\Exception $exception)
     {
-        fwrite(STDERR, 'det-cms-installer: ' . $exception->getMessage() . PHP_EOL);
-        exit(1);
+        // Reachable only for exceptions escaping launch() itself. Handled here
+        // (return true) so Bootstrap::run() does not rethrow; the failure exit
+        // code stays truthful via getExitCode() in the epilogue below.
+        $this->failWith($exception);
+        return true;
+    }
+
+    public function getExitCode(): int
+    {
+        return $this->exitCode;
+    }
+
+    /**
+     * Report on STDERR and record the failure exit code — the ONLY exit-decision
+     * point of the application (no exit() inside the write path).
+     */
+    private function failWith(\\Throwable $e): void
+    {
+        fwrite(STDERR, 'det-cms-installer: ' . $e->getMessage() . PHP_EOL);
+        $this->exitCode = self::EXIT_FAILURE;
+        $this->response->setCode(self::EXIT_FAILURE);
     }
 
     /**
      * Create-or-update the ONE declared target, strictly keyed on
      * (identifier, store scope). Refuses loudly on any ambiguity; never touches
-     * any other page; never reads or writes web/default/cms_home_page.
+     * any other page; never reads or writes web/default/cms_home_page. Any
+     * refusal is a thrown \\RuntimeException (a recorded exit 1, never a partial
+     * write and never a silent guess).
      */
     private function execute(): void
     {
@@ -417,12 +480,14 @@ final class DetCmsInstallerApp implements \\Magento\\Framework\\AppInterface
                 $lines[] = 'cms page id=' . (string) $conflict['page']->getId()
                     . ' store_id=' . json_encode($conflict['storeIds']);
             }
-            fwrite(STDERR, 'det-cms-installer: REFUSING to write: cms page(s) with the same identifier exist under a DIFFERENT store scope than the declared store_id=' . (string) $storeId . ' (' . implode('; ', $lines) . '). Nothing was written; resolve the collision manually (DET never re-scopes or guesses).' . PHP_EOL);
-            exit(1);
+            throw new \\RuntimeException(
+                'REFUSING to write: cms page(s) with the same identifier exist under a DIFFERENT store scope than the declared store_id=' . (string) $storeId . ' (' . implode('; ', $lines) . '). Nothing was written; resolve the collision manually (DET never re-scopes or guesses).'
+            );
         }
         if (count($candidates) > 1) {
-            fwrite(STDERR, 'det-cms-installer: REFUSING to write: ' . (string) count($candidates) . ' cms page(s) already match the identifier under the declared store scope — ambiguous target, nothing was written.' . PHP_EOL);
-            exit(1);
+            throw new \\RuntimeException(
+                'REFUSING to write: ' . (string) count($candidates) . ' cms page(s) already match the identifier under the declared store scope — ambiguous target, nothing was written.'
+            );
         }
 
         /** @var \\Magento\\Cms\\Api\\PageRepositoryInterface $pageRepository */
@@ -463,7 +528,11 @@ $bootstrap = \\Magento\\Framework\\App\\Bootstrap::create(BP, $_SERVER);
 /** @var DetCmsInstallerApp $app */
 $app = $bootstrap->createApplication(DetCmsInstallerApp::class);
 $bootstrap->run($app);
-exit(0);
+// Success path: Bootstrap::run() invoked sendResponse() on the returned
+// ResponseInterface, which exited the process with the recorded code (platform
+// behavior of \\Magento\\Framework\\App\\Console\\Response).
+// Escaped-exception path: catchException() recorded the failure — exit it.
+exit($app->getExitCode());
 `;
 }
 
@@ -638,8 +707,11 @@ Chạy lần hai báo \`action=updated\` với cùng page id — create-or-updat
 
 \`mapping-and-gaps.json\` liệt kê từng node nguồn với trạng thái mapped / gap /
 decoration-merged / excluded / skipped cùng lý do. **Độ phủ compose từng phần KHÔNG đồng nghĩa
-pixel-perfect**: mọi gap đều được ghi nhận, không có gì bị "vá" im lặng. Script cài này là
-bằng chứng sinh tự động, **chưa được chứng minh trên Magento thật** cho tới một lần chạy
-operator có ủy quyền trên store cách ly.
+pixel-perfect**: mọi gap đều được ghi nhận, không có gì bị "vá" im lặng. Hình dạng chạy thật
+của script (launch trả về \\Magento\\Framework\\App\\ResponseInterface có sendResponse() thật —
+không bao giờ trả về controller Result —, ghi qua service layer, idempotent cùng page id, từ
+chối xung đột store scope) **đã được chạy chứng minh trên một store Magento cách ly** trong đợt
+sửa lỗi [70]; trên bản cài Magento của BẠN, hãy luôn chạy \`--dry-run\` trước — đó là trách
+nhiệm operator cuối cùng.
 `;
 }
