@@ -15,6 +15,7 @@ const ACTIVE_JOB: BuildJobSnapshot = {
    runId: "build-1",
    configId: "g28-example",
    state: "running",
+   cancelled: false,
    exitCode: null,
    signal: null,
    timedOut: false,

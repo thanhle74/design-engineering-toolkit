@@ -89,7 +89,10 @@ export interface BuildJobView {
       | "exited"
       | "timeout"
       | "spawn-failed"
+      | "cancelled"
       | "interrupted";
+   /** [70] honest cancel flag carried by the runner snapshot. */
+   cancelled?: boolean;
    exitCode: number | null;
    signal: string | null;
    timedOut: boolean;
@@ -136,6 +139,8 @@ function stateTag(state: BuildJobView["state"], exitCode: number | null) {
          return <Tag color="error">hết thời gian chờ</Tag>;
       case "spawn-failed":
          return <Tag color="error">không khởi chạy được</Tag>;
+      case "cancelled":
+         return <Tag color="warning">đã hủy</Tag>;
       case "interrupted":
          return <Tag color="error">bị gián đoạn</Tag>;
    }

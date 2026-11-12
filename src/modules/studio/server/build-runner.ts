@@ -61,7 +61,13 @@ const STUDIO_APP_ROOT = path.resolve(
 );
 
 export type BuildJobState =
-   "queued" | "running" | "exited" | "timeout" | "spawn-failed" | "interrupted";
+   | "queued"
+   | "running"
+   | "exited"
+   | "timeout"
+   | "spawn-failed"
+   | "cancelled"
+   | "interrupted";
 
 export interface BuildManifestSummary {
    profileId: string;
@@ -77,6 +83,8 @@ export interface BuildJobSnapshot {
    runId: string;
    configId: string;
    state: BuildJobState;
+   /** [70] True when a user explicitly cancelled the live child (SIGTERM). */
+   cancelled: boolean;
    exitCode: number | null;
    signal: string | null;
    timedOut: boolean;
@@ -263,6 +271,7 @@ export class BuildRunner {
          state: (typeof record.state === "string"
             ? record.state
             : "interrupted") as BuildJobState,
+         cancelled: record.cancelled === true,
          exitCode: typeof record.exitCode === "number" ? record.exitCode : null,
          signal: typeof record.signal === "string" ? record.signal : null,
          timedOut: record.timedOut === true,
@@ -312,6 +321,23 @@ export class BuildRunner {
       return journal;
    }
 
+   /* ------------------------------- cancel ------------------------------ */
+
+   /**
+    * [70] User cancellation of the live job: SIGTERM the child — the same
+    * discipline as the agent runner's cancel(). The close handler records the
+    * honest `cancelled` terminal state (a timeout that already won the race
+    * stays `timeout`). Returns the live snapshot, or null when no live job
+    * matches the id. Never touches finished jobs.
+    */
+   cancel(runId: string): BuildJobSnapshot | null {
+      const active = this.active;
+      if (active === null || active.snapshot.runId !== runId) return null;
+      active.snapshot.cancelled = true;
+      active.child?.kill("SIGTERM");
+      return { ...active.snapshot };
+   }
+
    /* ------------------------------- start ------------------------------ */
 
    /**
@@ -345,6 +371,7 @@ export class BuildRunner {
          runId: `build-${Date.now()}`,
          configId,
          state: "queued",
+         cancelled: false,
          exitCode: null,
          signal: null,
          timedOut: false,
@@ -513,9 +540,11 @@ export class BuildRunner {
             if (activeJob.terminalHandled) return;
             snapshot.state = snapshot.timedOut
                ? "timeout"
-               : code === null
-                 ? "spawn-failed"
-                 : "exited";
+               : snapshot.cancelled
+                 ? "cancelled"
+                 : code === null
+                   ? "spawn-failed"
+                   : "exited";
             snapshot.exitCode = typeof code === "number" ? code : null;
             snapshot.signal = typeof signal === "string" ? signal : null;
             finishTerminal();
