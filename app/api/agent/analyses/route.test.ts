@@ -3,10 +3,31 @@
  * mocked; the HTTP contract (validation, 409 carrier, 503 blocked-with-status,
  * 202 accept) is the subject. The real catalog resolves base config ids
  * against the committed repository catalogue (offline).
+ *
+ * [70] The environment readiness gate is MOCKED (hermetic — no child
+ * processes): default ready so the pre-existing cases keep their behavior,
+ * plus gate-ORDER cases (400 before the gate, 503 environment-not-ready with
+ * checks before any catalog/preflight/runner work).
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("server-only", () => ({}));
+
+const assertReadyMock = vi.fn();
+vi.mock(
+   "@/src/modules/studio/server/environment/index",
+   async (importOriginal) => {
+      const actual =
+         await importOriginal<
+            typeof import("@/src/modules/studio/server/environment/index")
+         >();
+      return {
+         ...actual,
+         assertStudioEnvironmentReady: (...args: unknown[]) =>
+            assertReadyMock(...args),
+      };
+   },
+);
 
 const detectMock = vi.fn();
 vi.mock(
@@ -42,6 +63,38 @@ vi.mock(
 
 import { POST } from "./route";
 import { AgentBusyError } from "@/src/modules/studio/server/claude-agent/analysis-runner";
+import { StudioEnvironmentError } from "@/src/modules/studio/server/environment/index";
+import { type StudioReadinessChecks } from "@/src/modules/studio/shared/contracts/build-flow";
+
+const READY_CHECKS: StudioReadinessChecks = {
+   claudeCode: { ready: true, version: "2.1.322", reasonCode: "ok" },
+   figmaMcp: {
+      ready: true,
+      listed: true,
+      serverName: "plugin:figma:figma",
+      reasonCode: "ok",
+   },
+   detRunsDir: {
+      ready: true,
+      reasonCode: "ok",
+      envName: "STUDIO_DET_RUNS_DIR",
+   },
+};
+
+const BROKEN_CHECKS: StudioReadinessChecks = {
+   claudeCode: { ready: false, version: null, reasonCode: "not-installed" },
+   figmaMcp: {
+      ready: false,
+      listed: false,
+      serverName: null,
+      reasonCode: "mcp-not-listed",
+   },
+   detRunsDir: {
+      ready: false,
+      reasonCode: "not-configured",
+      envName: "STUDIO_DET_RUNS_DIR",
+   },
+};
 
 const READY_STATUS = {
    claudeCode: { ready: true, version: "2.1.322", reasonCode: "ok" },
@@ -74,6 +127,9 @@ beforeEach(() => {
    };
    detectMock.mockResolvedValue(READY_STATUS);
    startMock.mockReset();
+   // [70] Gate default: ready — pre-existing cases keep their old behavior.
+   assertReadyMock.mockReset();
+   assertReadyMock.mockResolvedValue(READY_CHECKS);
 });
 
 afterEach(() => {
@@ -89,6 +145,53 @@ describe("POST /api/agent/analyses", () => {
       expect(response.status).toBe(400);
       const payload = (await response.json()) as { error: { code: string } };
       expect(payload.error.code).toBe("bad-request");
+   });
+
+   it("[70] rejects a bad body with 400 BEFORE consulting the gate (even broken)", async () => {
+      assertReadyMock.mockImplementation(async () => {
+         throw new StudioEnvironmentError(BROKEN_CHECKS);
+      });
+      const response = await post({ fileKey: "bad key!", nodeId: "x" });
+      expect(response.status).toBe(400);
+      const payload = (await response.json()) as { error: { code: string } };
+      expect(payload.error.code).toBe("bad-request");
+      expect(assertReadyMock).not.toHaveBeenCalled();
+   });
+
+   it("[70] fails closed 503 environment-not-ready with checks BEFORE catalog/preflight/runner", async () => {
+      assertReadyMock.mockImplementation(async () => {
+         throw new StudioEnvironmentError(BROKEN_CHECKS);
+      });
+      const response = await post({
+         fileKey: "vNPtfBRpYM3PsExirVqhmt",
+         nodeId: "245:2",
+         baseConfigId: "slaunchpad-home-real-derived",
+      });
+      expect(response.status).toBe(503);
+      const payload = (await response.json()) as {
+         error: { code: string; message: string };
+         checks: StudioReadinessChecks;
+      };
+      expect(payload.error.code).toBe("environment-not-ready");
+      expect(payload.checks).toEqual(BROKEN_CHECKS);
+      // No paid or catalog work ever started: the gate runs first for a
+      // well-formed body.
+      expect(detectMock).not.toHaveBeenCalled();
+      expect(startMock).not.toHaveBeenCalled();
+   });
+
+   it("[70] passes through when the mocked gate is ready (202 unchanged)", async () => {
+      startMock.mockResolvedValue({
+         analysisId: "agent-gate",
+         state: "running",
+      });
+      const response = await post({
+         fileKey: "vNPtfBRpYM3PsExirVqhmt",
+         nodeId: "245:2",
+         baseConfigId: "slaunchpad-home-real-derived",
+      });
+      expect(response.status).toBe(202);
+      expect(assertReadyMock).toHaveBeenCalledTimes(1);
    });
 
    it("rejects an invalid fileKey / nodeId / missing baseConfigId with 400", async () => {

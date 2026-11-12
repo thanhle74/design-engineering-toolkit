@@ -13,6 +13,13 @@
  * 202 {buildRunId, state}; 409 when the analysis is not approvable / nothing
  * survives the pinned-source check / the build slot is busy; 404 unknown id;
  * 503 when build control is not configured.
+ *
+ * [70] Mutation gate: approval starts a NEW `det build`, so POST re-checks
+ * the server environment (`assertStudioEnvironmentReady`) first and fails
+ * closed with 503 `environment-not-ready` + per-check `{checks}` — before
+ * any lookup, materialization or spawn. The route has no request body, so
+ * there are no body validations to order ahead of the gate; a broken
+ * environment blocks every approval attempt regardless of the analysis id.
  */
 import { getBuildRunner } from "@/src/modules/studio/server/build-runner";
 import {
@@ -21,6 +28,11 @@ import {
 } from "@/src/modules/studio/server/claude-agent/agent-errors";
 import { getAgentAnalysisRunner } from "@/src/modules/studio/server/claude-agent/analysis-runner";
 import { materializeApprovedInputs } from "@/src/modules/studio/server/claude-agent/plan-materializer";
+import {
+   assertStudioEnvironmentReady,
+   environmentNotReadyResponse,
+   StudioEnvironmentError,
+} from "@/src/modules/studio/server/environment/index";
 import { assertRequestMatchesSourceIdentity } from "@/src/modules/studio/server/claude-agent/source-identity";
 import { isApprovableOutcome } from "@/src/modules/studio/shared/contracts";
 import path from "node:path";
@@ -33,6 +45,10 @@ export async function POST(
    void request.headers.get("accept");
 
    try {
+      // [70] Authoritative environment re-check FIRST — approval accepts new
+      // work (a build), so nothing (not even the id lookup) runs when the
+      // environment is not ready (fail closed 503 + checks).
+      await assertStudioEnvironmentReady();
       const { analysisId } = await context.params;
       const agentRunner = await getAgentAnalysisRunner();
       const result = await agentRunner.result(analysisId);
@@ -99,6 +115,9 @@ export async function POST(
          { status: 202 },
       );
    } catch (error) {
+      if (error instanceof StudioEnvironmentError) {
+         return environmentNotReadyResponse(error);
+      }
       return agentErrorResponse(error);
    }
 }

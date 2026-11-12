@@ -66,6 +66,17 @@ node bin/det.js build \
   --out out/det-bundles/slaunchpad-home-real-derived
 ```
 
+## CMS install target ([70])
+
+`build-config.json` declares an explicit `cmsInstall` target (`det-studio-homepage`, store
+view 0, active) so `det build` also emits the operator-executed install bundle at the bundle
+root (`install-homepage.php`, `pagebuilder-content.html`, `mapping-and-gaps.json`,
+`README.md`). This is a **dedicated page identifier, explicitly NOT the store default
+homepage**: the generated installer never reads or writes the store config value
+`web/default/cms_home_page` and never touches any other CMS page. DET itself never writes —
+running the installer writes the CMS page only inside the operator's own authorized Magento
+installation (run its `--dry-run` first).
+
 ## Honest boundaries
 
 - This is an **offline** build from a pinned snapshot of the #18 read. No Figma provider is

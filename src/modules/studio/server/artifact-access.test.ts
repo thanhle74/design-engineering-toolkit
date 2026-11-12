@@ -68,6 +68,8 @@ describe("download allowlist", () => {
          "e.svg",
          "f.txt",
          "g.html",
+         "install-homepage.php",
+         "README.md",
       ]) {
          expect(isDownloadableExtension(name)).toBe(true);
          expect(downloadContentType(name)).toBeDefined();
@@ -75,7 +77,7 @@ describe("download allowlist", () => {
    });
 
    it("refuses non-allowlisted extensions", () => {
-      for (const name of ["a.exe", "b.php", "c.sh", "d.mjs", "e"]) {
+      for (const name of ["a.exe", "c.sh", "d.mjs", "e"]) {
          expect(isDownloadableExtension(name)).toBe(false);
          expect(downloadContentType(name)).toBeUndefined();
       }
@@ -87,6 +89,14 @@ describe("download allowlist", () => {
          "text/plain; charset=utf-8",
       );
       expect(downloadContentType("preview.svg")).toBe("image/svg+xml");
+      // [70] CMS installer bundle: .php is served as INERT octet-stream bytes
+      // (never executed here); .md as markdown text.
+      expect(downloadContentType("install-homepage.php")).toBe(
+         "application/octet-stream",
+      );
+      expect(downloadContentType("README.md")).toBe(
+         "text/markdown; charset=utf-8",
+      );
    });
 });
 

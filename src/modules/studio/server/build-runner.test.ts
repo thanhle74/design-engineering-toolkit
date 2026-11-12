@@ -31,7 +31,15 @@ import {
 } from "./build-runner";
 import { exampleBuildConfigBody, requireDetCli } from "./test-helpers/det-cli";
 
-const TERMINAL = new Set(["exited", "timeout", "spawn-failed", "interrupted"]);
+// [70] "cancelled" joins the terminal set: user cancellation is a truthful
+// terminal state the awaitTerminal poller must recognize.
+const TERMINAL = new Set([
+   "exited",
+   "timeout",
+   "spawn-failed",
+   "interrupted",
+   "cancelled",
+]);
 
 let runsRoot: string;
 let projectsRoot: string;
@@ -494,4 +502,119 @@ describe("slot reservation and early spawn-error ordering (Coordinator C1/C2)", 
          expect(reread!.spawnError).toMatch(/could not be spawned/);
       },
    );
+});
+
+/* --------------------------- [70] cancellation -------------------------- */
+
+describe("BuildRunner.cancel — user cancellation of the live job", () => {
+   it("SIGTERMs the live child and records the honest cancelled terminal state", async () => {
+      const killedSignals: string[] = [];
+      let childRef: FakeChild | null = null;
+      const spawnImpl: typeof spawn = (() => {
+         const child = makeFakeChild();
+         child.kill = (signal?: string) => {
+            killedSignals.push(signal ?? "SIGTERM");
+            return true;
+         };
+         childRef = child;
+         return child as unknown as ChildProcess;
+      }) as unknown as typeof spawn;
+
+      const { runner, configPath } = await setupRunner({ spawnImpl });
+      const started = await runner.start("g28-example", configPath);
+      expect(started.state).toBe("running");
+
+      const cancelled = runner.cancel(started.runId);
+      expect(cancelled).not.toBeNull();
+      expect(cancelled!.cancelled).toBe(true);
+      expect(killedSignals).toContain("SIGTERM");
+
+      // The child dies from the SIGTERM: the close handler journals the
+      // truthful `cancelled` terminal state (distinct from `exited`).
+      childRef!.emit("close", null, "SIGTERM");
+      const final = await awaitTerminal(runner, started.runId);
+      expect(final.state).toBe("cancelled");
+      expect(final.cancelled).toBe(true);
+      expect(final.exitCode).toBeNull();
+      expect(final.signal).toBe("SIGTERM");
+      expect(final.finishedAt).not.toBeNull();
+
+      // the slot frees after the terminal journal write lands
+      const slotDeadline = Date.now() + 5_000;
+      while (runner.activeSnapshot() !== null && Date.now() < slotDeadline)
+         await sleep(50);
+      expect(runner.activeSnapshot()).toBeNull();
+   });
+
+   it("returns null for an unknown id while a job is live, and for the finished id after it", async () => {
+      let childRef: FakeChild | null = null;
+      const spawnImpl: typeof spawn = (() => {
+         const child = makeFakeChild();
+         childRef = child;
+         return child as unknown as ChildProcess;
+      }) as unknown as typeof spawn;
+
+      const { runner, configPath } = await setupRunner({ spawnImpl });
+      const started = await runner.start("g28-example", configPath);
+      // a DIFFERENT id never touches the live job
+      expect(runner.cancel("build-999999")).toBeNull();
+      expect(started.cancelled).toBe(false);
+
+      childRef!.emit("close", 0, null);
+      const final = await awaitTerminal(runner, started.runId);
+      expect(final.state).toBe("exited");
+      // the slot frees after the terminal journal write lands
+      const slotDeadline = Date.now() + 5_000;
+      while (runner.activeSnapshot() !== null && Date.now() < slotDeadline)
+         await sleep(50);
+      // finished jobs are never cancellable — cancel stays null, nothing
+      // resurrects the terminal state
+      expect(runner.cancel(started.runId)).toBeNull();
+      expect(runner.cancel("build-999999")).toBeNull();
+      const reread = await runner.snapshot(started.runId);
+      expect(reread!.state).toBe("exited");
+      expect(reread!.cancelled).toBe(false);
+   });
+
+   it("a timeout that already won the race stays timeout (cancel only flags it)", async () => {
+      process.env[STUDIO_BUILD_TIMEOUT_MS_ENV] = "1000";
+      let childRef: FakeChild | null = null;
+      let killCount = 0;
+      const timeoutKill = new Promise<void>((resolve) => {
+         // fake child IGNORES SIGTERM until the test says otherwise; resolve
+         // on the FIRST kill — which must be the runner's timeout timer
+         const child = makeFakeChild();
+         child.kill = (signal?: string) => {
+            killCount += 1;
+            if (killCount === 1) resolve();
+            void signal;
+            return true;
+         };
+         childRef = child;
+      });
+      const spawnImpl: typeof spawn = (() =>
+         childRef as unknown as ChildProcess) as unknown as typeof spawn;
+
+      const { runner, configPath } = await setupRunner({ spawnImpl });
+      const started = await runner.start("g28-example", configPath);
+
+      // Wait for the timeout SIGTERM (the child ignores it, so no close yet).
+      await timeoutKill;
+      const live = runner.activeSnapshot();
+      expect(live).not.toBeNull();
+      expect(live!.timedOut).toBe(true);
+
+      // Cancel AFTER the timeout fired: the flag lands on the live snapshot,
+      // but the timeout already won — the terminal state stays `timeout`.
+      const cancelled = runner.cancel(started.runId);
+      expect(cancelled).not.toBeNull();
+      expect(cancelled!.cancelled).toBe(true);
+      expect(cancelled!.state).toBe("running");
+
+      childRef!.emit("close", null, "SIGTERM");
+      const final = await awaitTerminal(runner, started.runId);
+      expect(final.state).toBe("timeout");
+      expect(final.timedOut).toBe(true);
+      expect(final.cancelled).toBe(true);
+   });
 });

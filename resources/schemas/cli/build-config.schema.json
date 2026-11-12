@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/build-config.schema.json",
-  "$comment": "Design Engineering Toolkit CLI family \u2014 BuildConfig. Major version 1 (issue #28 coordinator correction C1): the declarative input of the one-shot `det build --config` orchestrator, which drives the ALREADY-SHIPPED commands (inspect -> extract -> compose) through their exact existing contracts and emits a versioned build bundle + build manifest (schemas/cli/build-manifest.schema.json). This config introduces NO new engine, NO defaults and NO provider access: every path is explicit caller input, resolved relative to the config file's own directory (portable per-project configs); a `live` design-source mode is deliberately NOT representable in major 1 \u2014 a build runs from an offline snapshot/tree document only, and any live-source need must go through a separately authorized adapter (fail closed, never claimed). The config never points at a CMS/store/theme write target: the build is offline computation; preview installation into a checkout is an explicitly operator-gated step outside this contract.",
+  "$comment": "Design Engineering Toolkit CLI family \u2014 BuildConfig. Major version 1 (issue #28 coordinator correction C1): the declarative input of the one-shot `det build --config` orchestrator, which drives the ALREADY-SHIPPED commands (inspect -> extract -> compose) through their exact existing contracts and emits a versioned build bundle + build manifest (schemas/cli/build-manifest.schema.json). This config introduces NO new engine, NO defaults and NO provider access: every path is explicit caller input, resolved relative to the config file's own directory (portable per-project configs); a `live` design-source mode is deliberately NOT representable in major 1 \u2014 a build runs from an offline snapshot/tree document only, and any live-source need must go through a separately authorized adapter (fail closed, never claimed). The config never points at a CMS/store/theme write target: the build is offline computation; preview installation into a checkout is an explicitly operator-gated step outside this contract. Issue #70 additive minor: the optional `cmsInstall` block does NOT point the build at a write target \u2014 it declares the ONE explicit, operator-executed CMS target that the generated install bundle (`install-homepage.php` + companions) addresses when the bundle is later executed by its operator inside an authorized installation of the target platform; DET itself still never writes, and an absent block is recorded honestly as a build-manifest gap (CMS_INSTALL_TARGET_UNDECLARED).",
   "title": "Design Engineering Toolkit \u2014 Build Config",
   "type": "object",
   "required": [
@@ -97,6 +97,38 @@
       "type": "string",
       "minLength": 1,
       "description": "Default build-bundle output directory (relative to this config file, or absolute). The --out CLI flag overrides it; exactly one of the two must be present."
+    },
+    "cmsInstall": {
+      "type": "object",
+      "required": [
+        "identifier",
+        "title",
+        "storeId",
+        "active"
+      ],
+      "additionalProperties": false,
+      "description": "Issue #70 additive minor: the ONE explicit CMS install target the generated operator bundle addresses. Every field is required and nothing is defaulted — no invented target. The dedicated page identifier must NOT be the store's default homepage: the generated installer never reads or writes the store config value web/default/cms_home_page and never touches any other CMS page; it resolves strictly by this identifier within this store scope and refuses loudly when an existing page with the same identifier belongs to a different store set. When present and composition exits 0, the bundle root additionally carries install-homepage.php (cms-installer), the composed native content under its frozen operator-facing file name (native-content-copy), mapping-and-gaps.json (mapping-gap-report) and README.md (operator-readme); DET itself still never writes — the installer is operator-executed inside an authorized installation.",
+      "properties": {
+        "identifier": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9_-]*$",
+          "description": "The CMS page identifier the installer addresses, exclusively — a dedicated page, never the store default homepage key."
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The CMS page title written by the installer (echoed verbatim; no default)."
+        },
+        "storeId": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The store scope the installer writes into (0 = all store views); the page is stored with this exact scope and any existing page with the same identifier under a different store set refuses the run."
+        },
+        "active": {
+          "type": "boolean",
+          "description": "Whether the installed CMS page is active."
+        }
+      }
     }
   },
   "allOf": [

@@ -1,53 +1,31 @@
-import type { Metadata } from "next";
-import { connection } from "next/server";
+import { redirect } from "next/navigation";
 
-import { DetRunReaderError } from "@/src/modules/studio/shared/contracts";
-import {
-   BuildConfigCatalog,
-   STUDIO_BUILD_PROJECTS_DIR_ENV,
-} from "@/src/modules/studio/server/build-catalog";
-
-import { AgentWorkflow } from "@/src/modules/studio/agent";
-
-export const metadata: Metadata = { title: "Phân tích Figma bằng AI" };
-
-// Catalog + env are read per request (local operator tool) — fully blocking route.
+// The redirect target depends on the request URL — fully blocking route.
 export const instant = false;
 
 /**
- * [65] The AI analysis page. The page itself is server-only and does the
- * same catalog read the Build page does — the base build-config list the
- * operator picks the pinned source project from. All workflow state lives
- * in the client module; the page renders honestly even with zero configs
- * (the workflow cannot start without a base project).
+ * [70] `/agent` no longer has a page of its own: the one-click Build flow
+ * replaces the standalone AI-analysis screen, so every deep link keeps
+ * working as a server redirect to the Build lane (`/agent?analysis=X` →
+ * `/build?analysis=X`). The whole query string is preserved verbatim
+ * (`searchParams` per the Next 16 async-params convention), not just the
+ * `analysis` key. `redirect()` throws `NEXT_REDIRECT`, so this component
+ * never renders UI.
  */
-export default async function AgentPage() {
-   await connection();
-
-   let configs: { configId: string; label: string; designNode: string }[] = [];
-   let catalogError: string | null = null;
-   try {
-      const catalog = await BuildConfigCatalog.open(
-         process.env[STUDIO_BUILD_PROJECTS_DIR_ENV] ?? "",
-      );
-      const listing = await catalog.list();
-      configs = listing.entries.map((entry) => ({
-         configId: entry.configId,
-         label: entry.label,
-         designNode: entry.designSource.designNode,
-      }));
-   } catch (error) {
-      if (error instanceof DetRunReaderError) {
-         catalogError = error.message;
-      } else {
-         throw error;
+export default async function AgentPage({
+   searchParams,
+}: {
+   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+   const params = await searchParams;
+   const query = new URLSearchParams();
+   for (const [key, value] of Object.entries(params)) {
+      if (typeof value === "string") {
+         query.set(key, value);
+      } else if (Array.isArray(value)) {
+         for (const entry of value) query.append(key, entry);
       }
    }
-
-   return (
-      <AgentWorkflow
-         configs={configs}
-         {...(catalogError !== null ? { catalogError } : {})}
-      />
-   );
+   const queryString = query.toString();
+   redirect(queryString === "" ? "/build" : `/build?${queryString}`);
 }

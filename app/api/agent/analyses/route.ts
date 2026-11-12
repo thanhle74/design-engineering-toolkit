@@ -13,6 +13,13 @@
  * 202 {analysisId, state} on accept; 409 analysis-busy with the active
  * analysis; the child is the installed `claude` CLI in non-interactive mode,
  * restricted by the verified flag stack (see analysis-runner).
+ *
+ * [70] Mutation gate: after body validation (400s unchanged) and immediately
+ * before accepting work, POST re-checks the server environment
+ * (`assertStudioEnvironmentReady` — Claude Code + Figma MCP +
+ * STUDIO_DET_RUNS_DIR) and fails closed with 503 `environment-not-ready` +
+ * per-check `{checks}`. The runner's own preflight remains as defense in
+ * depth behind this gate.
  */
 import {
    BuildConfigCatalog,
@@ -31,6 +38,11 @@ import {
    AgentWorkflowError,
 } from "@/src/modules/studio/server/claude-agent/agent-errors";
 import { detectClaudeAgentStatus } from "@/src/modules/studio/server/claude-agent/claude-detect";
+import {
+   assertStudioEnvironmentReady,
+   environmentNotReadyResponse,
+   StudioEnvironmentError,
+} from "@/src/modules/studio/server/environment/index";
 import { assertRequestMatchesSourceIdentity } from "@/src/modules/studio/server/claude-agent/source-identity";
 
 interface AnalysisStartBody {
@@ -96,6 +108,9 @@ export async function POST(request: Request): Promise<Response> {
    }
 
    try {
+      // [70] Authoritative environment re-check — AFTER the 400s above, right
+      // before accepting work (fail closed 503 + checks on any failure).
+      await assertStudioEnvironmentReady();
       // URL-spelled node ids (`123-456`) normalize to the API form (`123:456`) —
       // the form every later surface (prompt echo, plan echo, pinned tree
       // membership) uses.
@@ -126,6 +141,9 @@ export async function POST(request: Request): Promise<Response> {
          { status: 202 },
       );
    } catch (error) {
+      if (error instanceof StudioEnvironmentError) {
+         return environmentNotReadyResponse(error);
+      }
       if (error instanceof AgentBusyError) {
          return Response.json(
             {
