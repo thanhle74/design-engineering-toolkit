@@ -15,7 +15,7 @@
       "types": ["node"]
    },
    "include": [
-      "src/core/**/*.ts",
+      "src/modules/core/**/*.ts",
       "src/modules/figma/**/*.ts",
       "src/modules/magento/**/*.ts",
       "src/modules/knowledge/**/*.ts"

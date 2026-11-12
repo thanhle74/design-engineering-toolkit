@@ -17,9 +17,10 @@ import { commandKb } from "./commands/kb.js";
 import { commandCompose } from "./commands/compose.js";
 import { commandBuild } from "./commands/build.js";
 
-// This module compiles to dist/src/core/cli/main.js — four levels up to the repository root.
+// This module compiles to dist/src/modules/core/cli/main.js — five levels up to the repository root.
 export const REPO_ROOT = path.resolve(
    path.dirname(fileURLToPath(import.meta.url)),
+   "..",
    "..",
    "..",
    "..",

@@ -2,7 +2,7 @@
 // tests/run-all.mjs harness). Runs the 14-case negative/semantic test plan from
 // docs/converter + docs/specs/ISSUE-5-converter-architecture.md §7: schema validation (positive +
 // negative), semantic checks, determinism, neutrality guard, and the two-family portability
-// check. Issue #9 note preserved: the production core graduated from test libs to src/core
+// check. Issue #9 note preserved: the production core graduated from test libs to src/modules/core
 // (TypeScript, compiled to dist/) and this suite tests the real production modules.
 // NOTE: checks register through the shared harness (scripts/run-contract-tests.mjs); the
 // bodies are synchronous — the harness awaits them like any other check.
@@ -14,17 +14,17 @@ import {
    canonicalStringify,
    contentHash,
    sha256Hex,
-} from "../../../dist/src/core/canonical.js";
+} from "../../../../dist/src/modules/core/canonical.js";
 import {
    resolveProjectSource,
    checkAdapterApplicable,
-} from "../../../dist/src/core/preflight.js";
+} from "../../../../dist/src/modules/core/preflight.js";
 import {
    validateBindingMap,
    resolveStructure,
    canonicalReportHash,
-} from "../../../dist/src/core/resolver.js";
-import { validateRegistry } from "../../../dist/src/core/semantic.js";
+} from "../../../../dist/src/modules/core/resolver.js";
+import { validateRegistry } from "../../../../dist/src/modules/core/semantic.js";
 import { REPO_ROOT as ROOT } from "./repo-root.mjs";
 
 const FIX = path.join(path.dirname(fileURLToPath(import.meta.url)), "fixtures");
@@ -573,7 +573,7 @@ export default async function registerContractsSuite(checkAsync) {
          const fixDir = path.join(FIX, "synthetic-flatcms");
          for (const f of readdirSync(fixDir))
             scanFile(
-               `src/core/__tests__/fixtures/synthetic-flatcms/${f}`,
+               `src/modules/core/__tests__/fixtures/synthetic-flatcms/${f}`,
                readFileSync(path.join(fixDir, f), "utf8"),
                neutralTerms,
             );

@@ -9,7 +9,7 @@ import assert from "node:assert";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { validateContract } from "../../../../dist/src/core/schema-registry.js";
+import { validateContract } from "../../../../dist/src/modules/core/schema-registry.js";
 import {
    resolveRootAliases,
    expandTildePath,
@@ -19,7 +19,7 @@ import {
    runExtract,
    KB_SOURCE_SCAN_CONTRACT_ID,
 } from "../../../../dist/src/modules/knowledge/extract.js";
-import { main } from "../../../../dist/src/core/cli/main.js";
+import { main } from "../../../../dist/src/modules/core/cli/main.js";
 
 // Committed W-B synthetic checkout fixture, relocated next to this suite by [68].
 const FIX = path.join(

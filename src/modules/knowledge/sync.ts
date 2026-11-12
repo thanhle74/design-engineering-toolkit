@@ -4,7 +4,7 @@
 // upgrades a record (only a fresh ingest re-observes). Unchanged digests are never re-parsed.
 import fs from "node:fs";
 import crypto from "node:crypto";
-import { validateContract } from "../../core/schema-registry.js";
+import { validateContract } from "../core/schema-registry.js";
 import type {
    KbDiagnostic,
    KbIngestManifest,

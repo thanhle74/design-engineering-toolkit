@@ -11,7 +11,7 @@ pnpm run setup   # ONCE: one root pnpm install --frozen-lockfile (ONE package.js
 pnpm run dev     # DET Studio → http://localhost:3000/build
 ```
 
-DET is **ONE Node.js / Next.js application rooted at the repository root** ([63]), organized as a modular monolith ([68]): the headless engine is `src/core` plus bounded feature modules `src/modules/{figma,magento,knowledge,studio}` — adapters live INSIDE their owning module (`src/modules/**/adapters/`), tests and fixtures beside their code (`__tests__/`), and the engine core stays React-free (callable via `node bin/det.js` from any cwd). The Next.js App Router (`app/`) is only the Studio UI module's routing layer. Committed data lives in `resources/{schemas,knowledge,examples,profiles,projects}`; specs and receipts in `docs/`. There are no npm workspaces, no `apps/`, no `packages/`, no internal package manifests.
+DET is **ONE Node.js / Next.js application rooted at the repository root** ([63]), organized as a modular monolith ([68]): the headless engine is `src/modules/core` plus bounded feature modules `src/modules/{figma,magento,knowledge,studio}` — adapters live INSIDE their owning module (`src/modules/**/adapters/`), tests and fixtures beside their code (`__tests__/`), and the engine core stays React-free (callable via `node bin/det.js` from any cwd). The Next.js App Router (`app/`) is only the Studio UI module's routing layer. Committed data lives in `resources/{schemas,knowledge,examples,profiles,projects}`; specs and receipts in `docs/`. There are no npm workspaces, no `apps/`, no `packages/`, no internal package manifests.
 
 Then in the browser: select **"Slaunchpad Homepage — real-derived (Figma rev
 2417494580183108397)"** (the committed repository example, cataloged in place — nothing

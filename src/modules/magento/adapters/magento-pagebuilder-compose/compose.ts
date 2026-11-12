@@ -59,14 +59,14 @@
 // - Proof ceiling: this output is STRUCTURAL composition evidence only.
 import fs from "node:fs";
 import { createHash } from "node:crypto";
-import { validateContract } from "../../../../core/schema-registry.js";
-import { sortDiagnostics } from "../../../../core/canonical.js";
+import { validateContract } from "../../../core/schema-registry.js";
+import { sortDiagnostics } from "../../../core/canonical.js";
 import type {
    Capability,
    Diagnostic,
    NodeIRNode,
    PageStructureSection,
-} from "../../../../core/types.js";
+} from "../../../core/types.js";
 
 // ---- Input ----------------------------------------------------------------------------------
 interface ManifestEntry {
@@ -158,7 +158,7 @@ if (!inputCheck.valid)
 
 // ---- Canonical hashing (MUST equal the core's canonicalization, never a second variant) ------
 // Canonical JSON = recursively key-sorted; volatile observation timestamps (generatedAt,
-// retrievedAt, accessedAt) are stripped before hashing (same rule as src/core/canonical.ts).
+// retrievedAt, accessedAt) are stripped before hashing (same rule as src/modules/core/canonical.ts).
 function canonicalize(value: unknown): unknown {
    if (Array.isArray(value)) return value.map(canonicalize);
    if (value && typeof value === "object") {
@@ -188,7 +188,7 @@ function sha256Hex(value: string): string {
 function stableHash(payload: unknown): string {
    return sha256Hex(JSON.stringify(canonicalize(stripVolatile(payload))));
 }
-// Canonical, order-independent stable pin hash of a binding map (src/core/resolver.ts
+// Canonical, order-independent stable pin hash of a binding map (src/modules/core/resolver.ts
 // bindingMapPinHash): bindings sorted by (sourceComponentId, sha of canonical variant key).
 function canonicalVariantKey(b: {
    variantConditions: { prop: string; op?: string; value: string }[];

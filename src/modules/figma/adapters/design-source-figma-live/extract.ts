@@ -22,7 +22,7 @@
 // - Revision pin: the provider's returned version token pins the snapshot; without one (and no
 //   lastModified fallback) the read fails closed — a snapshot without a revision is not evidence.
 import fs from "node:fs";
-import { validateContract } from "../../../../core/schema-registry.js";
+import { validateContract } from "../../../core/schema-registry.js";
 import { MAX_NODES, toSnapshotNodes, type FigmaDocNode } from "./figma-map.js";
 
 interface AdapterInput {

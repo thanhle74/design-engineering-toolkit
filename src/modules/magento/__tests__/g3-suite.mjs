@@ -9,22 +9,22 @@ import assert from "node:assert";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { main } from "../../../../dist/src/core/cli/main.js";
+import { main } from "../../../../dist/src/modules/core/cli/main.js";
 import {
    stableContentHash,
    canonicalStringify,
    stripVolatile,
-} from "../../../../dist/src/core/canonical.js";
-import { deriveNodeId } from "../../../../dist/src/core/design-source/extract.js";
+} from "../../../../dist/src/modules/core/canonical.js";
+import { deriveNodeId } from "../../../../dist/src/modules/core/design-source/extract.js";
 
-import { REPO_ROOT as ROOT } from "../../../../src/core/__tests__/repo-root.mjs";
+import { REPO_ROOT as ROOT } from "../../../../src/modules/core/__tests__/repo-root.mjs";
 const FIX = path.join(
    path.dirname(new URL(import.meta.url).pathname),
    "fixtures",
 );
 const G3 = path.join(FIX, "g3-hero-design-source");
 const G3_CHECKOUT = path.join(FIX, "g3-magento-like");
-const CORE_FIXTURES = path.join(ROOT, "src", "core", "__tests__", "fixtures");
+const CORE_FIXTURES = path.join(ROOT, "src", "modules", "core", "__tests__", "fixtures");
 const PROFILE = path.join(
    CORE_FIXTURES,
    "negative/profile-g3-hero-fixture.fixture.json",
@@ -993,7 +993,7 @@ export default async function registerG3Suite(checkAsync) {
             );
             // The example validates against its contract.
             const { validateContract } =
-               await import("../../../../dist/src/core/schema-registry.js");
+               await import("../../../../dist/src/modules/core/schema-registry.js");
             const check = validateContract("compose-output", committed);
             assert.ok(
                check.valid,
@@ -1067,9 +1067,9 @@ export default async function registerG3Suite(checkAsync) {
             );
          }
          scan(
-            "dist/src/core/cli/commands/compose.js",
+            "dist/src/modules/core/cli/commands/compose.js",
             fs.readFileSync(
-               path.join(ROOT, "dist/src/core/cli/commands/compose.js"),
+               path.join(ROOT, "dist/src/modules/core/cli/commands/compose.js"),
                "utf8",
             ),
          );

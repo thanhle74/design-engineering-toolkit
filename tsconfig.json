@@ -33,7 +33,7 @@
    "exclude": [
       "node_modules",
       "dist",
-      "src/core",
+      "src/modules/core",
       "src/modules/figma",
       "src/modules/magento",
       "src/modules/knowledge"

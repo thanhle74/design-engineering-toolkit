@@ -15,10 +15,10 @@ runtime behavior beyond what the declared config carries.
 
 Locked consumers (these suites fail if the files drift):
 
-- `src/core/__tests__/cli-path-resolution-suite.mjs` (T-63-3/T-63-5: foreign-cwd plan over the
+- `src/modules/core/__tests__/cli-path-resolution-suite.mjs` (T-63-3/T-63-5: foreign-cwd plan over the
   committed inputs),
-- `src/core/__tests__/registry-suite.mjs` (registry + bindings validate their contracts),
-- `src/core/__tests__/contracts-suite.mjs` (contract + neutrality gates over the registry),
+- `src/modules/core/__tests__/registry-suite.mjs` (registry + bindings validate their contracts),
+- `src/modules/core/__tests__/contracts-suite.mjs` (contract + neutrality gates over the registry),
 - `src/modules/figma/__tests__/g2-suite.mjs` (extraction over the registry).
 
 Sibling domains: `../` (this tree's index) — `hyva-ui/` and `phtml/` are intentionally absent

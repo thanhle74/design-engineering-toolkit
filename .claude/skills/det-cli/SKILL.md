@@ -11,7 +11,7 @@ The toolkit's deterministic logic lives in the **`det` CLI**, never in prompts. 
 
 ```bash
 pnpm install --frozen-lockfile   # once per checkout (ONE root package.json + ONE pnpm-lock.yaml, version pinned by `packageManager` — [63] single application, no workspaces)
-pnpm run build   # compile src/core + adapters/ to dist/ via tsconfig.core.json (gitignored)
+pnpm run build   # compile src/modules/core + adapters/ to dist/ via tsconfig.core.json (gitignored)
 node bin/det.js --help   # the committed CLI entrypoint of the single application
 ```
 

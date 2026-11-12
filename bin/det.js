@@ -5,7 +5,7 @@
 // (and `npm exec det`) invocation working from the checkout root — and from any cwd,
 // because every path the compiled core resolves anchors to this repository root,
 // never to the caller's cwd.
-const entry = new URL("../dist/src/core/cli/main.js", import.meta.url);
+const entry = new URL("../dist/src/modules/core/cli/main.js", import.meta.url);
 
 try {
    const { main } = await import(entry.href);

@@ -6,12 +6,12 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { REPO_ROOT as ROOT } from "./repo-root.mjs";
-import { main } from "../../../dist/src/core/cli/main.js";
+import { main } from "../../../../dist/src/modules/core/cli/main.js";
 import {
    runAdapter,
    validateAdapterEntry,
-} from "../../../dist/src/core/adapter-runtime.js";
-import { stableContentHash } from "../../../dist/src/core/canonical.js";
+} from "../../../../dist/src/modules/core/adapter-runtime.js";
+import { stableContentHash } from "../../../../dist/src/modules/core/canonical.js";
 
 const FIX = path.join(
    path.dirname(new URL(import.meta.url).pathname),
@@ -537,7 +537,7 @@ export default async function registerCliSuite(checkAsync) {
             process.cwd(),
             {
                ...baseDescriptor,
-               entry: "src/core/__tests__/fixtures/fake-adapter/crash.mjs",
+               entry: "src/modules/core/__tests__/fixtures/fake-adapter/crash.mjs",
             },
             input,
          );
@@ -550,7 +550,7 @@ export default async function registerCliSuite(checkAsync) {
             process.cwd(),
             {
                ...baseDescriptor,
-               entry: "src/core/__tests__/fixtures/fake-adapter/timeout.mjs",
+               entry: "src/modules/core/__tests__/fixtures/fake-adapter/timeout.mjs",
             },
             input,
             { timeoutMs: 300 },
@@ -564,7 +564,7 @@ export default async function registerCliSuite(checkAsync) {
             process.cwd(),
             {
                ...baseDescriptor,
-               entry: "src/core/__tests__/fixtures/fake-adapter/badjson.mjs",
+               entry: "src/modules/core/__tests__/fixtures/fake-adapter/badjson.mjs",
             },
             input,
          );
@@ -579,7 +579,7 @@ export default async function registerCliSuite(checkAsync) {
             process.cwd(),
             {
                ...baseDescriptor,
-               entry: "src/core/__tests__/fixtures/fake-adapter/wrongcontract.mjs",
+               entry: "src/modules/core/__tests__/fixtures/fake-adapter/wrongcontract.mjs",
             },
             input,
          );
@@ -872,7 +872,7 @@ export default async function registerCliSuite(checkAsync) {
             process.cwd(),
             {
                ...base,
-               entry: "src/core/__tests__/fixtures/fake-adapter/flood.mjs",
+               entry: "src/modules/core/__tests__/fixtures/fake-adapter/flood.mjs",
             },
             input,
             { maxStdoutBytes: 50_000, timeoutMs: 10_000 },
@@ -888,7 +888,7 @@ export default async function registerCliSuite(checkAsync) {
             process.cwd(),
             {
                ...base,
-               entry: "src/core/__tests__/fixtures/fake-adapter/crash.mjs",
+               entry: "src/modules/core/__tests__/fixtures/fake-adapter/crash.mjs",
             },
             input,
          );

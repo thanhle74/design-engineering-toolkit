@@ -27,6 +27,7 @@ export const REPO_ROOT = path.resolve(
    "..",
    "..",
    "..",
+   "..",
 );
 
 const SCHEMA_DIRS = [

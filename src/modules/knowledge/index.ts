@@ -1,5 +1,5 @@
 // Public API of the knowledge module ([68] module organization).
-// The generic CLI runtime (src/core/cli) consumes the module only through this surface;
+// The generic CLI runtime (src/modules/core/cli) consumes the module only through this surface;
 // other modules must not reach into module-internal files.
 export { runIngest } from "./ingest.js";
 export { runSync } from "./sync.js";

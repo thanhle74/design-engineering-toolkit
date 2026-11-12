@@ -31,7 +31,7 @@ import {
    type KbQuerySpec,
    type KbStoreData,
    type StoreDescriptor,
-} from "../../../modules/knowledge/index.js";
+} from "../../../knowledge/index.js";
 import { serializeJson, type CommandIO } from "../io.js";
 import { requireValue } from "../args.js";
 import { emit } from "./emit.js";

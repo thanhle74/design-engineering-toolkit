@@ -10,18 +10,18 @@ import fs from "node:fs";
 import http from "node:http";
 import os from "node:os";
 import path from "node:path";
-import { main } from "../../../../dist/src/core/cli/main.js";
+import { main } from "../../../../dist/src/modules/core/cli/main.js";
 import {
    stableContentHash,
    canonicalStringify,
    stripVolatile,
-} from "../../../../dist/src/core/canonical.js";
-import { deriveNodeId } from "../../../../dist/src/core/design-source/extract.js";
-import { SnapshotDesignSourcePort } from "../../../../dist/src/core/design-source/port.js";
+} from "../../../../dist/src/modules/core/canonical.js";
+import { deriveNodeId } from "../../../../dist/src/modules/core/design-source/extract.js";
+import { SnapshotDesignSourcePort } from "../../../../dist/src/modules/core/design-source/port.js";
 import {
    loadAdapters,
    runAdapter,
-} from "../../../../dist/src/core/adapter-runtime.js";
+} from "../../../../dist/src/modules/core/adapter-runtime.js";
 import {
    toSnapshotNodes,
    kindOf,
@@ -34,13 +34,14 @@ const FIX = path.join(
 );
 const G2 = path.join(FIX, "g2-design-source");
 const LIVE = path.join(FIX, "g2-figma-live");
-import { REPO_ROOT } from "../../../../src/core/__tests__/repo-root.mjs";
+import { REPO_ROOT } from "../../../../src/modules/core/__tests__/repo-root.mjs";
 const REPO = REPO_ROOT;
-// [63] the engine lives at the checkout root: src/core + src/modules/**/adapters/ + resources/schemas/ + dist/. ([68] module-owned adapters)
+// [63] the engine lives at the checkout root: src/modules/core + src/modules/**/adapters/ + resources/schemas/ + dist/. ([68] module-owned adapters)
 const CORE = REPO;
 const CORE_FIXTURES = path.join(
    REPO_ROOT,
    "src",
+   "modules",
    "core",
    "__tests__",
    "fixtures",
@@ -109,7 +110,7 @@ export default async function registerG2Suite(checkAsync) {
       "materialized G2 schemas validate their committed worked examples",
       async () => {
          const { validateContract } =
-            await import("../../../../dist/src/core/schema-registry.js");
+            await import("../../../../dist/src/modules/core/schema-registry.js");
          for (const [contract, file] of [
             ["node-ir", "node-ir.g2-fixture.example.json"],
             ["page-structure", "page-structure.g2-fixture.example.json"],
@@ -1042,23 +1043,23 @@ export default async function registerG2Suite(checkAsync) {
             ),
          );
          scan(
-            "dist/src/core/design-source/extract.js",
+            "dist/src/modules/core/design-source/extract.js",
             fs.readFileSync(
-               path.join(REPO, "dist/src/core/design-source/extract.js"),
+               path.join(REPO, "dist/src/modules/core/design-source/extract.js"),
                "utf8",
             ),
          );
          scan(
-            "dist/src/core/design-source/port.js",
+            "dist/src/modules/core/design-source/port.js",
             fs.readFileSync(
-               path.join(REPO, "dist/src/core/design-source/port.js"),
+               path.join(REPO, "dist/src/modules/core/design-source/port.js"),
                "utf8",
             ),
          );
          scan(
-            "dist/src/core/cli/commands/extract.js",
+            "dist/src/modules/core/cli/commands/extract.js",
             fs.readFileSync(
-               path.join(REPO, "dist/src/core/cli/commands/extract.js"),
+               path.join(REPO, "dist/src/modules/core/cli/commands/extract.js"),
                "utf8",
             ),
          );

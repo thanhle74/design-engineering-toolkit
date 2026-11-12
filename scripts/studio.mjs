@@ -11,7 +11,7 @@
 //   2. installs dependencies once if missing (one root
 //      `pnpm install --frozen-lockfile` against the single root pnpm lockfile
 //      — [63] there is exactly one package/lockfile);
-//   3. rebuilds the `det` dist/ when missing or stale vs src/core//src/modules engine sources/
+//   3. rebuilds the `det` dist/ when missing or stale vs src/modules/core//src/modules engine sources/
 //      (`pnpm run build:core`; the CLI that both `node bin/det.js` and the
 //      Studio build runner use);
 //   4. defaults STUDIO_DET_RUNS_DIR to <root>/out/studio-runs (created on
@@ -33,7 +33,7 @@ import { fileURLToPath } from "node:url";
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(SCRIPT_DIR, "..");
 const STUDIO_MODULE_DIR = path.join(ROOT, "src", "modules", "studio");
-const DET_DIST_ENTRY = path.join(ROOT, "dist", "src", "core", "cli", "main.js");
+const DET_DIST_ENTRY = path.join(ROOT, "dist", "src", "modules", "core", "cli", "main.js");
 const RUNS_DIR_DEFAULT = path.join(ROOT, "out", "studio-runs");
 // Node engines floor of the root package (Next 16); the headless core itself needs >=20.
 const MIN_NODE = [22, 13, 0];
@@ -91,7 +91,7 @@ function isCoreDistFresh() {
    if (!existsSync(DET_DIST_ENTRY)) return false;
    const srcNewest = newestMtime(
       [
-         path.join(ROOT, "src", "core"),
+         path.join(ROOT, "src", "modules", "core"),
          path.join(ROOT, "src", "modules", "figma"),
          path.join(ROOT, "src", "modules", "magento"),
          path.join(ROOT, "src", "modules", "knowledge"),

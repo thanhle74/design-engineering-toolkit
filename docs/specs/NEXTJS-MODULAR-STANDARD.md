@@ -9,7 +9,7 @@
 ## Repo adaptation (how this standard lands HERE)
 
 - **Scope.** This standard governs the Next.js surface only: `app/` (routing shell) and the
-  Studio UI module `src/modules/studio/**`. The headless engine (`src/core`, `src/modules/{figma,magento,knowledge}`,
+  Studio UI module `src/modules/studio/**`. The headless engine (`src/modules/core`, `src/modules/{figma,magento,knowledge}`,
   module-owned adapters) is a deterministic CLI, not a Next.js feature module — it stays
   under the [68] module doctrine and its gate-locked receipts.
 - **Layer mapping.** The standard's `services/` + `repositories/` roles live in ONE

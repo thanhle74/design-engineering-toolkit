@@ -22,4 +22,4 @@ Packaging ([60]→[63]): a distributable CLI package is explicitly NOT a support
 root `package.json` is `private: true` and the `npm pack --workspace @det/core` tarball ([60])
 no longer exists and is not pretended ([63] superseded the pack-portability gate). What those
 checks actually protected — the CLI resolving its contracts outside the caller's cwd — is locked
-by `src/core/__tests__/cli-path-resolution-suite.mjs`.
+by `src/modules/core/__tests__/cli-path-resolution-suite.mjs`.

@@ -10,15 +10,15 @@ import { createHash } from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { runAdapter } from "../../../../dist/src/core/adapter-runtime.js";
+import { runAdapter } from "../../../../dist/src/modules/core/adapter-runtime.js";
 import {
    validateContract,
    getAjv,
-} from "../../../../dist/src/core/schema-registry.js";
+} from "../../../../dist/src/modules/core/schema-registry.js";
 import { idGrammarError } from "../../../../dist/src/modules/knowledge/ids.js";
-import { main } from "../../../../dist/src/core/cli/main.js";
+import { main } from "../../../../dist/src/modules/core/cli/main.js";
 
-import { REPO_ROOT as ROOT } from "../../../../src/core/__tests__/repo-root.mjs";
+import { REPO_ROOT as ROOT } from "../../../../src/modules/core/__tests__/repo-root.mjs";
 const FIX = path.join(
    path.dirname(new URL(import.meta.url).pathname),
    "fixtures",

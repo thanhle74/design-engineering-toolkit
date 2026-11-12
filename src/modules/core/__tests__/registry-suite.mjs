@@ -16,9 +16,9 @@ import {
    contractId,
    contractAliases,
    REPO_ROOT,
-} from "../../../dist/src/core/schema-registry.js";
-import { schemaRefFor } from "../../../dist/src/core/run-envelope.js";
-import { validateRegistry } from "../../../dist/src/core/semantic.js";
+} from "../../../../dist/src/modules/core/schema-registry.js";
+import { schemaRefFor } from "../../../../dist/src/modules/core/run-envelope.js";
+import { validateRegistry } from "../../../../dist/src/modules/core/semantic.js";
 
 import { REPO_ROOT as ROOT } from "./repo-root.mjs";
 const registry = JSON.parse(
@@ -314,6 +314,7 @@ export default async function registerRegistrySuite(checkAsync) {
             ROOT,
             "dist",
             "src",
+            "modules",
             "core",
             "schema-registry.js",
          );

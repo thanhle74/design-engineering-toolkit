@@ -26,8 +26,8 @@ import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
-import { sortDiagnostics, sha256Hex } from "../../../../core/canonical.js";
-import { validateContract } from "../../../../core/schema-registry.js";
+import { sortDiagnostics, sha256Hex } from "../../../core/canonical.js";
+import { validateContract } from "../../../core/schema-registry.js";
 import type {
    Availability,
    Capability,
@@ -37,7 +37,7 @@ import type {
    ProofLevel,
    SourceEvidence,
    SourceRevision,
-} from "../../../../core/types.js";
+} from "../../../core/types.js";
 
 // ---- Input ----------------------------------------------------------------------------------
 interface AdapterInput {

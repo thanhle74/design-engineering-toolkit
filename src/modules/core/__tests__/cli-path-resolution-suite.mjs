@@ -179,12 +179,12 @@ export default async function registerCliPathResolutionSuite(checkAsync) {
                "--profile",
                path.join(
                   ROOT,
-                  "src/core/__tests__/fixtures/negative/profile-synthetic-magento-like.fixture.json",
+                  "src/modules/core/__tests__/fixtures/negative/profile-synthetic-magento-like.fixture.json",
                ),
                "--project",
                path.join(
                   ROOT,
-                  "src/core/__tests__/fixtures/synthetic-magento-like",
+                  "src/modules/core/__tests__/fixtures/synthetic-magento-like",
                ),
                "--out",
                outDir,

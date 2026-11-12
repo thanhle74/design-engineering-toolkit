@@ -10,7 +10,7 @@
 // revision-pinned" port, never a re-extraction and never a fixture stand-in.
 //
 // Faithfulness contract (each step reproduces the core's own derivation, see
-// src/core/design-source/extract.ts):
+// src/modules/core/design-source/extract.ts):
 // - locator        <- the node's sourceEvidence locator (strip the `design://<sourceId>/` prefix)
 // - kind           <- an adapter-vocabulary kind whose core kind-table mapping equals the
 //                     committed NodeIR kind; node identity hashes the MAPPED kind, so ids,

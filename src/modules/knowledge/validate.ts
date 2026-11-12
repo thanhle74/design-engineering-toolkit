@@ -3,7 +3,7 @@
 // the licensed/secret content guards. Re-derives descriptor counts and flags drift (the
 // descriptor must never lie about the partitions next to it).
 
-import { canonicalStringify } from "../../core/canonical.js";
+import { canonicalStringify } from "../core/canonical.js";
 import type {
    KbDiagnostic,
    KbRecord,

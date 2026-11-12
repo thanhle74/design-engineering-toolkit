@@ -16,7 +16,7 @@ and `resources/schemas/registry.json` ([41]) is the single alias → path map.
 
 Rules carried over from the pre-`[68]` layout, unchanged:
 
-- The engine reads these paths through `src/core/schema-registry.ts` (`REPO_ROOT`-anchored) and
+- The engine reads these paths through `src/modules/core/schema-registry.ts` (`REPO_ROOT`-anchored) and
   explicit caller-supplied arguments — never from `process.cwd()`, never from defaults.
 - `resources/projects/…/pilot/evidence` and all accepted receipts under `docs/evidence/` are protected:
   the engine never writes into them, and cleanup must not delete them ([68]).

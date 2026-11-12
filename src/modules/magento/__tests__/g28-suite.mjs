@@ -14,12 +14,12 @@ import assert from "node:assert";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { REPO_ROOT as ROOT } from "../../../../src/core/__tests__/repo-root.mjs";
-import { main } from "../../../../dist/src/core/cli/main.js";
+import { REPO_ROOT as ROOT } from "../../../../src/modules/core/__tests__/repo-root.mjs";
+import { main } from "../../../../dist/src/modules/core/cli/main.js";
 import {
    canonicalStringify,
    stripVolatile,
-} from "../../../../dist/src/core/canonical.js";
+} from "../../../../dist/src/modules/core/canonical.js";
 
 const FIX = path.join(
    path.dirname(new URL(import.meta.url).pathname),
@@ -722,7 +722,7 @@ export default async function registerG28Suite(checkAsync) {
                "committed example drifts from a fresh compose",
             );
             const { validateContract } =
-               await import("../../../../dist/src/core/schema-registry.js");
+               await import("../../../../dist/src/modules/core/schema-registry.js");
             const check = validateContract("compose-output", committed);
             assert.ok(
                check.valid,

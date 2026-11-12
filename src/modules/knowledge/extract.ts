@@ -14,18 +14,18 @@
 // "nothing written on failure" holds by construction.
 import fs from "node:fs";
 import path from "node:path";
-import { canonicalStringify } from "../../core/canonical.js";
+import { canonicalStringify } from "../core/canonical.js";
 import {
    loadAdapters,
    runAdapter,
    sortRunDiagnostics,
    type RunDiagnostic,
-} from "../../core/adapter-runtime.js";
+} from "../core/adapter-runtime.js";
 import {
    contractId,
    validateContract,
    REPO_ROOT,
-} from "../../core/schema-registry.js";
+} from "../core/schema-registry.js";
 import { BASELINE_DENY_GLOBS, resolveRootAliases } from "./path-gateway.js";
 import { LICENSED_TEXT_LIMIT, recordSafetyViolations } from "./safety.js";
 import type {

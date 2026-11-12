@@ -9,7 +9,7 @@ import type {
    CapabilityRegistry,
    Capability,
    SourceEvidence,
-} from "../../core/types.js";
+} from "../core/types.js";
 import type { KbCapabilityRecord, KbDiagnostic, KbSourceRef } from "./types.js";
 import { deriveCapabilityId } from "./ids.js";
 

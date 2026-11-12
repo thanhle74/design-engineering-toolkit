@@ -58,7 +58,7 @@ directories and never enter this repo.
 
 The platform/source *kinds* in `kb-ui-component` (`hyva-ui`, `secomm-uiwidget`, `page-builder-native`,
 plus `other`) are the audited first-class source kinds from the accepted #7 review — they are
-contract VALUES, not core-code coupling: `src/core/kb` contains zero platform literals, the KB-1
+contract VALUES, not core-code coupling: `src/modules/core/kb` contains zero platform literals, the KB-1
 schema and every other structure stays platform-free, and non-Magento sources use `other`/their own
 platform values.
 
