@@ -1,80 +1,24 @@
+import type { Metadata } from "next";
 import { connection } from "next/server";
-
-import { DetRunReaderError } from "@/src/modules/studio/shared/contracts";
-import {
-   BuildConfigCatalog,
-   STUDIO_BUILD_PROJECTS_DIR_ENV,
-} from "@/src/modules/studio/server/build-catalog";
-import { getBuildRunner } from "@/src/modules/studio/server/build-runner";
 
 import { BuildScreen } from "@/src/modules/studio/build-control";
 
+export const metadata: Metadata = { title: "Bản dựng" };
+
+// The one-click Build flow is client-driven against /api/build-flow and
+// /api/environment (both re-check server-side per request) — fully blocking
+// route, no server-side catalog/runner reads any more.
+export const instant = false;
+
 /**
- * [40] Build Control — real UI-triggered offline `det build` runs (S5).
- *
- * The catalog is the [58] union of the committed repository examples
- * (`resources/examples/build`, listed in place, no copying) plus caller-configured
- * entries from `STUDIO_BUILD_PROJECTS_DIR` when set. The runner additionally
- * requires `STUDIO_DET_RUNS_DIR` (where real bundles are written — the root
- * `npm run dev` launcher defaults it to out/studio-runs). Without a usable
- * catalog/runner the page renders an explicit not-connected/disabled state —
- * NEVER the DEMO fixture: a build-control page must never look like it built
- * something it did not. Builds are offline snapshot builds only; there is no
- * live Figma path.
+ * [70] Build — ONE one-click flow (rework of the [40]/[61] manual launcher):
+ * paste a Figma URL → ONE Build button → truthful pipeline → results. All
+ * state lives in the client module; the server-owned readiness gate is
+ * re-checked by every /api/build-flow mutation itself.
  */
 export default async function BuildPage() {
-   // Catalog/runner state comes from local disk/env per request. fs/env are not
-   // tracked as dynamic APIs by Cache Components, so signal request-time
-   // explicitly.
+   // Signal request-time explicitly (client fetches drive everything below).
    await connection();
 
-   let entries: Awaited<ReturnType<BuildConfigCatalog["list"]>> | null = null;
-   let catalogErrorCode: string | null = null;
-   let catalogErrorMessage: string | null = null;
-   try {
-      const catalog = await BuildConfigCatalog.open(
-         process.env[STUDIO_BUILD_PROJECTS_DIR_ENV] ?? "",
-      );
-      entries = await catalog.list();
-   } catch (error) {
-      if (error instanceof DetRunReaderError) {
-         catalogErrorCode = error.code;
-         catalogErrorMessage = error.message;
-      } else {
-         throw error;
-      }
-   }
-
-   let runnerReady = true;
-   let runnerReason: string | undefined;
-   let active = null;
-   try {
-      const runner = await getBuildRunner();
-      active = runner.activeSnapshot();
-   } catch (error) {
-      if (
-         error instanceof DetRunReaderError &&
-         error.code === "not-configured"
-      ) {
-         runnerReady = false;
-         runnerReason = error.message;
-      } else {
-         throw error;
-      }
-   }
-
-   return (
-      <BuildScreen
-         catalogErrorCode={catalogErrorCode}
-         catalogErrorMessage={catalogErrorMessage}
-         catalogEntries={entries?.entries ?? null}
-         catalogInvalid={entries?.invalid ?? []}
-         runnerReady={runnerReady}
-         runnerReason={runnerReason}
-         initialActive={active}
-      />
-   );
+   return <BuildScreen />;
 }
-
-// Catalog/runner state is read per request — fully blocking route.
-export const instant = false;
