@@ -5,6 +5,8 @@ import { usePathname } from "next/navigation";
 import { AppstoreOutlined } from "@ant-design/icons";
 import { Flex, Layout, Menu, Space, Typography, type MenuProps } from "antd";
 
+import { ReadinessIndicator } from "./readiness-indicator";
+
 const { Content } = Layout;
 
 /**
@@ -45,12 +47,18 @@ const { Content } = Layout;
  * and "Build" stay Latin/English on purpose (brand and machine-term naming).
  * Metadata lives in the server-safe `./studio-metadata`; a server layout must
  * not import non-component exports from this `'use client'` module.
+ *
+ * [70] Header readiness cluster: the nav drops `/agent` (the one-click Build
+ * flow replaces the standalone AI-analysis page; /agent now redirects to
+ * /build), leaving exactly three nav items, and the header row gains the
+ * compact `ReadinessIndicator` (state chip + "Kiểm tra" button, stock antd
+ * APIs only — see that file's header comment for the preset-color/loading
+ * notes). No new style props are introduced on any antd component.
  */
 
 export const studioNavItems = [
    { href: "/", label: "Tổng quan" },
    { href: "/build", label: "Build" },
-   { href: "/agent", label: "Phân tích AI" },
    { href: "/catalog", label: "Dự án" },
 ] as const;
 
@@ -88,6 +96,7 @@ export function StudioShell({ children }: { children: React.ReactNode }) {
                   selectedKeys={selectedKeys}
                   style={{ flex: "auto", minWidth: 0 }}
                />
+               <ReadinessIndicator />
             </Flex>
          </header>
          <Content>

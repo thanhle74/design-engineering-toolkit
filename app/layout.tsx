@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import "./globals.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { StudioProviders } from "@/src/modules/studio/components/layout/studio-providers";
+import { StudioReadinessProvider } from "@/src/modules/studio/readiness";
 import { studioMetadata } from "@/src/modules/studio/components/layout/studio-metadata";
 import { StudioShell } from "@/src/modules/studio/components/layout/studio-shell";
 
@@ -33,6 +34,14 @@ export const metadata = studioMetadata;
  * fallback, every request streams the real styled UI. All Studio routes are
  * dynamic (`connection()`), so the fallback never shows in practice.
  */
+
+/**
+ * [70] `StudioReadinessProvider` sits at the layout root, INSIDE the existing
+ * Suspense+`AntdRegistry` wrapper and ABOVE `StudioProviders`, so the shell
+ * header cluster (`ReadinessIndicator`) and every page lane consume the SAME
+ * single environment-readiness context — one GET /api/environment for the
+ * whole tree, one shared `recheck()`.
+ */
 export default function RootLayout({
    children,
 }: {
@@ -43,9 +52,11 @@ export default function RootLayout({
          <body>
             <Suspense fallback={null}>
                <AntdRegistry>
-                  <StudioProviders>
-                     <StudioShell>{children}</StudioShell>
-                  </StudioProviders>
+                  <StudioReadinessProvider>
+                     <StudioProviders>
+                        <StudioShell>{children}</StudioShell>
+                     </StudioProviders>
+                  </StudioReadinessProvider>
                </AntdRegistry>
             </Suspense>
          </body>

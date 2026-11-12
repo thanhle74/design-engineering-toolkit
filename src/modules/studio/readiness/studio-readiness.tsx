@@ -10,6 +10,13 @@
  * on mount and exposes an explicit `recheck()` for the header "Kiểm tra"
  * button. `status === null && !checking && error === null` is impossible:
  * before the first result the provider is always `checking` or `error`.
+ *
+ * W-A refinements (behavior of the frozen four fields unchanged):
+ *  - the response is shape-checked before it becomes `status` — a malformed
+ *    body lands in `error` ("Phản hồi … không đúng định dạng") instead of
+ *    leaking a partial object that would crash the header indicator;
+ *  - a monotonic sequence id drops STALE in-flight responses, so a slow
+ *    earlier check can never overwrite the result of a later `recheck()`.
  */
 import {
    createContext,
@@ -42,14 +49,41 @@ const StudioReadinessContext = createContext<StudioReadinessContextValue>({
    recheck: () => {},
 });
 
+/**
+ * Fails closed: anything that is not the frozen `StudioReadinessStatus`
+ * shape (per the [70] contract) is rejected, so the UI never renders a
+ * half-parsed environment state.
+ */
+export function isStudioReadinessStatus(
+   value: unknown,
+): value is StudioReadinessStatus {
+   if (typeof value !== "object" || value === null) return false;
+   const candidate = value as Record<string, unknown>;
+   const checks = candidate.checks;
+   if (typeof checks !== "object" || checks === null) return false;
+   const isCheck = (entry: unknown): boolean =>
+      typeof entry === "object" &&
+      entry !== null &&
+      typeof (entry as { ready?: unknown }).ready === "boolean";
+   const named = checks as Record<string, unknown>;
+   return (
+      typeof candidate.ready === "boolean" &&
+      isCheck(named.claudeCode) &&
+      isCheck(named.figmaMcp) &&
+      isCheck(named.detRunsDir)
+   );
+}
+
 export function StudioReadinessProvider({ children }: { children: ReactNode }) {
    const [status, setStatus] = useState<StudioReadinessStatus | null>(null);
    const [checking, setChecking] = useState(false);
    const [error, setError] = useState<string | null>(null);
-   const inFlight = useRef(0);
+   // Monotonic check sequence — only the LATEST issued check may apply its
+   // result; earlier responses resolving late are discarded.
+   const latestCheck = useRef(0);
 
    const runCheck = useCallback(() => {
-      inFlight.current += 1;
+      const checkId = ++latestCheck.current;
       setChecking(true);
       setError(null);
       fetch("/api/environment", { cache: "no-store" })
@@ -59,13 +93,21 @@ export function StudioReadinessProvider({ children }: { children: ReactNode }) {
                   `Kiểm tra môi trường thất bại (HTTP ${response.status}).`,
                );
             }
-            return (await response.json()) as StudioReadinessStatus;
+            const body: unknown = await response.json();
+            if (!isStudioReadinessStatus(body)) {
+               throw new Error(
+                  "Phản hồi kiểm tra môi trường không đúng định dạng.",
+               );
+            }
+            return body;
          })
          .then((next) => {
+            if (checkId !== latestCheck.current) return;
             setStatus(next);
             setChecking(false);
          })
          .catch((cause: unknown) => {
+            if (checkId !== latestCheck.current) return;
             setError(
                cause instanceof Error
                   ? cause.message
