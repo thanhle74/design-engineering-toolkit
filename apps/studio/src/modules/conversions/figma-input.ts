@@ -42,9 +42,9 @@ export type FigmaInputParseResult =
     };
 
 /** Figma node ids are `number:number` (URLs spell the separator as `-`). */
-const NODE_ID_PATTERN = /^(\d+)[-:](\d+)$/;
+export const NODE_ID_PATTERN = /^(\d+)[-:](\d+)$/;
 /** Figma file/branch keys are alphanumeric strings (typically 22 chars). */
-const FILE_KEY_PATTERN = /^[A-Za-z0-9]+$/;
+export const FILE_KEY_PATTERN = /^[A-Za-z0-9]+$/;
 const FIGMA_HOST_PATTERN = /(^|\.)figma\.com$/;
 /** Figma paths that are real Figma files but NOT design-file extraction input. */
 const NON_DESIGN_PATH_PREFIXES = ["/board/", "/slides/", "/make/", "/spec/", "/file/"] as const;
