@@ -98,10 +98,6 @@ export function ConversionForm({ profiles, className }: ConversionFormProps) {
   return (
     <section aria-labelledby="new-conversion-heading" className={className}>
       <h2 id="new-conversion-heading">Chuyển đổi mới</h2>
-      <Typography.Paragraph type="secondary">
-        Trỏ Studio vào một frame Figma để chuyển đổi. Studio chỉ chuẩn bị và soát lại yêu cầu —
-        engine det mới thực hiện chuyển đổi.
-      </Typography.Paragraph>
 
       <form onSubmit={handleSubmit} noValidate>
         <Flex vertical gap="middle">
@@ -138,8 +134,8 @@ export function ConversionForm({ profiles, className }: ConversionFormProps) {
             ) : null}
             <p id={SOURCE_HELP_ID}>
               <Typography.Text type="secondary">
-                Chấp nhận: URL file thiết kế Figma kèm node-id (…?node-id=1-2), hoặc node id trần
-                dạng 245:2. URL thiếu node-id sẽ bị từ chối — engine cần một node để trích xuất.
+                URL Figma kèm node-id (?node-id=1-2) hoặc node id trần 245:2 — thiếu node-id
+                sẽ bị từ chối.
               </Typography.Text>
             </p>
           </Flex>
@@ -206,16 +202,10 @@ export function ConversionForm({ profiles, className }: ConversionFormProps) {
               <Flex align="center" gap="small">
                 <ApiOutlined aria-hidden="true" />
                 <Typography.Text type="secondary">
-                  Chưa kết nối phần thực thi — cầu nối engine thuộc [28].
+                  Chưa kết nối engine — cầu nối thuộc [28].
                 </Typography.Text>
               </Flex>
             </Flex>
-            <p>
-              <Typography.Text type="secondary">
-                Việc gửi chỉ kiểm tra dữ liệu vừa nhập và hiển thị tóm tắt yêu cầu. Không có
-                chuyển đổi nào chạy và không lưu gì cả.
-              </Typography.Text>
-            </p>
           </Flex>
         </Flex>
       </form>

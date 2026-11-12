@@ -54,7 +54,7 @@ export interface OverviewViewProps {
 
 export function OverviewView({ runs, readerErrorCode, readerMessage }: OverviewViewProps) {
   return (
-    <Flex vertical gap={32}>
+    <Flex vertical gap={24}>
       <section aria-labelledby="studio-overview-heading">
         <Flex vertical gap={12} align="flex-start">
           {/* layout only: neutralize UA heading margins so the Flex gap owns rhythm */}
@@ -95,9 +95,9 @@ export function OverviewView({ runs, readerErrorCode, readerMessage }: OverviewV
           <Flex align="center" gap={8} wrap="wrap">
             <WarningOutlined aria-hidden="true" />
             <Typography.Text type="secondary">
-              Chưa có lần chạy nào. Đặt{" "}
+              Chưa có lần chạy nào — đặt{" "}
               <Typography.Text code>STUDIO_DET_RUNS_DIR</Typography.Text> trỏ tới output det thật,
-              hoặc bỏ trống để dùng fixture DEMO.
+              hoặc bỏ trống để dùng DEMO.
             </Typography.Text>
           </Flex>
         ) : (
@@ -111,10 +111,7 @@ export function OverviewView({ runs, readerErrorCode, readerMessage }: OverviewV
 
       {/* No Card title on purpose: ConversionForm renders its own h2 "Chuyển đổi mới" */}
       <Card size="small">
-        <Flex vertical gap={8}>
-          <ConversionForm profiles={DEMO_PROFILES} />
-          <Typography.Text type="secondary">Chưa hỗ trợ chạy trực tiếp.</Typography.Text>
-        </Flex>
+        <ConversionForm profiles={DEMO_PROFILES} />
       </Card>
     </Flex>
   );
