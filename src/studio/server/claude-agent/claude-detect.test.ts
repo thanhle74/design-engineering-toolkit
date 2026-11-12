@@ -252,5 +252,9 @@ describe("detectClaudeAgentStatus", () => {
     });
     expect(status.allowedFigmaTool).toBe("mcp__plugin_figma_figma__get_metadata");
     expect(status.ready).toBe(true);
+    // C65-4: every CONNECTED server name is surfaced so the runner can deny
+    // each non-Figma server at the toolset level. Only connected entries —
+    // a failed server has no tools to deny.
+    expect(status.connectedServerNames.sort()).toEqual(["magento-spec", "plugin:figma:figma", "slaunchpad"]);
   });
 });

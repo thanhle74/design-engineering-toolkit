@@ -158,3 +158,50 @@ describe("POST /api/agent/analyses", () => {
     expect(payload.state).toBe("running");
   });
 });
+
+describe("POST /api/agent/analyses — C65-3 source-identity binding", () => {
+  it("refuses a DIFFERENT Figma file whose node id overlaps the base binding (422, no spawn)", async () => {
+    startMock.mockResolvedValue({ analysisId: "agent-x", state: "running" });
+    const response = await post({ fileKey: "OtherFileKey1", nodeId: "245:2", baseConfigId: "slaunchpad-home-real-derived" });
+    expect(response.status).toBe(422);
+    const payload = (await response.json()) as { error: { code: string; message: string } };
+    expect(payload.error.code).toBe("base-source-mismatch");
+    // Vietnamese operator instruction; machine tokens verbatim.
+    expect(payload.error.message).toContain("không khớp");
+    expect(payload.error.message).toContain("vNPtfBRpYM3PsExirVqhmt");
+    // Nothing was paid: preflight and the runner were never reached.
+    expect(detectMock).not.toHaveBeenCalled();
+    expect(startMock).not.toHaveBeenCalled();
+  });
+
+  it("refuses an arbitrary root node id on the RIGHT file (422)", async () => {
+    startMock.mockResolvedValue({ analysisId: "agent-x", state: "running" });
+    const response = await post({ fileKey: "vNPtfBRpYM3PsExirVqhmt", nodeId: "999:999", baseConfigId: "slaunchpad-home-real-derived" });
+    expect(response.status).toBe(422);
+    const payload = (await response.json()) as { error: { code: string } };
+    expect(payload.error.code).toBe("base-source-mismatch");
+    expect(startMock).not.toHaveBeenCalled();
+  });
+
+  it("refuses a base config with NO verified binding at all (422, fail closed)", async () => {
+    const { mkdtemp, mkdir, writeFile, rm } = await import("node:fs/promises");
+    const { join } = await import("node:path");
+    const os = await import("node:os");
+    const tmpRoot = await mkdtemp(join(os.tmpdir(), "det65-unbound-"));
+    await mkdir(join(tmpRoot, "unbound-base"), { recursive: true });
+    await writeFile(join(tmpRoot, "unbound-base", "build-config.json"), JSON.stringify({ schemaVersion: 1 }), "utf8");
+    process.env.STUDIO_BUILD_PROJECTS_DIR = tmpRoot;
+    startMock.mockResolvedValue({ analysisId: "agent-x", state: "running" });
+    try {
+      const response = await post({ fileKey: "vNPtfBRpYM3PsExirVqhmt", nodeId: "245:2", baseConfigId: "unbound-base" });
+      expect(response.status).toBe(422);
+      const payload = (await response.json()) as { error: { code: string; message: string } };
+      expect(payload.error.code).toBe("base-source-mismatch");
+      expect(payload.error.message).toContain("chưa gắn nguồn Figma đã xác minh");
+      expect(startMock).not.toHaveBeenCalled();
+    } finally {
+      delete process.env.STUDIO_BUILD_PROJECTS_DIR;
+      await rm(tmpRoot, { recursive: true, force: true });
+    }
+  });
+});

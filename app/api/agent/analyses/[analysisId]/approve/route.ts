@@ -18,6 +18,7 @@ import { getBuildRunner } from "@/src/studio/server/build-runner";
 import { agentErrorResponse, AgentWorkflowError } from "@/src/studio/server/claude-agent/agent-errors";
 import { getAgentAnalysisRunner } from "@/src/studio/server/claude-agent/analysis-runner";
 import { materializeApprovedInputs } from "@/src/studio/server/claude-agent/plan-materializer";
+import { assertRequestMatchesSourceIdentity } from "@/src/studio/server/claude-agent/source-identity";
 import { isApprovableOutcome } from "@/src/studio/shared/contracts";
 import path from "node:path";
 import { mkdir } from "node:fs/promises";
@@ -48,6 +49,15 @@ export async function POST(
         "The analysis has no grounded plan or no resolved base build config."
       );
     }
+    // C65-3, authoritative at approval time: the plan's requested source must
+    // still EQUAL the base project's verified binding before anything is
+    // materialized or built. (The analysis start check alone is not enough —
+    // the binding could differ by the time an operator approves.)
+    await assertRequestMatchesSourceIdentity(
+      { fileKey: plan.requested.fileKey, nodeId: plan.requested.nodeId },
+      snapshot.baseConfigPath,
+      snapshot.request.baseConfigId
+    );
 
     const analysisDir = path.join(
       await resolveRunsRootForApprove(),

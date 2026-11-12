@@ -8,17 +8,24 @@
  *   --output-format json --json-schema <draft-7 plan schema>
  *   --permission-prompts none        → anything that would prompt is denied
  *   --allowedTools  <mcp__<figma>__get_metadata>  → the ONLY pre-approved tool
- *   --disallowedTools Bash,Write,Edit,NotebookEdit,WebFetch,WebSearch
+ *   --disallowedTools <built-ins>,mcp__<other-servers> → belt-and-braces deny
+ *   --tools ""                       → the ENTIRE built-in tool set is
+ *                                      removed from the session (C65-4,
+ *                                      verified live on 2.1.322: plugin MCP
+ *                                      tools remain available; the Read
+ *                                      probe reported the tool as absent)
  *   --max-budget-usd <cap>           → hard spend ceiling
  *   --no-session-persistence         → no resumable transcript left behind
  *   --append-system-prompt <read-only guardrails>
  *
  * (--restricted is deliberately NOT used: verified live, it removes plugin
  * MCP tools from the session entirely, which would break the Figma MCP
- * requirement. Denial enforcement rests on --permission-prompts none +
- * the explicit allow/deny lists; the child runs with `shell: false`, cwd is
- * a fresh per-run directory with no project settings, and built-in file
- * tools have nothing of interest there.)
+ * requirement. C65-4 enforcement is REAL toolset restriction, not prompt
+ * text: `--tools ""` empties the built-in set, and every connected NON-Figma
+ * MCP server from the same preflight `claude mcp list` is denied by name
+ * (`mcp__<server>`), verified live to remove those tools from the session's
+ * toolset. The child also runs with `shell: false` in a fresh per-run
+ * directory with no project settings.)
  *
  * Honesty contract, mirroring the build runner: one in-process slot (409 on
  * busy), SIGTERM timeout, bounded stdout/stderr tails, spawn errors are
@@ -59,16 +66,34 @@ import { buildAgentSystemPrompt, buildAgentTaskPrompt } from "./agent-prompt";
 export const STUDIO_AGENT_TIMEOUT_MS_ENV = "STUDIO_AGENT_TIMEOUT_MS";
 export const STUDIO_AGENT_MAX_BUDGET_USD_ENV = "STUDIO_AGENT_MAX_BUDGET_USD";
 
-const DEFAULT_TIMEOUT_MS = 300_000;
+/**
+ * C65-4: 15 minutes. The live 12-section analysis over remote MCP took
+ * ~407s; the previous 300s default honestly timed out that exact known
+ * case. `STUDIO_AGENT_TIMEOUT_MS` overrides (min 1000).
+ */
+export const DEFAULT_AGENT_TIMEOUT_MS = 900_000;
+const DEFAULT_TIMEOUT_MS = DEFAULT_AGENT_TIMEOUT_MS;
 const MIN_TIMEOUT_MS = 1_000;
 const DEFAULT_BUDGET_USD = "2";
 const STDOUT_TAIL_BYTES = 8 * 1024;
 const STDERR_TAIL_BYTES = 8 * 1024;
-/** Full stdout retention cap for envelope parsing (json format = one document). */
+/**
+ * C65-2: the COMPLETE stdout retention cap for envelope parsing (json format
+ * = one document). This buffer is NEVER trimmed for parsing — the earlier
+ * single-buffer design trimmed the parse stream to the 8 KiB diagnostic
+ * tail, so any valid envelope arriving in multiple chunks (>8 KiB total) was
+ * parsed from a head-truncated buffer and misclassified `envelope-invalid`
+ * (a single-chunk delivery happened to pass — the live 40 KB+ plan ran on
+ * luck of chunking, exactly the Coordinator's C65-2 finding).
+ */
 const STDOUT_PARSE_CAP_BYTES = 1024 * 1024;
 const JOURNAL_DIR = ".agent-jobs";
 const ANALYSIS_DIR = ".agent-analyses";
-/** Belt-and-braces deny list on top of `--permission-prompts none`. */
+/**
+ * Belt-and-braces deny list on top of `--tools ""` (which already removes
+ * the built-in set) — and, at spawn time, extended with `mcp__<server>`
+ * entries for every connected NON-Figma MCP server found by preflight.
+ */
 const DISALLOWED_TOOLS = "Bash,Write,Edit,NotebookEdit,WebFetch,WebSearch";
 
 export const ANALYSIS_ID_PATTERN = /^agent-\d+$/;
@@ -282,27 +307,28 @@ export class AgentAnalysisRunner {
    * and AgentWorkflowError("not-configured") when preflight fails — the
    * authoritative recheck happens HERE, immediately before the spawn (a
    * cached UI status is never authorization).
+   *
+   * C65-1: the slot is reserved SYNCHRONOUSLY, before the first await — the
+   * earlier shape checked `active` synchronously but only assigned it after
+   * the (awaited) preflight, so two overlapping starts both passed the check
+   * and both paid for a child. With the synchronous reservation, the second
+   * start sees the placeholder and gets an honest 409; the placeholder
+   * snapshot is filled in as preflight resolves, and EVERY failure path
+   * releases the reservation.
    */
   async start(request: AgentAnalysisRequest, baseConfigPath: string): Promise<AgentAnalysisSnapshot> {
-    // C1: synchronous busy check + reservation, before the first await.
     const busy = this.activeSnapshot();
     if (busy !== null) throw new AgentBusyError(busy);
 
-    const preflight = await detectClaudeAgentStatus({ spawnImpl: this.spawnImpl });
-    if (!preflight.ready || preflight.allowedFigmaTool === null) {
-      throw new AgentWorkflowError(
-        "agent-not-ready",
-        "Claude Code + Figma MCP preflight failed; the AI workflow stays blocked."
-      );
-    }
-
+    // Synchronous reservation — nothing is awaited between the busy check
+    // and this assignment.
     const snapshot: AgentAnalysisSnapshot = {
       analysisId: `agent-${Date.now()}`,
       state: "queued",
       request,
       baseConfigPath,
-      allowedFigmaTool: preflight.allowedFigmaTool,
-      claudeVersion: preflight.claudeCode.version,
+      allowedFigmaTool: "",
+      claudeVersion: null,
       command: [],
       exitCode: null,
       signal: null,
@@ -319,10 +345,28 @@ export class AgentAnalysisRunner {
       grounded: null,
     };
     const activeJob: ActiveJob = { snapshot, child: null, timer: null, terminalHandled: false };
-    this.active = activeJob; // slot reserved — every failed init path releases it
+    this.active = activeJob;
 
     try {
+      const preflight = await detectClaudeAgentStatus({ spawnImpl: this.spawnImpl });
+      if (!preflight.ready || preflight.allowedFigmaTool === null) {
+        throw new AgentWorkflowError(
+          "agent-not-ready",
+          "Claude Code + Figma MCP preflight failed; the AI workflow stays blocked."
+        );
+      }
+      snapshot.allowedFigmaTool = preflight.allowedFigmaTool;
+      snapshot.claudeVersion = preflight.claudeCode.version;
       await this.finalizeAnalysisId(snapshot);
+      // C65-4: deny every connected NON-Figma MCP server by name so its
+      // tools are absent from the child's toolset (verified live on 2.1.322
+      // that a server-level `mcp__<name>` deny removes the whole server).
+      const figmaToolPrefix = preflight.allowedFigmaTool.split("__").slice(0, 2).join("__");
+      const otherServerDenies = preflight.connectedServerNames
+        .map((serverName) => `mcp__${serverName.replace(/[^A-Za-z0-9_]/g, "_")}`)
+        .filter((denyEntry) => denyEntry !== figmaToolPrefix);
+      const disallowedTools = [DISALLOWED_TOOLS, ...otherServerDenies].join(",");
+
       const taskPrompt = buildAgentTaskPrompt({ fileKey: request.fileKey, nodeId: request.nodeId });
       const systemPrompt = buildAgentSystemPrompt(snapshot.allowedFigmaTool);
       snapshot.command = [
@@ -338,7 +382,14 @@ export class AgentAnalysisRunner {
         "--allowedTools",
         snapshot.allowedFigmaTool,
         "--disallowedTools",
-        DISALLOWED_TOOLS,
+        disallowedTools,
+        // C65-4: remove the ENTIRE built-in tool set from the session.
+        // Plugin MCP tools are unaffected (live-verified: with `--tools ""`
+        // the Figma get_metadata call still succeeded while the Read probe
+        // reported "The Read tool does not exist in this session"). Placed
+        // after the prompt so the variadic flag cannot swallow it.
+        "--tools",
+        "",
         "--max-budget-usd",
         parseBudgetUsd(),
         "--no-session-persistence",
@@ -371,15 +422,26 @@ export class AgentAnalysisRunner {
       activeJob.child = child;
 
       // C2: attach ALL listeners now — before any await below.
-      const stdoutChunks: Buffer[] = [];
+      // C65-2: TWO independent buffers. `parseChunks` keeps the COMPLETE
+      // stream up to STDOUT_PARSE_CAP_BYTES and is never trimmed — it is the
+      // only input to envelope classification. `stdoutTailChunks` is the
+      // bounded 8 KiB diagnostic tail for the journal, trimmed exactly as
+      // before.
+      const parseChunks: Buffer[] = [];
+      const stdoutTailChunks: Buffer[] = [];
       const stderrChunks: Buffer[] = [];
       let stdoutTruncated = false;
       let stdoutBytes = 0;
-      child.stdout?.on("data", (chunk: Buffer) => {
-        stdoutBytes += chunk.byteLength;
-        if (stdoutBytes <= STDOUT_PARSE_CAP_BYTES) stdoutChunks.push(chunk);
-        else stdoutTruncated = true;
-        trimTail(stdoutChunks, STDOUT_TAIL_BYTES);
+      child.stdout?.on("data", (chunk: Buffer | string) => {
+        const bytes = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+        stdoutBytes += bytes.byteLength;
+        if (stdoutBytes <= STDOUT_PARSE_CAP_BYTES) {
+          parseChunks.push(bytes);
+        } else {
+          stdoutTruncated = true;
+        }
+        stdoutTailChunks.push(bytes);
+        trimTail(stdoutTailChunks, STDOUT_TAIL_BYTES);
       });
       child.stderr?.on("data", (chunk: Buffer) => {
         stderrChunks.push(chunk);
@@ -397,7 +459,7 @@ export class AgentAnalysisRunner {
         activeJob.terminalHandled = true;
         if (activeJob.timer !== null) clearTimeout(activeJob.timer);
         snapshot.finishedAt = new Date().toISOString();
-        snapshot.stdoutTail = buffersToText(stdoutChunks);
+        snapshot.stdoutTail = buffersToText(stdoutTailChunks);
         snapshot.stderrTail = buffersToText(stderrChunks);
         void (async () => {
           try {
@@ -414,8 +476,10 @@ export class AgentAnalysisRunner {
                     ? "spawn-failed"
                     : "exited";
             if (processState === "exited") {
+              // C65-2: classify from the COMPLETE parse buffer, never the
+              // trimmed diagnostic tail.
               classified = classifyEnvelope(
-                Buffer.concat(stdoutChunks).toString("utf8"),
+                Buffer.concat(parseChunks).toString("utf8"),
                 stdoutTruncated,
                 snapshot.request
               );

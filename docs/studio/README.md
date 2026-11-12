@@ -80,10 +80,17 @@ verdicts, and untrusted Figma text is treated as data, never as instructions.
   --output-format json --json-schema <draft-07 derivation of the zod
   contract> --permission-prompts none --allowedTools
   mcp__<figma-server>__get_metadata --disallowedTools
-  Bash,Write,Edit,NotebookEdit,WebFetch,WebSearch --max-budget-usd 2
-  --no-session-persistence --append-system-prompt <read-only mandate>`, in a
-  fresh per-run cwd. No invented flags; `--restricted` is NOT used (it
-  removes plugin MCP tools entirely — verified live).
+  Bash,Write,Edit,NotebookEdit,WebFetch,WebSearch,mcp__<other-servers>
+  --tools "" --max-budget-usd 2 --no-session-persistence
+  --append-system-prompt <read-only mandate>`, in a fresh per-run cwd. The
+  C65-4 correction makes the tool restriction REAL, not prompt text:
+  `--tools ""` removes the ENTIRE built-in tool set from the session
+  (live-verified: a Read probe reported "The Read tool does not exist in
+  this session" while the Figma `get_metadata` call still succeeded), and
+  every connected NON-Figma MCP server from the same preflight
+  `claude mcp list` is denied by name (`mcp__<server>` — live-verified to
+  remove that server's tools from the toolset). `--restricted` is still NOT
+  used (it removes plugin MCP tools entirely — verified live).
 - **Honest outcomes.** `plan-ready` (grounded observation, echo-checked node
   ids, schema-valid) → operator review; `plan-ungrounded` (schema-valid but
   the agent reports no real observation — never approvable);
@@ -97,8 +104,28 @@ verdicts, and untrusted Figma text is treated as data, never as instructions.
   dropped proposals are counted and reported; zero survivors → 409
   `no-pinned-assignments`. Content refs and capability hints are
   recommendations only and are never materialized.
+- **Verified source binding (C65-3).** The base project declares its
+  verified Figma origin in a committed `source-identity.json` next to
+  `build-config.json` (file key + root node id + pinned revision +
+  provenance). Every analysis and approval request is compared against it
+  and fails closed with 422 `base-source-mismatch` (Vietnamese instruction,
+  machine tokens verbatim) on ANY difference — a different file with
+  overlapping numeric node ids, an arbitrary root id, or a base project
+  with no binding at all. Another Figma file would need its own pinned
+  snapshot project (out of scope for [65]); without one it has no
+  approvable base.
+- **Single-slot reservation (C65-1).** The paid-agent slot is reserved
+  synchronously BEFORE the preflight awaits — two overlapping starts can
+  never spawn two children (the second gets 409 `analysis-busy` with the
+  queued placeholder), and every failure path releases the slot.
+- **Envelope parse buffer (C65-2).** The complete stdout is kept (≤1 MiB,
+  never trimmed) solely for envelope classification; the 8 KiB journal tail
+  is a separate bounded diagnostic. A valid envelope arriving in many small
+  chunks classifies `plan-ready`; anything over the cap fails closed
+  `stdout-truncated`.
 - **Env:** requires `STUDIO_DET_RUNS_DIR` (same as build control).
-  `STUDIO_AGENT_TIMEOUT_MS` (default 300000, min 1000), 
+  `STUDIO_AGENT_TIMEOUT_MS` (default 900000 — the live 12-section analysis
+  took ~407s; 300s honestly timed it out — min 1000), 
   `STUDIO_AGENT_MAX_BUDGET_USD` (default `"2"`), `STUDIO_CLAUDE_CLI`
   (default `claude` on PATH). No server ever captures credentials or
   triggers installs/logins.

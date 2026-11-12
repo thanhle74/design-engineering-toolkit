@@ -22,6 +22,7 @@ const READY: ClaudeAgentPreflight = {
   figmaMcp: { ready: true, listed: true, serverName: "plugin:figma:figma", reasonCode: "ok" },
   ready: true,
   allowedFigmaTool: "mcp__plugin_figma_figma__get_metadata",
+  connectedServerNames: ["plugin:figma:figma", "slaunchpad"],
 };
 
 const BLOCKED: ClaudeAgentPreflight = {
@@ -29,6 +30,7 @@ const BLOCKED: ClaudeAgentPreflight = {
   figmaMcp: { ready: true, listed: true, serverName: "plugin:figma:figma", reasonCode: "ok" },
   ready: false,
   allowedFigmaTool: null,
+  connectedServerNames: ["plugin:figma:figma", "slaunchpad"],
 };
 
 const RUNNING_SNAPSHOT = {

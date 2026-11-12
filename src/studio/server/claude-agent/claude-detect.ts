@@ -76,6 +76,13 @@ export interface ClaudeAgentPreflight extends ClaudeAgentStatus {
    * Null when the server is not ready.
    */
   allowedFigmaTool: string | null;
+  /**
+   * C65-4: every CONNECTED MCP server name from the same `claude mcp list`
+   * (may include non-Figma servers). The runner denies each of them at the
+   * toolset level (`--disallowedTools mcp__<server>`) except the Figma one,
+   * so no other server's tools are available to the analysis child.
+   */
+  connectedServerNames: string[];
 }
 
 interface BoundedResult {
@@ -290,6 +297,8 @@ export async function detectClaudeAgentStatus(
     reasonCode: "mcp-not-listed",
   };
   let allowedFigmaTool: string | null = null;
+  // C65-4 deny-list input: names of every CONNECTED server (figma or not).
+  let connectedServerNames: string[] = [];
   // MCP listing is meaningful regardless of auth state (registration is env
   // truth); still list it so the UI can pinpoint WHICH part is missing.
   const list = await runBounded(
@@ -302,6 +311,7 @@ export async function detectClaudeAgentStatus(
   if (entries === null) {
     figmaMcp = { ready: false, listed: false, serverName: null, reasonCode: "mcp-list-unparseable" };
   } else {
+    connectedServerNames = entries.filter((entry) => entry.connected).map((entry) => entry.serverName);
     const server = findFigmaServer(entries);
     if (server === null) {
       figmaMcp = { ready: false, listed: false, serverName: null, reasonCode: "mcp-not-listed" };
@@ -318,6 +328,7 @@ export async function detectClaudeAgentStatus(
     figmaMcp,
     ready: claudeCode.ready && figmaMcp.ready,
     allowedFigmaTool,
+    connectedServerNames,
   };
 }
 

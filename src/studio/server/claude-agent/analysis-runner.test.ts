@@ -25,6 +25,7 @@ import { VALID_AGENT_PLAN } from "@/src/studio/shared/contracts/agent-plan.test"
 import {
   AgentAnalysisRunner,
   AgentBusyError,
+  DEFAULT_AGENT_TIMEOUT_MS,
   STUDIO_AGENT_TIMEOUT_MS_ENV,
 } from "./analysis-runner";
 
@@ -39,7 +40,15 @@ const REQUEST = { fileKey: "vNPtfBRpYM3PsExirVqhmt", nodeId: "245:2", baseConfig
 const DETECT_SCRIPT: Record<string, { stdout: string; code: number }> = {
   version: { stdout: "2.1.322 (Claude Code)\n", code: 0 },
   auth: { stdout: '{"loggedIn": true, "authMethod": "oauth_token"}\n', code: 0 },
-  mcp: { stdout: "plugin:figma:figma: https://mcp.figma.com/mcp (HTTP) - ✔ Connected\n", code: 0 },
+  // LIVE multi-server shape: the Figma plugin server AND a non-Figma server,
+  // both connected — the deny list must name only the non-Figma one.
+  mcp: {
+    stdout:
+      "Checking MCP server health…\n" +
+      "plugin:figma:figma: https://mcp.figma.com/mcp (HTTP) - ✔ Connected\n" +
+      "slaunchpad: php /home/op/slaunchpad/mcp.php - ✔ Connected\n",
+    code: 0,
+  },
 };
 
 function envelopeFor(plan: unknown, overrides: Record<string, unknown> = {}): string {
@@ -201,6 +210,14 @@ describe("happy path — valid bound output", () => {
     for (const tool of ["Bash", "Write", "Edit", "WebFetch", "WebSearch"]) {
       expect(disallowed).toContain(tool);
     }
+    // C65-4: the non-Figma MCP server from the same preflight list is denied
+    // by name; the Figma server itself is never denied.
+    expect(disallowed).toContain("mcp__slaunchpad");
+    expect(disallowed).not.toContain("mcp__plugin_figma_figma");
+    // C65-4: the ENTIRE built-in tool set is removed from the session
+    // (`--tools ""` — live-verified to keep plugin MCP tools available).
+    expect(capturedArgv).toContain("--tools");
+    expect(capturedArgv[capturedArgv.indexOf("--tools") + 1]).toBe("");
     expect(capturedArgv).toContain("--max-budget-usd");
     expect(capturedArgv).toContain("--no-session-persistence");
     expect(capturedArgv).toContain("--append-system-prompt");
@@ -400,5 +417,176 @@ describe("result read-back guards", () => {
     expect(await runner.result("agent-does-not-exist")).toBeNull();
     const dir = await stat(path.join(runsRoot)).catch(() => null);
     expect(dir).not.toBeNull();
+  });
+});
+
+/* --------------------- Coordinator correction round --------------------- */
+
+describe("C65-1 — synchronous single-slot reservation", () => {
+  function preflightHoldingSpawn(): {
+    impl: typeof spawn;
+    release: () => void;
+    analysisSpawns: string[][];
+    lastAnalysisChild: { current: FakeChild | null };
+  } {
+    let releaseDetect: () => void = () => {};
+    const held = new Promise<void>((resolve) => {
+      releaseDetect = resolve;
+    });
+    const analysisSpawns: string[][] = [];
+    const lastAnalysisChild: { current: FakeChild | null } = { current: null };
+    const impl = (command: string, args: readonly string[]) => {
+      const key =
+        args[0] === "--version" ? "version" : args[0] === "auth" ? "auth" : args[0] === "mcp" ? "mcp" : "analysis";
+      if (key === "analysis") {
+        analysisSpawns.push([command, ...args]);
+        lastAnalysisChild.current = makeFakeChild();
+        return lastAnalysisChild.current as unknown as ChildProcess;
+      }
+      const child = new EventEmitter() as unknown as ChildProcess & { pid: number };
+      child.pid = 424243;
+      child.stdout = new EventEmitter() as unknown as ChildProcess["stdout"];
+      child.stderr = new EventEmitter() as unknown as ChildProcess["stderr"];
+      const outcome = DETECT_SCRIPT[key];
+      if (key !== "mcp") {
+        queueMicrotask(() => {
+          child.stdout?.emit("data", Buffer.from(outcome.stdout));
+          child.emit("close", outcome.code, null);
+        });
+      } else {
+        // Hold the FIRST start inside the awaited preflight — the exact race
+        // window C65-1 closes.
+        void held.then(() => {
+          child.stdout?.emit("data", Buffer.from(outcome.stdout));
+          child.emit("close", outcome.code, null);
+        });
+      }
+      return child as unknown as ChildProcess;
+    };
+    return { impl: impl as unknown as typeof spawn, release: releaseDetect, analysisSpawns, lastAnalysisChild };
+  }
+
+  it("two overlapping starts held at preflight: exactly ONE analysis spawn, the other 409s", async () => {
+    const { impl, release, analysisSpawns, lastAnalysisChild } = preflightHoldingSpawn();
+    const runner = await openRunner(impl);
+
+    const first = runner.start(REQUEST, "/tmp/base/build-config.json");
+    await sleep(50); // first start parks inside the awaited mcp preflight
+
+    // The second start must 409 NOW — while the first is still at preflight.
+    let busyError: AgentBusyError | null = null;
+    await runner.start(REQUEST, "/tmp/base/build-config.json").catch((error) => {
+      if (error instanceof AgentBusyError) busyError = error;
+    });
+    expect(busyError).not.toBeNull();
+    // The 409 carrier honestly describes the reserved (queued) slot.
+    expect(busyError!.active.state).toBe("queued");
+    expect(busyError!.active.pid).toBeNull();
+
+    release();
+    const snapshot = await first;
+    expect(snapshot.state).toBe("running");
+    // Exactly ONE paid child was ever spawned.
+    expect(analysisSpawns.length).toBe(1);
+    // ...and the slot stays held while that child lives.
+    await expect(runner.start(REQUEST, "/tmp/base/build-config.json")).rejects.toBeInstanceOf(AgentBusyError);
+    // Terminate the live child so the slot releases and the run goes terminal.
+    lastAnalysisChild.current?.emit("close", 0, null);
+    const terminal = await awaitTerminal(runner, snapshot.analysisId);
+    expect(terminal.state).toBe("exited");
+    expect(terminal.outcome).toBe("envelope-invalid"); // closed with no stdout — honest
+  });
+
+  it("a preflight-failed start releases the slot for the next caller", async () => {
+    const failing = await openRunner(
+      analysisSpawn({
+        detect: { ...DETECT_SCRIPT, auth: { stdout: '{"loggedIn": false}\n', code: 0 } },
+      })
+    );
+    await expect(failing.start(REQUEST, "/tmp/base/build-config.json")).rejects.toMatchObject({
+      name: "AgentWorkflowError",
+      code: "agent-not-ready",
+    });
+    // The reservation taken before the preflight await was released on that
+    // failure path: a healthy start immediately after must succeed.
+    const child = makeFakeChild();
+    const healthy = await openRunner(analysisSpawn({ child }));
+    const snapshot = await healthy.start(REQUEST, "/tmp/base/build-config.json");
+    expect(snapshot.state).toBe("running");
+    child.emit("close", 0, null);
+    await awaitTerminal(healthy, snapshot.analysisId);
+  });
+});
+
+describe("C65-2 — complete parse buffer vs diagnostic tail", () => {
+  /** A contract-valid plan padded to ~40KB (the live plan's scale). */
+  function largePlan(): unknown {
+    const base = VALID_AGENT_PLAN.sections[0];
+    const sections = Array.from({ length: 12 }, (_, s) => ({
+      ...base,
+      name: `SECTION/Padded/${s + 1}`,
+      sourceNodeId: `300:${s + 1}`,
+      projection: Array.from({ length: 55 }, (_, p) => ({
+        sourceNodeId: `${300 + s}:${10 + p}`,
+        role: base.projection[0]?.role ?? "SECTION/Heading/Primary",
+        reason: `padding-${s}-${p}-${"x".repeat(110)}`,
+      })),
+    }));
+    return { ...VALID_AGENT_PLAN, sections };
+  }
+
+  it("a ~40KB valid envelope delivered in 512–1024B chunks classifies plan-ready and persists", async () => {
+    const envelope = Buffer.from(envelopeFor(largePlan()), "utf8");
+    expect(envelope.byteLength).toBeGreaterThan(8 * 1024); // larger than the old trim cap
+
+    const child = makeFakeChild();
+    const runner = await openRunner(analysisSpawn({ child }));
+    const snapshot = await runner.start(REQUEST, "/tmp/base/build-config.json");
+    for (let offset = 0; offset < envelope.byteLength; ) {
+      // Alternating 512B / 1024B chunks — realistic small-chunk delivery.
+      const size = 512 + (Math.floor(offset / 1024) % 2) * 512;
+      const end = Math.min(offset + size, envelope.byteLength);
+      child.stdout!.emit("data", envelope.subarray(offset, end));
+      offset = end;
+    }
+    child.emit("close", 0, null);
+
+    const terminal = await awaitTerminal(runner, snapshot.analysisId);
+    expect(terminal.outcome).toBe("plan-ready");
+    expect(terminal.state).toBe("exited");
+    expect(terminal.grounded).toBe(true);
+    // The plan is persisted and re-validates — the multi-chunk stream was
+    // parsed COMPLETELY, not from a head-truncated tail.
+    const result = await runner.result(snapshot.analysisId);
+    expect(result?.plan).not.toBeNull();
+    expect(result?.plan?.sections.length).toBe(12);
+    // The journal tail stays a bounded diagnostic.
+    expect(terminal.stdoutTail.length).toBeLessThanOrEqual(16 * 1024);
+  });
+
+  it("a >1MiB stream delivered in small chunks fails closed (stdout-truncated), never parsed", async () => {
+    const prefix = Buffer.from(envelopeFor(largePlan()), "utf8");
+    const padding = Buffer.alloc(1024 * 1024, 0x61);
+    const stream = Buffer.concat([prefix, padding, Buffer.from("]}")]);
+
+    const child = makeFakeChild();
+    const runner = await openRunner(analysisSpawn({ child }));
+    const snapshot = await runner.start(REQUEST, "/tmp/base/build-config.json");
+    for (let offset = 0; offset < stream.byteLength; offset += 1024) {
+      child.stdout!.emit("data", stream.subarray(offset, Math.min(offset + 1024, stream.byteLength)));
+    }
+    child.emit("close", 0, null);
+
+    const terminal = await awaitTerminal(runner, snapshot.analysisId);
+    expect(terminal.outcome).toBe("stdout-truncated");
+    expect(terminal.envelopeSafe).toBeNull();
+    expect(terminal.stdoutTail.length).toBeLessThanOrEqual(16 * 1024);
+  });
+});
+
+describe("C65-4 — real toolset restriction + usable default timeout", () => {
+  it("the default timeout covers the known 12-section live case (900s, not 300s)", () => {
+    // Live evidence: the real analysis ran 407s; 300s honestly timed out.
+    expect(DEFAULT_AGENT_TIMEOUT_MS).toBe(900_000);
   });
 });

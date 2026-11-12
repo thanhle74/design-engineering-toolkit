@@ -33,7 +33,7 @@ Enforcement stack (defense in depth): `--permission-prompts none` (no interactiv
 
 **UI (`src/modules/agent/**`, `/agent` page, nav item "Phân tích AI")** — stock antd light, [61] doctrine: status card `Claude Code: Đã kết nối/Chưa sẵn sàng` + `Figma MCP: …` with version + server name + Vietnamese instruction (machine tokens verbatim) + `Kiểm tra lại`; blocked state (`data-testid="agent-workflow-blocked"`) states "không có phương án thay thế demo"; form with ONE `<p role="alert">`; running state shows analysis id + Hủy (text states, no Spin); terminal outcomes render what actually happened (`plan-ready` → proposals; everything else verbatim machine code); "Chi tiết kỹ thuật" Collapse carries envelope truth (subtype/is_error/num_turns/session_id/total_cost_usd/permission_denials/stderr). `AgentPlanView` renders PROPOSALS only — ungrounded plans render their limitations with NO approval affordance (schema-driven, not prop-driven); approval Collapse shows pinned X/Y + dropped ids; approve disabled unless approvable && pinned>0; after approval, a real link to the ordinary `/runs/<buildRunId>` page.
 
-## 2. Gates (exact commands, this workspace, final head)
+## 2. Gates (exact commands, this workspace, final head) — PRE-RECONCILIATION HEAD `31abc74` (superseded by §11 for the reconciled head)
 
 | Gate | Command | Result |
 |---|---|---|
@@ -45,7 +45,7 @@ Enforcement stack (defense in depth): `--permission-prompts none` (no interactiv
 
 **New test coverage (101 tests, all through the spawn seam — NO live claude in CI):** contract (schema + JSON-schema derivation + invariants), detect (every reason code + timeout + the **live-shape regression test**), runner (argv contract, all 7 outcome classes incl. echo-mismatch injection guard, timeout/cancel/busy/spawn-failed/interrupted, corrupted-plan read-back, stdout cap), materializer (namespace/revision reuse, pinned membership, drops reported, determinism, zero-survival refusal — against the REAL committed project), 5 route suites (HTTP contracts incl. **approve→REAL `det build` interop**: exit 0, pinned revision, `COMPOSITION_SKIPS_PRESENT` asserted, no completeness code), 2 UI suites (blocked/ready/submit/cancel/recheck/503-status-refresh, single alert, ungrounded-no-approval).
 
-## 3. LIVE operator E2E (this host, real claude 2.1.322 + real Figma MCP + real engine) — PROVEN
+## 3. LIVE operator E2E (this host, real claude 2.1.322 + real Figma MCP + real engine) — PROVEN at `31abc74` (repeated after the corrections — see §11)
 
 Production server (`next build` + `next start`, PORT=3100, `STUDIO_DET_RUNS_DIR=/tmp/det65-live-runs`, `STUDIO_AGENT_TIMEOUT_MS=900000`):
 
@@ -77,7 +77,7 @@ Production server (`next build` + `next start`, PORT=3100, `STUDIO_DET_RUNS_DIR=
 
 No Figma writes (agent read-only by allowed tool + prompt + permission mode; the reserved fixture was READ only). No Page Builder CMS/DB mutations (approval writes only under the runs root's analysis workspace; base projects untouched — asserted in tests). No Hyvä source distribution. No production writes. No credential capture, no auto-install/login from server requests (preflight only observes and instructs). `det build` interop used the pre-existing approved example flow.
 
-## 7. Shared-file churn for the #63 move map (all minimal, disclosed)
+## 7. Shared-file churn for the #63 move map (all minimal, disclosed) — pre-reconciliation paths; all four now live at their post-[63] locations (see §11)
 
 1. `apps/studio/components/layout/studio-shell.tsx` — +1 nav item `{ href: "/agent", label: "Phân tích AI" }`.
 2. `apps/studio/src/modules/conversions/figma-input.ts` — `export` added to the two existing patterns (`NODE_ID_PATTERN`, `FILE_KEY_PATTERN`).
@@ -103,11 +103,121 @@ e. `--json-schema` output is derived from zod at runtime and cached; if the cont
 ## 10. Reproduce (Coordinator, this workspace)
 
 ```bash
-npm ci && npm run build            # root: core dist for the real-CLI interop tests
-npm test                           # 195/195
-cd apps/studio && npm test         # 364/364 (approve interop test runs REAL det build)
-npm run build && npx tsc --noEmit && npm run lint
+# pre-reconciliation head 31abc74 (historical):
+#   cd apps/studio && npm test        # 364/364
+# reconciled correction head (current):
+npm ci && npm test                   # 195/195
+npm run test:studio                  # 374/374 (approve interop test runs REAL det build)
+npm run build && npm run typecheck && npm run lint
 # live flow (requires local claude + Figma MCP):
-# PORT=3100 STUDIO_DET_RUNS_DIR=<dir> STUDIO_AGENT_TIMEOUT_MS=900000 npx next start
+# npm run build:app
+# PORT=3100 STUDIO_DET_RUNS_DIR=<dir> npx next start
 # GET /api/agent/status → POST /api/agent/analyses → poll GET .../analyses/<id> → POST .../approve → /runs/<buildRunId>
 ```
+
+## 11. Correction round — Coordinator CORRECTION_REQUIRED (C65-1..C65-4) + reconciliation onto the merged #63 single-application main
+
+Two Coordinator comments on PR #67 defined this round: the four-finding
+[CORRECTION_REQUIRED review](https://github.com/thanhle74/design-engineering-toolkit/pull/67#issuecomment-6813072508)
+and the integration handoff ("#63 NOW MERGED. Resume #65 on SAME PR #67 …
+DO NOT MERGE #67 as-is", new authoritative main `e7d2f5a`). One coordinated
+update in the same workspace delivered both.
+
+### 11.1 Reconciliation onto new main `e7d2f5a` (move map applied to every [65] file)
+
+Merged `origin/main` and applied the [63] move map to all [65] code — no
+`apps/`/`packages/` resurrection, no secondary manifests, all #63 and #65
+code preserved (the merge commit's own message carries the full map):
+`src/shared/contracts/agent-plan{,.test}.ts → src/studio/shared/contracts/`,
+`src/server/claude-agent/* → src/studio/server/claude-agent/`,
+`src/modules/agent/* → src/studio/modules/agent/`, `app/api/agent/**` +
+`app/agent/page.tsx → root app/`, screenshots `→ docs/studio/screenshots/65-*`,
+the README AI section now in `docs/studio/README.md`; `@/src/*` aliases
+remapped to `@/src/studio/*`. The handoff checkpoint conflict resolved: [63]
+demoted to HISTORICAL (PR #66 / `e7d2f5a`), [65] stays CURRENT.
+
+### 11.2 C65-1 — synchronous single-slot reservation (BLOCKER fixed)
+
+`start()` now reserves the paid-agent slot SYNCHRONOUSLY, before the first
+await: the busy check and `this.active = activeJob` assignment are in the
+same synchronous region, and the awaited preflight runs INSIDE the guarded
+region with the placeholder (honest `state: "queued"`, `pid: null`) visible
+to concurrent callers. Every failure path — preflight refusal, spawn failure,
+any init throw — releases the reservation (`child === null` guard keeps the
+release away from a live child, whose terminal event owns it). Regression
+tests: two overlapping starts held at preflight → the second 409s with the
+queued placeholder while the first completes with EXACTLY ONE analysis
+spawn; preflight-failed start releases the slot for the next caller.
+
+### 11.3 C65-2 — complete parse buffer vs diagnostic tail (BLOCKER fixed)
+
+The single stdout buffer is split: `parseChunks` keeps the COMPLETE stream up
+to 1 MiB (`STDOUT_PARSE_CAP_BYTES`) and is NEVER trimmed — envelope
+classification parses only from it; `stdoutTailChunks` is the bounded 8 KiB
+journal diagnostic, trimmed as before. The old shape trimmed the PARSE
+stream to the 8 KiB tail, so any valid envelope arriving in multiple chunks
+was parsed head-truncated and misclassified `envelope-invalid` (the live
+40 KB plan passed only because it arrived as one chunk). Regression tests: a
+~40 KB valid envelope delivered in alternating 512 B/1024 B chunks →
+`plan-ready`, plan persisted (12 sections re-read); a >1 MiB stream in 1 KiB
+chunks → fail-closed `stdout-truncated`, never parsed.
+
+### 11.4 C65-3 — verified source-identity binding (BLOCKER fixed)
+
+New committed per-base record `source-identity.json`
+(`examples/build/slaunchpad-home-real-derived/`): `figmaFileKey
+vNPtfBRpYM3PsExirVqhmt`, `figmaRootNodeId 245:2`, `providerRevisionId
+2417494580183108397`, provenance = the authorized #18 read-only extract
+(merged main `8aaaf2e`). New server module `source-identity.ts`
+(`readSourceIdentity` + `assertRequestMatchesSourceIdentity`) is enforced at
+BOTH gates: analyses POST (before any preflight or paid child) and approve
+POST (authoritative re-check before anything is materialized or built).
+Mismatch → 422 `base-source-mismatch` with the Vietnamese instruction
+(machine tokens verbatim); a base with NO binding fails closed. Node-ID
+membership alone can never approve another file: the regression tests cover
+a different file with overlapping node ids (analyses 422, runner never
+reached; approve 422 with nothing materialized/built) and an unbound base
+(422). Another Figma file requires its own pinned snapshot project —
+explicitly out of scope for [65].
+
+### 11.5 C65-4 — real toolset restriction + usable default timeout
+
+`--allowedTools` is auto-approval, not availability — the Coordinator was
+right, and the fix restricts the actual toolset with LIVE evidence on the
+installed 2.1.322:
+- **Probe A** (`--tools ""` + allowed Figma get_metadata): the plugin MCP
+  tool RAN and returned real fixture data (childCount 15) — built-ins can be
+  emptied without losing the Figma MCP.
+- **Probe B** (Read probe, canary file): *"The Read tool does not exist in
+  this session. Available tools are only StructuredOutput and
+  Magento-related MCP tools"* — the built-in set is really gone; it also
+  revealed the other MCP servers' tools were still PRESENT.
+- **Probe C** (magento-spec tool with server-level denies
+  `mcp__magento-spec,mcp__slaunchpad`): *"Tool unavailable: … is not present
+  in this session's toolset (only Figma MCP tools are available)"* — the
+  non-Figma servers' tools are REMOVED from the toolset.
+Deployed argv change: `--tools ""` added, and `--disallowedTools` extended
+at spawn time with `mcp__<server>` for every connected NON-Figma server
+from the same preflight (preflight now returns `connectedServerNames`).
+The timeout default is raised 300s → **900s** (`DEFAULT_AGENT_TIMEOUT_MS`,
+pinned by a test): the live 12-section analysis took ~407s and the 300s
+default honestly timed it out; `STUDIO_AGENT_TIMEOUT_MS` still overrides.
+Budget cap and cancellation unchanged.
+
+### 11.6 Gates at the reconciled correction head (exact commands)
+
+| Gate | Command | Result |
+|---|---|---|
+| Clean install | `npm ci` | pass (ONE root lockfile) |
+| Root contracts | `npm test` | **195/195** (incl. #28 full-root 12/12 fixture, G3/G4 native PB, #56 real-derived 2/12) |
+| Studio module | `npm run test:studio` | **374/374** (364 + 10 new correction-round tests) |
+| Typecheck | `npm run typecheck` | pass |
+| Lint | `npm run lint` | pass (0 errors, 0 warnings) |
+| Production build | `npm run build` | pass (`/agent` + 5 agent routes compiled) |
+| Foreign-cwd CLI | `node bin/det.js --version`/`--help` from `/tmp` | pass (`0.1.0`) |
+
+### 11.7 LIVE operator E2E repeated on the reconciled head (real claude + real Figma MCP + real engine)
+
+Production server (`next start`, port 3100, fresh runs root
+`<runs-root>` = `~/.local/state/det-studio-65-correction`), DEFAULT timeout
+(900s — no env override this time):

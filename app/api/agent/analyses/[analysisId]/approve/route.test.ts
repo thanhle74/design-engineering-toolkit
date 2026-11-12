@@ -42,7 +42,7 @@ const REQUEST = { fileKey: "vNPtfBRpYM3PsExirVqhmt", nodeId: "245:2", baseConfig
 
 async function seedAnalysis(
   analysisId: string,
-  opts: { outcome: string | null; grounded: boolean | null; plan?: unknown }
+  opts: { outcome: string | null; grounded: boolean | null; plan?: unknown; request?: typeof REQUEST }
 ): Promise<void> {
   const journalDir = path.join(runsRoot, ".agent-jobs");
   const analysisDir = path.join(runsRoot, ".agent-analyses", analysisId);
@@ -54,7 +54,7 @@ async function seedAnalysis(
       journalSchemaVersion: 1,
       analysisId,
       state: "exited",
-      request: REQUEST,
+      request: opts.request ?? REQUEST,
       pid: null,
       baseConfigPath,
       allowedFigmaTool: "mcp__plugin_figma_figma__get_metadata",
@@ -212,4 +212,39 @@ describe("POST /api/agent/analyses/[analysisId]/approve", () => {
       expect(baseProjection).toContain('"sourceLocator": "design://figma-home-desktop/254:43"'); // base manual assignment intact
     }
   );
+
+  it("C65-3: refuses approval of a plan requested from a DIFFERENT Figma file (422, nothing built)", async () => {
+    // The echo-guard passes because the JOURNAL request and the plan agree —
+    // they just both name a different file than the base's verified binding.
+    const foreignRequest = { fileKey: "OtherFileKey1", nodeId: "245:2", baseConfigId: "slaunchpad-home-real-derived" };
+    const foreignPlan = { ...VALID_AGENT_PLAN, requested: { fileKey: "OtherFileKey1", nodeId: "245:2" } };
+    await seedAnalysis("agent-700006", { outcome: "plan-ready", grounded: true, plan: foreignPlan, request: foreignRequest });
+    const response = await post("agent-700006");
+    expect(response.status).toBe(422);
+    const body = (await response.json()) as { error: { code: string; message: string } };
+    expect(body.error.code).toBe("base-source-mismatch");
+    expect(body.error.message).toContain("không khớp");
+    // Nothing was materialized or built: no approved workspace, no build run.
+    await expect(
+      readFile(path.join(runsRoot, ".agent-analyses", "agent-700006", "approved", "approval.json"), "utf8")
+    ).rejects.toThrow();
+    const buildDirExists = await readFile(path.join(runsRoot, "build-1794450000000", "build-manifest.json"), "utf8").then(
+      () => true,
+      () => false
+    );
+    expect(buildDirExists).toBe(false);
+  });
+
+  it("C65-3: refuses approval when the base copy has no source-identity binding (422)", async () => {
+    const { unlink } = await import("node:fs/promises");
+    // The seeded base project copy usually carries the committed binding;
+    // strip it to prove the fail-closed path for an unbound base.
+    await unlink(path.join(runsRoot, "base-project", "source-identity.json"));
+    await seedAnalysis("agent-700007", { outcome: "plan-ready", grounded: true, plan: VALID_AGENT_PLAN });
+    const response = await post("agent-700007");
+    expect(response.status).toBe(422);
+    const body = (await response.json()) as { error: { code: string; message: string } };
+    expect(body.error.code).toBe("base-source-mismatch");
+    expect(body.error.message).toContain("chưa gắn nguồn Figma đã xác minh");
+  });
 });

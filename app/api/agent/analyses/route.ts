@@ -19,6 +19,7 @@ import { FILE_KEY_PATTERN, NODE_ID_PATTERN } from "@/src/studio/modules/conversi
 import { getAgentAnalysisRunner, AgentBusyError } from "@/src/studio/server/claude-agent/analysis-runner";
 import { agentErrorResponse, AgentWorkflowError } from "@/src/studio/server/claude-agent/agent-errors";
 import { detectClaudeAgentStatus } from "@/src/studio/server/claude-agent/claude-detect";
+import { assertRequestMatchesSourceIdentity } from "@/src/studio/server/claude-agent/source-identity";
 
 interface AnalysisStartBody {
   fileKey?: unknown;
@@ -70,6 +71,16 @@ export async function POST(request: Request): Promise<Response> {
     const normalizedNodeId = nodeId.replace("-", ":");
     const catalog = await BuildConfigCatalog.open(process.env[STUDIO_BUILD_PROJECTS_DIR_ENV] ?? "");
     const baseConfigPath = await catalog.resolveConfigPath(baseConfigId);
+    // C65-3: the requested Figma source must EQUAL the selected base's
+    // verified binding (committed source-identity.json) — checked BEFORE any
+    // preflight or paid child. A different file (even with overlapping node
+    // ids) or an arbitrary root never reaches the agent; another Figma file
+    // would need its own pinned snapshot project (out of scope for [65]).
+    await assertRequestMatchesSourceIdentity(
+      { fileKey, nodeId: normalizedNodeId },
+      baseConfigPath,
+      baseConfigId
+    );
     // The AUTHORITATIVE preflight re-check happens inside runner.start()
     // immediately before the spawn — a cached UI status is never authorization.
     const runner = await getAgentAnalysisRunner();
