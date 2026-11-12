@@ -2,6 +2,10 @@
 .env
 .env.*
 !.env.example
+
+# [50] Studio catalogue local SQLite (default local env: STUDIO_DATA_DIR=./data).
+# Covers studio.sqlite plus its -wal/-shm side files and any backup set.
+/data/
 profiles/*.local.*
 profiles/local/
 projects/*/local/
