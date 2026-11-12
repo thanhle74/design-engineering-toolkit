@@ -17,7 +17,8 @@
     "setup": "node scripts/setup.mjs",
     "dev": "node scripts/studio.mjs dev",
     "start": "node scripts/studio.mjs start",
-    "studio:build": "node scripts/studio.mjs build"
+    "studio:build": "node scripts/studio.mjs build",
+    "clean": "rm -rf dist .next tsconfig.tsbuildinfo .eslintcache coverage"
   },
   "bin": {
     "det": "bin/det.js"

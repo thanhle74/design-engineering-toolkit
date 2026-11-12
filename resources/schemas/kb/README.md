@@ -1,9 +1,9 @@
 # KB contract family (issue #15 — Knowledge Engine MVP)
 
 Versioned JSON Schema contracts for the knowledge engine (`det kb ingest|sync|query|validate`).
-**Frozen at major 1** from the reviewed issue #7 drafts in
-[`specs/knowledge-foundation/schemas/`](../../specs/knowledge-foundation/schemas/) (which remain the
-dated review record). All schemas use **JSON Schema Draft 2020-12**, `schemaVersion` integer major
+**Frozen at major 1** from the reviewed issue #7 drafts (`specs/knowledge-foundation/schemas/`,
+review record; the draft files themselves were removed in [68] as superseded — see the git
+history at that path). All schemas use **JSON Schema Draft 2020-12**, `schemaVersion` integer major
 (`const: 1`), `additionalProperties: false` everywhere — same conventions as the converter and CLI
 families.
 
@@ -51,8 +51,10 @@ directories and never enter this repo.
 3. **`kb-relations.evidence` gains optional `method`**, and the relations `lifecycle` gains optional
    `reviewedBy`/`reviewRef` (symmetry with the record envelope — review metadata carries forward
    across re-ingest on relations too).
-4. `$id` paths moved from `specs/knowledge-foundation/schemas/` to `schemas/kb/` — the drafts stay
-   in place as the dated review record; this family is the contract the CLI validates against.
+4. `$id` paths moved from `specs/knowledge-foundation/schemas/` to `schemas/kb/` — this family is
+   the contract the CLI validates against. ([68] notes: the draft files themselves were removed as
+   superseded — see git history at that path — and the family now lives at
+   `resources/schemas/kb/`; the `$id` URIs are unchanged frozen identifiers, never file paths.)
 
 The platform/source *kinds* in `kb-ui-component` (`hyva-ui`, `secomm-uiwidget`, `page-builder-native`,
 plus `other`) are the audited first-class source kinds from the accepted #7 review — they are
@@ -85,5 +87,5 @@ platform values.
 
 | Version | Change |
 |---|---|
-| 1.0.0 | Initial freeze from the reviewed issue #7 drafts (issue #15). Adjustments listed above; older drafts remain in `specs/knowledge-foundation/schemas/` as the review record. |
+| 1.0.0 | Initial freeze from the reviewed issue #7 drafts (issue #15). Adjustments listed above; the draft files were removed in [68] as superseded (git history at `specs/knowledge-foundation/schemas/` is the review record). |
 | 1.1.0 | M4 additive evolution (issue #19), `schemaVersion` stays major 1: **`kb-capability`** gains `recordType: "module"` (installed-module inventory records; `mod:` id prefix — a module is platform knowledge, not a capability claim) and the `mod:` prefix in the id grammar; **`kb-ingest-manifest`** lanes become optional (`minProperties: 1`) and gain the optional `inputs.platformRecords` lane for extract-emitted KB-1 records (existing all-four-lane manifests remain valid); **`kb-ui-component`** license regime enum gains `osl`/`afl` (Magento OSL-3.0/AFL-3.0 platform-native components); **new** `kb-extract-manifest.schema.json` (read-only source extract plans) and `kb-source-scan.schema.json` (out-of-process scanner payload contract); `kb-engine-output` gains an extract-report branch (`$defs.writtenOutput`). Old strict readers of 1.0 must treat unknown `recordType`s and lanes as unsupported (never best-effort parse). |

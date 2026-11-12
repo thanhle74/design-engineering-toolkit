@@ -1,6 +1,6 @@
 # Knowledge Foundation — Contracts
 
-> **Status:** DRAFT for review (issue [#7](https://github.com/thanhle74/design-engineering-toolkit/issues/7)). Normative for the three knowledge bases and their boundaries. Companion documents: [KNOWLEDGE-ARCHITECTURE.md](KNOWLEDGE-ARCHITECTURE.md) (how these contracts are inhabited), [schemas/](schemas/README.md) (example schema drafts), [TECH-ADR.md](TECH-ADR.md) (technology that will enforce them).
+> **Status:** DRAFT for review (issue [#7](https://github.com/thanhle74/design-engineering-toolkit/issues/7)). Normative for the three knowledge bases and their boundaries. Companion documents: [KNOWLEDGE-ARCHITECTURE.md](KNOWLEDGE-ARCHITECTURE.md) (how these contracts are inhabited), (schema drafts: removed in [68] as superseded by the frozen [`resources/schemas/kb/`](../../../resources/schemas/kb/) family — git history at `specs/knowledge-foundation/schemas/`), [TECH-ADR.md](TECH-ADR.md) (technology that will enforce them).
 >
 > **These are contracts, not implementations.** Nothing here implies a running engine. The V1 contract family in [`schemas/`](../../schemas/) (issue #1) stays valid; this document **generalizes** its conventions and adds the knowledge layer on top.
 

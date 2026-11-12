@@ -1,5 +1,7 @@
 # INTEGRATION-RECEIPT — [7] knowledge foundation package
 
+> **[68] layout note:** the `specs/` tree now lives at `docs/specs/`, and the schema draft files listed in §5 below were removed as superseded by the frozen `resources/schemas/kb/` contract family (git history at `specs/knowledge-foundation/schemas/` keeps the review record). All other paths in this receipt are historical.
+
 > Integrator: single-writer session (branch `thanhle74/7-architecture-three-knowledge-bases-requirement`, base `main` @ `82c9129`). Dispatch model per issue [#7](https://github.com/thanhle74/design-engineering-toolkit/issues/7): four parallel read-only workers → one integrator. All worker audits executed 2026-11-03. **Draft PR only — no auto-merge.**
 
 ## 1. Worker dispatch & receipts
