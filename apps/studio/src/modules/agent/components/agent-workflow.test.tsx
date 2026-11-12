@@ -212,10 +212,14 @@ describe("AgentWorkflow — ready state", () => {
       throw new Error(`unexpected fetch ${url}`);
     });
     render(<AgentWorkflow configs={CONFIGS} />);
-    // antd's loading button has no disabled attribute (a click is swallowed
-    // by its loading guard), so settle on the fetched status content itself —
-    // it commits in the same batch as loading=false.
-    await screen.findByText(/Claude Code chưa đăng nhập/);
+    // antd's Button click-guard checks innerLoading (class ant-btn-loading);
+    // a click on a still-loading button is silently swallowed. Gate on the
+    // guard condition itself — CI timing differs from local, and content
+    // presence alone proved flaky there.
+    await waitFor(() => {
+      const recheck = screen.getByText("Kiểm tra lại").closest("button") as HTMLButtonElement;
+      expect(recheck.className).not.toContain("ant-btn-loading");
+    });
     const recheck = screen.getByText("Kiểm tra lại").closest("button") as HTMLButtonElement;
     const callsAfterLoad = fetchMock.mock.calls.length;
     fireEvent.click(recheck);
