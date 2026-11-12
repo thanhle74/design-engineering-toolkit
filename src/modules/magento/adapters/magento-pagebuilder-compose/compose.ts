@@ -107,18 +107,7 @@ interface ComposeInput {
    projection?: {
       assignments: {
          sourceLocator: string;
-         role:
-            | "background-media"
-            | "content-lead"
-            | "heading"
-            | "body"
-            | "cta"
-            | "decoration"
-            | "column-primary"
-            | "column-secondary"
-            | "inline-media"
-            | "grid-column"
-            | "grid-caption";
+         role: ComposerRole;
          reason: string;
       }[];
    };

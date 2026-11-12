@@ -31,7 +31,14 @@ export type ComposerRole =
    | "column-secondary"
    | "inline-media"
    | "grid-column"
-   | "grid-caption";
+   | "grid-caption"
+   // [#72] v1.5.0 additive vocabulary: carousel-of-slides and native products listing
+   // decisions. Carousel intent is NOT decidable from NodeIR geometry alone (peer repeated
+   // groups are structurally identical to grids), so these roles exist to carry the recorded
+   // decision instead of a structural guess.
+   | "slide"
+   | "products-grid"
+   | "products-carousel";
 
 export interface MappingEntry {
    sourceNodeId: string;
