@@ -74,6 +74,7 @@ import {
    type TextRun,
 } from "./elements.js";
 import type { ComposerRole, MappingEntry } from "./handler-context.js";
+import { SECTION_SHAPE_HANDLERS } from "./handlers/registry.js";
 import type {
    Capability,
    Diagnostic,
@@ -360,6 +361,33 @@ function walkSubtree(rootId: string, visit: (node: NodeIRNode) => void): void {
    };
    visitChildren(rootId);
 }
+
+// ---- [#72] Modular section-shape handler context (frozen seam, ./handler-context.ts) ---------
+// ONE context per run, built from this module's indexes and offered to every registered
+// handler (./handlers/registry.ts). Handlers read the same views the legacy composers use and
+// append accountable records through pushDiagnostic/pushMapping — they never print and never
+// mutate compose state otherwise. The role resolver rides on the context so handlers reuse the
+// single role-resolution source (explicit projection > SLOT naming-contract table) without a
+// second copy of the table.
+const sectionComposeContext = {
+   nodesById,
+   locatorOf,
+   walkSubtree,
+   requireCap,
+   textByRef,
+   mediaByRef,
+   linkByRef,
+   roleByLocator,
+   excludedLocators,
+   ctaSubtreeLocators,
+   pushDiagnostic: (d: Diagnostic): void => {
+      diagnostics.push(d);
+   },
+   pushMapping: (m: MappingEntry): void => {
+      mapping.push(m);
+   },
+   resolveComposerRole,
+};
 
 // SLOT/<role> naming-contract role (design-source naming spec): the segment after the prefix,
 // lowercased and reduced to [a-z0-9]. Absent prefix -> null (reported, never guessed).
@@ -2897,6 +2925,22 @@ function composeSection(
    });
    if (gridColumns.length > 0) {
       return composeColumnGridSection(section, sectionNodeId, gridColumns);
+   }
+   // [#72] Registered modular section-shape handlers (./handlers/registry.ts), deterministic
+   // array order: the first non-null fragment wins and becomes the section output exactly like
+   // the legacy paths above. A null return is a SILENT shape-miss — no diagnostics, no mapping
+   // — and the legacy dispatch below proceeds unchanged, so an empty registry is byte-identical
+   // to the pre-#72 dispatcher. The projected legacy shapes above keep precedence by design:
+   // an explicit recorded projection (column/column-grid roles) always overrides a structural
+   // reading, and every structural handler additionally declines sections carrying those
+   // projected roles.
+   for (const handler of SECTION_SHAPE_HANDLERS) {
+      const fragment = handler.compose(
+         section,
+         sectionNodeId,
+         sectionComposeContext,
+      );
+      if (fragment !== null) return fragment;
    }
    // Band guard: a direct-child container that carries its own manifest media entry, or that
    // contains structured (non-CTA) role-resolved text, marks a hero/column-shaped section — the
