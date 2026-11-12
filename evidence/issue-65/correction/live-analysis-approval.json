@@ -1,0 +1,87 @@
+{
+  "label": "[65] correction-round LIVE E2E on the reconciled post-#63 head (real claude 2.1.322 + real Figma MCP + real det build)",
+  "analysis": {
+    "analysisId": "agent-1794455177248",
+    "request": {
+      "fileKey": "vNPtfBRpYM3PsExirVqhmt",
+      "nodeId": "245:2",
+      "baseConfigId": "slaunchpad-home-real-derived"
+    },
+    "terminalState": "exited",
+    "outcome": "plan-ready",
+    "grounded": true,
+    "exitCode": 0,
+    "timeoutEnvOverride": null,
+    "timeoutDefault": "900000 (DEFAULT_AGENT_TIMEOUT_MS — the run took 384435 ms; the previous 300000 default would have timed out)",
+    "argvEnforcement": {
+      "allowedTools": "mcp__plugin_figma_figma__get_metadata",
+      "disallowedTools": "Bash,Write,Edit,NotebookEdit,WebFetch,WebSearch,mcp__slaunchpad,mcp__magento_spec",
+      "tools": "",
+      "maxBudgetUsd": "2",
+      "noSessionPersistence": true
+    },
+    "envelopeSafe": {
+      "subtype": "success",
+      "isError": false,
+      "sessionId": "67e59704-ee20-4000-9230-00f2e1da9a22",
+      "numTurns": 3,
+      "durationMs": 384435,
+      "totalCostUsd": 0.9527200000000001,
+      "permissionDenialCount": 0,
+      "hasStructuredOutput": true
+    },
+    "planFacts": {
+      "observedRoot": "PAGE/Home/Desktop",
+      "directChildren": 15,
+      "sections": 12,
+      "proposals": 86,
+      "siteChrome": 3,
+      "limitationsEntries": 8
+    }
+  },
+  "mismatchProbe": {
+    "request": {
+      "fileKey": "OtherFileKey1",
+      "nodeId": "245:2",
+      "baseConfigId": "slaunchpad-home-real-derived"
+    },
+    "httpStatus": 422,
+    "errorCode": "base-source-mismatch",
+    "childrenSpawned": 0
+  },
+  "build": {
+    "buildRunId": "build-1794455593850",
+    "state": "exited",
+    "exitCode": 0,
+    "durationMs": 719,
+    "sourceRevisionId": "2417494580183108397",
+    "gaps": [
+      {
+        "code": "COMPOSITION_SKIPS_PRESENT",
+        "count": 3
+      },
+      {
+        "code": "COMPOSITION_EXCLUSIONS_PRESENT",
+        "count": 26
+      },
+      {
+        "code": "COMPOSITION_GAPS_PRESENT",
+        "count": 126
+      },
+      {
+        "code": "PREVIEW_INSTALL_OPERATOR_GATED",
+        "count": null
+      },
+      {
+        "code": "PREVIEW_ASSETS_NOT_GENERATED",
+        "count": null
+      }
+    ],
+    "downloadVerification": {
+      "artifact": "03-composition/native-content.html",
+      "manifestSha256": "4d9cf26ca22e32d8ccf1dd63b63c6a985a84ab63c41da4a306fa8269ae19210e",
+      "downloadedSha256": "4d9cf26ca22e32d8ccf1dd63b63c6a985a84ab63c41da4a306fa8269ae19210e",
+      "bytes": 11507
+    }
+  }
+}

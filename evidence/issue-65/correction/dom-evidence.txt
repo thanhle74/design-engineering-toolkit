@@ -1,0 +1,13 @@
+PASS run: LIVE badge
+PASS run: skip gap code
+PASS run: exclusion gap code
+PASS run: gaps code
+PASS run: preview gates
+PASS run: NEEDS_REVIEW present
+PASS run: pinned locator
+PASS run: sha256 verified line
+PASS agent: plan-ready
+PASS agent: grounded root
+PASS agent: unpinned note
+PASS agent: fileKey token
+PASS agent: no plan-ungrounded

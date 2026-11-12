@@ -50,6 +50,7 @@ const { Content } = Layout;
 export const studioNavItems = [
   { href: "/", label: "Tổng quan" },
   { href: "/build", label: "Build" },
+  { href: "/agent", label: "Phân tích AI" },
   { href: "/catalog", label: "Dự án" },
 ] as const;
 

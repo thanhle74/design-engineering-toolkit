@@ -1,0 +1,11 @@
+{
+  "analysisId": "agent-1794449651983",
+  "approvedAt": "2026-11-12T02:21:28.362Z",
+  "derivedFrom": "agent-plan",
+  "baseConfigPath": "<repo-root>/examples/build/slaunchpad-home-real-derived/build-config.json",
+  "planContentHash": "d940ac448b67db7984c99134cf42f8afb2236f9b4cc19c72ac20b55e5803a02c",
+  "totalProposedAssignments": 87,
+  "pinnedAssignments": 87,
+  "droppedNodeIds": [],
+  "replacedProjectionPath": "semantic-projection.json"
+}
