@@ -184,9 +184,13 @@
             "compose-report",
             "native-content",
             "tool-run-envelope",
-            "design-tree-input"
+            "design-tree-input",
+            "cms-installer",
+            "native-content-copy",
+            "mapping-gap-report",
+            "operator-readme"
           ],
-          "description": "Closed major-1 manifest role enum (additive minors only)."
+          "description": "Closed major-1 manifest role enum (additive minors only). Issue #70 additive minor: the four install-bundle roles — cms-installer (the operator-executed install-homepage.php), native-content-copy (the frozen operator-facing file name of a byte-exact copy of the composed native content), mapping-gap-report (mapping-and-gaps.json, the honest mapping ledger) and operator-readme (README.md). All four sit at the bundle root with provenance via det-build, stage composition, and exist only when the build config declares a cmsInstall target and composition exits 0."
         },
         "sha256": {
           "type": "string",

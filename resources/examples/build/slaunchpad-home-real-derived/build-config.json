@@ -11,5 +11,11 @@
   "registry": "capability-registry.json",
   "bindings": "component-bindings.json",
   "content": "content-manifest.json",
-  "projection": "semantic-projection.json"
+  "projection": "semantic-projection.json",
+  "cmsInstall": {
+    "identifier": "det-studio-homepage",
+    "title": "DET Studio Homepage",
+    "storeId": 0,
+    "active": true
+  }
 }
