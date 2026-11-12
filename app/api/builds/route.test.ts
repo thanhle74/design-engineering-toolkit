@@ -6,13 +6,42 @@
  * creates the cached runner (see build-runner.ts getBuildRunner). The busy
  * mapping is unit-tested separately (api-error.test.ts) since the route uses
  * the real single-slot runner without the test spawn seam.
+ *
+ * [70] The environment readiness gate is MOCKED (hermetic — no child
+ * processes): default ready so the existing real-build proof keeps running,
+ * plus gate-ORDER cases (400 before the gate, 503 environment-not-ready with
+ * checks after it).
  */
-import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
+import {
+   afterAll,
+   beforeAll,
+   beforeEach,
+   describe,
+   expect,
+   it,
+   vi,
+} from "vitest";
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
 vi.mock("server-only", () => ({}));
+
+const assertReadyMock = vi.fn();
+vi.mock(
+   "@/src/modules/studio/server/environment/index",
+   async (importOriginal) => {
+      const actual =
+         await importOriginal<
+            typeof import("@/src/modules/studio/server/environment/index")
+         >();
+      return {
+         ...actual,
+         assertStudioEnvironmentReady: (...args: unknown[]) =>
+            assertReadyMock(...args),
+      };
+   },
+);
 
 import { STUDIO_DET_RUNS_DIR_ENV } from "@/src/modules/studio/server/det-run-reader-factory";
 import { STUDIO_BUILD_PROJECTS_DIR_ENV } from "@/src/modules/studio/server/build-catalog";
@@ -21,9 +50,41 @@ import {
    exampleBuildConfigBody,
    requireDetCli,
 } from "@/src/modules/studio/server/test-helpers/det-cli";
+import { StudioEnvironmentError } from "@/src/modules/studio/server/environment/index";
+import { type StudioReadinessChecks } from "@/src/modules/studio/shared/contracts/build-flow";
 
 import { GET, POST } from "./route";
 import { getBuildRunner } from "@/src/modules/studio/server/build-runner";
+
+const READY_CHECKS: StudioReadinessChecks = {
+   claudeCode: { ready: true, version: "2.1.322", reasonCode: "ok" },
+   figmaMcp: {
+      ready: true,
+      listed: true,
+      serverName: "plugin:figma:figma",
+      reasonCode: "ok",
+   },
+   detRunsDir: {
+      ready: true,
+      reasonCode: "ok",
+      envName: "STUDIO_DET_RUNS_DIR",
+   },
+};
+
+const BROKEN_CHECKS: StudioReadinessChecks = {
+   claudeCode: { ready: false, version: null, reasonCode: "not-installed" },
+   figmaMcp: {
+      ready: false,
+      listed: false,
+      serverName: null,
+      reasonCode: "mcp-not-listed",
+   },
+   detRunsDir: {
+      ready: false,
+      reasonCode: "not-configured",
+      envName: "STUDIO_DET_RUNS_DIR",
+   },
+};
 
 let runsRoot: string;
 let projectsRoot: string;
@@ -47,6 +108,12 @@ afterAll(async () => {
       if (value === undefined) delete process.env[key];
       else process.env[key] = value;
    }
+});
+
+// [70] Gate default: ready — every pre-existing case keeps its old behavior.
+beforeEach(() => {
+   assertReadyMock.mockReset();
+   assertReadyMock.mockResolvedValue(READY_CHECKS);
 });
 
 async function configureEnv(): Promise<void> {
@@ -88,6 +155,45 @@ describe("GET /api/builds", () => {
    });
 });
 
+describe("POST /api/builds — [70] environment gate order", () => {
+   it("rejects a bad body with 400 BEFORE consulting the gate (even broken)", async () => {
+      assertReadyMock.mockImplementation(async () => {
+         throw new StudioEnvironmentError(BROKEN_CHECKS);
+      });
+      const response = await POST(post({}));
+      expect(response.status).toBe(400);
+      const body = (await response.json()) as { error: { code: string } };
+      expect(body.error.code).toBe("bad-request");
+      // The gate sits AFTER validation: never consulted for a 400.
+      expect(assertReadyMock).not.toHaveBeenCalled();
+   });
+
+   it("fails closed 503 environment-not-ready with checks BEFORE any business logic", async () => {
+      assertReadyMock.mockImplementation(async () => {
+         throw new StudioEnvironmentError(BROKEN_CHECKS);
+      });
+      const response = await POST(post({ configId: "no-such-entry" }));
+      expect(response.status).toBe(503);
+      const body = (await response.json()) as {
+         error: { code: string; message: string };
+         checks: StudioReadinessChecks;
+      };
+      expect(body.error.code).toBe("environment-not-ready");
+      // 503 wins over the catalog 404: the gate runs first for a well-formed
+      // body — no work is accepted while the environment is broken.
+      expect(body.checks).toEqual(BROKEN_CHECKS);
+      expect(body.checks.detRunsDir.envName).toBe("STUDIO_DET_RUNS_DIR");
+   });
+
+   it("maps a non-environment gate crash to the 500 internal-error envelope", async () => {
+      assertReadyMock.mockRejectedValue(new Error("boom"));
+      const response = await POST(post({ configId: "no-such-entry" }));
+      expect(response.status).toBe(500);
+      const body = (await response.json()) as { error: { code: string } };
+      expect(body.error.code).toBe("internal-error");
+   });
+});
+
 describe("POST /api/builds", () => {
    // [58] with no env at all the canonical repository catalogue still answers:
    // an unknown id is a catalog-scoped 404, never a fake build start.
@@ -99,6 +205,14 @@ describe("POST /api/builds", () => {
       };
       expect(body.error.code).toBe("run-not-found");
       expect(body.error.message).toMatch(/build-config entry/i);
+   });
+
+   it("starts a build through the mocked-ready gate (gate consulted exactly once)", async () => {
+      await configureEnv();
+      const response = await POST(post({ configId: "no-such-entry" }));
+      // Catalog still answers 404 for an unknown id AFTER the ready gate ran.
+      expect(response.status).toBe(404);
+      expect(assertReadyMock).toHaveBeenCalledTimes(1);
    });
 
    it("rejects a malformed body with 400", async () => {

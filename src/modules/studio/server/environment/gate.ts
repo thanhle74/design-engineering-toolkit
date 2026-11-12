@@ -49,7 +49,15 @@ export class StudioEnvironmentError extends Error {
    }
 }
 
-async function checkDetRunsDir(): Promise<StudioReadinessChecks["detRunsDir"]> {
+/**
+ * [70] `STUDIO_DET_RUNS_DIR` readiness: set (non-blank) AND an existing
+ * directory. Exported for gate unit tests; the frozen public API stays the
+ * `index.ts` re-exports. The env VALUE never crosses this boundary — only
+ * the env NAME.
+ */
+export async function checkDetRunsDir(): Promise<
+   StudioReadinessChecks["detRunsDir"]
+> {
    const configured = process.env[STUDIO_DET_RUNS_DIR_ENV];
    if (configured === undefined || configured.trim() === "") {
       return {
@@ -82,7 +90,11 @@ async function checkDetRunsDir(): Promise<StudioReadinessChecks["detRunsDir"]> {
    }
 }
 
-function mergeChecks(
+/**
+ * Flatten the [65] preflight into the frozen contract shape next to the
+ * detRunsDir check. Exported for gate unit tests (pure aggregation, no I/O).
+ */
+export function mergeChecks(
    preflight: ClaudeAgentPreflight,
    detRunsDir: StudioReadinessChecks["detRunsDir"],
 ): StudioReadinessChecks {

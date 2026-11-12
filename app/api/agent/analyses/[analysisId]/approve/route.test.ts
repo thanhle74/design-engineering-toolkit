@@ -11,6 +11,10 @@
  * pinned source revision, and honest composition gaps
  * (COMPOSITION_SKIPS_PRESENT) in the manifest the run page renders — the
  * engine never claims 12/12 because an AI proposed sections.
+ *
+ * [70] The environment readiness gate is MOCKED (hermetic — no child
+ * processes), default ready so the real-build proof keeps running; the
+ * gate-first order (503 before the id lookup) is pinned explicitly.
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
@@ -18,6 +22,22 @@ import os from "node:os";
 import path from "node:path";
 
 vi.mock("server-only", () => ({}));
+
+const assertReadyMock = vi.fn();
+vi.mock(
+   "@/src/modules/studio/server/environment/index",
+   async (importOriginal) => {
+      const actual =
+         await importOriginal<
+            typeof import("@/src/modules/studio/server/environment/index")
+         >();
+      return {
+         ...actual,
+         assertStudioEnvironmentReady: (...args: unknown[]) =>
+            assertReadyMock(...args),
+      };
+   },
+);
 
 import { STUDIO_DET_RUNS_DIR_ENV } from "@/src/modules/studio/server/det-run-reader-factory";
 import {
@@ -28,6 +48,38 @@ import { VALID_AGENT_PLAN } from "@/src/modules/studio/shared/contracts/agent-pl
 import { getBuildRunner } from "@/src/modules/studio/server/build-runner";
 
 import { POST } from "./route";
+import { StudioEnvironmentError } from "@/src/modules/studio/server/environment/index";
+import { type StudioReadinessChecks } from "@/src/modules/studio/shared/contracts/build-flow";
+
+const READY_CHECKS: StudioReadinessChecks = {
+   claudeCode: { ready: true, version: "2.1.322", reasonCode: "ok" },
+   figmaMcp: {
+      ready: true,
+      listed: true,
+      serverName: "plugin:figma:figma",
+      reasonCode: "ok",
+   },
+   detRunsDir: {
+      ready: true,
+      reasonCode: "ok",
+      envName: "STUDIO_DET_RUNS_DIR",
+   },
+};
+
+const BROKEN_CHECKS: StudioReadinessChecks = {
+   claudeCode: { ready: false, version: null, reasonCode: "not-installed" },
+   figmaMcp: {
+      ready: false,
+      listed: false,
+      serverName: null,
+      reasonCode: "mcp-not-listed",
+   },
+   detRunsDir: {
+      ready: false,
+      reasonCode: "not-configured",
+      envName: "STUDIO_DET_RUNS_DIR",
+   },
+};
 
 const REAL_DERIVED_DIR = path.join(
    REPO_ROOT,
@@ -127,6 +179,9 @@ function post(analysisId: string): Promise<Response> {
 
 beforeEach(async () => {
    resetRunnerGlobals();
+   // [70] Gate default: ready — the real-build proof keeps its behavior.
+   assertReadyMock.mockReset();
+   assertReadyMock.mockResolvedValue(READY_CHECKS);
    runsRoot = await mkdtemp(path.join(os.tmpdir(), "det65-approve-"));
    process.env[STUDIO_DET_RUNS_DIR_ENV] = runsRoot;
    const baseDir = path.join(runsRoot, "base-project");
@@ -142,6 +197,23 @@ afterEach(async () => {
 });
 
 describe("POST /api/agent/analyses/[analysisId]/approve", () => {
+   it("[70] fails closed 503 environment-not-ready BEFORE any lookup or work", async () => {
+      assertReadyMock.mockImplementation(async () => {
+         throw new StudioEnvironmentError(BROKEN_CHECKS);
+      });
+      const response = await post("agent-700000");
+      expect(response.status).toBe(503);
+      const body = (await response.json()) as {
+         error: { code: string; message: string };
+         checks: StudioReadinessChecks;
+      };
+      expect(body.error.code).toBe("environment-not-ready");
+      expect(body.checks).toEqual(BROKEN_CHECKS);
+      // Gate-first: a broken environment blocks every approval attempt —
+      // even for an id that would otherwise 404.
+      expect(assertReadyMock).toHaveBeenCalledTimes(1);
+   });
+
    it("503s when the runs root is not configured", async () => {
       delete process.env[STUDIO_DET_RUNS_DIR_ENV];
       const response = await post("agent-700000");
