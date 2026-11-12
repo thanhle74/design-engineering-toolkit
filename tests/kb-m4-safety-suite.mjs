@@ -8,7 +8,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
-import { main } from "../packages/core/dist/src/core/cli/main.js";
+import { main } from "../dist/src/core/cli/main.js";
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
 
@@ -123,7 +123,7 @@ export default async function registerKbM4SafetySuite(checkAsync) {
   });
 
   await checkAsync("KB-M4-S2", "portability scan extended: schemas/**, examples/**, docs/knowledge/**, specs/knowledge-foundation/** carry no owner paths, real private-store path references or credential material", async () => {
-    const scanRoots = ["packages/core/schemas", "examples", "docs/knowledge", "specs/knowledge-foundation"];
+    const scanRoots = ["schemas", "examples", "docs/knowledge", "specs/knowledge-foundation"];
     for (const r of scanRoots) assert.ok(fs.existsSync(path.join(ROOT, r)), `${r} must exist — the scan must never be vacuous`);
     const hits = [];
     const scan = (dir) => {

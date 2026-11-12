@@ -32,7 +32,7 @@ catalogue mode ([50]) is independent of this workflow.
      **repository example** badge. Its declared provenance paths are shown as declared; the
      engine validates them at build time.
    - The old **G28 fixture demo** is not prelisted — it only appears if you create it in
-     your own `STUDIO_BUILD_PROJECTS_DIR` (see `apps/studio/README.md`).
+     your own `STUDIO_BUILD_PROJECTS_DIR` (see `docs/studio/README.md`).
 3. Click **Build** on the real-derived entry. The runner executes the real
    `det build --config` offline (one build at a time; a second concurrent request fails
    with 409).
@@ -86,10 +86,10 @@ Exit 0 = all stages completed; the bundle layout matches what Studio serves abov
 ## Troubleshooting
 
 - **`det: compiled core not found`** — run `npm run build` at the repository root (compiles
-  `packages/core/dist` in the [60] npm-workspaces layout; the root `npm run dev` launcher does
+  `dist/` in the [63] single-application layout; the root `npm run dev` launcher does
   this automatically when the core dist is missing or stale).
 - **The build page shows "Runner not ready"** — Studio was started without
-  `STUDIO_DET_RUNS_DIR` (e.g. `npm run dev` inside `apps/studio` instead of the root).
+  `STUDIO_DET_RUNS_DIR` (e.g. `next dev` started directly without the root launcher).
   Use the root launcher (`npm run dev` at the repository root), which defaults the runs
   dir to `out/studio-runs`, or export `STUDIO_DET_RUNS_DIR` yourself and restart.
 - **The catalogue lists no repository entry** — Studio is not running from a checkout

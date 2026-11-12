@@ -10,9 +10,9 @@ The toolkit's deterministic logic lives in the **`det` CLI**, never in prompts. 
 ## Setup
 
 ```bash
-npm ci          # once per checkout (single root npm-workspaces lockfile — [60]: @det/core in packages/core + apps/studio)
-npm run build   # compile packages/core/src + packages/core/adapters to packages/core/dist (gitignored)
-node bin/det.js --help   # root wrapper over the @det/core package CLI
+npm ci          # once per checkout (ONE root package.json + ONE package-lock.json — [63] single application, no workspaces)
+npm run build   # compile src/core + adapters/ to dist/ via tsconfig.core.json (gitignored)
+node bin/det.js --help   # the committed CLI entrypoint of the single application
 ```
 
 ## Commands (read-only; nothing is written without --out)

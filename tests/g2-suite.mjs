@@ -10,19 +10,19 @@ import fs from "node:fs";
 import http from "node:http";
 import os from "node:os";
 import path from "node:path";
-import { main } from "../packages/core/dist/src/core/cli/main.js";
-import { stableContentHash, canonicalStringify, stripVolatile } from "../packages/core/dist/src/core/canonical.js";
-import { deriveNodeId } from "../packages/core/dist/src/core/design-source/extract.js";
-import { SnapshotDesignSourcePort } from "../packages/core/dist/src/core/design-source/port.js";
-import { loadAdapters, runAdapter } from "../packages/core/dist/src/core/adapter-runtime.js";
-import { toSnapshotNodes, kindOf, MAX_NODES } from "../packages/core/dist/adapters/design-source-figma-live/figma-map.js";
+import { main } from "../dist/src/core/cli/main.js";
+import { stableContentHash, canonicalStringify, stripVolatile } from "../dist/src/core/canonical.js";
+import { deriveNodeId } from "../dist/src/core/design-source/extract.js";
+import { SnapshotDesignSourcePort } from "../dist/src/core/design-source/port.js";
+import { loadAdapters, runAdapter } from "../dist/src/core/adapter-runtime.js";
+import { toSnapshotNodes, kindOf, MAX_NODES } from "../dist/adapters/design-source-figma-live/figma-map.js";
 
 const FIX = path.join(path.dirname(new URL(import.meta.url).pathname), "fixtures");
 const G2 = path.join(FIX, "g2-design-source");
 const LIVE = path.join(FIX, "g2-figma-live");
 const REPO = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
-// [60] the engine package root: adapters + schemas + dist live inside @det/core now.
-const CORE = path.join(REPO, "packages", "core");
+// [63] the engine lives at the checkout root: src/core + adapters/ + schemas/ + dist/ are root dirs.
+const CORE = REPO;
 const PROFILE = path.join(FIX, "negative/profile-g2-design-fixture.fixture.json");
 const PROFILE_B = path.join(FIX, "negative/profile-g2-design-secondary.fixture.json");
 const REGISTRY = path.join(G2, "g2-capability-registry.fixture.json");
@@ -48,7 +48,7 @@ function extractArgs(extra = []) {
 
 export default async function registerG2Suite(checkAsync) {
   checkAsync("G2-T23a", "materialized G2 schemas validate their committed worked examples", async () => {
-    const { validateContract } = await import("../packages/core/dist/src/core/schema-registry.js");
+    const { validateContract } = await import("../dist/src/core/schema-registry.js");
     for (const [contract, file] of [
       ["node-ir", "node-ir.g2-fixture.example.json"],
       ["page-structure", "page-structure.g2-fixture.example.json"],
@@ -386,14 +386,14 @@ export default async function registerG2Suite(checkAsync) {
       if (m) hits.push(`${rel}: ${[...new Set(m)].join(",")}`);
     };
     for (const f of ["node-ir.schema.json", "page-structure.schema.json", "source-review.schema.json"]) {
-      scan(`schemas/converter/${f}`, fs.readFileSync(path.join(FIX, "..", "..", "packages/core/schemas/converter", f), "utf8"));
+      scan(`schemas/converter/${f}`, fs.readFileSync(path.join(FIX, "..", "..", "schemas/converter", f), "utf8"));
     }
-    scan("schemas/cli/design-source-snapshot.schema.json", fs.readFileSync(path.join(FIX, "..", "..", "packages/core/schemas/cli/design-source-snapshot.schema.json"), "utf8"));
-    scan("packages/core/dist/src/core/design-source/extract.js", fs.readFileSync(path.join(FIX, "..", "..", "packages/core/dist/src/core/design-source/extract.js"), "utf8"));
-    scan("packages/core/dist/src/core/design-source/port.js", fs.readFileSync(path.join(FIX, "..", "..", "packages/core/dist/src/core/design-source/port.js"), "utf8"));
-    scan("packages/core/dist/src/core/cli/commands/extract.js", fs.readFileSync(path.join(FIX, "..", "..", "packages/core/dist/src/core/cli/commands/extract.js"), "utf8"));
+    scan("schemas/cli/design-source-snapshot.schema.json", fs.readFileSync(path.join(FIX, "..", "..", "schemas/cli/design-source-snapshot.schema.json"), "utf8"));
+    scan("dist/src/core/design-source/extract.js", fs.readFileSync(path.join(FIX, "..", "..", "dist/src/core/design-source/extract.js"), "utf8"));
+    scan("dist/src/core/design-source/port.js", fs.readFileSync(path.join(FIX, "..", "..", "dist/src/core/design-source/port.js"), "utf8"));
+    scan("dist/src/core/cli/commands/extract.js", fs.readFileSync(path.join(FIX, "..", "..", "dist/src/core/cli/commands/extract.js"), "utf8"));
     for (const f of fs.readdirSync(G2)) if (f.endsWith(".json")) scan(`tests/fixtures/g2-design-source/${f}`, fs.readFileSync(path.join(G2, f), "utf8"));
-    for (const f of ["descriptor.json"]) scan(`adapters/design-source-fixture/${f}`, fs.readFileSync(path.join(FIX, "..", "..", "packages/core/adapters/design-source-fixture", f), "utf8"));
+    for (const f of ["descriptor.json"]) scan(`adapters/design-source-fixture/${f}`, fs.readFileSync(path.join(FIX, "..", "..", "adapters/design-source-fixture", f), "utf8"));
     for (const f of fs.readdirSync(path.join(FIX, "..", "..", "examples/converter")).filter((x) => x.includes("g2"))) {
       scan(`examples/converter/${f}`, fs.readFileSync(path.join(FIX, "..", "..", "examples/converter", f), "utf8"));
     }
@@ -687,7 +687,7 @@ export default async function registerG2Suite(checkAsync) {
         else scan(`${rel}/${f}`, fs.readFileSync(p, "utf8"), banned);
       }
     };
-    walkDir(path.join(CORE, "adapters/design-source-figma-live"), "packages/core/adapters/design-source-figma-live", adapterBanned);
+    walkDir(path.join(CORE, "adapters/design-source-figma-live"), "adapters/design-source-figma-live", adapterBanned);
     walkDir(path.join(LIVE, ""), "tests/fixtures/g2-figma-live", adapterBanned);
     // Derived live evidence + receipt (when present): token-shaped secrets and absolute paths are
     // never committed; the source/revision provenance pins required by the issue are allowed.
