@@ -21,7 +21,21 @@ Status: **complete, awaiting Coordinator review — NOT merged (per protected ru
 
 ## Gates
 
-All gates re-run at the exact head SHA (recorded below) — see the final-gate section of this receipt's commit. Baselines held: `pnpm test` (195), `pnpm run test:studio` (558; one pre-existing flake observed once in an earlier baseline run, green on rerun), typecheck, lint, build, touched-file Prettier, foreign-cwd det CLI, generated `php -l`, installer dry-run + create/update/verify/cleanup.
+All gates re-run at the exact final head **`a212418`**:
+
+| Gate | Result |
+| --- | --- |
+| `pnpm install --frozen-lockfile` | PASS (lockfile up to date) |
+| `pnpm test` | **201/201 checks passed** (baseline 195 + #72 suites) |
+| `pnpm run test:studio` | **610/610 tests, 58 files** (baseline 558 + #72 additions) |
+| `pnpm run typecheck` | exit 0 |
+| `pnpm run lint` | exit 0 |
+| `pnpm run build` | exit 0 (core + app) |
+| touched-file Prettier | all matched files pass (PHP proof script out of Prettier scope, no PHP parser) |
+| foreign-cwd det CLI build (cwd=/tmp) | exit 0, generated installer `php -l` clean, master content byte-identical to the DB-created row (sha `3a8bb580…`) |
+| generated installer `--dry-run` | PASS (store-5 plan, sha matches) |
+| installer create/update/verify/cleanup | recorded in the round-trip receipt above |
+
 
 ## Honest limitations
 
