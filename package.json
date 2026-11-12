@@ -1,55 +1,58 @@
 {
-  "name": "design-engineering-toolkit",
-  "version": "0.1.0",
-  "private": true,
-  "type": "module",
-  "description": "Modular monolith CLI engine (det): deterministic profile validation, read-only capability inspection and structural mapping, per resources/schemas/converter + resources/schemas/cli contracts. Tech ADR-1: TypeScript on Node; core is platform-neutral, adapters are out-of-process. [63] ONE Node.js/Next.js application rooted at the repository root: ONE package.json + ONE lockfile, the Next.js App Router (app/) is the Studio UI module's routing layer, and the engine (src/core), the feature modules (src/modules — figma, magento, knowledge, studio with module-owned adapters) are internal modules of the same project — no npm workspaces, no apps/, no packages/.",
-  "packageManager": "pnpm@12.18.0",
-  "scripts": {
-    "build": "pnpm run build:core && pnpm run build:app",
-    "build:core": "tsc -p tsconfig.core.json",
-    "build:app": "next build",
-    "app:dev": "next dev",
-    "app:start": "next start",
-    "test": "pnpm run build:core && node scripts/run-contract-tests.mjs",
-    "test:studio": "vitest run",
-    "typecheck": "tsc --noEmit",
-    "lint": "eslint app src/modules/studio next.config.ts vitest.config.ts vitest.setup.ts eslint.config.mjs",
-    "setup": "node scripts/setup.mjs",
-    "dev": "node scripts/studio.mjs dev",
-    "start": "node scripts/studio.mjs start",
-    "studio:build": "node scripts/studio.mjs build",
-    "clean": "rm -rf dist .next tsconfig.tsbuildinfo .eslintcache coverage"
-  },
-  "bin": {
-    "det": "bin/det.js"
-  },
-  "engines": {
-    "node": ">=22.13.0"
-  },
-  "dependencies": {
-    "@ant-design/icons": "6.3.4",
-    "@ant-design/nextjs-registry": "1.3.0",
-    "ajv": "^8.20.0",
-    "antd": "6.7.0",
-    "next": "16.4.5",
-    "react": "19.3.0",
-    "react-dom": "19.3.0",
-    "zod": "^4.6.7"
-  },
-  "devDependencies": {
-    "@testing-library/jest-dom": "^7.0.1",
-    "@testing-library/react": "^16.3.3",
-    "@testing-library/user-event": "^14.6.8",
-    "@types/node": "^26.6.6",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "@vitejs/plugin-react-swc": "^4.3.3",
-    "eslint": "^9",
-    "eslint-config-next": "16.4.5",
-    "jsdom": "^31.0.0",
-    "server-only": "^0.0.1",
-    "typescript": "^5.7.0",
-    "vitest": "^5.1.0"
-  }
+   "name": "design-engineering-toolkit",
+   "version": "0.1.0",
+   "private": true,
+   "type": "module",
+   "description": "Modular monolith CLI engine (det): deterministic profile validation, read-only capability inspection and structural mapping, per resources/schemas/converter + resources/schemas/cli contracts. Tech ADR-1: TypeScript on Node; core is platform-neutral, adapters are out-of-process. [63] ONE Node.js/Next.js application rooted at the repository root: ONE package.json + ONE lockfile, the Next.js App Router (app/) is the Studio UI module's routing layer, and the engine (src/core), the feature modules (src/modules — figma, magento, knowledge, studio with module-owned adapters) are internal modules of the same project — no npm workspaces, no apps/, no packages/.",
+   "packageManager": "pnpm@12.18.0",
+   "scripts": {
+      "build": "pnpm run build:core && pnpm run build:app",
+      "build:core": "tsc -p tsconfig.core.json",
+      "build:app": "next build",
+      "app:dev": "next dev",
+      "app:start": "next start",
+      "test": "pnpm run build:core && node scripts/run-contract-tests.mjs",
+      "test:studio": "vitest run",
+      "typecheck": "tsc --noEmit",
+      "lint": "eslint app src/modules/studio next.config.ts vitest.config.ts vitest.setup.ts eslint.config.mjs",
+      "format": "prettier --write .",
+      "format:check": "prettier --check .",
+      "setup": "node scripts/setup.mjs",
+      "dev": "node scripts/studio.mjs dev",
+      "start": "node scripts/studio.mjs start",
+      "studio:build": "node scripts/studio.mjs build",
+      "clean": "rm -rf dist .next tsconfig.tsbuildinfo .eslintcache coverage"
+   },
+   "bin": {
+      "det": "bin/det.js"
+   },
+   "engines": {
+      "node": ">=22.13.0"
+   },
+   "dependencies": {
+      "@ant-design/icons": "6.3.4",
+      "@ant-design/nextjs-registry": "1.3.0",
+      "ajv": "^8.20.0",
+      "antd": "6.7.0",
+      "next": "16.4.5",
+      "react": "19.3.0",
+      "react-dom": "19.3.0",
+      "zod": "^4.6.7"
+   },
+   "devDependencies": {
+      "@testing-library/jest-dom": "^7.0.1",
+      "@testing-library/react": "^16.3.3",
+      "@testing-library/user-event": "^14.6.8",
+      "@types/node": "^26.6.6",
+      "@types/react": "^19",
+      "@types/react-dom": "^19",
+      "@vitejs/plugin-react-swc": "^4.3.3",
+      "eslint": "^9",
+      "eslint-config-next": "16.4.5",
+      "jsdom": "^31.0.0",
+      "prettier": "^3.9.10",
+      "server-only": "^0.0.1",
+      "typescript": "^5.7.0",
+      "vitest": "^5.1.0"
+   }
 }

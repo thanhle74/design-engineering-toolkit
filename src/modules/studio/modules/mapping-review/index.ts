@@ -13,10 +13,10 @@ export { MappingReviewTable } from "./components/mapping-review-table";
 export { DiagnosticsPanel } from "./components/diagnostics-panel";
 export { ProvenanceFooter } from "./components/provenance-footer";
 export {
-  ComposeDispositionBadge,
-  ReviewDispositionBadge,
-  KindBadge,
-  SeverityBadge,
-  OriginBadge,
-  RunModeBadge,
+   ComposeDispositionBadge,
+   ReviewDispositionBadge,
+   KindBadge,
+   SeverityBadge,
+   OriginBadge,
+   RunModeBadge,
 } from "./components/disposition-badges";

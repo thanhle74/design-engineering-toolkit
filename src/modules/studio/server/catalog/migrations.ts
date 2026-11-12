@@ -19,9 +19,9 @@ import { DetRunReaderError } from "@/src/modules/studio/shared/contracts";
 import type { CatalogDatabase } from "./sqlite-driver";
 
 export interface CatalogMigration {
-  readonly number: number;
-  readonly name: string;
-  readonly statements: readonly string[];
+   readonly number: number;
+   readonly name: string;
+   readonly statements: readonly string[];
 }
 
 /**
@@ -36,28 +36,28 @@ export interface CatalogMigration {
  * scoping stays enforced by the FK for every project-linked row.
  */
 const MIGRATION_1_INITIAL: CatalogMigration = {
-  number: 1,
-  name: "catalogue-initial-projects-runs-artifacts",
-  statements: [
-    `CREATE TABLE catalog_meta (
+   number: 1,
+   name: "catalogue-initial-projects-runs-artifacts",
+   statements: [
+      `CREATE TABLE catalog_meta (
   key TEXT PRIMARY KEY,
   value TEXT NOT NULL
 )`,
-    `CREATE TABLE projects (
+      `CREATE TABLE projects (
   id TEXT PRIMARY KEY,
   platform_id TEXT NOT NULL,
   config_hash TEXT NOT NULL,
   first_seen_at TEXT NOT NULL,
   updated_at TEXT NOT NULL
 )`,
-    `CREATE TABLE project_configs (
+      `CREATE TABLE project_configs (
   project_id TEXT NOT NULL REFERENCES projects(id) ON DELETE RESTRICT,
   config_hash TEXT NOT NULL,
   first_seen_at TEXT NOT NULL,
   last_seen_at TEXT NOT NULL,
   PRIMARY KEY (project_id, config_hash)
 )`,
-    `CREATE TABLE runs (
+      `CREATE TABLE runs (
   id TEXT PRIMARY KEY,
   project_id TEXT REFERENCES projects(id) ON DELETE RESTRICT,
   status TEXT NOT NULL CHECK (status IN ('RUNNING','SUCCEEDED','PARTIAL','FAILED','INTERRUPTED')),
@@ -79,9 +79,9 @@ const MIGRATION_1_INITIAL: CatalogMigration = {
   indexed_at TEXT NOT NULL,
   artifact_count INTEGER NOT NULL DEFAULT 0
 )`,
-    `CREATE INDEX idx_runs_project ON runs(project_id, id)`,
-    `CREATE INDEX idx_runs_fingerprint ON runs(input_fingerprint)`,
-    `CREATE TABLE artifacts (
+      `CREATE INDEX idx_runs_project ON runs(project_id, id)`,
+      `CREATE INDEX idx_runs_fingerprint ON runs(input_fingerprint)`,
+      `CREATE TABLE artifacts (
   run_id TEXT NOT NULL REFERENCES runs(id) ON DELETE RESTRICT,
   path TEXT NOT NULL,
   role TEXT NOT NULL,
@@ -90,22 +90,24 @@ const MIGRATION_1_INITIAL: CatalogMigration = {
   verified_at TEXT,
   PRIMARY KEY (run_id, path)
 )`,
-    `CREATE INDEX idx_artifacts_sha256 ON artifacts(sha256)`,
-  ],
+      `CREATE INDEX idx_artifacts_sha256 ON artifacts(sha256)`,
+   ],
 };
 
 /** Ordered migration list — append-only; never edit an applied migration. */
-export const CATALOG_MIGRATIONS: readonly CatalogMigration[] = [MIGRATION_1_INITIAL];
+export const CATALOG_MIGRATIONS: readonly CatalogMigration[] = [
+   MIGRATION_1_INITIAL,
+];
 
 export interface MigrationResult {
-  /** Migration numbers applied by THIS call (empty when already current). */
-  applied: number[];
-  /** The now-current schema version (highest applied number; 0 for a fresh DB that applied nothing). */
-  version: number;
+   /** Migration numbers applied by THIS call (empty when already current). */
+   applied: number[];
+   /** The now-current schema version (highest applied number; 0 for a fresh DB that applied nothing). */
+   version: number;
 }
 
 function ensureMigrationsTable(db: CatalogDatabase): void {
-  db.exec(`CREATE TABLE IF NOT EXISTS catalog_migrations (
+   db.exec(`CREATE TABLE IF NOT EXISTS catalog_migrations (
   number INTEGER PRIMARY KEY,
   name TEXT NOT NULL,
   applied_at TEXT NOT NULL
@@ -113,8 +115,10 @@ function ensureMigrationsTable(db: CatalogDatabase): void {
 }
 
 function appliedNumbers(db: CatalogDatabase): Set<number> {
-  const rows = db.prepare("SELECT number FROM catalog_migrations").all() as Array<{ number: number }>;
-  return new Set(rows.map((row) => Number(row.number)));
+   const rows = db
+      .prepare("SELECT number FROM catalog_migrations")
+      .all() as Array<{ number: number }>;
+   return new Set(rows.map((row) => Number(row.number)));
 }
 
 /**
@@ -123,40 +127,44 @@ function appliedNumbers(db: CatalogDatabase): Set<number> {
  * refuses the catalogue — a half-migrated DB is never operated on).
  */
 export function migrateCatalogDatabase(
-  db: CatalogDatabase,
-  migrations: readonly CatalogMigration[] = CATALOG_MIGRATIONS
+   db: CatalogDatabase,
+   migrations: readonly CatalogMigration[] = CATALOG_MIGRATIONS,
 ): MigrationResult {
-  ensureMigrationsTable(db);
-  const applied = appliedNumbers(db);
+   ensureMigrationsTable(db);
+   const applied = appliedNumbers(db);
 
-  const done: number[] = [];
-  for (const migration of migrations) {
-    if (applied.has(migration.number)) continue;
-    try {
-      db.exec("BEGIN IMMEDIATE");
-      for (const statement of migration.statements) db.exec(statement);
-      db.prepare("INSERT INTO catalog_migrations (number, name, applied_at) VALUES (?, ?, ?)").run(
-        migration.number,
-        migration.name,
-        new Date().toISOString()
-      );
-      db.exec("COMMIT");
-      done.push(migration.number);
-    } catch (error) {
+   const done: number[] = [];
+   for (const migration of migrations) {
+      if (applied.has(migration.number)) continue;
       try {
-        db.exec("ROLLBACK");
-      } catch {
-        /* the failed statement may have ended the transaction already */
+         db.exec("BEGIN IMMEDIATE");
+         for (const statement of migration.statements) db.exec(statement);
+         db.prepare(
+            "INSERT INTO catalog_migrations (number, name, applied_at) VALUES (?, ?, ?)",
+         ).run(migration.number, migration.name, new Date().toISOString());
+         db.exec("COMMIT");
+         done.push(migration.number);
+      } catch (error) {
+         try {
+            db.exec("ROLLBACK");
+         } catch {
+            /* the failed statement may have ended the transaction already */
+         }
+         throw new DetRunReaderError(
+            "invalid-payload",
+            `Catalog migration ${migration.number} (${migration.name}) failed; the catalogue refuses to run a partially migrated database. ${
+               error instanceof Error ? error.message.slice(0, 120) : ""
+            }`,
+         );
       }
-      throw new DetRunReaderError(
-        "invalid-payload",
-        `Catalog migration ${migration.number} (${migration.name}) failed; the catalogue refuses to run a partially migrated database. ${
-          error instanceof Error ? error.message.slice(0, 120) : ""
-        }`
-      );
-    }
-  }
+   }
 
-  const version = migrations.reduce((max, m) => (applied.has(m.number) || done.includes(m.number) ? Math.max(max, m.number) : max), 0);
-  return { applied: done, version };
+   const version = migrations.reduce(
+      (max, m) =>
+         applied.has(m.number) || done.includes(m.number)
+            ? Math.max(max, m.number)
+            : max,
+      0,
+   );
+   return { applied: done, version };
 }

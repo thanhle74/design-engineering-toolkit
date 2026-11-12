@@ -9,41 +9,45 @@
 import { getDetRunReader } from "@/src/modules/studio/server/det-run-reader-factory";
 import { detRunErrorResponse } from "@/src/modules/studio/server/api-error";
 
-
 export async function GET(
-  request: Request,
-  context: { params: Promise<{ runId: string; artifactId: string }> }
+   request: Request,
+   context: { params: Promise<{ runId: string; artifactId: string }> },
 ): Promise<Response> {
-  // Reading any request header marks this route request-time (Cache
-  // Components forbids the legacy `dynamic` export; fs/env are not tracked
-  // dynamic APIs). The header value is discarded.
-  void request.headers.get("accept");
+   // Reading any request header marks this route request-time (Cache
+   // Components forbids the legacy `dynamic` export; fs/env are not tracked
+   // dynamic APIs). The header value is discarded.
+   void request.headers.get("accept");
 
-  try {
-    const { runId, artifactId } = await context.params;
+   try {
+      const { runId, artifactId } = await context.params;
 
-    let decodedArtifactId: string;
-    try {
-      decodedArtifactId = decodeURIComponent(artifactId);
-    } catch {
-      return Response.json(
-        { error: { code: "bad-request", message: "artifactId is not a valid encoded URI component." } },
-        { status: 400 }
-      );
-    }
+      let decodedArtifactId: string;
+      try {
+         decodedArtifactId = decodeURIComponent(artifactId);
+      } catch {
+         return Response.json(
+            {
+               error: {
+                  code: "bad-request",
+                  message: "artifactId is not a valid encoded URI component.",
+               },
+            },
+            { status: 400 },
+         );
+      }
 
-    const reader = await getDetRunReader();
-    const download = await reader.readArtifact(runId, decodedArtifactId);
+      const reader = await getDetRunReader();
+      const download = await reader.readArtifact(runId, decodedArtifactId);
 
-    return new Response(new Uint8Array(download.bytes), {
-      status: 200,
-      headers: {
-        "Content-Type": download.contentType,
-        "Content-Disposition": `attachment; filename="${download.fileName}"`,
-        "Cache-Control": "no-store",
-      },
-    });
-  } catch (error) {
-    return detRunErrorResponse(error);
-  }
+      return new Response(new Uint8Array(download.bytes), {
+         status: 200,
+         headers: {
+            "Content-Type": download.contentType,
+            "Content-Disposition": `attachment; filename="${download.fileName}"`,
+            "Cache-Control": "no-store",
+         },
+      });
+   } catch (error) {
+      return detRunErrorResponse(error);
+   }
 }

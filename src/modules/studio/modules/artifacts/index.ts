@@ -6,8 +6,8 @@
  * page-supplied `onDownload` callback and performs no data access of its own.
  */
 export {
-  ArtifactManifest,
-  isUnsafeArtifactFile,
-  type ArtifactDownloadHandler,
-  type ArtifactManifestProps,
+   ArtifactManifest,
+   isUnsafeArtifactFile,
+   type ArtifactDownloadHandler,
+   type ArtifactManifestProps,
 } from "./artifact-manifest";

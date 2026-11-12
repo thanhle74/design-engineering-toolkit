@@ -10,22 +10,24 @@
 import type { ConversionOutputTarget, StudioProfileOption } from "./types";
 
 export interface ConversionOutputTargetOption {
-  value: ConversionOutputTarget;
-  label: string;
+   value: ConversionOutputTarget;
+   label: string;
 }
 
 export const OUTPUT_TARGET_OPTIONS: readonly ConversionOutputTargetOption[] = [
-  { value: "native-page-builder", label: "Native Page Builder" },
-  { value: "hyva-phtml", label: "Hyvä PHTML (frontend-only)" },
-  { value: "auto", label: "Tự động" },
+   { value: "native-page-builder", label: "Native Page Builder" },
+   { value: "hyva-phtml", label: "Hyvä PHTML (frontend-only)" },
+   { value: "auto", label: "Tự động" },
 ];
 
-export const DEFAULT_OUTPUT_TARGET: ConversionOutputTarget = "native-page-builder";
+export const DEFAULT_OUTPUT_TARGET: ConversionOutputTarget =
+   "native-page-builder";
 
 /** Label lookup for summaries — keeps rendered copy consistent with the selector. */
-export const TARGET_LABELS: Record<ConversionOutputTarget, string> = Object.fromEntries(
-  OUTPUT_TARGET_OPTIONS.map((option) => [option.value, option.label])
-) as Record<ConversionOutputTarget, string>;
+export const TARGET_LABELS: Record<ConversionOutputTarget, string> =
+   Object.fromEntries(
+      OUTPUT_TARGET_OPTIONS.map((option) => [option.value, option.label]),
+   ) as Record<ConversionOutputTarget, string>;
 
 /**
  * Module-local demo profiles. Ids are `demo-` prefixed and names carry an
@@ -33,6 +35,10 @@ export const TARGET_LABELS: Record<ConversionOutputTarget, string> = Object.from
  * configuration. Used by tests; the integrator may wire them for the demo page.
  */
 export const DEMO_PROFILES: readonly StudioProfileOption[] = [
-  { id: "demo-fashion-storefront", name: "DEMO — Cửa hàng thời trang", demo: true },
-  { id: "demo-content-site", name: "DEMO — Trang nội dung", demo: true },
+   {
+      id: "demo-fashion-storefront",
+      name: "DEMO — Cửa hàng thời trang",
+      demo: true,
+   },
+   { id: "demo-content-site", name: "DEMO — Trang nội dung", demo: true },
 ];

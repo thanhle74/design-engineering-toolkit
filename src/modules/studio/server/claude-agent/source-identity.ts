@@ -27,23 +27,23 @@ import { AgentWorkflowError } from "./agent-errors";
 export const SOURCE_IDENTITY_FILE = "source-identity.json";
 
 export interface SourceIdentity {
-  schemaVersion: 1;
-  /** Verified Figma file key the base project was extracted from. */
-  figmaFileKey: string;
-  /** Verified root node id in that file (normalized `n:m`). */
-  figmaRootNodeId: string;
-  /** Provider revision the snapshot was pinned to (if recorded). */
-  providerRevisionId: string | null;
-  /** Where the verification comes from (human-auditable provenance note). */
-  provenance: string;
+   schemaVersion: 1;
+   /** Verified Figma file key the base project was extracted from. */
+   figmaFileKey: string;
+   /** Verified root node id in that file (normalized `n:m`). */
+   figmaRootNodeId: string;
+   /** Provider revision the snapshot was pinned to (if recorded). */
+   providerRevisionId: string | null;
+   /** Where the verification comes from (human-auditable provenance note). */
+   provenance: string;
 }
 
 interface RawSourceIdentity {
-  schemaVersion?: unknown;
-  figmaFileKey?: unknown;
-  figmaRootNodeId?: unknown;
-  providerRevisionId?: unknown;
-  provenance?: unknown;
+   schemaVersion?: unknown;
+   figmaFileKey?: unknown;
+   figmaRootNodeId?: unknown;
+   providerRevisionId?: unknown;
+   provenance?: unknown;
 }
 
 const FILE_KEY_PATTERN = /^[A-Za-z0-9]+$/;
@@ -54,40 +54,46 @@ const NODE_ID_PATTERN = /^(\d+):(\d+)$/;
  * the file is absent (a base project with no verified Figma binding — the
  * agent workflow must refuse it rather than guess).
  */
-export async function readSourceIdentity(baseConfigPath: string): Promise<SourceIdentity | null> {
-  let raw: string;
-  try {
-    raw = await readFile(path.join(path.dirname(baseConfigPath), SOURCE_IDENTITY_FILE), "utf8");
-  } catch {
-    return null;
-  }
-  let parsed: RawSourceIdentity;
-  try {
-    parsed = JSON.parse(raw) as RawSourceIdentity;
-  } catch {
-    return null;
-  }
-  if (
-    parsed.schemaVersion !== 1 ||
-    typeof parsed.figmaFileKey !== "string" ||
-    !FILE_KEY_PATTERN.test(parsed.figmaFileKey) ||
-    typeof parsed.figmaRootNodeId !== "string" ||
-    !NODE_ID_PATTERN.test(parsed.figmaRootNodeId) ||
-    typeof parsed.provenance !== "string" ||
-    parsed.provenance.trim() === ""
-  ) {
-    return null;
-  }
-  return {
-    schemaVersion: 1,
-    figmaFileKey: parsed.figmaFileKey,
-    figmaRootNodeId: parsed.figmaRootNodeId,
-    providerRevisionId:
-      typeof parsed.providerRevisionId === "string" && parsed.providerRevisionId.trim() !== ""
-        ? parsed.providerRevisionId
-        : null,
-    provenance: parsed.provenance,
-  };
+export async function readSourceIdentity(
+   baseConfigPath: string,
+): Promise<SourceIdentity | null> {
+   let raw: string;
+   try {
+      raw = await readFile(
+         path.join(path.dirname(baseConfigPath), SOURCE_IDENTITY_FILE),
+         "utf8",
+      );
+   } catch {
+      return null;
+   }
+   let parsed: RawSourceIdentity;
+   try {
+      parsed = JSON.parse(raw) as RawSourceIdentity;
+   } catch {
+      return null;
+   }
+   if (
+      parsed.schemaVersion !== 1 ||
+      typeof parsed.figmaFileKey !== "string" ||
+      !FILE_KEY_PATTERN.test(parsed.figmaFileKey) ||
+      typeof parsed.figmaRootNodeId !== "string" ||
+      !NODE_ID_PATTERN.test(parsed.figmaRootNodeId) ||
+      typeof parsed.provenance !== "string" ||
+      parsed.provenance.trim() === ""
+   ) {
+      return null;
+   }
+   return {
+      schemaVersion: 1,
+      figmaFileKey: parsed.figmaFileKey,
+      figmaRootNodeId: parsed.figmaRootNodeId,
+      providerRevisionId:
+         typeof parsed.providerRevisionId === "string" &&
+         parsed.providerRevisionId.trim() !== ""
+            ? parsed.providerRevisionId
+            : null,
+      provenance: parsed.provenance,
+   };
 }
 
 /**
@@ -97,24 +103,27 @@ export async function readSourceIdentity(baseConfigPath: string): Promise<Source
  * verbatim. A base without a binding fails closed as well.
  */
 export async function assertRequestMatchesSourceIdentity(
-  request: { fileKey: string; nodeId: string },
-  baseConfigPath: string,
-  baseConfigId: string
+   request: { fileKey: string; nodeId: string },
+   baseConfigPath: string,
+   baseConfigId: string,
 ): Promise<SourceIdentity> {
-  const identity = await readSourceIdentity(baseConfigPath);
-  if (identity === null) {
-    throw new AgentWorkflowError(
-      "base-source-mismatch",
-      `Cấu hình cơ sở "${baseConfigId}" chưa gắn nguồn Figma đã xác minh (thiếu ${SOURCE_IDENTITY_FILE}); workflow AI bị chặn — không phán đoán nguồn.`
-    );
-  }
-  if (request.fileKey !== identity.figmaFileKey || request.nodeId !== identity.figmaRootNodeId) {
-    throw new AgentWorkflowError(
-      "base-source-mismatch",
-      `Nguồn Figma (${request.fileKey}, node ${request.nodeId}) không khớp với cấu hình cơ sở ` +
-        `"${baseConfigId}" (file ${identity.figmaFileKey}, root ${identity.figmaRootNodeId}). ` +
-        `Phân tích và duyệt chỉ chạy trên đúng nguồn đã pin của cấu hình này.`
-    );
-  }
-  return identity;
+   const identity = await readSourceIdentity(baseConfigPath);
+   if (identity === null) {
+      throw new AgentWorkflowError(
+         "base-source-mismatch",
+         `Cấu hình cơ sở "${baseConfigId}" chưa gắn nguồn Figma đã xác minh (thiếu ${SOURCE_IDENTITY_FILE}); workflow AI bị chặn — không phán đoán nguồn.`,
+      );
+   }
+   if (
+      request.fileKey !== identity.figmaFileKey ||
+      request.nodeId !== identity.figmaRootNodeId
+   ) {
+      throw new AgentWorkflowError(
+         "base-source-mismatch",
+         `Nguồn Figma (${request.fileKey}, node ${request.nodeId}) không khớp với cấu hình cơ sở ` +
+            `"${baseConfigId}" (file ${identity.figmaFileKey}, root ${identity.figmaRootNodeId}). ` +
+            `Phân tích và duyệt chỉ chạy trên đúng nguồn đã pin của cấu hình này.`,
+      );
+   }
+   return identity;
 }

@@ -15,16 +15,16 @@ import { detectClaudeAgentStatus } from "@/src/modules/studio/server/claude-agen
 import { agentErrorResponse } from "@/src/modules/studio/server/claude-agent/agent-errors";
 
 export async function GET(request: Request): Promise<Response> {
-  // Request-time marker (Cache Components): fs/env are not tracked dynamic APIs.
-  void request.headers.get("accept");
+   // Request-time marker (Cache Components): fs/env are not tracked dynamic APIs.
+   void request.headers.get("accept");
 
-  try {
-    const status = await detectClaudeAgentStatus();
-    return Response.json({
-      status,
-      runsConfigured: process.env.STUDIO_DET_RUNS_DIR !== undefined,
-    });
-  } catch (error) {
-    return agentErrorResponse(error);
-  }
+   try {
+      const status = await detectClaudeAgentStatus();
+      return Response.json({
+         status,
+         runsConfigured: process.env.STUDIO_DET_RUNS_DIR !== undefined,
+      });
+   } catch (error) {
+      return agentErrorResponse(error);
+   }
 }

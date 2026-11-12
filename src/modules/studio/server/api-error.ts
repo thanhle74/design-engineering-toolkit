@@ -14,30 +14,40 @@ import { DetRunReaderError } from "@/src/modules/studio/shared/contracts";
 import { BuildBusyError } from "./build-runner";
 
 const STATUS_BY_CODE: Record<DetRunReaderError["code"], number> = {
-  "not-configured": 503,
-  "run-not-found": 404,
-  "artifact-not-found": 404,
-  "artifact-not-downloadable": 403,
-  "path-refused": 400,
-  "invalid-payload": 500,
+   "not-configured": 503,
+   "run-not-found": 404,
+   "artifact-not-found": 404,
+   "artifact-not-downloadable": 403,
+   "path-refused": 400,
+   "invalid-payload": 500,
 };
 
 /** Control characters never reach a response body. */
 function sanitizeMessage(message: string): string {
-  return message.replace(/[\u0000-\u001f\u007f]/g, " ").trim();
+   return message.replace(/[\u0000-\u001f\u007f]/g, " ").trim();
 }
 
 export function detRunErrorResponse(error: unknown): Response {
-  if (error instanceof DetRunReaderError) {
-    return Response.json(
-      { error: { code: error.code, message: sanitizeMessage(error.message) } },
-      { status: STATUS_BY_CODE[error.code] }
-    );
-  }
-  return Response.json(
-    { error: { code: "internal-error", message: "Unexpected server error while reading DET run data." } },
-    { status: 500 }
-  );
+   if (error instanceof DetRunReaderError) {
+      return Response.json(
+         {
+            error: {
+               code: error.code,
+               message: sanitizeMessage(error.message),
+            },
+         },
+         { status: STATUS_BY_CODE[error.code] },
+      );
+   }
+   return Response.json(
+      {
+         error: {
+            code: "internal-error",
+            message: "Unexpected server error while reading DET run data.",
+         },
+      },
+      { status: 500 },
+   );
 }
 
 /**
@@ -47,17 +57,17 @@ export function detRunErrorResponse(error: unknown): Response {
  * Job tails are already capped at capture time; no extra fields are added.
  */
 export function buildControlErrorResponse(error: unknown): Response {
-  if (error instanceof BuildBusyError) {
-    return Response.json(
-      {
-        error: {
-          code: "build-busy",
-          message: sanitizeMessage(error.message),
-        },
-        active: error.active,
-      },
-      { status: 409 }
-    );
-  }
-  return detRunErrorResponse(error);
+   if (error instanceof BuildBusyError) {
+      return Response.json(
+         {
+            error: {
+               code: "build-busy",
+               message: sanitizeMessage(error.message),
+            },
+            active: error.active,
+         },
+         { status: 409 },
+      );
+   }
+   return detRunErrorResponse(error);
 }

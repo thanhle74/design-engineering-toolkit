@@ -8,7 +8,8 @@
  */
 
 /** Where the operator wants the conversion to land. Labels live in `conversion-options.ts`. */
-export type ConversionOutputTarget = "native-page-builder" | "hyva-phtml" | "auto";
+export type ConversionOutputTarget =
+   "native-page-builder" | "hyva-phtml" | "auto";
 
 /**
  * A project profile option handed to the form by the host page (integrator).
@@ -16,9 +17,9 @@ export type ConversionOutputTarget = "native-page-builder" | "hyva-phtml" | "aut
  * `demo: true` (and a `demo-` id prefix) so they can never read as real config.
  */
 export interface StudioProfileOption {
-  id: string;
-  name: string;
-  demo?: boolean;
+   id: string;
+   name: string;
+   demo?: boolean;
 }
 
 /** How the Figma source was supplied: a full design-file URL or a bare node id. */
@@ -30,10 +31,10 @@ export type FigmaInputKind = "url" | "bare";
  * it is never invented.
  */
 export interface ConversionRequestSummary {
-  fileKey: string | null;
-  nodeId: string;
-  inputKind: FigmaInputKind;
-  target: ConversionOutputTarget;
-  profileId: string | null;
-  profileName: string | null;
+   fileKey: string | null;
+   nodeId: string;
+   inputKind: FigmaInputKind;
+   target: ConversionOutputTarget;
+   profileId: string | null;
+   profileName: string | null;
 }

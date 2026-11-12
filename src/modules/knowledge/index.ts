@@ -6,5 +6,11 @@ export { runSync } from "./sync.js";
 export { runQuery, type KbQueryKb, type KbQuerySpec } from "./query.js";
 export { runValidate } from "./validate.js";
 export { runExtract } from "./extract.js";
-export { readDescriptor, readStore, serializeDescriptor, projectFile, STORE_FILES } from "./store.js";
+export {
+   readDescriptor,
+   readStore,
+   serializeDescriptor,
+   projectFile,
+   STORE_FILES,
+} from "./store.js";
 export type { KbStoreData, StoreDescriptor } from "./types.js";

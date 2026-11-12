@@ -18,7 +18,13 @@ import { commandCompose } from "./commands/compose.js";
 import { commandBuild } from "./commands/build.js";
 
 // This module compiles to dist/src/core/cli/main.js — four levels up to the repository root.
-export const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..", "..", "..");
+export const REPO_ROOT = path.resolve(
+   path.dirname(fileURLToPath(import.meta.url)),
+   "..",
+   "..",
+   "..",
+   "..",
+);
 
 const HELP = `det — Design Engineering Toolkit CLI (deterministic, read-only core)
 
@@ -128,72 +134,94 @@ design source), and adapter probes are read-only by contract (the adapter-descri
 enforces readOnly). The KB store holds metadata and digests — never secrets, never licensed
 source bytes.`;
 
-export async function main(argv: string[], env: NodeJS.ProcessEnv = process.env, io: CommandIO = { env, out: (l) => process.stdout.write(l + "\n"), err: (l) => process.stderr.write(l + "\n") }): Promise<number> {
-  toolVersionString(); // every envelope carries the real tool version
-  const parsed = parseArgs(argv);
+export async function main(
+   argv: string[],
+   env: NodeJS.ProcessEnv = process.env,
+   io: CommandIO = {
+      env,
+      out: (l) => process.stdout.write(l + "\n"),
+      err: (l) => process.stderr.write(l + "\n"),
+   },
+): Promise<number> {
+   toolVersionString(); // every envelope carries the real tool version
+   const parsed = parseArgs(argv);
 
-  if (parsed.flags["version"] === true) {
-    io.out(toolVersionString());
-    return 0;
-  }
-  if (parsed.flags["help"] === true || argv.length === 0) {
-    io.out(HELP);
-    return parsed.flags["help"] === true ? 0 : argv.length === 0 && parsed.command === null ? 2 : 0;
-  }
+   if (parsed.flags["version"] === true) {
+      io.out(toolVersionString());
+      return 0;
+   }
+   if (parsed.flags["help"] === true || argv.length === 0) {
+      io.out(HELP);
+      return parsed.flags["help"] === true
+         ? 0
+         : argv.length === 0 && parsed.command === null
+           ? 2
+           : 0;
+   }
 
-  if (parsed.errors.length > 0) {
-    for (const e of parsed.errors) io.err(`det: ${e}`);
-    io.err("Run 'det --help' for usage.");
-    return 2;
-  }
-  if (parsed.command === null) {
-    io.err("det: no command given (expected validate|inspect|plan|extract|kb|compose|build). Run 'det --help' for usage.");
-    return 2;
-  }
-  const unexpectedFlags = unexpectedFlagsForCommand(parsed.command, parsed.flags);
-  if (unexpectedFlags.length > 0) {
-    for (const name of unexpectedFlags) io.err(`det: flag --${name} does not belong to command '${parsed.command}'`);
-    io.err("Run 'det --help' for usage.");
-    return 2;
-  }
-
-  try {
-    // Fail loudly if the contract layer is broken rather than emitting unvalidated output.
-    assertSchemasLoad();
-  } catch (e) {
-    io.err(`det: contract layer failed to load: ${(e as Error).message}`);
-    return 2;
-  }
-
-  const flags = parsed.flags;
-  switch (parsed.command) {
-    case "validate":
-      return commandValidate(flags, io);
-    case "inspect":
-      return commandInspect(flags, io);
-    case "plan":
-      return commandPlan(flags, io);
-    case "extract":
-      // Parser rejects repeatable KB-only flags for extract; this runtime cast is safe.
-      return commandExtract(flags as Record<string, string | boolean>, io);
-    case "kb":
-      return commandKb(flags, io);
-    case "compose":
-      return commandCompose(flags as Record<string, string | boolean>, io);
-    case "build":
-      return commandBuild(flags as Record<string, string | boolean>, io);
-    default:
-      io.err(`det: unknown command '${parsed.command}'`);
+   if (parsed.errors.length > 0) {
+      for (const e of parsed.errors) io.err(`det: ${e}`);
+      io.err("Run 'det --help' for usage.");
       return 2;
-  }
+   }
+   if (parsed.command === null) {
+      io.err(
+         "det: no command given (expected validate|inspect|plan|extract|kb|compose|build). Run 'det --help' for usage.",
+      );
+      return 2;
+   }
+   const unexpectedFlags = unexpectedFlagsForCommand(
+      parsed.command,
+      parsed.flags,
+   );
+   if (unexpectedFlags.length > 0) {
+      for (const name of unexpectedFlags)
+         io.err(
+            `det: flag --${name} does not belong to command '${parsed.command}'`,
+         );
+      io.err("Run 'det --help' for usage.");
+      return 2;
+   }
+
+   try {
+      // Fail loudly if the contract layer is broken rather than emitting unvalidated output.
+      assertSchemasLoad();
+   } catch (e) {
+      io.err(`det: contract layer failed to load: ${(e as Error).message}`);
+      return 2;
+   }
+
+   const flags = parsed.flags;
+   switch (parsed.command) {
+      case "validate":
+         return commandValidate(flags, io);
+      case "inspect":
+         return commandInspect(flags, io);
+      case "plan":
+         return commandPlan(flags, io);
+      case "extract":
+         // Parser rejects repeatable KB-only flags for extract; this runtime cast is safe.
+         return commandExtract(flags as Record<string, string | boolean>, io);
+      case "kb":
+         return commandKb(flags, io);
+      case "compose":
+         return commandCompose(flags as Record<string, string | boolean>, io);
+      case "build":
+         return commandBuild(flags as Record<string, string | boolean>, io);
+      default:
+         io.err(`det: unknown command '${parsed.command}'`);
+         return 2;
+   }
 }
 
 function toolVersionString(): string {
-  try {
-    const pkg = JSON.parse(fs.readFileSync(path.join(REPO_ROOT, "package.json"), "utf8")) as { version?: string };
-    if (pkg.version) setToolVersion(pkg.version);
-    return pkg.version ?? "0.0.0";
-  } catch {
-    return "0.0.0";
-  }
+   try {
+      const pkg = JSON.parse(
+         fs.readFileSync(path.join(REPO_ROOT, "package.json"), "utf8"),
+      ) as { version?: string };
+      if (pkg.version) setToolVersion(pkg.version);
+      return pkg.version ?? "0.0.0";
+   } catch {
+      return "0.0.0";
+   }
 }

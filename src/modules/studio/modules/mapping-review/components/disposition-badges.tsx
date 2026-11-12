@@ -25,87 +25,89 @@
 import { WarningOutlined } from "@ant-design/icons";
 import { Tag } from "antd";
 import type {
-  StudioComposeDisposition,
-  StudioNodeKind,
-  StudioReviewDisposition,
-  StudioSeverity,
+   StudioComposeDisposition,
+   StudioNodeKind,
+   StudioReviewDisposition,
+   StudioSeverity,
 } from "@/src/modules/studio/shared/contracts";
 
 export function ComposeDispositionBadge({
-  disposition,
+   disposition,
 }: {
-  disposition: StudioComposeDisposition;
+   disposition: StudioComposeDisposition;
 }) {
-  switch (disposition) {
-    case "mapped":
-      return <Tag color="success">{disposition}</Tag>;
-    case "gap":
-      return <Tag color="gold">{disposition}</Tag>;
-    case "decoration-merged":
-    case "excluded":
-      return <Tag>{disposition}</Tag>;
-    case "skipped":
-      return <Tag>{disposition}</Tag>;
-  }
+   switch (disposition) {
+      case "mapped":
+         return <Tag color="success">{disposition}</Tag>;
+      case "gap":
+         return <Tag color="gold">{disposition}</Tag>;
+      case "decoration-merged":
+      case "excluded":
+         return <Tag>{disposition}</Tag>;
+      case "skipped":
+         return <Tag>{disposition}</Tag>;
+   }
 }
 
 export function ReviewDispositionBadge({
-  disposition,
+   disposition,
 }: {
-  disposition: StudioReviewDisposition;
+   disposition: StudioReviewDisposition;
 }) {
-  if (disposition === "NEEDS_REVIEW") {
-    return (
-      <Tag
-        color="gold"
-        icon={<WarningOutlined aria-hidden="true" data-icon="inline-start" />}
-      >
-        {disposition}
-      </Tag>
-    );
-  }
-  return <Tag>{disposition}</Tag>;
+   if (disposition === "NEEDS_REVIEW") {
+      return (
+         <Tag
+            color="gold"
+            icon={
+               <WarningOutlined aria-hidden="true" data-icon="inline-start" />
+            }
+         >
+            {disposition}
+         </Tag>
+      );
+   }
+   return <Tag>{disposition}</Tag>;
 }
 
 export function KindBadge({ kind }: { kind?: StudioNodeKind }) {
-  if (!kind) {
-    // "không rõ" — a fact the run does not carry is shown, never invented ([61] Vietnamese).
-    return <Tag>không rõ</Tag>;
-  }
-  return <Tag>{kind}</Tag>;
+   if (!kind) {
+      // "không rõ" — a fact the run does not carry is shown, never invented ([61] Vietnamese).
+      return <Tag>không rõ</Tag>;
+   }
+   return <Tag>{kind}</Tag>;
 }
 
 export function SeverityBadge({ severity }: { severity: StudioSeverity }) {
-  switch (severity) {
-    case "info":
-      return <Tag color="blue">{severity}</Tag>;
-    case "warning":
-      return <Tag color="gold">{severity}</Tag>;
-    case "error":
-      return <Tag color="error">{severity}</Tag>;
-  }
+   switch (severity) {
+      case "info":
+         return <Tag color="blue">{severity}</Tag>;
+      case "warning":
+         return <Tag color="gold">{severity}</Tag>;
+      case "error":
+         return <Tag color="error">{severity}</Tag>;
+   }
 }
 
 export function OriginBadge({
-  origin,
+   origin,
 }: {
-  origin: "run" | "compose" | "review";
+   origin: "run" | "compose" | "review";
 }) {
-  return <Tag>{origin}</Tag>;
+   return <Tag>{origin}</Tag>;
 }
 
 /** DEMO/LIVE run-mode badge: a fixture run is always visibly labeled DEMO. */
 export function RunModeBadge({ mode }: { mode: "fixture" | "live" }) {
-  if (mode === "fixture") {
-    return (
-      <Tag color="gold" data-testid="studio-demo-badge">
-        DEMO
+   if (mode === "fixture") {
+      return (
+         <Tag color="gold" data-testid="studio-demo-badge">
+            DEMO
+         </Tag>
+      );
+   }
+   return (
+      <Tag color="success" data-testid="studio-live-badge">
+         LIVE
       </Tag>
-    );
-  }
-  return (
-    <Tag color="success" data-testid="studio-live-badge">
-      LIVE
-    </Tag>
-  );
+   );
 }

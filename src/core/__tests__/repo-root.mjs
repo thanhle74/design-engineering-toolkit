@@ -8,8 +8,9 @@ import { fileURLToPath } from "node:url";
 
 let root = path.dirname(fileURLToPath(import.meta.url));
 while (!fs.existsSync(path.join(root, "package.json"))) {
-  const parent = path.dirname(root);
-  if (parent === root) throw new Error(`checkout root not found: no package.json above ${root}`);
-  root = parent;
+   const parent = path.dirname(root);
+   if (parent === root)
+      throw new Error(`checkout root not found: no package.json above ${root}`);
+   root = parent;
 }
 export const REPO_ROOT = root;

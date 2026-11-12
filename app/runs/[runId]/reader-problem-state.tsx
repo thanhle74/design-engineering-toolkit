@@ -1,6 +1,10 @@
 "use client";
 
-import { ApiOutlined, ArrowLeftOutlined, WarningOutlined } from "@ant-design/icons";
+import {
+   ApiOutlined,
+   ArrowLeftOutlined,
+   WarningOutlined,
+} from "@ant-design/icons";
 import { Alert, Button, Flex, Typography } from "antd";
 
 /**
@@ -12,44 +16,46 @@ import { Alert, Button, Flex, Typography } from "antd";
  * reader-error → ApiOutlined). Stock antd light only — no custom CSS.
  */
 export function ReaderProblemState({
-  kind,
-  title,
-  message,
-  hint,
+   kind,
+   title,
+   message,
+   hint,
 }: {
-  kind: "run-not-found" | "reader-error";
-  title: string;
-  message: string;
-  hint: string;
+   kind: "run-not-found" | "reader-error";
+   title: string;
+   message: string;
+   hint: string;
 }) {
-  const runNotFound = kind === "run-not-found";
-  return (
-    <Flex vertical gap={16} align="flex-start">
-      <Button
-        type="text"
-        href="/"
-        icon={<ArrowLeftOutlined aria-hidden="true" />}
-      >
-        Tổng quan
-      </Button>
-      <Alert
-        type="warning"
-        showIcon
-        icon={
-          runNotFound ? (
-            <WarningOutlined aria-hidden="true" />
-          ) : (
-            <ApiOutlined aria-hidden="true" />
-          )
-        }
-        message={title}
-        description={
-          <>
-            <p>{message}</p>
-            <Typography.Paragraph type="secondary">{hint}</Typography.Paragraph>
-          </>
-        }
-      />
-    </Flex>
-  );
+   const runNotFound = kind === "run-not-found";
+   return (
+      <Flex vertical gap={16} align="flex-start">
+         <Button
+            type="text"
+            href="/"
+            icon={<ArrowLeftOutlined aria-hidden="true" />}
+         >
+            Tổng quan
+         </Button>
+         <Alert
+            type="warning"
+            showIcon
+            icon={
+               runNotFound ? (
+                  <WarningOutlined aria-hidden="true" />
+               ) : (
+                  <ApiOutlined aria-hidden="true" />
+               )
+            }
+            message={title}
+            description={
+               <>
+                  <p>{message}</p>
+                  <Typography.Paragraph type="secondary">
+                     {hint}
+                  </Typography.Paragraph>
+               </>
+            }
+         />
+      </Flex>
+   );
 }

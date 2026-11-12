@@ -48,46 +48,51 @@ const { Content } = Layout;
  */
 
 export const studioNavItems = [
-  { href: "/", label: "Tổng quan" },
-  { href: "/build", label: "Build" },
-  { href: "/agent", label: "Phân tích AI" },
-  { href: "/catalog", label: "Dự án" },
+   { href: "/", label: "Tổng quan" },
+   { href: "/build", label: "Build" },
+   { href: "/agent", label: "Phân tích AI" },
+   { href: "/catalog", label: "Dự án" },
 ] as const;
 
 export function StudioShell({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
+   const pathname = usePathname();
 
-  const navMenuItems: MenuProps["items"] = studioNavItems.map((item) => ({
-    key: item.href,
-    label: <Link href={item.href}>{item.label}</Link>,
-  }));
+   const navMenuItems: MenuProps["items"] = studioNavItems.map((item) => ({
+      key: item.href,
+      label: <Link href={item.href}>{item.label}</Link>,
+   }));
 
-  const selectedKeys = studioNavItems
-    .filter((item) => item.href === pathname)
-    .map((item) => item.href);
+   const selectedKeys = studioNavItems
+      .filter((item) => item.href === pathname)
+      .map((item) => item.href);
 
-  return (
-    <Layout style={{ minHeight: "100dvh" }}>
-      <header className="studio-content">
-        <Flex align="center" justify="space-between" gap="middle" wrap="wrap">
-          <Link href="/" aria-label="DET Studio home">
-            <Space align="center" size="small">
-              <AppstoreOutlined aria-hidden="true" />
-              <Typography.Text strong>DET Studio</Typography.Text>
-            </Space>
-          </Link>
-          <Menu
-            aria-label="Studio"
-            mode="horizontal"
-            items={navMenuItems}
-            selectedKeys={selectedKeys}
-            style={{ flex: "auto", minWidth: 0 }}
-          />
-        </Flex>
-      </header>
-      <Content>
-        <div className="studio-content">{children}</div>
-      </Content>
-    </Layout>
-  );
+   return (
+      <Layout style={{ minHeight: "100dvh" }}>
+         <header className="studio-content">
+            <Flex
+               align="center"
+               justify="space-between"
+               gap="middle"
+               wrap="wrap"
+            >
+               <Link href="/" aria-label="DET Studio home">
+                  <Space align="center" size="small">
+                     <AppstoreOutlined aria-hidden="true" />
+                     <Typography.Text strong>DET Studio</Typography.Text>
+                  </Space>
+               </Link>
+               <Menu
+                  aria-label="Studio"
+                  mode="horizontal"
+                  items={navMenuItems}
+                  selectedKeys={selectedKeys}
+                  style={{ flex: "auto", minWidth: 0 }}
+               />
+            </Flex>
+         </header>
+         <Content>
+            <div className="studio-content">{children}</div>
+         </Content>
+      </Layout>
+   );
 }

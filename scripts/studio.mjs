@@ -39,77 +39,83 @@ const RUNS_DIR_DEFAULT = path.join(ROOT, "out", "studio-runs");
 const MIN_NODE = [22, 13, 0];
 
 function fail(message) {
-  process.stderr.write(`det studio: ${message}\n`);
-  process.exit(1);
+   process.stderr.write(`det studio: ${message}\n`);
+   process.exit(1);
 }
 
 function log(message) {
-  process.stderr.write(`[det studio] ${message}\n`);
+   process.stderr.write(`[det studio] ${message}\n`);
 }
 
 function assertNodeVersion() {
-  const parts = process.versions.node.split(".").map((n) => Number(n));
-  const [maj = 0, min = 0, pat = 0] = parts;
-  const [rMaj, rMin, rPat] = MIN_NODE;
-  const tooOld =
-    maj < rMaj || (maj === rMaj && (min < rMin || (min === rMin && pat < rPat)));
-  if (tooOld) {
-    fail(
-      `Node.js >= ${MIN_NODE.join(".")} is required (found ${process.versions.node}); ` +
-        "DET Studio (Next.js 16) needs it. Install a newer Node and retry."
-    );
-  }
+   const parts = process.versions.node.split(".").map((n) => Number(n));
+   const [maj = 0, min = 0, pat = 0] = parts;
+   const [rMaj, rMin, rPat] = MIN_NODE;
+   const tooOld =
+      maj < rMaj ||
+      (maj === rMaj && (min < rMin || (min === rMin && pat < rPat)));
+   if (tooOld) {
+      fail(
+         `Node.js >= ${MIN_NODE.join(".")} is required (found ${process.versions.node}); ` +
+            "DET Studio (Next.js 16) needs it. Install a newer Node and retry.",
+      );
+   }
 }
 
 /** Newest mtime (ms) of all matching files under the given dirs, recursively. */
 function newestMtime(dirs, pattern) {
-  let newest = 0;
-  const walk = (dir) => {
-    let infos;
-    try {
-      infos = readdirSync(dir, { withFileTypes: true });
-    } catch {
-      return;
-    }
-    for (const info of infos) {
-      const full = path.join(dir, info.name);
-      if (info.isDirectory()) {
-        if (info.name === "node_modules" || info.name === ".next") continue;
-        walk(full);
-      } else if (info.isFile() && pattern.test(info.name)) {
-        newest = Math.max(newest, statSync(full).mtimeMs);
+   let newest = 0;
+   const walk = (dir) => {
+      let infos;
+      try {
+         infos = readdirSync(dir, { withFileTypes: true });
+      } catch {
+         return;
       }
-    }
-  };
-  for (const dir of dirs) walk(dir);
-  return newest;
+      for (const info of infos) {
+         const full = path.join(dir, info.name);
+         if (info.isDirectory()) {
+            if (info.name === "node_modules" || info.name === ".next") continue;
+            walk(full);
+         } else if (info.isFile() && pattern.test(info.name)) {
+            newest = Math.max(newest, statSync(full).mtimeMs);
+         }
+      }
+   };
+   for (const dir of dirs) walk(dir);
+   return newest;
 }
 
 /** dist/ is stale when any engine source .ts is newer than every dist .js. */
 function isCoreDistFresh() {
-  if (!existsSync(DET_DIST_ENTRY)) return false;
-  const srcNewest = newestMtime(
-    [path.join(ROOT, "src", "core"), path.join(ROOT, "src", "modules", "figma"), path.join(ROOT, "src", "modules", "magento"), path.join(ROOT, "src", "modules", "knowledge")],
-    /\.ts$/
-  );
-  const distNewest = newestMtime([path.join(ROOT, "dist")], /\.js$/);
-  if (srcNewest === 0) return true;
-  return distNewest >= srcNewest;
+   if (!existsSync(DET_DIST_ENTRY)) return false;
+   const srcNewest = newestMtime(
+      [
+         path.join(ROOT, "src", "core"),
+         path.join(ROOT, "src", "modules", "figma"),
+         path.join(ROOT, "src", "modules", "magento"),
+         path.join(ROOT, "src", "modules", "knowledge"),
+      ],
+      /\.ts$/,
+   );
+   const distNewest = newestMtime([path.join(ROOT, "dist")], /\.js$/);
+   if (srcNewest === 0) return true;
+   return distNewest >= srcNewest;
 }
 
 function depsInstalled() {
-  return existsSync(path.join(ROOT, "node_modules", "next", "package.json"));
+   return existsSync(path.join(ROOT, "node_modules", "next", "package.json"));
 }
 
 function pnpmRun(args, label) {
-  log(`${label} (pnpm ${args.join(" ")} at the repository root) …`);
-  const result = spawnSync("pnpm", args, { cwd: ROOT, stdio: "inherit" });
-  if (result.error !== undefined) {
-    fail(`${label} could not start pnpm: ${result.error.message}`);
-  }
-  if (result.status !== 0) {
-    fail(`${label} failed with exit code ${result.status ?? "signal"}.`);
-  }
+   log(`${label} (pnpm ${args.join(" ")} at the repository root) …`);
+   const result = spawnSync("pnpm", args, { cwd: ROOT, stdio: "inherit" });
+   if (result.error !== undefined) {
+      fail(`${label} could not start pnpm: ${result.error.message}`);
+   }
+   if (result.status !== 0) {
+      fail(`${label} failed with exit code ${result.status ?? "signal"}.`);
+   }
 }
 
 /**
@@ -120,79 +126,100 @@ function pnpmRun(args, label) {
  * discovers the committed resources/examples/build catalogue in place ([58]).
  */
 function resolveEnv({ createDirs }) {
-  const env = { ...process.env };
-  const resolved = {};
-  const runs = env.STUDIO_DET_RUNS_DIR;
-  if (runs === undefined || runs.trim() === "") {
-    if (createDirs) mkdirSync(RUNS_DIR_DEFAULT, { recursive: true });
-    env.STUDIO_DET_RUNS_DIR = RUNS_DIR_DEFAULT;
-    resolved.STUDIO_DET_RUNS_DIR = { value: RUNS_DIR_DEFAULT, source: "default" };
-  } else {
-    resolved.STUDIO_DET_RUNS_DIR = { value: runs, source: "env" };
-  }
-  for (const name of ["STUDIO_BUILD_PROJECTS_DIR", "STUDIO_DET_CLI", "STUDIO_DATA_DIR", "STUDIO_BUILD_TIMEOUT_MS"]) {
-    resolved[name] =
-      env[name] === undefined ? { value: null, source: "unset" } : { value: env[name], source: "env" };
-  }
-  return { env, resolved };
+   const env = { ...process.env };
+   const resolved = {};
+   const runs = env.STUDIO_DET_RUNS_DIR;
+   if (runs === undefined || runs.trim() === "") {
+      if (createDirs) mkdirSync(RUNS_DIR_DEFAULT, { recursive: true });
+      env.STUDIO_DET_RUNS_DIR = RUNS_DIR_DEFAULT;
+      resolved.STUDIO_DET_RUNS_DIR = {
+         value: RUNS_DIR_DEFAULT,
+         source: "default",
+      };
+   } else {
+      resolved.STUDIO_DET_RUNS_DIR = { value: runs, source: "env" };
+   }
+   for (const name of [
+      "STUDIO_BUILD_PROJECTS_DIR",
+      "STUDIO_DET_CLI",
+      "STUDIO_DATA_DIR",
+      "STUDIO_BUILD_TIMEOUT_MS",
+   ]) {
+      resolved[name] =
+         env[name] === undefined
+            ? { value: null, source: "unset" }
+            : { value: env[name], source: "env" };
+   }
+   return { env, resolved };
 }
 
 function printEnv() {
-  const { resolved } = resolveEnv({ createDirs: false });
-  process.stdout.write(
-    `${JSON.stringify({
-      root: ROOT,
-      studioDir: STUDIO_MODULE_DIR,
-      coreDistEntry: DET_DIST_ENTRY,
-      coreDistFresh: isCoreDistFresh(),
-      studioDepsInstalled: depsInstalled(),
-      env: resolved,
-    })}\n`
-  );
+   const { resolved } = resolveEnv({ createDirs: false });
+   process.stdout.write(
+      `${JSON.stringify({
+         root: ROOT,
+         studioDir: STUDIO_MODULE_DIR,
+         coreDistEntry: DET_DIST_ENTRY,
+         coreDistFresh: isCoreDistFresh(),
+         studioDepsInstalled: depsInstalled(),
+         env: resolved,
+      })}\n`,
+   );
 }
 
 function startStudio(mode) {
-  assertNodeVersion();
-  if (!depsInstalled()) {
-    pnpmRun(["install", "--frozen-lockfile"], "first run: installing dependencies (one root lockfile)");
-  }
-  if (!isCoreDistFresh()) {
-    pnpmRun(["run", "build:core"], "building the det core");
-  }
-  const { env, resolved } = resolveEnv({ createDirs: true });
-  log(`repository root: ${ROOT}`);
-  log(
-    `runs dir: ${resolved.STUDIO_DET_RUNS_DIR.value} (${resolved.STUDIO_DET_RUNS_DIR.source === "default" ? "default — set STUDIO_DET_RUNS_DIR to override" : "from STUDIO_DET_RUNS_DIR"})`
-  );
-  if (mode === "start" || mode === "build") {
-    pnpmRun(["run", "build:app"], "building the Studio production bundle");
-    if (mode === "build") return;
-  }
-  log(`starting Studio (${mode}) at the repository root — http://localhost:${env.PORT ?? 3000}${mode === "dev" ? "/build" : ""}`);
-  const child = spawn("pnpm", ["run", mode === "dev" ? "app:dev" : "app:start"], {
-    cwd: ROOT,
-    env,
-    stdio: "inherit",
-  });
-  for (const signal of ["SIGINT", "SIGTERM"]) {
-    process.on(signal, () => child.kill(signal));
-  }
-  child.on("exit", (code, signal) => {
-    process.exit(signal !== null ? 0 : (code ?? 1));
-  });
-  child.on("error", (error) => fail(`could not start the Studio server: ${error.message}`));
+   assertNodeVersion();
+   if (!depsInstalled()) {
+      pnpmRun(
+         ["install", "--frozen-lockfile"],
+         "first run: installing dependencies (one root lockfile)",
+      );
+   }
+   if (!isCoreDistFresh()) {
+      pnpmRun(["run", "build:core"], "building the det core");
+   }
+   const { env, resolved } = resolveEnv({ createDirs: true });
+   log(`repository root: ${ROOT}`);
+   log(
+      `runs dir: ${resolved.STUDIO_DET_RUNS_DIR.value} (${resolved.STUDIO_DET_RUNS_DIR.source === "default" ? "default — set STUDIO_DET_RUNS_DIR to override" : "from STUDIO_DET_RUNS_DIR"})`,
+   );
+   if (mode === "start" || mode === "build") {
+      pnpmRun(["run", "build:app"], "building the Studio production bundle");
+      if (mode === "build") return;
+   }
+   log(
+      `starting Studio (${mode}) at the repository root — http://localhost:${env.PORT ?? 3000}${mode === "dev" ? "/build" : ""}`,
+   );
+   const child = spawn(
+      "pnpm",
+      ["run", mode === "dev" ? "app:dev" : "app:start"],
+      {
+         cwd: ROOT,
+         env,
+         stdio: "inherit",
+      },
+   );
+   for (const signal of ["SIGINT", "SIGTERM"]) {
+      process.on(signal, () => child.kill(signal));
+   }
+   child.on("exit", (code, signal) => {
+      process.exit(signal !== null ? 0 : (code ?? 1));
+   });
+   child.on("error", (error) =>
+      fail(`could not start the Studio server: ${error.message}`),
+   );
 }
 
 const mode = process.argv[2];
 switch (mode) {
-  case "dev":
-  case "start":
-  case "build":
-    startStudio(mode);
-    break;
-  case "print-env":
-    printEnv();
-    break;
-  default:
-    fail("usage: node scripts/studio.mjs <dev|start|build|print-env>");
+   case "dev":
+   case "start":
+   case "build":
+      startStudio(mode);
+      break;
+   case "print-env":
+      printEnv();
+      break;
+   default:
+      fail("usage: node scripts/studio.mjs <dev|start|build|print-env>");
 }

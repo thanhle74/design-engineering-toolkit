@@ -13,34 +13,34 @@ import { RunModeBadge } from "@/src/modules/studio/modules/mapping-review";
  * h1 keeps its heading semantics, the run id uses the stock `Text code` look.
  */
 export function RunHeader({
-  label,
-  mode,
-  runId,
+   label,
+   mode,
+   runId,
 }: {
-  label: string;
-  mode: StudioRunMode;
-  runId: string;
+   label: string;
+   mode: StudioRunMode;
+   runId: string;
 }) {
-  return (
-    <Flex vertical gap={8} align="flex-start">
-      <Button
-        type="text"
-        href="/"
-        icon={<ArrowLeftOutlined aria-hidden="true" />}
-      >
-        Tổng quan
-      </Button>
-      <Flex wrap="wrap" align="center" gap={8}>
-        {/* layout only: neutralize UA heading margins so the Flex gap owns rhythm */}
-        <h1 style={{ margin: 0 }}>{label}</h1>
-        <RunModeBadge mode={mode} />
+   return (
+      <Flex vertical gap={8} align="flex-start">
+         <Button
+            type="text"
+            href="/"
+            icon={<ArrowLeftOutlined aria-hidden="true" />}
+         >
+            Tổng quan
+         </Button>
+         <Flex wrap="wrap" align="center" gap={8}>
+            {/* layout only: neutralize UA heading margins so the Flex gap owns rhythm */}
+            <h1 style={{ margin: 0 }}>{label}</h1>
+            <RunModeBadge mode={mode} />
+         </Flex>
+         <Flex wrap="wrap" align="baseline" gap={4}>
+            <Typography.Text type="secondary">Lần chạy</Typography.Text>
+            <Typography.Text type="secondary" code>
+               {runId}
+            </Typography.Text>
+         </Flex>
       </Flex>
-      <Flex wrap="wrap" align="baseline" gap={4}>
-        <Typography.Text type="secondary">Lần chạy</Typography.Text>
-        <Typography.Text type="secondary" code>
-          {runId}
-        </Typography.Text>
-      </Flex>
-    </Flex>
-  );
+   );
 }

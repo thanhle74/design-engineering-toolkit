@@ -11,35 +11,48 @@
  */
 import { DetRunReaderError } from "@/src/modules/studio/shared/contracts";
 import { detRunErrorResponse } from "@/src/modules/studio/server/api-error";
-import { BuildConfigCatalog, STUDIO_BUILD_PROJECTS_DIR_ENV } from "@/src/modules/studio/server/build-catalog";
+import {
+   BuildConfigCatalog,
+   STUDIO_BUILD_PROJECTS_DIR_ENV,
+} from "@/src/modules/studio/server/build-catalog";
 import { getBuildRunner } from "@/src/modules/studio/server/build-runner";
 
 export async function GET(request: Request): Promise<Response> {
-  // Reading any request header marks this route request-time (Cache
-  // Components forbids the legacy `dynamic` export); the value is discarded.
-  void request.headers.get("accept");
+   // Reading any request header marks this route request-time (Cache
+   // Components forbids the legacy `dynamic` export); the value is discarded.
+   void request.headers.get("accept");
 
-  try {
-    const catalog = await BuildConfigCatalog.open(process.env[STUDIO_BUILD_PROJECTS_DIR_ENV] ?? "");
-    const listing = await catalog.list();
+   try {
+      const catalog = await BuildConfigCatalog.open(
+         process.env[STUDIO_BUILD_PROJECTS_DIR_ENV] ?? "",
+      );
+      const listing = await catalog.list();
 
-    // Runner readiness rides along so the UI can disable Build truthfully
-    // (control requires BOTH the projects dir and a valid runs dir).
-    let runnerReady = true;
-    let runnerReason: string | undefined;
-    try {
-      await getBuildRunner();
-    } catch (error) {
-      if (error instanceof DetRunReaderError && error.code === "not-configured") {
-        runnerReady = false;
-        runnerReason = error.message;
-      } else {
-        throw error;
+      // Runner readiness rides along so the UI can disable Build truthfully
+      // (control requires BOTH the projects dir and a valid runs dir).
+      let runnerReady = true;
+      let runnerReason: string | undefined;
+      try {
+         await getBuildRunner();
+      } catch (error) {
+         if (
+            error instanceof DetRunReaderError &&
+            error.code === "not-configured"
+         ) {
+            runnerReady = false;
+            runnerReason = error.message;
+         } else {
+            throw error;
+         }
       }
-    }
 
-    return Response.json({ entries: listing.entries, invalid: listing.invalid, runnerReady, ...(runnerReason === undefined ? {} : { runnerReason }) });
-  } catch (error) {
-    return detRunErrorResponse(error);
-  }
+      return Response.json({
+         entries: listing.entries,
+         invalid: listing.invalid,
+         runnerReady,
+         ...(runnerReason === undefined ? {} : { runnerReason }),
+      });
+   } catch (error) {
+      return detRunErrorResponse(error);
+   }
 }

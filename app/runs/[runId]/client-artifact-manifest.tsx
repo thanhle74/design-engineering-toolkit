@@ -15,65 +15,67 @@ import type { StudioArtifactView } from "@/src/modules/studio/shared/contracts";
  */
 
 interface ClientArtifactManifestProps {
-  runId: string;
-  artifacts: readonly StudioArtifactView[];
+   runId: string;
+   artifacts: readonly StudioArtifactView[];
 }
 
 function fileNameFromDisposition(
-  disposition: string | null,
-  artifact: StudioArtifactView
+   disposition: string | null,
+   artifact: StudioArtifactView,
 ): string {
-  const match = /filename\*?=(?:UTF-8'')?"?([^";]+)"?/i.exec(disposition ?? "");
-  if (match?.[1]) return decodeURIComponent(match[1]);
-  return artifact.artifactId.split("/").pop() ?? "artifact";
+   const match = /filename\*?=(?:UTF-8'')?"?([^";]+)"?/i.exec(
+      disposition ?? "",
+   );
+   if (match?.[1]) return decodeURIComponent(match[1]);
+   return artifact.artifactId.split("/").pop() ?? "artifact";
 }
 
 export function ClientArtifactManifest({
-  runId,
-  artifacts,
+   runId,
+   artifacts,
 }: ClientArtifactManifestProps) {
-  const [error, setError] = useState<string | null>(null);
+   const [error, setError] = useState<string | null>(null);
 
-  async function onDownload(artifact: StudioArtifactView): Promise<void> {
-    setError(null);
-    try {
-      const response = await fetch(
-        `/api/runs/${encodeURIComponent(runId)}/artifacts/${encodeURIComponent(artifact.artifactId)}`
-      );
-      if (!response.ok) {
-        const body = (await response.json().catch(() => null)) as {
-          error?: { code?: string; message?: string };
-        } | null;
-        setError(
-          `Tải xuống bị từ chối (HTTP ${response.status}${body?.error?.code ? ` · ${body.error.code}` : ""}).`
-        );
-        return;
+   async function onDownload(artifact: StudioArtifactView): Promise<void> {
+      setError(null);
+      try {
+         const response = await fetch(
+            `/api/runs/${encodeURIComponent(runId)}/artifacts/${encodeURIComponent(artifact.artifactId)}`,
+         );
+         if (!response.ok) {
+            const body = (await response.json().catch(() => null)) as {
+               error?: { code?: string; message?: string };
+            } | null;
+            setError(
+               `Tải xuống bị từ chối (HTTP ${response.status}${body?.error?.code ? ` · ${body.error.code}` : ""}).`,
+            );
+            return;
+         }
+         const blob = await response.blob();
+         const url = URL.createObjectURL(blob);
+         const anchor = document.createElement("a");
+         anchor.href = url;
+         anchor.download = fileNameFromDisposition(
+            response.headers.get("content-disposition"),
+            artifact,
+         );
+         document.body.append(anchor);
+         anchor.click();
+         anchor.remove();
+         URL.revokeObjectURL(url);
+      } catch {
+         setError("Tải xuống thất bại — route artifact không truy cập được.");
       }
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      const anchor = document.createElement("a");
-      anchor.href = url;
-      anchor.download = fileNameFromDisposition(
-        response.headers.get("content-disposition"),
-        artifact
-      );
-      document.body.append(anchor);
-      anchor.click();
-      anchor.remove();
-      URL.revokeObjectURL(url);
-    } catch {
-      setError("Tải xuống thất bại — route artifact không truy cập được.");
-    }
-  }
+   }
 
-  return (
-    <Flex vertical gap={8}>
-      <ArtifactManifest artifacts={artifacts} onDownload={onDownload} />
-      {error !== null ? (
-        <p role="alert">
-          <Typography.Text type="danger">{error}</Typography.Text>
-        </p>
-      ) : null}
-    </Flex>
-  );
+   return (
+      <Flex vertical gap={8}>
+         <ArtifactManifest artifacts={artifacts} onDownload={onDownload} />
+         {error !== null ? (
+            <p role="alert">
+               <Typography.Text type="danger">{error}</Typography.Text>
+            </p>
+         ) : null}
+      </Flex>
+   );
 }

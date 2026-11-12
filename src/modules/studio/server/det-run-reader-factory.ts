@@ -18,8 +18,8 @@
 import "server-only";
 
 import {
-  DetRunReaderError,
-  type DetRunReader,
+   DetRunReaderError,
+   type DetRunReader,
 } from "@/src/modules/studio/shared/contracts";
 
 import { DirectoryDetRunReader } from "./directory-det-run-reader";
@@ -28,17 +28,17 @@ import { FixtureDetRunReader } from "./fixture-det-run-reader";
 export const STUDIO_DET_RUNS_DIR_ENV = "STUDIO_DET_RUNS_DIR";
 
 export async function getDetRunReader(): Promise<DetRunReader> {
-  const configuredRoot = process.env[STUDIO_DET_RUNS_DIR_ENV];
-  if (configuredRoot === undefined) {
-    return new FixtureDetRunReader();
-  }
-  try {
-    return await DirectoryDetRunReader.open(configuredRoot);
-  } catch (error) {
-    if (error instanceof DetRunReaderError) throw error;
-    throw new DetRunReaderError(
-      "not-configured",
-      "STUDIO_DET_RUNS_DIR is set but does not point to a usable DET output root directory."
-    );
-  }
+   const configuredRoot = process.env[STUDIO_DET_RUNS_DIR_ENV];
+   if (configuredRoot === undefined) {
+      return new FixtureDetRunReader();
+   }
+   try {
+      return await DirectoryDetRunReader.open(configuredRoot);
+   } catch (error) {
+      if (error instanceof DetRunReaderError) throw error;
+      throw new DetRunReaderError(
+         "not-configured",
+         "STUDIO_DET_RUNS_DIR is set but does not point to a usable DET output root directory.",
+      );
+   }
 }

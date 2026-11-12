@@ -13,5 +13,5 @@ import { App as AntdApp } from "antd";
  * contextHolder (the build launcher's feedback path may use it).
  */
 export function StudioProviders({ children }: { children: React.ReactNode }) {
-  return <AntdApp>{children}</AntdApp>;
+   return <AntdApp>{children}</AntdApp>;
 }

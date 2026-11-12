@@ -6,6 +6,7 @@ description: DET terminal self-review and compact evidence handoff — prove tes
 # DET Review Receipt
 
 Before reporting done:
+
 - Verify the actual diff/affected callers; check unsafe server/client imports, path containment, unexpected writes and schema drift.
 - Run exact checkout tests: `pnpm test` for DET core when changed; Studio `typecheck/lint/build` plus focused UI tests when Studio changed; capture actual exit status.
 - Capture **small evidence**: issue + PR, branch and exact SHA, edited files, feature screenshots, UI states tested, actual artifact provenance, fixture vs live labels, known gaps and next blocker. Don't claim an Admin Save/Reload or Figma/preview run from demo screenshots.

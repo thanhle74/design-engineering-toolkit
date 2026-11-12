@@ -3,11 +3,11 @@ import { connection } from "next/server";
 
 import { DetRunReaderError } from "@/src/modules/studio/shared/contracts";
 import {
-  getStudioCatalog,
-  STUDIO_DATA_DIR_ENV,
-  type CatalogProjectView,
-  type CatalogRunView,
-  type CatalogStats,
+   getStudioCatalog,
+   STUDIO_DATA_DIR_ENV,
+   type CatalogProjectView,
+   type CatalogRunView,
+   type CatalogStats,
 } from "@/src/modules/studio/server/catalog/studio-catalog";
 
 import { CatalogView } from "./catalog-view";
@@ -28,54 +28,54 @@ export const instant = false;
  * metadata, it never hides files.
  */
 export default async function CatalogPage() {
-  // Catalog state comes from local disk/env per request. fs/env are not
-  // tracked as dynamic APIs by Cache Components, so signal request-time.
-  await connection();
+   // Catalog state comes from local disk/env per request. fs/env are not
+   // tracked as dynamic APIs by Cache Components, so signal request-time.
+   await connection();
 
-  const configured = process.env[STUDIO_DATA_DIR_ENV] !== undefined;
-  let offMessage: string | null = null;
-  let errorCode: string | null = null;
-  let errorMessage: string | null = null;
-  let projects: CatalogProjectView[] = [];
-  let runs: CatalogRunView[] = [];
-  let stats: CatalogStats | null = null;
+   const configured = process.env[STUDIO_DATA_DIR_ENV] !== undefined;
+   let offMessage: string | null = null;
+   let errorCode: string | null = null;
+   let errorMessage: string | null = null;
+   let projects: CatalogProjectView[] = [];
+   let runs: CatalogRunView[] = [];
+   let stats: CatalogStats | null = null;
 
-  if (configured) {
-    try {
-      const catalog = await getStudioCatalog();
-      if (catalog === null) {
-        offMessage = "STUDIO_DATA_DIR chưa đặt; catalog SQLite đang tắt.";
-      } else {
-        const runsRoot = process.env.STUDIO_DET_RUNS_DIR;
-        if (typeof runsRoot === "string") {
-          await catalog.refreshIndex(runsRoot);
-        }
-        projects = catalog.listProjects();
-        runs = catalog.listRuns();
-        stats = catalog.stats();
+   if (configured) {
+      try {
+         const catalog = await getStudioCatalog();
+         if (catalog === null) {
+            offMessage = "STUDIO_DATA_DIR chưa đặt; catalog SQLite đang tắt.";
+         } else {
+            const runsRoot = process.env.STUDIO_DET_RUNS_DIR;
+            if (typeof runsRoot === "string") {
+               await catalog.refreshIndex(runsRoot);
+            }
+            projects = catalog.listProjects();
+            runs = catalog.listRuns();
+            stats = catalog.stats();
+         }
+      } catch (error) {
+         if (error instanceof DetRunReaderError) {
+            errorCode = error.code;
+            errorMessage = error.message;
+         } else {
+            throw error;
+         }
       }
-    } catch (error) {
-      if (error instanceof DetRunReaderError) {
-        errorCode = error.code;
-        errorMessage = error.message;
-      } else {
-        throw error;
-      }
-    }
-  } else {
-    offMessage =
-      "Catalog SQLite đang tắt: STUDIO_DATA_DIR chưa đặt. Đặt nó trỏ tới một thư mục cục bộ để lưu metadata dự án/lần chạy qua các lần khởi động lại Studio; chế độ fixture và file-backed không bị ảnh hưởng.";
-  }
+   } else {
+      offMessage =
+         "Catalog SQLite đang tắt: STUDIO_DATA_DIR chưa đặt. Đặt nó trỏ tới một thư mục cục bộ để lưu metadata dự án/lần chạy qua các lần khởi động lại Studio; chế độ fixture và file-backed không bị ảnh hưởng.";
+   }
 
-  return (
-    <CatalogView
-      configured={configured}
-      offMessage={offMessage}
-      errorCode={errorCode}
-      errorMessage={errorMessage}
-      projects={projects}
-      runs={runs}
-      stats={stats}
-    />
-  );
+   return (
+      <CatalogView
+         configured={configured}
+         offMessage={offMessage}
+         errorCode={errorCode}
+         errorMessage={errorMessage}
+         projects={projects}
+         runs={runs}
+         stats={stats}
+      />
+   );
 }

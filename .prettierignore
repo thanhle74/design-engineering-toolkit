@@ -1,0 +1,21 @@
+# Byte-exact fixtures and committed evidence must never be reformatted.
+src/core/__tests__/fixtures
+src/modules/figma/__tests__/fixtures
+src/modules/figma/adapters/design-source-fixture
+src/modules/knowledge/__tests__/fixtures
+src/modules/magento/__tests__/fixtures
+src/modules/studio/server/__fixtures__
+src/modules/studio/shared/fixtures
+
+# Committed data and prose keep their hand-maintained shape.
+resources/
+docs/
+public/
+kb/
+
+# Build outputs and machine-local state.
+dist/
+out/
+.next/
+coverage/
+pnpm-lock.yaml

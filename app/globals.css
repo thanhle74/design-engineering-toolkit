@@ -7,7 +7,7 @@
  * the single documented layout exception the shell requires.
  */
 :root {
-  color-scheme: light;
+   color-scheme: light;
 }
 
 /**
@@ -17,10 +17,10 @@
  * content region. No colors or theme values live here.
  */
 .studio-content {
-  margin-inline: auto;
-  width: 100%;
-  max-width: 1152px;
-  padding: 24px;
+   margin-inline: auto;
+   width: 100%;
+   max-width: 1152px;
+   padding: 24px;
 }
 
 /**
@@ -34,5 +34,5 @@
  * are unavailable.
  */
 body .ant-layout {
-  background: var(--ant-color-bg-container, #fff);
+   background: var(--ant-color-bg-container, #fff);
 }

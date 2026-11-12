@@ -12,33 +12,38 @@ import { buildControlErrorResponse } from "@/src/modules/studio/server/api-error
 import { getBuildRunner } from "@/src/modules/studio/server/build-runner";
 
 export async function GET(
-  request: Request,
-  context: { params: Promise<{ runId: string }> }
+   request: Request,
+   context: { params: Promise<{ runId: string }> },
 ): Promise<Response> {
-  void request.headers.get("accept");
+   void request.headers.get("accept");
 
-  try {
-    const { runId } = await context.params;
-    let decodedRunId: string;
-    try {
-      decodedRunId = decodeURIComponent(runId);
-    } catch {
-      return Response.json(
-        { error: { code: "bad-request", message: "runId is not a valid encoded URI component." } },
-        { status: 400 }
-      );
-    }
+   try {
+      const { runId } = await context.params;
+      let decodedRunId: string;
+      try {
+         decodedRunId = decodeURIComponent(runId);
+      } catch {
+         return Response.json(
+            {
+               error: {
+                  code: "bad-request",
+                  message: "runId is not a valid encoded URI component.",
+               },
+            },
+            { status: 400 },
+         );
+      }
 
-    const runner = await getBuildRunner();
-    const snapshot = await runner.snapshot(decodedRunId);
-    if (snapshot === null) {
-      throw new DetRunReaderError(
-        "run-not-found",
-        `No Studio build job with id "${decodedRunId.length > 100 ? `${decodedRunId.slice(0, 100)}…` : decodedRunId}".`
-      );
-    }
-    return Response.json({ job: snapshot });
-  } catch (error) {
-    return buildControlErrorResponse(error);
-  }
+      const runner = await getBuildRunner();
+      const snapshot = await runner.snapshot(decodedRunId);
+      if (snapshot === null) {
+         throw new DetRunReaderError(
+            "run-not-found",
+            `No Studio build job with id "${decodedRunId.length > 100 ? `${decodedRunId.slice(0, 100)}…` : decodedRunId}".`,
+         );
+      }
+      return Response.json({ job: snapshot });
+   } catch (error) {
+      return buildControlErrorResponse(error);
+   }
 }

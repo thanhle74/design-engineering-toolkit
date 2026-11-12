@@ -20,65 +20,68 @@ import { OriginBadge, SeverityBadge } from "./disposition-badges";
 const UNKNOWN = "không rõ";
 
 function DiagnosticRow({ diagnostic }: { diagnostic: StudioDiagnosticView }) {
-  return (
-    <Flex
-      component="li"
-      wrap="wrap"
-      align="flex-start"
-      gap="small"
-      data-testid="diagnostic-row"
-      data-severity={diagnostic.severity}
-      data-origin={diagnostic.origin}
-    >
-      <SeverityBadge severity={diagnostic.severity} />
-      {diagnostic.code && (
-        <Typography.Text code type="secondary">
-          {diagnostic.code}
-        </Typography.Text>
-      )}
-      <p>{diagnostic.message}</p>
-      <Typography.Text type="secondary">
-        subject: {diagnostic.subjectType ?? UNKNOWN}
-      </Typography.Text>
-      {diagnostic.subjectId && (
-        <Typography.Text code type="secondary" title={diagnostic.subjectId}>
-          {diagnostic.subjectId}
-        </Typography.Text>
-      )}
-      <OriginBadge origin={diagnostic.origin} />
-    </Flex>
-  );
+   return (
+      <Flex
+         component="li"
+         wrap="wrap"
+         align="flex-start"
+         gap="small"
+         data-testid="diagnostic-row"
+         data-severity={diagnostic.severity}
+         data-origin={diagnostic.origin}
+      >
+         <SeverityBadge severity={diagnostic.severity} />
+         {diagnostic.code && (
+            <Typography.Text code type="secondary">
+               {diagnostic.code}
+            </Typography.Text>
+         )}
+         <p>{diagnostic.message}</p>
+         <Typography.Text type="secondary">
+            subject: {diagnostic.subjectType ?? UNKNOWN}
+         </Typography.Text>
+         {diagnostic.subjectId && (
+            <Typography.Text code type="secondary" title={diagnostic.subjectId}>
+               {diagnostic.subjectId}
+            </Typography.Text>
+         )}
+         <OriginBadge origin={diagnostic.origin} />
+      </Flex>
+   );
 }
 
 export function DiagnosticsPanel({
-  diagnostics,
+   diagnostics,
 }: {
-  diagnostics: readonly StudioDiagnosticView[];
+   diagnostics: readonly StudioDiagnosticView[];
 }) {
-  return (
-    <section
-      aria-labelledby="studio-diagnostics-heading"
-      data-testid="diagnostics-panel"
-    >
-      <h3>
-        Chẩn đoán{" "}
-        <Typography.Text type="secondary">
-          ({diagnostics.length} bản ghi)
-        </Typography.Text>
-      </h3>
-      {diagnostics.length === 0 ? (
-        <p data-testid="diagnostics-empty">
-          <Typography.Text type="secondary">
-            Không có chẩn đoán nào được ghi cho lần chạy này.
-          </Typography.Text>
-        </p>
-      ) : (
-        <ul>
-          {diagnostics.map((diagnostic, index) => (
-            <DiagnosticRow diagnostic={diagnostic} key={`${diagnostic.origin}-${diagnostic.code ?? "no-code"}-${index}`} />
-          ))}
-        </ul>
-      )}
-    </section>
-  );
+   return (
+      <section
+         aria-labelledby="studio-diagnostics-heading"
+         data-testid="diagnostics-panel"
+      >
+         <h3>
+            Chẩn đoán{" "}
+            <Typography.Text type="secondary">
+               ({diagnostics.length} bản ghi)
+            </Typography.Text>
+         </h3>
+         {diagnostics.length === 0 ? (
+            <p data-testid="diagnostics-empty">
+               <Typography.Text type="secondary">
+                  Không có chẩn đoán nào được ghi cho lần chạy này.
+               </Typography.Text>
+            </p>
+         ) : (
+            <ul>
+               {diagnostics.map((diagnostic, index) => (
+                  <DiagnosticRow
+                     diagnostic={diagnostic}
+                     key={`${diagnostic.origin}-${diagnostic.code ?? "no-code"}-${index}`}
+                  />
+               ))}
+            </ul>
+         )}
+      </section>
+   );
 }

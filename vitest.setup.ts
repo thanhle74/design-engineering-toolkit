@@ -8,13 +8,13 @@ import { cleanup } from "@testing-library/react";
  * Provide a stub for all lanes.
  */
 class ResizeObserverStub {
-  observe(): void {}
-  unobserve(): void {}
-  disconnect(): void {}
+   observe(): void {}
+   unobserve(): void {}
+   disconnect(): void {}
 }
 if (typeof globalThis.ResizeObserver === "undefined") {
-  globalThis.ResizeObserver =
-    ResizeObserverStub as unknown as typeof ResizeObserver;
+   globalThis.ResizeObserver =
+      ResizeObserverStub as unknown as typeof ResizeObserver;
 }
 
 /**
@@ -22,35 +22,32 @@ if (typeof globalThis.ResizeObserver === "undefined") {
  * Menu overflow, Form) requires. The matches answer mirrors antd's own test
  * setup: only max-width queries are considered matching.
  */
-if (
-  typeof window !== "undefined" &&
-  typeof window.matchMedia !== "function"
-) {
-  Object.defineProperty(window, "matchMedia", {
-    writable: true,
-    value: (query: string) => ({
-      matches: query.includes("max-width"),
-      media: query,
-      onchange: null,
-      addListener(): void {},
-      removeListener(): void {},
-      addEventListener(): void {},
-      removeEventListener(): void {},
-      dispatchEvent(): boolean {
-        return false;
-      },
-    }),
-  });
+if (typeof window !== "undefined" && typeof window.matchMedia !== "function") {
+   Object.defineProperty(window, "matchMedia", {
+      writable: true,
+      value: (query: string) => ({
+         matches: query.includes("max-width"),
+         media: query,
+         onchange: null,
+         addListener(): void {},
+         removeListener(): void {},
+         addEventListener(): void {},
+         removeEventListener(): void {},
+         dispatchEvent(): boolean {
+            return false;
+         },
+      }),
+   });
 }
 
 /**
  * antd motion/overflow helpers call scrollIntoView on focused elements.
  */
 if (
-  typeof HTMLElement !== "undefined" &&
-  typeof HTMLElement.prototype.scrollIntoView !== "function"
+   typeof HTMLElement !== "undefined" &&
+   typeof HTMLElement.prototype.scrollIntoView !== "function"
 ) {
-  HTMLElement.prototype.scrollIntoView = (): void => {};
+   HTMLElement.prototype.scrollIntoView = (): void => {};
 }
 
 /**
@@ -58,5 +55,5 @@ if (
  * tests even if a lane forgot its own afterEach(cleanup).
  */
 afterEach(() => {
-  cleanup();
+   cleanup();
 });

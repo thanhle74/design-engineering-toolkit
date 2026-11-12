@@ -17,38 +17,54 @@ const ROOT = path.resolve(SCRIPT_DIR, "..");
 const MIN_NODE = [22, 13, 0];
 
 function fail(message) {
-  process.stderr.write(`det setup: ${message}\n`);
-  process.exit(1);
+   process.stderr.write(`det setup: ${message}\n`);
+   process.exit(1);
 }
 
 function log(message) {
-  process.stderr.write(`[det setup] ${message}\n`);
+   process.stderr.write(`[det setup] ${message}\n`);
 }
 
-const [maj = 0, min = 0, pat = 0] = process.versions.node.split(".").map(Number);
+const [maj = 0, min = 0, pat = 0] = process.versions.node
+   .split(".")
+   .map(Number);
 const [rMaj, rMin, rPat] = MIN_NODE;
-if (maj < rMaj || (maj === rMaj && (min < rMin || (min === rMin && pat < rPat)))) {
-  fail(
-    `Node.js >= ${MIN_NODE.join(".")} is required (found ${process.versions.node}); ` +
-      "DET Studio (Next.js 16) needs it."
-  );
+if (
+   maj < rMaj ||
+   (maj === rMaj && (min < rMin || (min === rMin && pat < rPat)))
+) {
+   fail(
+      `Node.js >= ${MIN_NODE.join(".")} is required (found ${process.versions.node}); ` +
+         "DET Studio (Next.js 16) needs it.",
+   );
 }
 
 function pnpmInstall(cwd, label) {
-  log(`${label} (pnpm install --frozen-lockfile in ${path.relative(ROOT, cwd) || "."}) …`);
-  const result = spawnSync("pnpm", ["install", "--frozen-lockfile"], { cwd, stdio: "inherit" });
-  if (result.error !== undefined) fail(`${label} could not start pnpm: ${result.error.message}`);
-  if (result.status !== 0) fail(`${label} failed with exit code ${result.status ?? "signal"}.`);
+   log(
+      `${label} (pnpm install --frozen-lockfile in ${path.relative(ROOT, cwd) || "."}) …`,
+   );
+   const result = spawnSync("pnpm", ["install", "--frozen-lockfile"], {
+      cwd,
+      stdio: "inherit",
+   });
+   if (result.error !== undefined)
+      fail(`${label} could not start pnpm: ${result.error.message}`);
+   if (result.status !== 0)
+      fail(`${label} failed with exit code ${result.status ?? "signal"}.`);
 }
 
 pnpmInstall(ROOT, "installing workspace dependencies (one root lockfile)");
 
 log("building the det core (pnpm run build in .) …");
-const build = spawnSync("pnpm", ["run", "build"], { cwd: ROOT, stdio: "inherit" });
-if (build.status !== 0) fail(`core build failed with exit code ${build.status ?? "signal"}.`);
+const build = spawnSync("pnpm", ["run", "build"], {
+   cwd: ROOT,
+   stdio: "inherit",
+});
+if (build.status !== 0)
+   fail(`core build failed with exit code ${build.status ?? "signal"}.`);
 
 log("setup complete.");
 process.stderr.write(
-  "\nNext step:  pnpm run dev        # starts DET Studio at http://localhost:3000/build\n" +
-    "            (production mode:  pnpm run start)\n\n"
+   "\nNext step:  pnpm run dev        # starts DET Studio at http://localhost:3000/build\n" +
+      "            (production mode:  pnpm run start)\n\n",
 );

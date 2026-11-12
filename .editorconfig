@@ -1,0 +1,16 @@
+# Editor-agnostic formatting contract for this repository. Prettier
+# (.prettierrc.json, tabWidth 3) is the enforcing formatter; this file makes
+# every editor agree with it even without the Prettier extension.
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 3
+
+[*.md]
+# Prose wraps freely; indentation is not significant.
+indent_size = 2

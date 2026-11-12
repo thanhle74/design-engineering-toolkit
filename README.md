@@ -43,6 +43,7 @@ node bin/det.js plan     --profile <p> --registry out/capability-registry.json -
 - **Boundaries:** no Figma, no CMS/DB writes, no Admin round-trip in this gate. Agents should use the [`det-cli` skill](.claude/skills/det-cli/SKILL.md) instead of reimplementing logic as prompts; the `magento-specs` MCP is optional and never a runtime dependency. Evidence: [docs/converter/RECEIPT-ISSUE9-CLI.md](docs/converter/RECEIPT-ISSUE9-CLI.md).
 
 Start here:
+
 - [Issue #5 architecture spec](docs/specs/ISSUE-5-converter-architecture.md) — **historical G1 record** (integrated; living specs are the product/modular specs below); integrator receipt: [docs/converter/RECEIPT-ISSUE5-G1.md](docs/converter/RECEIPT-ISSUE5-G1.md)
 - [Converter contracts](resources/schemas/converter/) (materialized schemas) + [contract reference incl. deferred NodeIR/PageStructure](docs/converter/CONTRACTS.md)
 - [Capability matrix — Magento PB + UiWidget + Hyvä](docs/converter/CAPABILITY-MATRIX.md) (proof ceiling REGISTERED; machine-readable sample in `resources/examples/converter/`)
@@ -75,6 +76,7 @@ Start here:
 [Issue #1](https://github.com/thanhle74/design-engineering-toolkit/issues/1) architecture was approved/closed via merged [PR #3](https://github.com/thanhle74/design-engineering-toolkit/pull/3). [Issue #2](https://github.com/thanhle74/design-engineering-toolkit/issues/2) manual Figma pilot was built and closed; **it was not an automated toolkit pipeline**. `resources/projects/slaunchpad-fashion/pilot/pilot-plan.md` documents what was built and which QA gates remain unverified. The orchestrator/runtime importer is **not implemented by that pilot**.
 
 Historic V1 references remain:
+
 - [Architecture](docs/ARCHITECTURE.md) · [Source audit](docs/source-audit/secomm-launchpad-fashion.md)
 - [Quality gates](docs/quality-gates.md) · [Safety](docs/safety-and-scope.md) · [Pilot scope](docs/pilot-scope.md)
 - [Versioned schemas](resources/schemas/) · [example profiles](resources/profiles/) · [contract examples](resources/examples/)

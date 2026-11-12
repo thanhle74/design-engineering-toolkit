@@ -6,8 +6,8 @@ import type { NextConfig } from "next";
  * minimal `globals.css`.
  */
 const nextConfig: NextConfig = {
-  cacheComponents: true,
-  partialPrefetching: true,
+   cacheComponents: true,
+   partialPrefetching: true,
 };
 
 export default nextConfig;

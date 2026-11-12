@@ -37,14 +37,14 @@ export const CATALOG_BUSY_TIMEOUT_MS = 5000;
 
 /** The minimal DatabaseSync surface the catalogue uses (keeps the seam honest). */
 export interface CatalogDatabase {
-  exec(sql: string): void;
-  prepare(sql: string): {
-    run(...params: unknown[]): { changes: number | bigint };
-    get(...params: unknown[]): unknown;
-    all(...params: unknown[]): unknown[];
-  };
-  close(): void;
-  open: boolean;
+   exec(sql: string): void;
+   prepare(sql: string): {
+      run(...params: unknown[]): { changes: number | bigint };
+      get(...params: unknown[]): unknown;
+      all(...params: unknown[]): unknown[];
+   };
+   close(): void;
+   open: boolean;
 }
 
 /**
@@ -57,25 +57,32 @@ export interface CatalogDatabase {
  */
 const SQLITE_MODULE_SPECIFIER = ["node", "sqlite"].join(":") as "node:sqlite";
 
-type NodeSqliteModule = { DatabaseSync: new (path: string, options?: { open?: boolean }) => CatalogDatabase };
+type NodeSqliteModule = {
+   DatabaseSync: new (
+      path: string,
+      options?: { open?: boolean },
+   ) => CatalogDatabase;
+};
 
 export type SqliteImport = () => Promise<NodeSqliteModule>;
 
 /** Production import; tests may inject a failure to prove the honest error path. */
 const defaultImport: SqliteImport = async () =>
-  (await import(/* @vite-ignore */ SQLITE_MODULE_SPECIFIER)) as unknown as NodeSqliteModule;
+   (await import(
+      /* @vite-ignore */ SQLITE_MODULE_SPECIFIER
+   )) as unknown as NodeSqliteModule;
 
 function driverUnavailableError(reason: string): DetRunReaderError {
-  return new DetRunReaderError(
-    "not-configured",
-    `STUDIO_DATA_DIR is set but the catalogue cannot run on this Node runtime: ${reason} The SQLite catalogue requires Node >= 22.13 (node:sqlite). ` +
-      "Unset STUDIO_DATA_DIR to run Studio without persistence, or run Studio on a supported Node."
-  );
+   return new DetRunReaderError(
+      "not-configured",
+      `STUDIO_DATA_DIR is set but the catalogue cannot run on this Node runtime: ${reason} The SQLite catalogue requires Node >= 22.13 (node:sqlite). ` +
+         "Unset STUDIO_DATA_DIR to run Studio without persistence, or run Studio on a supported Node.",
+   );
 }
 
 export interface OpenCatalogOptions {
-  /** Test seam: replaces the dynamic `import("node:sqlite")`. */
-  importImpl?: SqliteImport;
+   /** Test seam: replaces the dynamic `import("node:sqlite")`. */
+   importImpl?: SqliteImport;
 }
 
 /**
@@ -83,35 +90,42 @@ export interface OpenCatalogOptions {
  * the backup snapshot is inspected before any target directory is written).
  * Same pragmas as the catalogue; no dir creation, no permission changes.
  */
-export async function openExistingDatabase(file: string, opts: OpenCatalogOptions = {}): Promise<CatalogDatabase> {
-  let driver: NodeSqliteModule;
-  try {
-    driver = await (opts.importImpl ?? defaultImport)();
-  } catch {
-    throw driverUnavailableError("the built-in node:sqlite module is unavailable.");
-  }
-  if (typeof driver?.DatabaseSync !== "function") {
-    throw driverUnavailableError("the built-in node:sqlite module did not provide DatabaseSync.");
-  }
-  const info = await stat(file).catch(() => null);
-  if (info === null || !info.isFile()) {
-    throw new DetRunReaderError(
-      "invalid-payload",
-      "The backup database file is missing or is not a regular file; the backup set is incomplete."
-    );
-  }
-  let db: CatalogDatabase;
-  try {
-    db = new driver.DatabaseSync(file);
-    db.exec(`PRAGMA busy_timeout = ${CATALOG_BUSY_TIMEOUT_MS};`);
-    db.exec("PRAGMA foreign_keys = ON;");
-  } catch {
-    throw new DetRunReaderError(
-      "invalid-payload",
-      "The backup database file could not be opened as a SQLite catalogue; the backup set is corrupt."
-    );
-  }
-  return db;
+export async function openExistingDatabase(
+   file: string,
+   opts: OpenCatalogOptions = {},
+): Promise<CatalogDatabase> {
+   let driver: NodeSqliteModule;
+   try {
+      driver = await (opts.importImpl ?? defaultImport)();
+   } catch {
+      throw driverUnavailableError(
+         "the built-in node:sqlite module is unavailable.",
+      );
+   }
+   if (typeof driver?.DatabaseSync !== "function") {
+      throw driverUnavailableError(
+         "the built-in node:sqlite module did not provide DatabaseSync.",
+      );
+   }
+   const info = await stat(file).catch(() => null);
+   if (info === null || !info.isFile()) {
+      throw new DetRunReaderError(
+         "invalid-payload",
+         "The backup database file is missing or is not a regular file; the backup set is incomplete.",
+      );
+   }
+   let db: CatalogDatabase;
+   try {
+      db = new driver.DatabaseSync(file);
+      db.exec(`PRAGMA busy_timeout = ${CATALOG_BUSY_TIMEOUT_MS};`);
+      db.exec("PRAGMA foreign_keys = ON;");
+   } catch {
+      throw new DetRunReaderError(
+         "invalid-payload",
+         "The backup database file could not be opened as a SQLite catalogue; the backup set is corrupt.",
+      );
+   }
+   return db;
 }
 
 /**
@@ -119,73 +133,86 @@ export async function openExistingDatabase(file: string, opts: OpenCatalogOption
  * pragmas and file permissions. Creates the dir 0700 when missing; refuses a
  * non-directory. Never echoes the configured path into error messages.
  */
-export async function openCatalogDatabase(dataDir: string, opts: OpenCatalogOptions = {}): Promise<CatalogDatabase> {
-  if (typeof dataDir !== "string" || dataDir.trim() === "") {
-    throw new DetRunReaderError(
-      "not-configured",
-      "STUDIO_DATA_DIR is set but empty; it must name a local directory for the catalogue database."
-    );
-  }
-
-  let driver: NodeSqliteModule;
-  try {
-    driver = await (opts.importImpl ?? defaultImport)();
-  } catch {
-    throw driverUnavailableError("the built-in node:sqlite module is unavailable.");
-  }
-  if (typeof driver?.DatabaseSync !== "function") {
-    throw driverUnavailableError("the built-in node:sqlite module did not provide DatabaseSync.");
-  }
-
-  let dirInfo = await stat(dataDir).catch(() => null);
-  if (dirInfo === null) {
-    await mkdir(dataDir, { recursive: true, mode: CATALOG_DIR_MODE }).catch(() => {
+export async function openCatalogDatabase(
+   dataDir: string,
+   opts: OpenCatalogOptions = {},
+): Promise<CatalogDatabase> {
+   if (typeof dataDir !== "string" || dataDir.trim() === "") {
       throw new DetRunReaderError(
-        "not-configured",
-        "STUDIO_DATA_DIR is set but its directory could not be created; check local filesystem permissions."
+         "not-configured",
+         "STUDIO_DATA_DIR is set but empty; it must name a local directory for the catalogue database.",
       );
-    });
-    dirInfo = await stat(dataDir).catch(() => null);
-  }
-  if (dirInfo === null || !dirInfo.isDirectory()) {
-    throw new DetRunReaderError(
-      "not-configured",
-      "STUDIO_DATA_DIR is set but does not name a directory."
-    );
-  }
+   }
 
-  let db: CatalogDatabase;
-  try {
-    db = new driver.DatabaseSync(path.join(dataDir, CATALOG_DB_FILE));
-  } catch {
-    throw new DetRunReaderError(
-      "not-configured",
-      "STUDIO_DATA_DIR is set but its catalogue database could not be opened; check local filesystem permissions."
-    );
-  }
+   let driver: NodeSqliteModule;
+   try {
+      driver = await (opts.importImpl ?? defaultImport)();
+   } catch {
+      throw driverUnavailableError(
+         "the built-in node:sqlite module is unavailable.",
+      );
+   }
+   if (typeof driver?.DatabaseSync !== "function") {
+      throw driverUnavailableError(
+         "the built-in node:sqlite module did not provide DatabaseSync.",
+      );
+   }
 
-  // Catalogue metadata is the operator's private local data (issue #50):
-  // owner read/write only, regardless of the process umask. The paths are
-  // plain filesystem joins (turbopackIgnore silences the bundler's
-  // dynamic-path heuristic — nothing here resolves modules).
-  await Promise.all(
-    [CATALOG_DB_FILE, `${CATALOG_DB_FILE}-wal`, `${CATALOG_DB_FILE}-shm`].map((file) =>
-      chmod(path.join(/* turbopackIgnore: true */ dataDir, file), CATALOG_FILE_MODE).catch(() => {})
-    )
-  ).catch(() => {});
+   let dirInfo = await stat(dataDir).catch(() => null);
+   if (dirInfo === null) {
+      await mkdir(dataDir, { recursive: true, mode: CATALOG_DIR_MODE }).catch(
+         () => {
+            throw new DetRunReaderError(
+               "not-configured",
+               "STUDIO_DATA_DIR is set but its directory could not be created; check local filesystem permissions.",
+            );
+         },
+      );
+      dirInfo = await stat(dataDir).catch(() => null);
+   }
+   if (dirInfo === null || !dirInfo.isDirectory()) {
+      throw new DetRunReaderError(
+         "not-configured",
+         "STUDIO_DATA_DIR is set but does not name a directory.",
+      );
+   }
 
-  try {
-    db.exec(`PRAGMA busy_timeout = ${CATALOG_BUSY_TIMEOUT_MS};`);
-    db.exec("PRAGMA foreign_keys = ON;");
-    // WAL where safe: refused journal modes fall back silently to the default
-    // rollback journal (probe returns the actually-selected mode either way).
-    db.exec("PRAGMA journal_mode = WAL;");
-  } catch {
-    db.close();
-    throw new DetRunReaderError(
-      "not-configured",
-      "STUDIO_DATA_DIR is set but its catalogue database rejected session pragmas (foreign_keys/busy_timeout); the catalogue refuses to run without FK enforcement."
-    );
-  }
-  return db;
+   let db: CatalogDatabase;
+   try {
+      db = new driver.DatabaseSync(path.join(dataDir, CATALOG_DB_FILE));
+   } catch {
+      throw new DetRunReaderError(
+         "not-configured",
+         "STUDIO_DATA_DIR is set but its catalogue database could not be opened; check local filesystem permissions.",
+      );
+   }
+
+   // Catalogue metadata is the operator's private local data (issue #50):
+   // owner read/write only, regardless of the process umask. The paths are
+   // plain filesystem joins (turbopackIgnore silences the bundler's
+   // dynamic-path heuristic — nothing here resolves modules).
+   await Promise.all(
+      [CATALOG_DB_FILE, `${CATALOG_DB_FILE}-wal`, `${CATALOG_DB_FILE}-shm`].map(
+         (file) =>
+            chmod(
+               path.join(/* turbopackIgnore: true */ dataDir, file),
+               CATALOG_FILE_MODE,
+            ).catch(() => {}),
+      ),
+   ).catch(() => {});
+
+   try {
+      db.exec(`PRAGMA busy_timeout = ${CATALOG_BUSY_TIMEOUT_MS};`);
+      db.exec("PRAGMA foreign_keys = ON;");
+      // WAL where safe: refused journal modes fall back silently to the default
+      // rollback journal (probe returns the actually-selected mode either way).
+      db.exec("PRAGMA journal_mode = WAL;");
+   } catch {
+      db.close();
+      throw new DetRunReaderError(
+         "not-configured",
+         "STUDIO_DATA_DIR is set but its catalogue database rejected session pragmas (foreign_keys/busy_timeout); the catalogue refuses to run without FK enforcement.",
+      );
+   }
+   return db;
 }

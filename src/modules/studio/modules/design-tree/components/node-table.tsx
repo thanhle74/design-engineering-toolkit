@@ -18,9 +18,9 @@ import { Table, Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import type { StudioMappingView } from "@/src/modules/studio/shared/contracts";
 import {
-  ComposeDispositionBadge,
-  KindBadge,
-  ReviewDispositionBadge,
+   ComposeDispositionBadge,
+   KindBadge,
+   ReviewDispositionBadge,
 } from "@/src/modules/studio/modules/mapping-review";
 
 /** "không rõ" — a fact the run does not carry is shown, never invented ([61] Vietnamese). */
@@ -32,66 +32,66 @@ const UNKNOWN = "không rõ";
  * the test-visible row attribute honest without loosening antd's own typing.
  */
 function rowProps(
-  props: Record<string, string>
+   props: Record<string, string>,
 ): HTMLAttributes<HTMLTableRowElement> {
-  return props as unknown as HTMLAttributes<HTMLTableRowElement>;
+   return props as unknown as HTMLAttributes<HTMLTableRowElement>;
 }
 
 const columns: ColumnsType<StudioMappingView> = [
-  {
-    title: "Node id",
-    render: (_, mapping) => (
-      <Typography.Text code title={mapping.nodeId}>
-        {mapping.nodeId}
-      </Typography.Text>
-    ),
-  },
-  {
-    title: "Tên trong nguồn",
-    render: (_, mapping) => (
-      <Typography.Text type="secondary">
-        {mapping.sourceName ?? UNKNOWN}
-      </Typography.Text>
-    ),
-  },
-  {
-    title: "Loại",
-    render: (_, mapping) => <KindBadge kind={mapping.kind} />,
-  },
-  {
-    title: "Compose",
-    render: (_, mapping) => (
-      <ComposeDispositionBadge disposition={mapping.composeDisposition} />
-    ),
-  },
-  {
-    title: "Review",
-    render: (_, mapping) =>
-      mapping.reviewDisposition ? (
-        <ReviewDispositionBadge disposition={mapping.reviewDisposition} />
-      ) : (
-        <Typography.Text type="secondary">—</Typography.Text>
+   {
+      title: "Node id",
+      render: (_, mapping) => (
+         <Typography.Text code title={mapping.nodeId}>
+            {mapping.nodeId}
+         </Typography.Text>
       ),
-  },
+   },
+   {
+      title: "Tên trong nguồn",
+      render: (_, mapping) => (
+         <Typography.Text type="secondary">
+            {mapping.sourceName ?? UNKNOWN}
+         </Typography.Text>
+      ),
+   },
+   {
+      title: "Loại",
+      render: (_, mapping) => <KindBadge kind={mapping.kind} />,
+   },
+   {
+      title: "Compose",
+      render: (_, mapping) => (
+         <ComposeDispositionBadge disposition={mapping.composeDisposition} />
+      ),
+   },
+   {
+      title: "Review",
+      render: (_, mapping) =>
+         mapping.reviewDisposition ? (
+            <ReviewDispositionBadge disposition={mapping.reviewDisposition} />
+         ) : (
+            <Typography.Text type="secondary">—</Typography.Text>
+         ),
+   },
 ];
 
 export function DesignNodeTable({
-  mappings,
-  testId,
+   mappings,
+   testId,
 }: {
-  mappings: readonly StudioMappingView[];
-  testId: string;
+   mappings: readonly StudioMappingView[];
+   testId: string;
 }) {
-  return (
-    <div data-testid={testId}>
-      <Table<StudioMappingView>
-        rowKey="nodeId"
-        size="small"
-        columns={columns}
-        dataSource={[...mappings]}
-        pagination={false}
-        onRow={() => rowProps({ "data-testid": "design-tree-node" })}
-      />
-    </div>
-  );
+   return (
+      <div data-testid={testId}>
+         <Table<StudioMappingView>
+            rowKey="nodeId"
+            size="small"
+            columns={columns}
+            dataSource={[...mappings]}
+            pagination={false}
+            onRow={() => rowProps({ "data-testid": "design-tree-node" })}
+         />
+      </div>
+   );
 }

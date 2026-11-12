@@ -15,7 +15,10 @@
  * 503 when build control is not configured.
  */
 import { getBuildRunner } from "@/src/modules/studio/server/build-runner";
-import { agentErrorResponse, AgentWorkflowError } from "@/src/modules/studio/server/claude-agent/agent-errors";
+import {
+   agentErrorResponse,
+   AgentWorkflowError,
+} from "@/src/modules/studio/server/claude-agent/agent-errors";
 import { getAgentAnalysisRunner } from "@/src/modules/studio/server/claude-agent/analysis-runner";
 import { materializeApprovedInputs } from "@/src/modules/studio/server/claude-agent/plan-materializer";
 import { assertRequestMatchesSourceIdentity } from "@/src/modules/studio/server/claude-agent/source-identity";
@@ -24,76 +27,90 @@ import path from "node:path";
 import { mkdir } from "node:fs/promises";
 
 export async function POST(
-  request: Request,
-  context: { params: Promise<{ analysisId: string }> }
+   request: Request,
+   context: { params: Promise<{ analysisId: string }> },
 ): Promise<Response> {
-  void request.headers.get("accept");
+   void request.headers.get("accept");
 
-  try {
-    const { analysisId } = await context.params;
-    const agentRunner = await getAgentAnalysisRunner();
-    const result = await agentRunner.result(analysisId);
-    if (result === null) {
-      throw new AgentWorkflowError("analysis-not-found", "No analysis matches the requested id.");
-    }
-    const { snapshot, plan } = result;
-    if (snapshot.outcome === null || !isApprovableOutcome(snapshot.outcome)) {
-      throw new AgentWorkflowError(
-        "analysis-not-approvable",
-        "Only a terminal plan-ready analysis can be approved."
+   try {
+      const { analysisId } = await context.params;
+      const agentRunner = await getAgentAnalysisRunner();
+      const result = await agentRunner.result(analysisId);
+      if (result === null) {
+         throw new AgentWorkflowError(
+            "analysis-not-found",
+            "No analysis matches the requested id.",
+         );
+      }
+      const { snapshot, plan } = result;
+      if (snapshot.outcome === null || !isApprovableOutcome(snapshot.outcome)) {
+         throw new AgentWorkflowError(
+            "analysis-not-approvable",
+            "Only a terminal plan-ready analysis can be approved.",
+         );
+      }
+      if (
+         plan === null ||
+         snapshot.grounded !== true ||
+         snapshot.baseConfigPath === null
+      ) {
+         throw new AgentWorkflowError(
+            "analysis-not-approvable",
+            "The analysis has no grounded plan or no resolved base build config.",
+         );
+      }
+      // C65-3, authoritative at approval time: the plan's requested source must
+      // still EQUAL the base project's verified binding before anything is
+      // materialized or built. (The analysis start check alone is not enough —
+      // the binding could differ by the time an operator approves.)
+      await assertRequestMatchesSourceIdentity(
+         { fileKey: plan.requested.fileKey, nodeId: plan.requested.nodeId },
+         snapshot.baseConfigPath,
+         snapshot.request.baseConfigId,
       );
-    }
-    if (plan === null || snapshot.grounded !== true || snapshot.baseConfigPath === null) {
-      throw new AgentWorkflowError(
-        "analysis-not-approvable",
-        "The analysis has no grounded plan or no resolved base build config."
+
+      const analysisDir = path.join(
+         await resolveRunsRootForApprove(),
+         ".agent-analyses",
+         analysisId,
       );
-    }
-    // C65-3, authoritative at approval time: the plan's requested source must
-    // still EQUAL the base project's verified binding before anything is
-    // materialized or built. (The analysis start check alone is not enough —
-    // the binding could differ by the time an operator approves.)
-    await assertRequestMatchesSourceIdentity(
-      { fileKey: plan.requested.fileKey, nodeId: plan.requested.nodeId },
-      snapshot.baseConfigPath,
-      snapshot.request.baseConfigId
-    );
+      await mkdir(analysisDir, { recursive: true });
 
-    const analysisDir = path.join(
-      await resolveRunsRootForApprove(),
-      ".agent-analyses",
-      analysisId
-    );
-    await mkdir(analysisDir, { recursive: true });
+      const { approvedConfigPath, record } = await materializeApprovedInputs({
+         analysisId,
+         plan,
+         baseConfigPath: snapshot.baseConfigPath,
+         analysisDir,
+      });
 
-    const { approvedConfigPath, record } = await materializeApprovedInputs({
-      analysisId,
-      plan,
-      baseConfigPath: snapshot.baseConfigPath,
-      analysisDir,
-    });
-
-    // The deterministic engine consumes the frozen inputs through the SAME
-    // single-slot build runner as every manual build (409 busy propagates).
-    const buildRunner = await getBuildRunner();
-    const buildSnapshot = await buildRunner.start(snapshot.request.baseConfigId, approvedConfigPath);
-    return Response.json(
-      { buildRunId: buildSnapshot.runId, state: buildSnapshot.state, approval: record },
-      { status: 202 }
-    );
-  } catch (error) {
-    return agentErrorResponse(error);
-  }
+      // The deterministic engine consumes the frozen inputs through the SAME
+      // single-slot build runner as every manual build (409 busy propagates).
+      const buildRunner = await getBuildRunner();
+      const buildSnapshot = await buildRunner.start(
+         snapshot.request.baseConfigId,
+         approvedConfigPath,
+      );
+      return Response.json(
+         {
+            buildRunId: buildSnapshot.runId,
+            state: buildSnapshot.state,
+            approval: record,
+         },
+         { status: 202 },
+      );
+   } catch (error) {
+      return agentErrorResponse(error);
+   }
 }
 
 /** The agent runner already validated this env; resolve it once more for the path. */
 async function resolveRunsRootForApprove(): Promise<string> {
-  const configuredRoot = process.env.STUDIO_DET_RUNS_DIR;
-  if (configuredRoot === undefined || configuredRoot.trim() === "") {
-    throw new AgentWorkflowError(
-      "not-configured",
-      "The AI workflow requires STUDIO_DET_RUNS_DIR (analyses journal + persist there)."
-    );
-  }
-  return path.resolve(configuredRoot);
+   const configuredRoot = process.env.STUDIO_DET_RUNS_DIR;
+   if (configuredRoot === undefined || configuredRoot.trim() === "") {
+      throw new AgentWorkflowError(
+         "not-configured",
+         "The AI workflow requires STUDIO_DET_RUNS_DIR (analyses journal + persist there).",
+      );
+   }
+   return path.resolve(configuredRoot);
 }

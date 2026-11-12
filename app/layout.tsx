@@ -33,18 +33,22 @@ export const metadata = studioMetadata;
  * fallback, every request streams the real styled UI. All Studio routes are
  * dynamic (`connection()`), so the fallback never shows in practice.
  */
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="vi">
-      <body>
-        <Suspense fallback={null}>
-          <AntdRegistry>
-            <StudioProviders>
-              <StudioShell>{children}</StudioShell>
-            </StudioProviders>
-          </AntdRegistry>
-        </Suspense>
-      </body>
-    </html>
-  );
+export default function RootLayout({
+   children,
+}: {
+   children: React.ReactNode;
+}) {
+   return (
+      <html lang="vi">
+         <body>
+            <Suspense fallback={null}>
+               <AntdRegistry>
+                  <StudioProviders>
+                     <StudioShell>{children}</StudioShell>
+                  </StudioProviders>
+               </AntdRegistry>
+            </Suspense>
+         </body>
+      </html>
+   );
 }

@@ -10,10 +10,10 @@ import type { Metadata } from "next";
  * of client imports and React component exports.
  */
 export const studioMetadata: Metadata = {
-  title: {
-    default: "DET Studio",
-    template: "%s · DET Studio",
-  },
-  description:
-    "Giao diện nội bộ dành cho vận hành viên: xem lại, xem trước và xuất nội dung CMS.",
+   title: {
+      default: "DET Studio",
+      template: "%s · DET Studio",
+   },
+   description:
+      "Giao diện nội bộ dành cho vận hành viên: xem lại, xem trước và xuất nội dung CMS.",
 };
