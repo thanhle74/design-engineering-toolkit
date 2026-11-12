@@ -7,7 +7,7 @@ import {
 } from "@/src/modules/studio/server/build-catalog";
 import { getBuildRunner } from "@/src/modules/studio/server/build-runner";
 
-import { BuildView } from "./build-view";
+import { BuildScreen } from "@/src/modules/studio/modules/build-control";
 
 /**
  * [40] Build Control — real UI-triggered offline `det build` runs (S5).
@@ -64,7 +64,7 @@ export default async function BuildPage() {
    }
 
    return (
-      <BuildView
+      <BuildScreen
          catalogErrorCode={catalogErrorCode}
          catalogErrorMessage={catalogErrorMessage}
          catalogEntries={entries?.entries ?? null}

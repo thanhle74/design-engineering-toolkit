@@ -6,7 +6,7 @@ import {
 } from "@/src/modules/studio/shared/contracts";
 import { getDetRunReader } from "@/src/modules/studio/server/det-run-reader-factory";
 
-import { OverviewView } from "./overview-view";
+import { OverviewScreen } from "@/src/modules/studio/modules/overview";
 
 export default async function OverviewPage() {
    // Runs are read from local disk/env per request. fs/env are not tracked as
@@ -31,7 +31,7 @@ export default async function OverviewPage() {
    }
 
    return (
-      <OverviewView
+      <OverviewScreen
          runs={runs}
          readerErrorCode={readerErrorCode}
          readerMessage={readerMessage}

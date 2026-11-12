@@ -56,7 +56,7 @@ export interface OverviewViewProps {
    readerMessage: string | null;
 }
 
-export function OverviewView({
+export function OverviewScreen({
    runs,
    readerErrorCode,
    readerMessage,

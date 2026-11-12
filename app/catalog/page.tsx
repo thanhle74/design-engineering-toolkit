@@ -10,7 +10,7 @@ import {
    type CatalogStats,
 } from "@/src/modules/studio/server/catalog/studio-catalog";
 
-import { CatalogView } from "./catalog-view";
+import { CatalogScreen } from "@/src/modules/studio/modules/catalog";
 
 export const metadata: Metadata = { title: "Dự án & lần chạy" };
 
@@ -68,7 +68,7 @@ export default async function CatalogPage() {
    }
 
    return (
-      <CatalogView
+      <CatalogScreen
          configured={configured}
          offMessage={offMessage}
          errorCode={errorCode}

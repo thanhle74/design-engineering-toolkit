@@ -7,7 +7,7 @@ import {
    BuildLauncher,
    type BuildJobView,
    type BuildLauncherEntry,
-} from "./build-launcher";
+} from "../components/build-launcher";
 
 /**
  * [61] Client view child for the Build Control server page: stock antd light
@@ -29,7 +29,7 @@ interface BuildViewProps {
    initialActive: BuildJobView | null;
 }
 
-export function BuildView({
+export function BuildScreen({
    catalogErrorCode,
    catalogErrorMessage,
    catalogEntries,

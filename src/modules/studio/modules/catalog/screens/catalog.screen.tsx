@@ -194,7 +194,7 @@ export interface CatalogViewProps {
    stats: CatalogStats | null;
 }
 
-export function CatalogView({
+export function CatalogScreen({
    configured,
    offMessage,
    errorCode,
