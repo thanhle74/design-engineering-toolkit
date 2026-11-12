@@ -6,7 +6,7 @@
  * `<configId>/project.json` carrying `{label, description}`).
  *
  * Roots ([58]):
- *  - the CANONICAL repository catalogue `<repoRoot>/examples/build` — the
+ *  - the CANONICAL repository catalogue `<repoRoot>/resources/examples/build` — the
  *    committed, revision-pinned examples discovered IN PLACE (never copied
  *    into `out/`; entries are read-only inputs, builds write only to the
  *    configured runs root). Located from this module's own layout with a
@@ -50,16 +50,16 @@ export const STUDIO_BUILD_PROJECTS_DIR_ENV = "STUDIO_BUILD_PROJECTS_DIR";
 const BUILD_CONFIG_FILE = "build-config.json";
 const PROJECT_META_FILE = "project.json";
 
-/** The canonical repository catalogue, relative to the checkout root. */
-const REPO_CATALOG_SEGMENTS = ["examples", "build"] as const;
+/** The canonical repository catalogue, relative to the checkout root ([68] resources/ layout). */
+const REPO_CATALOG_SEGMENTS = ["resources", "examples", "build"] as const;
 
 /**
  * [58] Locate the checkout root for the canonical repository catalogue: from
- * this module's own location (`src/studio/server` → checkout root, the same
+ * this module's own location (`src/modules/studio/server` → checkout root, the same
  * bundler contract as the runner's STUDIO_APP_ROOT) with a cwd-based fallback
  * (Next runs with cwd = checkout root in the [63] single-application layout).
  * Every candidate is validated against the checkout shape (package.json +
- * examples/build) so an accidental match can never promote an unrelated
+ * resources/examples/build) so an accidental match can never promote an unrelated
  * directory. No match → `null` (a relocated Studio server lists only
  * configured entries).
  */
@@ -80,7 +80,7 @@ function findRepoCatalogRoot(): string | null {
 const REPO_ROOT = findRepoCatalogRoot();
 
 /**
- * Light zod mirror of schemas/cli/build-config.schema.json v1 — listing only
+ * Light zod mirror of resources/schemas/cli/build-config.schema.json v1 — listing only
  * (display fields required; unknown keys ignored; the engine owns the
  * authoritative contract).
  */
@@ -118,7 +118,7 @@ export interface BuildConfigCatalogEntry {
   inputSource: "capability-probe" | "pinned-registry";
   /**
    * [58] Where the entry was discovered: a committed repository example
-   * (`examples/build`, read-only, in place) or the caller-configured dir.
+   * (`resources/examples/build`, read-only, in place) or the caller-configured dir.
    */
   origin: "repository" | "configured";
   /** Declared config-relative paths, shown verbatim as provenance. */

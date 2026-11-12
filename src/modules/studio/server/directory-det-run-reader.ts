@@ -8,7 +8,7 @@
  *    before from the artifacts that command wrote (partial runs assemble
  *    truthfully with what is present).
  *  - `[40]` build bundles: root `build-manifest.json` (written by
- *    `det build --config`, schema `schemas/cli/build-manifest.schema.json`)
+ *    `det build --config`, schema `resources/schemas/cli/build-manifest.schema.json`)
  *    delegates to BuildBundleReader, which joins the stage artifacts and
  *    verifies every declared output's on-disk bytes against the manifest's
  *    per-FILE-BYTE sha256 before anything is downloadable.

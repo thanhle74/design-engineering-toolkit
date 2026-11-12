@@ -2,7 +2,7 @@
  * [40] DET Studio — GET /api/build-configs
  *
  * Lists build-config entries: the committed repository catalogue
- * (examples/build, in place — [58]) plus caller-configured entries from
+ * (resources/examples/build, in place — [58]) plus caller-configured entries from
  * STUDIO_BUILD_PROJECTS_DIR when set (light listing mirror only — det build
  * owns authoritative validation). An explicitly set but invalid env maps to
  * 503 not-configured with the env NAME, never its value. Entries that fail

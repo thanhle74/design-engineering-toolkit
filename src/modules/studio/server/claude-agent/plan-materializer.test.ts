@@ -1,7 +1,7 @@
 /**
  * [65] Plan materializer tests — the deterministic AI-proposal → frozen
  * build-inputs bridge. Uses the REAL committed base project
- * (`examples/build/slaunchpad-home-real-derived`, pinned tree + base
+ * (`resources/examples/build/slaunchpad-home-real-derived`, pinned tree + base
  * projection from #56) copied into tmp — no AI, no network, no live MCP.
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -23,7 +23,7 @@ import {
   MaterializeError,
 } from "./plan-materializer";
 
-const REAL_DERIVED_DIR = path.join(REPO_ROOT, "examples", "build", "slaunchpad-home-real-derived");
+const REAL_DERIVED_DIR = path.join(REPO_ROOT, "resources", "examples", "build", "slaunchpad-home-real-derived");
 
 let workRoot: string;
 let baseDir: string;

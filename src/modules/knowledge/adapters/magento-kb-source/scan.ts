@@ -7,7 +7,7 @@
 //   root is the caller's gateway-resolved ABSOLUTE scan root; rootAlias is the declared alias
 //   name (digest keys + payload identity); denyGlobs is the FULL merged additive glob list.
 // stdout = exactly one KbSourceScanPayload JSON document
-// (schemas/kb/kb-source-scan.schema.json). The det core never imports this file; the extract
+// (resources/schemas/kb/kb-source-scan.schema.json). The det core never imports this file; the extract
 // orchestrator spawns it per adapters/magento-kb-source/descriptor.json.
 //
 // One kind per payload; four kinds:
@@ -50,7 +50,7 @@ import { BASELINE_DENY_GLOBS, globToRegExp } from "../../path-gateway.js";
 import { slugify } from "../../ids.js";
 import { getAjv } from "../../../../core/schema-registry.js";
 
-// Output contract $id (schemas/kb/kb-source-scan.schema.json). Validated by $id — the schema
+// Output contract $id (resources/schemas/kb/kb-source-scan.schema.json). Validated by $id — the schema
 // file is registered in the shared ajv instance by the schema-registry directory scan.
 const KB_SOURCE_SCAN_ID = "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/kb/kb-source-scan.schema.json";
 

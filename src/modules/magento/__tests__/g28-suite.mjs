@@ -286,7 +286,7 @@ export default async function registerG28Suite(checkAsync) {
       const { code, out, err } = await runCli([...composeArgsFor(extractDir, registryPath), "--json"]);
       assert.equal(code, 0, `exit ${code}: ${err.slice(0, 300)}`);
       const fresh = JSON.parse(out).output.report;
-      const committed = JSON.parse(fs.readFileSync(path.join(ROOT, "examples/converter/compose-output.issue28-home.example.json"), "utf8"));
+      const committed = JSON.parse(fs.readFileSync(path.join(ROOT, "resources/examples/converter/compose-output.issue28-home.example.json"), "utf8"));
       assert.equal(canonicalStringify(stripVolatile(fresh)), canonicalStringify(stripVolatile(committed)), "committed example drifts from a fresh compose");
       const { validateContract } = await import("../../../../dist/src/core/schema-registry.js");
       const check = validateContract("compose-output", committed);

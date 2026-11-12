@@ -1,6 +1,6 @@
 // Core contract suite ([68] module-owned: the checks that lived inline in the pre-#68 root
 // tests/run-all.mjs harness). Runs the 14-case negative/semantic test plan from
-// docs/converter + specs/ISSUE-5-converter-architecture.md §7: schema validation (positive +
+// docs/converter + docs/specs/ISSUE-5-converter-architecture.md §7: schema validation (positive +
 // negative), semantic checks, determinism, neutrality guard, and the two-family portability
 // check. Issue #9 note preserved: the production core graduated from test libs to src/core
 // (TypeScript, compiled to dist/) and this suite tests the real production modules.
@@ -28,7 +28,7 @@ export default async function registerContractsSuite(checkAsync) {
   // Both schema families declare "format": "date-time"; register a strict-enough checker
   // (ajv core has no built-in formats without ajv-formats, which we deliberately do not add).
   ajv.addFormat("date-time", /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$/);
-  const SCHEMA_DIRS = [path.join(ROOT, "schemas", "converter"), ROOT];
+  const SCHEMA_DIRS = [path.join(ROOT, "resources", "schemas", "converter"), path.join(ROOT, "resources", "schemas")];
   const schemaFiles = SCHEMA_DIRS.flatMap((dir) =>
     readdirSync(dir).filter((f) => f.endsWith(".schema.json") || f === "common.defs.json").map((f) => path.join(dir, f))
   );
@@ -36,13 +36,13 @@ export default async function registerContractsSuite(checkAsync) {
   // (common.defs.json#/$defs/...) resolve against those ids once every file is registered.
   for (const f of schemaFiles) ajv.addSchema(load(f));
   const compile = (basename) =>
-    ajv.getSchema(`https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/${basename}`) ?? ajv.compile(load(path.join(ROOT, "schemas", "converter", basename)));
-  const v1Compile = (basename) => ajv.getSchema(`https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/${basename}`) ?? ajv.compile(load(path.join(ROOT, "schemas", basename)));
+    ajv.getSchema(`https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/${basename}`) ?? ajv.compile(load(path.join(ROOT, "resources", "schemas", "converter", basename)));
+  const v1Compile = (basename) => ajv.getSchema(`https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/${basename}`) ?? ajv.compile(load(path.join(ROOT, "resources", "schemas", basename)));
 
   const registry = load(`${FIX}/synthetic-flatcms/registry.fixture.json`);
   const bindings = load(`${FIX}/synthetic-flatcms/bindings.fixture.json`);
   const structure = load(`${FIX}/synthetic-flatcms/structure.fixture.json`);
-  const magentoRegistry = load(path.join(ROOT, "examples/converter/capability-registry.magento-pagebuilder.example.json"));
+  const magentoRegistry = load(path.join(ROOT, "resources/knowledge/magento/pagebuilder/capability-registry.magento-pagebuilder.example.json"));
   const syntheticProfile = load(`${FIX}/negative/profile-synthetic-flatcms.fixture.json`);
 
   // ---- T-07 / T-10: schema validation ----------------------------------------------------
@@ -154,14 +154,14 @@ export default async function registerContractsSuite(checkAsync) {
     assert(report.coverage.total === 5 && report.coverage.native === 3 && report.coverage.widget === 1 && report.coverage["custom-required"] === 1, JSON.stringify(report.coverage));
     assert(report.diagnostics.some((x) => x.code === "RESPONSIVE_UNCERTAIN" && x.severity === "warning"), "responsive advisory expected");
     // The committed example must equal a fresh deterministic run (minus generatedAt).
-    const committed = load(path.join(ROOT, "examples/converter/resolution-report.synthetic-flatcms.example.json"));
+    const committed = load(path.join(ROOT, "resources/examples/converter/resolution-report.synthetic-flatcms.example.json"));
     const fresh = { ...report, generatedAt: committed.generatedAt };
     assert(JSON.stringify(fresh, null, 2) + "\n" === JSON.stringify(committed, null, 2) + "\n", "committed example drifts from a fresh resolver run");
     return `coverage=${JSON.stringify(report.coverage)} warnings=${report.counts.warnings}`;
   });
   checkAsync("POS-e", "committed resolution-report example validates", () => {
     const v = compile("resolution-report.schema.json");
-    const ok = v(load(path.join(ROOT, "examples/converter/resolution-report.synthetic-flatcms.example.json")));
+    const ok = v(load(path.join(ROOT, "resources/examples/converter/resolution-report.synthetic-flatcms.example.json")));
     assert(ok, "committed report example must validate: " + JSON.stringify(v.errors?.slice(0, 5)));
     return "valid";
   });
@@ -171,7 +171,7 @@ export default async function registerContractsSuite(checkAsync) {
     const a = canonicalReportHash(resolveStructure(registry, bindings, structure));
     // Document-order arrays (structure sections/elements) are semantic and stay fixed;
     // association arrays (registry capabilities, bindings) may arrive in any order and
-    // the resolver must restore canonical order (schemas/converter/README.md rule 1).
+    // the resolver must restore canonical order (resources/schemas/converter/README.md rule 1).
     const shuffledRegistry = { ...registry, capabilities: [...registry.capabilities].reverse() };
     const shuffledBindings = { ...bindings, bindings: [...bindings.bindings].reverse() };
     const b = canonicalReportHash(resolveStructure(shuffledRegistry, shuffledBindings, structure));
@@ -181,7 +181,7 @@ export default async function registerContractsSuite(checkAsync) {
     return a.slice(0, 16) + "…";
   });
   checkAsync("T-08b", "magento example registry is in canonical key order", () => {
-    const raw = readFileSync(path.join(ROOT, "examples/converter/capability-registry.magento-pagebuilder.example.json"), "utf8");
+    const raw = readFileSync(path.join(ROOT, "resources/knowledge/magento/pagebuilder/capability-registry.magento-pagebuilder.example.json"), "utf8");
     const parsed = JSON.parse(raw);
     assert(JSON.stringify(parsed, null, 2) + "\n" === raw, "file serialization must be 2-space canonical form");
     const capOrder = parsed.capabilities.map((c) => c.id + "∥" + c.appearanceId);
@@ -227,7 +227,7 @@ export default async function registerContractsSuite(checkAsync) {
 
   // ---- T-09: core-neutrality grep guard ----------------------------------------------------
   checkAsync("T-09", "neutrality guard: no platform literals/paths/figma-ids in neutral surfaces", () => {
-    // Neutral surfaces: schemas/converter/**, schemas/cli/** and the synthetic-flatcms fixtures.
+    // Neutral surfaces: resources/schemas/converter/**, resources/schemas/cli/** and the synthetic-flatcms fixtures.
     // V1 schemas are legitimately Figma-typed — scanned separately, only for non-Figma platform leakage.
     // The synthetic-magento-like fixture tree is deliberately magento-shaped (it is the adapter
     // fixture) and is covered by T-18b's owner-path/licensing scans instead.
@@ -238,25 +238,25 @@ export default async function registerContractsSuite(checkAsync) {
       const m = text.match(new RegExp(re.source, "gi"));
       if (m) hits.push(`${relPath}: ${[...new Set(m)].join(",")}`);
     };
-    const convDir = path.join(ROOT, "schemas", "converter");
-    for (const f of readdirSync(convDir).filter((f) => f.endsWith(".json"))) scanFile(`schemas/converter/${f}`, readFileSync(path.join(convDir, f), "utf8"), neutralTerms);
-    const cliDir = path.join(ROOT, "schemas", "cli");
-    for (const f of readdirSync(cliDir).filter((f) => f.endsWith(".json"))) scanFile(`schemas/cli/${f}`, readFileSync(path.join(cliDir, f), "utf8"), neutralTerms);
+    const convDir = path.join(ROOT, "resources", "schemas", "converter");
+    for (const f of readdirSync(convDir).filter((f) => f.endsWith(".json"))) scanFile(`resources/schemas/converter/${f}`, readFileSync(path.join(convDir, f), "utf8"), neutralTerms);
+    const cliDir = path.join(ROOT, "resources", "schemas", "cli");
+    for (const f of readdirSync(cliDir).filter((f) => f.endsWith(".json"))) scanFile(`resources/schemas/cli/${f}`, readFileSync(path.join(cliDir, f), "utf8"), neutralTerms);
     const fixDir = path.join(FIX, "synthetic-flatcms");
     for (const f of readdirSync(fixDir)) scanFile(`src/core/__tests__/fixtures/synthetic-flatcms/${f}`, readFileSync(path.join(fixDir, f), "utf8"), neutralTerms);
-    for (const f of readdirSync(path.join(ROOT, "schemas")).filter((f) => f.endsWith(".schema.json"))) {
-      scanFile(`schemas/${f}`, readFileSync(path.join(ROOT, "schemas", f), "utf8"), v1Terms);
+    for (const f of readdirSync(path.join(ROOT, "resources", "schemas")).filter((f) => f.endsWith(".schema.json"))) {
+      scanFile(`resources/schemas/${f}`, readFileSync(path.join(ROOT, "resources", "schemas", f), "utf8"), v1Terms);
     }
     assert(hits.length === 0, "neutrality violations:\n" + hits.join("\n"));
-    return "0 matches across schemas/** and synthetic fixtures";
+    return "0 matches across resources/schemas/** and synthetic fixtures";
   });
 
   // ---- T-14: two-family portability --------------------------------------------------------
   checkAsync("T-14a", "V1 profile family still validates independently", () => {
     const v = v1Compile("project-profile.schema.json");
-    const ok = v(load(path.join(ROOT, "profiles/luxury-editorial.example.json")));
+    const ok = v(load(path.join(ROOT, "resources/profiles/luxury-editorial.example.json")));
     assert(ok, "V1 profile must validate: " + JSON.stringify(v.errors?.slice(0, 3)));
-    const ok2 = v(load(path.join(ROOT, "profiles/commerce-promotional.example.json")));
+    const ok2 = v(load(path.join(ROOT, "resources/profiles/commerce-promotional.example.json")));
     assert(ok2, "V1 commerce profile must validate");
     return "both V1 profiles valid (family untouched)";
   });
@@ -267,7 +267,7 @@ export default async function registerContractsSuite(checkAsync) {
       ["component-defs.schema.json", "components.secomm-fashion.example.json"],
     ]) {
       const v = v1Compile(schema);
-      const ok = v(load(path.join(ROOT, "examples", example)));
+      const ok = v(load(path.join(ROOT, "resources", "examples", example)));
       assert(ok, `${example} must validate against ${schema}: ` + JSON.stringify(v.errors?.slice(0, 3)));
     }
     return "3/3 V1 examples valid";

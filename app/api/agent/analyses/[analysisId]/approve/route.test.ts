@@ -26,7 +26,7 @@ import { getBuildRunner } from "@/src/modules/studio/server/build-runner";
 
 import { POST } from "./route";
 
-const REAL_DERIVED_DIR = path.join(REPO_ROOT, "examples", "build", "slaunchpad-home-real-derived");
+const REAL_DERIVED_DIR = path.join(REPO_ROOT, "resources", "examples", "build", "slaunchpad-home-real-derived");
 
 let runsRoot: string;
 let baseConfigPath: string;

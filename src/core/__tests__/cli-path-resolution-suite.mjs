@@ -4,7 +4,7 @@
 // the #60 workspace layout; a distributable root CLI package is NOT a supported artifact
 // and is deliberately not claimed). What must stay portable INSIDE the checkout is the
 // committed `node <root>/bin/det.js` entrypoint: invoked from a foreign cwd it resolves
-// its schema registry (schemas/), adapter descriptors (src/modules/**/adapters/ + dist entries) and
+// its schema registry (resources/schemas/), adapter descriptors (src/modules/**/adapters/ + dist entries) and
 // version from the REPOSITORY ROOT — never from the caller's cwd — and it fails closed
 // with structured diagnostics on bad input. Closest prior art: REG-07 (foreign-cwd
 // import probe), [60] foreign-cwd CLI checks, REG-09 (committed plan inputs).
@@ -36,7 +36,7 @@ export default async function registerCliPathResolutionSuite(checkAsync) {
     }
   });
 
-  checkAsync("T-63-2", "root CLI resolves schemas/registry.json + adapters from the checkout root from a foreign cwd: committed #54 plan inputs resolve offline", () => {
+  checkAsync("T-63-2", "root CLI resolves resources/schemas/registry.json + adapters from the checkout root from a foreign cwd: committed #54 plan inputs resolve offline", () => {
     const foreign = fs.mkdtempSync(path.join(os.tmpdir(), "det63-plan-"));
     const outDir = path.join(foreign, "plan-out");
     const plan = execFileSync(
@@ -44,10 +44,10 @@ export default async function registerCliPathResolutionSuite(checkAsync) {
       [
         DET_CLI,
         "plan",
-        "--profile", path.join(ROOT, "profiles/slaunchpad-fashion.example.json"),
-        "--registry", path.join(ROOT, "examples/converter/capability-registry.magento-pagebuilder.example.json"),
-        "--bindings", path.join(ROOT, "examples/converter/component-binding-map.slaunchpad-fashion.example.json"),
-        "--input", path.join(ROOT, "evidence/issue-18/live-read-verified/page-structure.json"),
+        "--profile", path.join(ROOT, "resources/profiles/slaunchpad-fashion.example.json"),
+        "--registry", path.join(ROOT, "resources/knowledge/magento/pagebuilder/capability-registry.magento-pagebuilder.example.json"),
+        "--bindings", path.join(ROOT, "resources/knowledge/magento/pagebuilder/component-binding-map.slaunchpad-fashion.example.json"),
+        "--input", path.join(ROOT, "docs/evidence/issue-18/live-read-verified/page-structure.json"),
         "--out", outDir,
         "--json",
       ],
@@ -129,9 +129,9 @@ export default async function registerCliPathResolutionSuite(checkAsync) {
         DET_CLI,
         "plan",
         "--profile", path.join(foreign, "no-such-profile.json"),
-        "--registry", path.join(ROOT, "examples/converter/capability-registry.magento-pagebuilder.example.json"),
-        "--bindings", path.join(ROOT, "examples/converter/component-binding-map.slaunchpad-fashion.example.json"),
-        "--input", path.join(ROOT, "evidence/issue-18/live-read-verified/page-structure.json"),
+        "--registry", path.join(ROOT, "resources/knowledge/magento/pagebuilder/capability-registry.magento-pagebuilder.example.json"),
+        "--bindings", path.join(ROOT, "resources/knowledge/magento/pagebuilder/component-binding-map.slaunchpad-fashion.example.json"),
+        "--input", path.join(ROOT, "docs/evidence/issue-18/live-read-verified/page-structure.json"),
         "--json",
       ];
       try {

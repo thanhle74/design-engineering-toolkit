@@ -1,4 +1,4 @@
-// Issue #41 registry suite: schemas/registry.json is the single source of truth for contract
+// Issue #41 registry suite: resources/schemas/registry.json is the single source of truth for contract
 // aliases. Every alias must resolve to a package-relative local schema file whose OWN $id is
 // byte-for-byte identical to the historical Ajv key / serialized schemaRef (no URI migration),
 // the run-envelope role refs must stay byte-for-byte (including the documented '#native-content'
@@ -16,7 +16,7 @@ import { schemaRefFor } from "../../../dist/src/core/run-envelope.js";
 import { validateRegistry } from "../../../dist/src/core/semantic.js";
 
 import { REPO_ROOT as ROOT } from "./repo-root.mjs";
-const registry = JSON.parse(fs.readFileSync(path.join(ROOT, "schemas", "registry.json"), "utf8"));
+const registry = JSON.parse(fs.readFileSync(path.join(ROOT, "resources", "schemas", "registry.json"), "utf8"));
 
 // Golden compatibility pin (issue #41): these alias -> $id pairs ARE the byte-for-byte
 // contract. A drift in any alias, path or $id fails this suite loudly — the $id URLs are
@@ -77,7 +77,7 @@ const HARNESS_REF =
   "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/converter/CONTRACTS-harness-shape";
 
 export default async function registerRegistrySuite(checkAsync) {
-  checkAsync("REG-01", "schemas/registry.json is well-formed: version 1, package-relative alias paths that exist on disk", async () => {
+  checkAsync("REG-01", "resources/schemas/registry.json is well-formed: version 1, package-relative alias paths that exist on disk", async () => {
     assert.equal(registry.version, 1, "registry version is 1");
     const aliases = registry.aliases;
     assert.ok(aliases && typeof aliases === "object", "registry declares an aliases map");
@@ -86,7 +86,7 @@ export default async function registerRegistrySuite(checkAsync) {
     assert.deepEqual(Object.keys(GOLDEN_IDS).sort(), names.sort(), "registry aliases match the golden alias set");
     for (const [alias, rel] of Object.entries(aliases)) {
       assert.equal(typeof rel, "string", `alias '${alias}' maps to a string path`);
-      assert.match(rel, /^schemas\/[A-Za-z0-9._/-]+\.schema\.json$/, `alias '${alias}' path is package-relative under schemas/ and ends in .schema.json: ${rel}`);
+      assert.match(rel, /^resources\/schemas\/[A-Za-z0-9._/-]+\.schema\.json$/, `alias '${alias}' path is package-relative under resources/schemas/ and ends in .schema.json: ${rel}`);
       assert.ok(!rel.includes(".."), `alias '${alias}' path must not traverse up: ${rel}`);
       assert.ok(fs.existsSync(path.join(REPO_ROOT, rel)), `alias '${alias}' file exists on disk (package-relative): ${rel}`);
     }
@@ -117,7 +117,7 @@ export default async function registerRegistrySuite(checkAsync) {
       assert.ok(ajv.getSchema(id), `Ajv has the schema registered for '${alias}' (${id})`);
       n++;
     }
-    assert.equal(REPO_ROOT, ROOT, "REPO_ROOT resolves to the checkout root ([63] single-application layout: schemas/ is a root dir, adapters live under src/modules/**/adapters/)");
+    assert.equal(REPO_ROOT, ROOT, "REPO_ROOT resolves to the checkout root ([63] single-application layout: resources/schemas/ is a root dir, adapters live under src/modules/**/adapters/)");
     return `${n} $ids registered in Ajv`;
   });
 
@@ -175,7 +175,7 @@ process.stdout.write(contractId("build-manifest"));`;
   });
 
   checkAsync("REG-08", "fail loud: unknown alias and unregistered $id are refused with precise registry errors", async () => {
-    assert.throws(() => contractId("no-such-alias"), /Unknown contract alias 'no-such-alias' \(schemas\/registry\.json\)/);
+    assert.throws(() => contractId("no-such-alias"), /Unknown contract alias 'no-such-alias' \(resources\/schemas\/registry\.json\)/);
     assert.throws(() => schemaRefFor("no-such-role"), /Unknown contract alias/);
     return "missing alias fails loudly at resolution";
   });
@@ -186,7 +186,7 @@ process.stdout.write(contractId("build-manifest"));`;
   // must resolve the revision-pinned live-derived #18 PageStructure offline — coverage honestly
   // zero (no proven bindings), zero errors. Re-breaking the example registry fails CI loudly.
   checkAsync("REG-09", "example capability registry is evidence-valid and resolves the live-derived #18 PageStructure (coverage honestly 0)", async () => {
-    const regPath = path.join(ROOT, "examples/converter/capability-registry.magento-pagebuilder.example.json");
+    const regPath = path.join(ROOT, "resources/knowledge/magento/pagebuilder/capability-registry.magento-pagebuilder.example.json");
     const registryJson = JSON.parse(fs.readFileSync(regPath, "utf8"));
     const verdict = validateRegistry(registryJson);
     assert.equal(verdict.valid, true, "example registry must pass validateRegistry: " + JSON.stringify(verdict.diagnostics.filter((d) => d.severity === "error").slice(0, 3)));
@@ -202,10 +202,10 @@ process.stdout.write(contractId("build-manifest"));`;
       [
         "bin/det.js",
         "plan",
-        "--profile", path.join(ROOT, "profiles/slaunchpad-fashion.example.json"),
+        "--profile", path.join(ROOT, "resources/profiles/slaunchpad-fashion.example.json"),
         "--registry", regPath,
-        "--bindings", path.join(ROOT, "examples/converter/component-binding-map.slaunchpad-fashion.example.json"),
-        "--input", path.join(ROOT, "evidence/issue-18/live-read-verified/page-structure.json"),
+        "--bindings", path.join(ROOT, "resources/knowledge/magento/pagebuilder/component-binding-map.slaunchpad-fashion.example.json"),
+        "--input", path.join(ROOT, "docs/evidence/issue-18/live-read-verified/page-structure.json"),
         "--out", outDir,
         "--json",
       ],

@@ -1,7 +1,7 @@
 // Magento Page Builder adapter — read-only capability probe (out-of-process subprocess).
 //
-// Contract: stdin = one AdapterInput JSON document (schemas/cli/adapter-input.schema.json),
-// stdout = one CapabilityRegistry JSON payload (schemas/converter/capability-registry.schema.json).
+// Contract: stdin = one AdapterInput JSON document (resources/schemas/cli/adapter-input.schema.json),
+// stdout = one CapabilityRegistry JSON payload (resources/schemas/converter/capability-registry.schema.json).
 // The det core never imports this file; it spawns it per the adapter descriptor.
 //
 // Evidence rules (audited against a real Magento CE 2.4.8-p5 checkout, issue #9):

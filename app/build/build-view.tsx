@@ -9,7 +9,7 @@ import { BuildLauncher, type BuildJobView, type BuildLauncherEntry } from "./bui
  * [61] Client view child for the Build Control server page: stock antd light
  * heading, catalog/runner alerts and the launcher. Terse Vietnamese operator
  * copy ("ít chữ"); machine tokens (npm run dev, STUDIO_BUILD_PROJECTS_DIR,
- * STUDIO_DET_RUNS_DIR, examples/build, docs/studio/README.md, error codes)
+ * STUDIO_DET_RUNS_DIR, resources/examples/build, docs/studio/README.md, error codes)
  * stay verbatim inside the stock `Typography.Text code` look. No custom CSS
  * or utility classes; raw h1 keeps its aria-labelledby target and the inline
  * heading style is layout-only.
@@ -57,7 +57,7 @@ export function BuildView({
               <p>{catalogErrorMessage}</p>
               <Typography.Paragraph type="secondary">
                 Chạy <Typography.Text code>npm run dev</Typography.Text> từ gốc repo (các ví dụ có
-                sẵn trong <Typography.Text code>examples/build</Typography.Text> được nạp tại chỗ),
+                sẵn trong <Typography.Text code>resources/examples/build</Typography.Text> được nạp tại chỗ),
                 hoặc đặt <Typography.Text code>STUDIO_BUILD_PROJECTS_DIR</Typography.Text> trỏ tới
                 thư mục các mục cấu hình (một thư mục con mỗi mục, chứa{" "}
                 <Typography.Text code>build-config.json</Typography.Text>) và{" "}

@@ -14,8 +14,8 @@ import { REPO_ROOT as ROOT } from "../../../../src/core/__tests__/repo-root.mjs"
 const FIX = path.join(path.dirname(new URL(import.meta.url).pathname), "fixtures");
 // Shared contract fixtures (negative/, synthetic-*) are owned by the core suite home; KB-specific data lives beside this suite.
 const CORE_FIXTURES = path.join(ROOT, "src", "core", "__tests__", "fixtures");
-const EX_KB = path.join(ROOT, "examples", "kb");
-const KB_STORE = path.join(ROOT, "kb");
+const EX_KB = path.join(ROOT, "resources", "examples", "kb");
+const KB_STORE = path.join(ROOT, "resources", "knowledge", "store");
 const REG_ROOT = path.join(CORE_FIXTURES, "synthetic-magento-like");
 const KB_NEG = path.join(FIX, "kb", "negative");
 const KB_DIRTY = path.join(FIX, "kb", "dirty");
@@ -46,7 +46,7 @@ function mkTemp(prefix) {
   return fs.mkdtempSync(path.join(os.tmpdir(), `det-kb-${prefix}-`));
 }
 
-// Stage a mutable copy of examples/kb (manifest + inputs) into a temp dir.
+// Stage a mutable copy of resources/examples/kb (manifest + inputs) into a temp dir.
 function stageExamples(dest = mkTemp("examples")) {
   for (const f of fs.readdirSync(EX_KB)) fs.copyFileSync(path.join(EX_KB, f), path.join(dest, f));
   return dest;
@@ -611,9 +611,9 @@ export default async function registerKbSuite(checkAsync) {
     return "gate blocks unsafe scope; ids+kinds named, values withheld";
   });
 
-  await checkAsync("KB-26", "portability scan: no owner paths, no real file keys, no secret markers in schemas/kb, examples/kb or kb/", async () => {
+  await checkAsync("KB-26", "portability scan: no owner paths, no real file keys, no secret markers in resources/schemas/kb, resources/examples/kb or kb/", async () => {
     const forbidden = [/\/home\/[a-z]/i, /slaunch/i, /vNPtfBRpYM3PsExirVqhmt/i, ...SECRET_MARKERS.map((m) => new RegExp(m))];
-    const dirs = [path.join(ROOT, "schemas", "kb"), EX_KB, KB_STORE];
+    const dirs = [path.join(ROOT, "resources", "schemas", "kb"), EX_KB, KB_STORE];
     const hits = [];
     const scan = (dir) => {
       for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {

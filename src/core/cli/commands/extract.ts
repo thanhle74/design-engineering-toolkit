@@ -22,7 +22,7 @@ import { isBlocking, loadProfile, resolveSource } from "./shared.js";
 import type { BindingMap, CapabilityRegistry, ConverterProfile, DesignSourceSnapshot, Diagnostic } from "../../types.js";
 
 // Snapshot-emitting adapters are identified by their declared output contract ($id),
-// resolved from schemas/registry.json + the schema file's own $id (issue #41).
+// resolved from resources/schemas/registry.json + the schema file's own $id (issue #41).
 const SNAPSHOT_CONTRACT = contractId("design-source-snapshot");
 
 export async function commandExtract(flags: Record<string, string | boolean>, io: CommandIO): Promise<0 | 1 | 2 | 3> {

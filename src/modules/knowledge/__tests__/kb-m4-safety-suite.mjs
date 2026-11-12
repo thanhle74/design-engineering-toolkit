@@ -122,8 +122,8 @@ export default async function registerKbM4SafetySuite(checkAsync) {
     return "gitignore lines + 0 tracked + check-ignore 2/2";
   });
 
-  await checkAsync("KB-M4-S2", "portability scan extended: schemas/**, examples/**, docs/knowledge/**, specs/knowledge-foundation/** carry no owner paths, real private-store path references or credential material", async () => {
-    const scanRoots = ["schemas", "examples", "docs/knowledge", "specs/knowledge-foundation"];
+  await checkAsync("KB-M4-S2", "portability scan extended: resources/schemas/**, resources/examples/**, docs/knowledge/**, docs/specs/knowledge-foundation/** carry no owner paths, real private-store path references or credential material", async () => {
+    const scanRoots = ["resources/schemas", "resources/examples", "resources/knowledge", "docs/knowledge", "docs/specs/knowledge-foundation"];
     for (const r of scanRoots) assert.ok(fs.existsSync(path.join(ROOT, r)), `${r} must exist — the scan must never be vacuous`);
     const hits = [];
     const scan = (dir) => {

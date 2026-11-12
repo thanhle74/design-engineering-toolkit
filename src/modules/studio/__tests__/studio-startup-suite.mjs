@@ -1,7 +1,7 @@
 // [58] suite: single-root startup — one operator entrypoint and the in-place
 // canonical project catalogue. Locks the [58] operator contract offline:
 // cwd-independent root resolution with explicit-env passthrough (launcher),
-// the committed examples/build catalogue shape (single canonical entry, no
+// the committed resources/examples/build catalogue shape (single canonical entry, no
 // stale/duplicate configs), a real in-place `det build` that writes NOTHING
 // into the committed project, and the root script wiring. All checks are
 // deterministic, fully offline, and never touch Figma/Magento.
@@ -11,13 +11,12 @@ import { createHash } from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { main } from "../../../../dist/src/core/cli/main.js";
 
 import { REPO_ROOT as ROOT } from "../../../../src/core/__tests__/repo-root.mjs";
 const STUDIO_SCRIPT = path.join(ROOT, "scripts", "studio.mjs");
 const SETUP_SCRIPT = path.join(ROOT, "scripts", "setup.mjs");
-const PROJECT = path.join(ROOT, "examples", "build", "slaunchpad-home-real-derived");
+const PROJECT = path.join(ROOT, "resources", "examples", "build", "slaunchpad-home-real-derived");
 const CANONICAL_ID = "slaunchpad-home-real-derived";
 // src/modules/studio/server/artifact-access.ts RUN_ID_PATTERN (same id space).
 const RUN_ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/;
@@ -78,10 +77,10 @@ export default async function registerStudioStartupSuite(checkAsync) {
     assert.deepEqual(parsed.env.STUDIO_DET_CLI, { value: "/opt/det/det.js", source: "env" });
   });
 
-  checkAsync("R58-T3", "canonical catalogue shape: exactly one committed examples/build entry, id-safe, no stale duplicates", () => {
+  checkAsync("R58-T3", "canonical catalogue shape: exactly one committed resources/examples/build entry, id-safe, no stale duplicates", () => {
     const entries = fs
-      .readdirSync(path.join(ROOT, "examples", "build"), { withFileTypes: true })
-      .filter((d) => d.isDirectory() && fs.existsSync(path.join(ROOT, "examples", "build", d.name, "build-config.json")))
+      .readdirSync(path.join(ROOT, "resources", "examples", "build"), { withFileTypes: true })
+      .filter((d) => d.isDirectory() && fs.existsSync(path.join(ROOT, "resources", "examples", "build", d.name, "build-config.json")))
       .map((d) => d.name)
       .sort();
     assert.deepEqual(entries, [CANONICAL_ID]);

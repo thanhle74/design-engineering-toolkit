@@ -1,6 +1,6 @@
 // Ajv schema registry for the det core: loads every committed schema family
-// (schemas/converter + schemas/cli + schemas/kb + schemas root) once and compiles validators
-// by $id or basename. schemas/registry.json (issue #41) is the single source of contract
+// (resources/schemas/converter + resources/schemas/cli + resources/schemas/kb + schemas root) once and compiles validators
+// by $id or basename. resources/schemas/registry.json (issue #41) is the single source of contract
 // aliases; the schema files on disk stay the canonical contracts and carry their own $id.
 import fs from "node:fs";
 import path from "node:path";
@@ -22,12 +22,12 @@ const Ajv = AjvDefault as unknown as new (options?: Record<string, unknown>) => 
 
 export const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
 
-const SCHEMA_DIRS = [path.join(REPO_ROOT, "schemas", "converter"), path.join(REPO_ROOT, "schemas", "cli"), path.join(REPO_ROOT, "schemas", "kb"), path.join(REPO_ROOT, "schemas")];
+const SCHEMA_DIRS = [path.join(REPO_ROOT, "resources", "schemas", "converter"), path.join(REPO_ROOT, "resources", "schemas", "cli"), path.join(REPO_ROOT, "resources", "schemas", "kb"), path.join(REPO_ROOT, "resources", "schemas")];
 
 let instance: AjvInstance | null = null;
 
 // ajv strict mode rejects "format": "date-time" without a registered checker; the repo
-// deliberately ships no ajv-formats (schemas/converter tests established this checker).
+// deliberately ships no ajv-formats (resources/schemas/converter tests established this checker).
 const DATE_TIME_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$/;
 
 export function getAjv(): AjvInstance {
@@ -47,7 +47,7 @@ export function getAjv(): AjvInstance {
   return ajv;
 }
 
-// ---- schemas/registry.json: contract alias -> relative schema path (issue #41) ----------
+// ---- resources/schemas/registry.json: contract alias -> relative schema path (issue #41) ----------
 // The registry JSON is the single source of contract aliases; each mapped file's own $id is
 // the Ajv registry key and the serialized schemaRef identity (byte-for-byte, no URI
 // migration). Resolution is alias -> path -> the schema file's own $id, read from the DET
@@ -57,7 +57,7 @@ interface RegistryDoc {
   aliases: Record<string, string>;
 }
 
-const REGISTRY_FILE = path.join(REPO_ROOT, "schemas", "registry.json");
+const REGISTRY_FILE = path.join(REPO_ROOT, "resources", "schemas", "registry.json");
 
 let registryDoc: RegistryDoc | null = null;
 const idByAlias = new Map<string, string>();
@@ -92,7 +92,7 @@ export function contractId(name: string): string {
   const cached = idByAlias.get(name);
   if (cached !== undefined) return cached;
   const rel = loadRegistry().aliases[name];
-  if (rel === undefined) throw new Error(`Unknown contract alias '${name}' (schemas/registry.json)`);
+  if (rel === undefined) throw new Error(`Unknown contract alias '${name}' (resources/schemas/registry.json)`);
   if (path.isAbsolute(rel) || rel.includes("..") || /^[A-Za-z][A-Za-z0-9+.-]*:/.test(rel)) {
     throw new Error(`registry alias '${name}' must map to a package-relative schema path, got '${rel}'`);
   }

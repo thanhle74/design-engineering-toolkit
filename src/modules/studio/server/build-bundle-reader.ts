@@ -2,7 +2,7 @@
  * [40] DET Studio — build-bundle reader for `det build --config` output.
  *
  * A build bundle is one run directory whose ROOT carries `build-manifest.json`
- * (schema `schemas/cli/build-manifest.schema.json`, kind `det-build-manifest`)
+ * (schema `resources/schemas/cli/build-manifest.schema.json`, kind `det-build-manifest`)
  * and NO root `tool-run.json`: the per-stage tool-run envelopes live inside
  * the stage directories. DirectoryDetRunReader dispatches bundle-shaped dirs
  * here ([40] discovery seam) — the DetRunReader contract, the factory env and
@@ -84,14 +84,14 @@ const CONFIG_HASH = /^sha256:[0-9a-f]{64}$/;
  * schemaRef manifest-first from the stage envelope instead.
  */
 const BUNDLE_ROLE_SCHEMA_FALLBACK: Record<string, string> = {
-  "tool-run-envelope": "schemas/cli/tool-run.schema.json",
-  "build-manifest": "schemas/cli/build-manifest.schema.json",
-  registry: "schemas/converter/capability-registry.schema.json",
-  "node-ir": "schemas/converter/node-ir.schema.json",
-  "page-structure": "schemas/converter/page-structure.schema.json",
-  "source-review": "schemas/converter/source-review.schema.json",
-  "compose-report": "schemas/cli/compose-output.schema.json",
-  "native-content": "schemas/cli/compose-output.schema.json#native-content",
+  "tool-run-envelope": "resources/schemas/cli/tool-run.schema.json",
+  "build-manifest": "resources/schemas/cli/build-manifest.schema.json",
+  registry: "resources/schemas/converter/capability-registry.schema.json",
+  "node-ir": "resources/schemas/converter/node-ir.schema.json",
+  "page-structure": "resources/schemas/converter/page-structure.schema.json",
+  "source-review": "resources/schemas/converter/source-review.schema.json",
+  "compose-report": "resources/schemas/cli/compose-output.schema.json",
+  "native-content": "resources/schemas/cli/compose-output.schema.json#native-content",
 };
 
 export interface GuardedBuildManifest {

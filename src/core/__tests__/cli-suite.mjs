@@ -176,7 +176,7 @@ export default async function registerCliSuite(checkAsync) {
     const report = JSON.parse(r.out).output;
     assert.equal(report.coverage.total, 5);
     // Determinism: same canonical hash as the committed resolver example (hash excludes generatedAt).
-    const committed = JSON.parse(fs.readFileSync(path.join(ROOT, "examples/converter/resolution-report.synthetic-flatcms.example.json"), "utf8"));
+    const committed = JSON.parse(fs.readFileSync(path.join(ROOT, "resources/examples/converter/resolution-report.synthetic-flatcms.example.json"), "utf8"));
     const strip = (x) => JSON.stringify({ ...x, generatedAt: undefined });
     assert.equal(strip(report), strip(committed), "report drifts from committed example");
     // No-write default.
@@ -404,10 +404,11 @@ export default async function registerCliSuite(checkAsync) {
     const neutralTerms = /magento|secomm|pagebuilder|hyva|slaunch|\/home\/thanhle|figma/i;
     scanDir(path.join(process.cwd(), "dist/src"), neutralTerms, new Set(["adapters"]), true);
     scanDir(path.join(process.cwd(), "bin"), neutralTerms);
-    scanDir(path.join(process.cwd(), "schemas/cli"), neutralTerms);
+    scanDir(path.join(process.cwd(), "resources/schemas/cli"), neutralTerms);
     // Shipped code and committed data must never embed the owner's machine path.
     const ownerPath = /\/home\/thanhle/;
-    for (const dir of ["src", "schemas", "bin", "examples", "profiles"]) scanDir(path.join(process.cwd(), dir), ownerPath);
+    // [68] shipped surfaces: src (sources), resources (schemas/examples/profiles/projects/knowledge data), bin (launcher).
+    for (const dir of ["src", "resources", "bin"]) scanDir(path.join(process.cwd(), dir), ownerPath);
     // Adapters must not ship licensed Hyvä source: only thin declaration scanning exists.
     const adapterFiles = [];
     const collect = (d) => {

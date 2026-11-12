@@ -35,7 +35,7 @@ const PROOF_LEVELS = new Set(["DETECTED", "ASSUMED", "TESTED", "UNKNOWN"]);
 // Engine artifact payloads validate against the engine-output envelope (records view /
 // sync report / query result); the store descriptor validates against kb-store directly.
 // Schema identity for every artifact comes solely from run-envelope's registry-resolved
-// schemaRefs (schemas/registry.json + each file's own $id, issue #41) — never re-declare
+// schemaRefs (resources/schemas/registry.json + each file's own $id, issue #41) — never re-declare
 // schema URLs here.
 
 // KB stable hashes strip ALL observation timestamps (scannedAt/capturedAt/recordedAt ride on

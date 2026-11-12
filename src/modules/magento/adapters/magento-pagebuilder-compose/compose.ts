@@ -1,7 +1,7 @@
 // Magento Page Builder compose adapter — deterministic native content composer (G3, issue #23).
 //
-// Contract: stdin = one ComposeInput JSON document (schemas/cli/compose-input.schema.json),
-// stdout = one ComposeOutput JSON payload (schemas/cli/compose-output.schema.json).
+// Contract: stdin = one ComposeInput JSON document (resources/schemas/cli/compose-input.schema.json),
+// stdout = one ComposeOutput JSON payload (resources/schemas/cli/compose-output.schema.json).
 // The det core never imports this file; it spawns it per the adapter descriptor. The core has
 // already validated every embedded payload + all cross-pins; this adapter re-validates
 // defensively and fails closed on anything unexpected.
@@ -323,7 +323,7 @@ function resolveComposerRole(node: NodeIRNode): ComposerRole | undefined {
 const esc = (s: string): string => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 const escText = (s: string): string => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-const SEP = "\u241f"; // canonical separator (U+241F), same convention as the core evidence/derivation ids
+const SEP = "\u241f"; // canonical separator (U+241F), same convention as the core docs/evidence/derivation ids
 
 // Deterministic master-format style key (issue #25 NaN correction): the Admin stage rehydrates
 // element styles EXCLUSIVELY from the `<style>` block keyed by data-pb-style (stage-builder

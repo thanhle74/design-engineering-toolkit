@@ -22,7 +22,7 @@ const G2 = path.join(FIX, "g2-design-source");
 const LIVE = path.join(FIX, "g2-figma-live");
 import { REPO_ROOT } from "../../../../src/core/__tests__/repo-root.mjs";
 const REPO = REPO_ROOT;
-// [63] the engine lives at the checkout root: src/core + src/modules/**/adapters/ + schemas/ + dist/. ([68] module-owned adapters)
+// [63] the engine lives at the checkout root: src/core + src/modules/**/adapters/ + resources/schemas/ + dist/. ([68] module-owned adapters)
 const CORE = REPO;
 const CORE_FIXTURES = path.join(REPO_ROOT, "src", "core", "__tests__", "fixtures");
 const PROFILE = path.join(CORE_FIXTURES, "negative/profile-g2-design-fixture.fixture.json");
@@ -56,7 +56,7 @@ export default async function registerG2Suite(checkAsync) {
       ["page-structure", "page-structure.g2-fixture.example.json"],
       ["source-review", "source-review.g2-fixture.example.json"],
     ]) {
-      const payload = JSON.parse(fs.readFileSync(path.join(REPO, "examples/converter", file), "utf8"));
+      const payload = JSON.parse(fs.readFileSync(path.join(REPO, "resources/examples/converter", file), "utf8"));
       const check = validateContract(contract, payload);
       assert.ok(check.valid, `${file} must validate: ${check.errors.slice(0, 3).join("; ")}`);
     }
@@ -78,7 +78,7 @@ export default async function registerG2Suite(checkAsync) {
       ["pageStructure", "page-structure.g2-fixture.example.json"],
       ["review", "source-review.g2-fixture.example.json"],
     ]) {
-      const committed = JSON.parse(fs.readFileSync(path.join(REPO, "examples/converter", file), "utf8"));
+      const committed = JSON.parse(fs.readFileSync(path.join(REPO, "resources/examples/converter", file), "utf8"));
       assert.equal(canonicalStringify(stripVolatile(o[key])), canonicalStringify(stripVolatile(committed)), `${file} drifts from a fresh run`);
     }
     return "3/3 examples reproducible (deterministic extraction)";
@@ -251,7 +251,7 @@ export default async function registerG2Suite(checkAsync) {
   });
 
   checkAsync("G2-T26c", "cross-project registry and stale binding pin fail closed (INPUT_CONTRACT_MISMATCH / EVIDENCE_MISSING)", async () => {
-    const cross = await runCli([...extractArgs(["--registry", path.join(REPO, "examples/converter/capability-registry.magento-pagebuilder.example.json")]), "--json"]);
+    const cross = await runCli([...extractArgs(["--registry", path.join(REPO, "resources/knowledge/magento/pagebuilder/capability-registry.magento-pagebuilder.example.json")]), "--json"]);
     assert.equal(cross.code, 1);
     const crossRun = JSON.parse(cross.out).run;
     assert.ok(crossRun.runDiagnostics.some((x) => x.code === "INPUT_CONTRACT_MISMATCH"), JSON.stringify(crossRun.runDiagnostics));
@@ -388,9 +388,9 @@ export default async function registerG2Suite(checkAsync) {
       if (m) hits.push(`${rel}: ${[...new Set(m)].join(",")}`);
     };
     for (const f of ["node-ir.schema.json", "page-structure.schema.json", "source-review.schema.json"]) {
-      scan(`schemas/converter/${f}`, fs.readFileSync(path.join(REPO, "schemas/converter", f), "utf8"));
+      scan(`resources/schemas/converter/${f}`, fs.readFileSync(path.join(REPO, "resources/schemas/converter", f), "utf8"));
     }
-    scan("schemas/cli/design-source-snapshot.schema.json", fs.readFileSync(path.join(REPO, "schemas/cli/design-source-snapshot.schema.json"), "utf8"));
+    scan("resources/schemas/cli/design-source-snapshot.schema.json", fs.readFileSync(path.join(REPO, "resources/schemas/cli/design-source-snapshot.schema.json"), "utf8"));
     scan("dist/src/core/design-source/extract.js", fs.readFileSync(path.join(REPO, "dist/src/core/design-source/extract.js"), "utf8"));
     scan("dist/src/core/design-source/port.js", fs.readFileSync(path.join(REPO, "dist/src/core/design-source/port.js"), "utf8"));
     scan("dist/src/core/cli/commands/extract.js", fs.readFileSync(path.join(REPO, "dist/src/core/cli/commands/extract.js"), "utf8"));
@@ -404,11 +404,11 @@ export default async function registerG2Suite(checkAsync) {
       // transport) is unchanged.
       scan(`src/modules/figma/adapters/design-source-fixture/${f}`, descText.replace(/"entry":\s*"[^"]*"/, `"entry": "<location-redacted>"`));
     }
-    for (const f of fs.readdirSync(path.join(REPO, "examples/converter")).filter((x) => x.includes("g2"))) {
-      scan(`examples/converter/${f}`, fs.readFileSync(path.join(REPO, "examples/converter", f), "utf8"));
+    for (const f of fs.readdirSync(path.join(REPO, "resources/examples/converter")).filter((x) => x.includes("g2"))) {
+      scan(`resources/examples/converter/${f}`, fs.readFileSync(path.join(REPO, "resources/examples/converter", f), "utf8"));
     }
     assert.deepEqual(hits, [], "neutrality violations:\n" + hits.join("\n"));
-    return "0 matches across schemas/core/adapters/fixtures/examples";
+    return "0 matches across resources/schemas/core/adapters/fixtures/examples";
   });
 
   // ---- Issue #18 live read-only design-source adapter (offline gate over a stubbed provider API)
@@ -683,7 +683,7 @@ export default async function registerG2Suite(checkAsync) {
     return "extract->plan chain green on live-derived structure; 0 bindings honestly reported";
   });
 
-  checkAsync("G2-T31g", "new live surfaces stay free of secrets and owner identifiers (provider pins allowed only in evidence/receipt)", async () => {
+  checkAsync("G2-T31g", "new live surfaces stay free of secrets and owner identifiers (provider pins allowed only in docs/evidence/receipt)", async () => {
     const adapterBanned = /vNPtfBRpYM3PsExirVqhmt|figd_[A-Za-z0-9_-]{10,}|\/home\/thanhle|slaunch|secomm|\b245:2\b|\b245:16\b/i;
     const hits = [];
     const scan = (rel, text, banned) => {
@@ -702,13 +702,13 @@ export default async function registerG2Suite(checkAsync) {
     // Derived live evidence + receipt (when present): token-shaped secrets and absolute paths are
     // never committed; the source/revision provenance pins required by the issue are allowed.
     const evidenceBanned = /figd_[A-Za-z0-9_-]{10,}|-----BEGIN|\/home\/[a-z]+\//i;
-    const evidenceDir = path.join(REPO, "evidence/issue-18");
-    if (fs.existsSync(evidenceDir)) walkDir(evidenceDir, "evidence/issue-18", evidenceBanned);
+    const evidenceDir = path.join(REPO, "docs/evidence/issue-18");
+    if (fs.existsSync(evidenceDir)) walkDir(evidenceDir, "docs/evidence/issue-18", evidenceBanned);
     const receipt = path.join(REPO, "docs/converter/RECEIPT-ISSUE18-G2-LIVE.md");
     if (fs.existsSync(receipt)) scan("docs/converter/RECEIPT-ISSUE18-G2-LIVE.md", fs.readFileSync(receipt, "utf8"), evidenceBanned);
     assert.deepEqual(hits, [], "secret/owner-identifier violations:\n" + hits.join("\n"));
     const { server } = await liveServer();
     server.close();
-    return "adapter + fixtures clean; evidence/receipt secrets policy enforced";
+    return "adapter + fixtures clean; docs/evidence/receipt secrets policy enforced";
   });
 }

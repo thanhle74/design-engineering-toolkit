@@ -43,7 +43,7 @@ export interface BuildLauncherEntry {
   profileId: string;
   designSource: { mode: string; project: string; designFile: string; designNode: string };
   inputSource: "capability-probe" | "pinned-registry";
-  /** [58] repository = committed examples/build catalogue, configured = caller dir. */
+  /** [58] repository = committed resources/examples/build catalogue, configured = caller dir. */
   origin?: "repository" | "configured";
   declaredPaths: {
     profile: string;
@@ -453,7 +453,7 @@ export function BuildLauncher({
               <Typography.Text code>build-config.json</Typography.Text> dưới{" "}
               <Typography.Text code>STUDIO_BUILD_PROJECTS_DIR</Typography.Text> (xem{" "}
               <Typography.Text code>docs/studio/README.md</Typography.Text> và{" "}
-              <Typography.Text code>examples/build/project.example.json</Typography.Text>).
+              <Typography.Text code>resources/examples/build/project.example.json</Typography.Text>).
             </Typography.Text>
           ) : (
             entries.map((entry) => (

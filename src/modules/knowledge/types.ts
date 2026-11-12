@@ -1,5 +1,5 @@
 // Knowledge Engine (issue #15) — shared KB record types.
-// The JSON Schemas in schemas/kb/ stay the canonical validation layer (ajv); these structural
+// The JSON Schemas in resources/schemas/kb/ stay the canonical validation layer (ajv); these structural
 // types exist so the TypeScript core is type-checked against the shapes it validates at runtime.
 // Platform-neutral: platform/source identifiers appear as VALUES, never as structure.
 import type { RunDiagnostic } from "../../core/adapter-runtime.js";

@@ -2,7 +2,7 @@
  * [40] Studio test helper — drive the REAL det CLI for build-control E2E.
  *
  * The build-control tests deliberately run the shipped offline engine
- * (`node bin/det.js build --config examples/build/project.example.json`,
+ * (`node bin/det.js build --config resources/examples/build/project.example.json`,
  * ~1s, fully offline) instead of synthetic fixtures, so verified downloads,
  * stage truth and tamper refusals are proven against actual engine output
  * exactly as issue #40 requires. Dist must be built first — the helper fails
@@ -22,7 +22,7 @@ const HELPER_DIR = path.dirname(fileURLToPath(import.meta.url));
 export const REPO_ROOT = path.resolve(HELPER_DIR, "..", "..", "..", "..", "..");
 
 export const DET_ENTRY = path.join(REPO_ROOT, "bin", "det.js");
-export const EXAMPLE_BUILD_CONFIG = path.join(REPO_ROOT, "examples", "build", "project.example.json");
+export const EXAMPLE_BUILD_CONFIG = path.join(REPO_ROOT, "resources", "examples", "build", "project.example.json");
 
 /** G28 fixture inputs ([68]: fixtures co-located with the owning magento module's suites). */
 export const G28_FIXTURE_DIR = path.join(

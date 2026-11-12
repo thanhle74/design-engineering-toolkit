@@ -1,5 +1,5 @@
 // Issue #56 suite: the first real-source Studio build project
-// (examples/build/slaunchpad-home-real-derived). Locks the provenance chain from the
+// (resources/examples/build/slaunchpad-home-real-derived). Locks the provenance chain from the
 // committed #18 live-read evidence to the offline `det build` bundle the Studio /build page
 // runs, plus the honesty invariants (no invented content, no machine paths, measured
 // partial coverage). All checks run fully offline over committed artifacts — no provider
@@ -15,8 +15,8 @@ import { validateRegistry } from "../../../../dist/src/core/semantic.js";
 import { main } from "../../../../dist/src/core/cli/main.js";
 
 import { REPO_ROOT as ROOT } from "../../../../src/core/__tests__/repo-root.mjs";
-const PROJECT = path.join(ROOT, "examples/build/slaunchpad-home-real-derived");
-const LIVE = path.join(ROOT, "evidence/issue-18/live-read-verified");
+const PROJECT = path.join(ROOT, "resources/examples/build/slaunchpad-home-real-derived");
+const LIVE = path.join(ROOT, "docs/evidence/issue-18/live-read-verified");
 const SOURCE_REVISION = "2417494580183108397";
 
 async function runCli(args) {

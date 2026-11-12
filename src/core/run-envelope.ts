@@ -1,4 +1,4 @@
-// Tool-run envelope assembly (schemas/cli/tool-run.schema.json): the deterministic record of
+// Tool-run envelope assembly (resources/schemas/cli/tool-run.schema.json): the deterministic record of
 // one det command — artifacts + hashes + converter diagnostics + process-level run diagnostics.
 import { contentHash, sha256Hex, canonicalStringify, sortDiagnostics, stableContentHash, stripVolatile } from "./canonical.js";
 import { contractId } from "./schema-registry.js";
@@ -9,7 +9,7 @@ export const TOOL_NAME = "det";
 
 export type CommandName = "validate" | "inspect" | "plan" | "extract" | "kb" | "compose" | "build";
 export type ExitCode = 0 | 1 | 2 | 3;
-// Issue #15: kb-store roles are additive minors of the tool-run family (schemas/cli/README.md).
+// Issue #15: kb-store roles are additive minors of the tool-run family (resources/schemas/cli/README.md).
 // Issue #23: compose-report is the additive G3 role (native content composition output).
 export type ArtifactRole =
   | "registry" | "resolution-report" | "node-ir" | "page-structure" | "source-review" | "profile-input" | "binding-map" | "structure-input" | "adapter-descriptor"
@@ -53,7 +53,7 @@ export function setToolVersion(v: string): void {
   TOOL_VERSION = v;
 }
 
-// Artifact role -> contract alias in schemas/registry.json (issue #41): the registry and the
+// Artifact role -> contract alias in resources/schemas/registry.json (issue #41): the registry and the
 // schema files' own $id are the single source of schema identity; this map only assigns roles
 // to contracts and never restates a URL. `structure-input` is the documented exception below.
 const ROLE_CONTRACT: Record<Exclude<ArtifactRole, "structure-input">, string> = {
@@ -85,7 +85,7 @@ const ROLE_CONTRACT: Record<Exclude<ArtifactRole, "structure-input">, string> = 
 const NATIVE_CONTENT_REF_SUFFIX = "#native-content";
 
 // G1 harness structure pseudo-ref (docs/converter/CONTRACTS.md §4): a docs contract, not a
-// materialized schema file — the one identifier outside schemas/registry.json, kept
+// materialized schema file — the one identifier outside resources/schemas/registry.json, kept
 // byte-for-byte for envelope compatibility. The role is legacy (not emitted since the G2
 // materialization) and its staged retirement is follow-up work per issue #14.
 const STRUCTURE_INPUT_HARNESS_REF =
@@ -93,7 +93,7 @@ const STRUCTURE_INPUT_HARNESS_REF =
 
 const schemaRefs = new Map<string, string>();
 
-// schemaRef for one artifact role, resolved through schemas/registry.json + the schema file's
+// schemaRef for one artifact role, resolved through resources/schemas/registry.json + the schema file's
 // own $id (memoized). Throws loudly on an unknown role or a broken registry entry.
 export function schemaRefFor(role: ArtifactRole): string {
   const cached = schemaRefs.get(role);

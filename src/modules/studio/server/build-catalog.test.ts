@@ -71,7 +71,7 @@ describe("repository catalogue ([58])", () => {
     expect(JSON.stringify(entry!)).not.toContain(os.tmpdir());
   });
 
-  it("resolves the repository entry's config inside examples/build", async () => {
+  it("resolves the repository entry's config inside resources/examples/build", async () => {
     const catalog = await BuildConfigCatalog.open("");
     const resolved = await catalog.resolveConfigPath("slaunchpad-home-real-derived");
     expect(resolved).toContain(path.join("examples", "build", "slaunchpad-home-real-derived", "build-config.json"));

@@ -1,4 +1,4 @@
-// Canonical JSON + hashing per schemas/converter/README.md (deterministic serialization rules).
+// Canonical JSON + hashing per resources/schemas/converter/README.md (deterministic serialization rules).
 // Ported verbatim (logic-identical) from the #5 G1 harness (tests/lib/canonical.mjs) as part of
 // issue #9: production code must not live in tests/. Parity is proven by the unchanged T-08 checks.
 import crypto from "node:crypto";

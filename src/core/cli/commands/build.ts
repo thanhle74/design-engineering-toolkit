@@ -2,10 +2,10 @@
 //
 // A THIN, validated driver over the ALREADY-SHIPPED commands (inspect -> extract -> compose):
 // it introduces no engine, no parser, no mapping logic and no defaults. Every input comes from
-// one schema'd BuildConfig document (schemas/cli/build-config.schema.json) whose paths resolve
+// one schema'd BuildConfig document (resources/schemas/cli/build-config.schema.json) whose paths resolve
 // relative to the config file itself, so a project config is portable; the CLI --out flag (or
 // config.outputDir) names the bundle directory. The bundle is the versioned inventory contract
-// of schemas/cli/build-manifest.schema.json: per-FILE-BYTE sha256 over every generated artifact
+// of resources/schemas/cli/build-manifest.schema.json: per-FILE-BYTE sha256 over every generated artifact
 // and consumed input (deliberately a different, documented notion from the converter family's
 // canonical payload contentHash), exact stage provenance, and an honest gap list — the
 // explicitly OPERATOR_GATED preview-installation steps are recorded as gaps, never claimed.

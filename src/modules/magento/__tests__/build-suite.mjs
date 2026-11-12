@@ -2,7 +2,7 @@
 // orchestrator over the SHIPPED commands, the versioned build bundle + per-FILE-BYTE manifest,
 // the compose native-content artifact closure, and the fail-closed posture (offline-only,
 // usage errors, honest dry run, failed-stage propagation). All checks run fully offline over
-// the committed sample project (examples/build) — no MCP, no agent, no network, no defaults.
+// the committed sample project (resources/examples/build) — no MCP, no agent, no network, no defaults.
 import assert from "node:assert";
 import crypto from "node:crypto";
 import fs from "node:fs";
@@ -12,8 +12,8 @@ import { main } from "../../../../dist/src/core/cli/main.js";
 import { validateContract } from "../../../../dist/src/core/schema-registry.js";
 
 import { REPO_ROOT as ROOT } from "../../../../src/core/__tests__/repo-root.mjs";
-const EXAMPLE_CONFIG = path.join(ROOT, "examples/build/project.example.json");
-const COMMITTED_NATIVE = path.join(ROOT, "examples/converter/compose-output.issue28-home.example.json");
+const EXAMPLE_CONFIG = path.join(ROOT, "resources/examples/build/project.example.json");
+const COMMITTED_NATIVE = path.join(ROOT, "resources/examples/converter/compose-output.issue28-home.example.json");
 
 function sha256File(p) {
   return crypto.createHash("sha256").update(fs.readFileSync(p)).digest("hex");
@@ -80,7 +80,7 @@ export default async function registerBuildSuite(checkAsync) {
     const bytes = fs.readFileSync(path.join(bundleDir, "03-composition", "native-content.html"));
     assert.equal(nc.contentHash, crypto.createHash("sha256").update(bytes).digest("hex"), "native-content contentHash is the EXACT file-byte sha256");
     // The closed tool-run contract itself carries the additive roles (schema/source parity).
-    const toolRunSchema = JSON.parse(fs.readFileSync(path.join(ROOT, "schemas/cli/tool-run.schema.json"), "utf8"));
+    const toolRunSchema = JSON.parse(fs.readFileSync(path.join(ROOT, "resources/schemas/cli/tool-run.schema.json"), "utf8"));
     const roleEnum = toolRunSchema.properties.artifacts.items.properties.role.enum;
     for (const role of ["compose-report", "native-content", "build-manifest"]) assert.ok(roleEnum.includes(role), `tool-run role enum carries ${role}`);
     const commandEnum = toolRunSchema.properties.command.enum;
@@ -140,7 +140,7 @@ export default async function registerBuildSuite(checkAsync) {
     // Paths in a build config resolve relative to the config file itself; a config written
     // outside the repo tree carries absolutized caller inputs (as any external project would).
     const base = JSON.parse(fs.readFileSync(EXAMPLE_CONFIG, "utf8"));
-    const abs = (p) => (path.isAbsolute(p) ? p : path.join(ROOT, "examples/build", p));
+    const abs = (p) => (path.isAbsolute(p) ? p : path.join(ROOT, "resources/examples/build", p));
     const configAbsolute = {
       ...base,
       profile: abs(base.profile),
@@ -174,10 +174,10 @@ export default async function registerBuildSuite(checkAsync) {
       if (m) hits.push(`${rel}: ${[...new Set(m)].join(",")}`);
     };
     for (const f of ["build-config.schema.json", "build-manifest.schema.json"]) {
-      scan(`schemas/cli/${f}`, fs.readFileSync(path.join(ROOT, "schemas/cli", f), "utf8"));
+      scan(`resources/schemas/cli/${f}`, fs.readFileSync(path.join(ROOT, "resources/schemas/cli", f), "utf8"));
     }
-    scan("examples/build/project.example.json", fs.readFileSync(path.join(ROOT, "examples/build/project.example.json"), "utf8"));
-    scan("examples/build/README.md", fs.readFileSync(path.join(ROOT, "examples/build/README.md"), "utf8"));
+    scan("resources/examples/build/project.example.json", fs.readFileSync(path.join(ROOT, "resources/examples/build/project.example.json"), "utf8"));
+    scan("resources/examples/build/README.md", fs.readFileSync(path.join(ROOT, "resources/examples/build/README.md"), "utf8"));
     // The build bundle manifest is a runtime OUTPUT artifact: its input records intentionally
     // carry the caller's resolved local paths (absolute when outside the config tree) — the
     // neutrality invariant governs COMMITTED surfaces, which are scanned above.

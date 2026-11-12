@@ -2,7 +2,7 @@
  * [29] W-D — DirectoryDetRunReader tests.
  *
  * Payloads are small but shaped like the REAL engine artifacts
- * (schemas/cli/tool-run + compose-output, schemas/converter/source-review +
+ * (resources/schemas/cli/tool-run + compose-output, resources/schemas/converter/source-review +
  * page-structure + node-ir). Security cases: traversal, absolute paths,
  * symlink escape, extension allowlist, size cap — a refused path must never
  * leak file content, and error messages must never contain server paths.

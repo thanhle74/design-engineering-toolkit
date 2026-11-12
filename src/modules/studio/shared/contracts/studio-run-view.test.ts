@@ -114,7 +114,7 @@ describe("[40] additive optional build block", () => {
       artifactId: "03-composition/native-content.html",
       role: "native-content",
       file: "03-composition/native-content.html",
-      schemaRef: "schemas/cli/compose-output.schema.json#native-content",
+      schemaRef: "resources/schemas/cli/compose-output.schema.json#native-content",
       sha256: "b".repeat(64),
       downloadable: true,
     };

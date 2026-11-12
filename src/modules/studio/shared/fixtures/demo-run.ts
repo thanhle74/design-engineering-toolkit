@@ -2,7 +2,7 @@
  * [29] DET Studio — the ONE labeled DEMO fixture (bootstrap checkpoint).
  *
  * `demo-run.json` is shaped exactly like the frozen StudioRunView read model
- * (derived from `schemas/cli/*` and `schemas/converter/*`) and is validated
+ * (derived from `resources/schemas/cli/*` and `resources/schemas/converter/*`) and is validated
  * against its zod schema at import time, so any drift fails loudly instead of
  * silently skewing UI lanes.
  *

@@ -98,7 +98,7 @@ Usage:
       defaults, no hardcoded projects). Major 1 builds run from OFFLINE snapshot/tree documents
       only; a live design-source mode is not representable and fails closed. The bundle lands in
       --out (or config.outputDir) as versioned stage directories plus build-manifest.json — the
-      per-file-byte inventory (schemas/cli/build-manifest.schema.json) of every generated
+      per-file-byte inventory (resources/schemas/cli/build-manifest.schema.json) of every generated
       artifact, consumed input, stage provenance and honest gap (preview installation into a
       checkout is explicitly OPERATOR_GATED: the build never writes to any platform).
 

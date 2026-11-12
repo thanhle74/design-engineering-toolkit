@@ -2,11 +2,11 @@
  * [29] DET Studio — frozen UI-facing read model.
  *
  * Derived from actual DET artifact schemas (do not invent fields here):
- *   - schemas/cli/tool-run.schema.json        (run manifest, artifacts, run diagnostics)
- *   - schemas/cli/compose-output.schema.json  (mapping dispositions, compose diagnostics)
- *   - schemas/converter/source-review.schema.json (review dispositions, semantic classes)
- *   - schemas/converter/page-structure.schema.json (ordered sections)
- *   - schemas/converter/node-ir.schema.json   (node kinds)
+ *   - resources/schemas/cli/tool-run.schema.json        (run manifest, artifacts, run diagnostics)
+ *   - resources/schemas/cli/compose-output.schema.json  (mapping dispositions, compose diagnostics)
+ *   - resources/schemas/converter/source-review.schema.json (review dispositions, semantic classes)
+ *   - resources/schemas/converter/page-structure.schema.json (ordered sections)
+ *   - resources/schemas/converter/node-ir.schema.json   (node kinds)
  *
  * Canonical compose dispositions are preserved EXACTLY as the engine emits them:
  * `mapped | gap | decoration-merged | excluded | skipped`. `NEEDS_REVIEW` is a
@@ -17,7 +17,7 @@
  */
 import { z } from "zod";
 
-/** Exact enum from schemas/cli/compose-output.schema.json $defs.mappingEntry.disposition. */
+/** Exact enum from resources/schemas/cli/compose-output.schema.json $defs.mappingEntry.disposition. */
 export const STUDIO_COMPOSE_DISPOSITIONS = [
   "mapped",
   "gap",
@@ -27,7 +27,7 @@ export const STUDIO_COMPOSE_DISPOSITIONS = [
 ] as const;
 export type StudioComposeDisposition = (typeof STUDIO_COMPOSE_DISPOSITIONS)[number];
 
-/** Exact enum from schemas/converter/source-review.schema.json entry.disposition. */
+/** Exact enum from resources/schemas/converter/source-review.schema.json entry.disposition. */
 export const STUDIO_REVIEW_DISPOSITIONS = [
   "MAPPED",
   "EXCLUDED_WITH_REASON",
@@ -37,7 +37,7 @@ export const STUDIO_REVIEW_DISPOSITIONS = [
 ] as const;
 export type StudioReviewDisposition = (typeof STUDIO_REVIEW_DISPOSITIONS)[number];
 
-/** Exact severity enum from schemas/converter/common.defs.json diagnostic + tool-run runDiagnostics. */
+/** Exact severity enum from resources/schemas/converter/common.defs.json diagnostic + tool-run runDiagnostics. */
 export const STUDIO_SEVERITIES = ["info", "warning", "error"] as const;
 export type StudioSeverity = (typeof STUDIO_SEVERITIES)[number];
 
@@ -45,7 +45,7 @@ export type StudioSeverity = (typeof STUDIO_SEVERITIES)[number];
 export const STUDIO_RUN_MODES = ["fixture", "live"] as const;
 export type StudioRunMode = (typeof STUDIO_RUN_MODES)[number];
 
-/** Exact enum from schemas/converter/node-ir.schema.json node.kind. */
+/** Exact enum from resources/schemas/converter/node-ir.schema.json node.kind. */
 export const STUDIO_NODE_KINDS = [
   "page-section",
   "container",
@@ -59,7 +59,7 @@ export const STUDIO_NODE_KINDS = [
 ] as const;
 export type StudioNodeKind = (typeof STUDIO_NODE_KINDS)[number];
 
-/** Exact enum from schemas/converter/source-review.schema.json entry.semanticClass. */
+/** Exact enum from resources/schemas/converter/source-review.schema.json entry.semanticClass. */
 export const STUDIO_SEMANTIC_CLASSES = [
   "SITE_CHROME",
   "EDITORIAL_SECTION",
@@ -74,7 +74,7 @@ export const STUDIO_DIAGNOSTIC_ORIGINS = ["run", "compose", "review"] as const;
 export type StudioDiagnosticOrigin = (typeof STUDIO_DIAGNOSTIC_ORIGINS)[number];
 
 /**
- * Closed major-1 role enum from schemas/cli/tool-run.schema.json artifacts[].role.
+ * Closed major-1 role enum from resources/schemas/cli/tool-run.schema.json artifacts[].role.
  * `compose-report`, `native-content` and `build-manifest` are the additive
  * roles tool-run schema 1.4.0 already carries (documented by the [36]/[40]
  * receipts); the reader still treats roles as open strings.
@@ -100,7 +100,7 @@ export const STUDIO_ARTIFACT_ROLES = [
 ] as const;
 export type StudioArtifactRole = (typeof STUDIO_ARTIFACT_ROLES)[number];
 
-/** Where a mapping's compose target landed (schemas/cli/compose-output.schema.json mappingEntry.target). */
+/** Where a mapping's compose target landed (resources/schemas/cli/compose-output.schema.json mappingEntry.target). */
 export const StudioTargetRefSchema = z.object({
   capabilityId: z.string().min(1),
   appearanceId: z.string().min(1),
@@ -185,11 +185,11 @@ export const StudioArtifactViewSchema = z.object({
 });
 export type StudioArtifactView = z.infer<typeof StudioArtifactViewSchema>;
 
-/** Exact stage enum from schemas/cli/build-manifest.schema.json stages[].stage. */
+/** Exact stage enum from resources/schemas/cli/build-manifest.schema.json stages[].stage. */
 export const STUDIO_BUILD_STAGES = ["capability-probe", "extraction", "composition"] as const;
 export type StudioBuildStageName = (typeof STUDIO_BUILD_STAGES)[number];
 
-/** Exact status enum from schemas/cli/build-manifest.schema.json stages[].status. */
+/** Exact status enum from resources/schemas/cli/build-manifest.schema.json stages[].status. */
 export const STUDIO_BUILD_STAGE_STATUSES = ["completed", "reused", "failed", "planned"] as const;
 export type StudioBuildStageStatus = (typeof STUDIO_BUILD_STAGE_STATUSES)[number];
 

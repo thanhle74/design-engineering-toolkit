@@ -32,10 +32,10 @@ import { isBlocking, loadProfile } from "./shared.js";
 import type { BindingMap, CapabilityRegistry, ConverterProfile, Diagnostic, NodeIR, PageStructure } from "../../types.js";
 
 // The compose-capable adapters are identified by their declared output contract ($id),
-// resolved from schemas/registry.json + the schema file's own $id (issue #41).
+// resolved from resources/schemas/registry.json + the schema file's own $id (issue #41).
 export const COMPOSE_OUTPUT_CONTRACT = contractId("compose-output");
 
-// Shared structural types for the G3 compose family (schemas/cli/{content-manifest,compose-output}, major 1).
+// Shared structural types for the G3 compose family (resources/schemas/cli/{content-manifest,compose-output}, major 1).
 export interface ContentManifestEntry {
   valueRef: string;
   kind: "text" | "media" | "link";

@@ -11,7 +11,7 @@ import type { KbDiagnostic, ManifestInput } from "./types.js";
 
 export const LOCAL_CONFIG_RELATIVE_PATH = path.join(".toolkit", "local.json");
 
-// Baseline deny-set: profiles/manifests may ADD, never remove.
+// Baseline deny-set: resources/profiles/manifests may ADD, never remove.
 export const BASELINE_DENY_GLOBS: string[] = [
   "auth.json",
   "app/etc/env.php",

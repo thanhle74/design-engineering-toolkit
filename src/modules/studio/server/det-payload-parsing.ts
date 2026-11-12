@@ -39,7 +39,7 @@ export const BUILD_MANIFEST_FILE = "build-manifest.json";
  * `artifact("compose-report", output, { file: "compose-report.json" })`).
  * Recorded drift, NOT silently hidden: that role is present in the engine's
  * type union (`src/core/run-envelope.ts`) but not yet in the closed role enum
- * of `schemas/cli/tool-run.schema.json` — closing it belongs to [28]'s
+ * of `resources/schemas/cli/tool-run.schema.json` — closing it belongs to [28]'s
  * schema/versioning gate, not to Studio. Studio therefore treats roles as
  * open strings and resolves the compose payload manifest-first, falling back
  * to the CLI's fixed conventional filename. It NEVER reads the never-on-disk

@@ -1,7 +1,7 @@
 /**
  * [40] Build-bundle reader tests — driven through DirectoryDetRunReader (the
  * contract surface, including the [40] discovery dispatch) against a REAL
- * `det build` bundle (examples/build/project.example.json, offline) plus
+ * `det build` bundle (resources/examples/build/project.example.json, offline) plus
  * synthetic manifests for guard/edge cases.
  *
  * Proven per issue #40: bundle vs legacy coexistence in the listing, stage

@@ -10,7 +10,7 @@ import { BuildView } from "./build-view";
  * [40] Build Control — real UI-triggered offline `det build` runs (S5).
  *
  * The catalog is the [58] union of the committed repository examples
- * (`examples/build`, listed in place, no copying) plus caller-configured
+ * (`resources/examples/build`, listed in place, no copying) plus caller-configured
  * entries from `STUDIO_BUILD_PROJECTS_DIR` when set. The runner additionally
  * requires `STUDIO_DET_RUNS_DIR` (where real bundles are written — the root
  * `npm run dev` launcher defaults it to out/studio-runs). Without a usable

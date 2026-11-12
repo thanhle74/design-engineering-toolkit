@@ -116,7 +116,7 @@ function npmRun(args, label) {
  * passed through untouched; only STUDIO_DET_RUNS_DIR gets a repository-root
  * default when unset (the directory is created lazily in run modes, never in
  * print-env). The build-config catalogue needs no env: the Studio server
- * discovers the committed examples/build catalogue in place ([58]).
+ * discovers the committed resources/examples/build catalogue in place ([58]).
  */
 function resolveEnv({ createDirs }) {
   const env = { ...process.env };

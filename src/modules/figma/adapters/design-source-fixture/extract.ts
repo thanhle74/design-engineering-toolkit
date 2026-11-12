@@ -1,8 +1,8 @@
 // Design-source FIXTURE adapter — bounded read-only reader for synthetic design-source tree
 // documents (out-of-process subprocess; issue #14 G2 synthetic gate).
 //
-// Contract: stdin = one AdapterInput JSON document (schemas/cli/adapter-input.schema.json),
-// stdout = one DesignSourceSnapshot payload (schemas/cli/design-source-snapshot.schema.json).
+// Contract: stdin = one AdapterInput JSON document (resources/schemas/cli/adapter-input.schema.json),
+// stdout = one DesignSourceSnapshot payload (resources/schemas/cli/design-source-snapshot.schema.json).
 // The det core never imports this file; it spawns it per the adapter descriptor.
 //
 // Rules:
