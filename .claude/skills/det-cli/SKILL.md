@@ -85,7 +85,8 @@ The `magento-specs` MCP is a documentation/pattern reference for authoring and a
 ```bash
 # Deterministic ingest from a manifest (the only way records enter a KB store; report-only by default)
 node bin/det.js kb ingest --manifest resources/examples/kb/manifest.json \
-  --root reg="$(pwd)/tests/fixtures/synthetic-magento-like" --json
+  --root reg="$(pwd)/src/modules/core/__tests__/fixtures/synthetic-magento-like" --json
+# fixtures live co-located with the engine ([68] module layout — was tests/fixtures/ pre-flatten)
 
 # Digest-driven sync (changed sources -> records marked STALE; writes only when something went stale)
 node bin/det.js kb sync --store kb --manifest resources/examples/kb/manifest.json --root reg=... --out kb
