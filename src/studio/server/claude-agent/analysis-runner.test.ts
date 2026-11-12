@@ -516,6 +516,43 @@ describe("C65-1 — synchronous single-slot reservation", () => {
     child.emit("close", 0, null);
     await awaitTerminal(healthy, snapshot.analysisId);
   });
+
+  it("a cancel landing during the queued preflight aborts the start — nothing spawns, slot releases", async () => {
+    const { impl, release, analysisSpawns, lastAnalysisChild } = preflightHoldingSpawn();
+    const runner = await openRunner(impl);
+
+    const pending = runner.start(REQUEST, "/tmp/base/build-config.json");
+    await sleep(50); // parked inside the awaited preflight
+
+    // Cancel via the live active snapshot's id (what a queued-state UI holds).
+    const activeId = runner.activeSnapshot()?.analysisId ?? "";
+    expect(activeId).toMatch(/^agent-\d+$/);
+    const cancelled = runner.cancel(activeId);
+    expect(cancelled?.cancelled).toBe(true);
+
+    release();
+    await expect(pending).rejects.toMatchObject({
+      name: "AgentWorkflowError",
+      code: "analysis-cancelled",
+    });
+    // NOTHING was ever spawned and the slot is free again.
+    expect(analysisSpawns.length).toBe(0);
+    expect(lastAnalysisChild.current).toBeNull();
+    // The journal honestly records a cancelled start (pid null, no command).
+    const journal = JSON.parse(
+      await readFile(path.join(runsRoot, ".agent-jobs", `${activeId}.json`), "utf8")
+    );
+    expect(journal.state).toBe("cancelled");
+    expect(journal.pid).toBeNull();
+    expect(journal.command).toEqual([]);
+    // The slot is released: a fresh start proceeds normally.
+    const child = makeFakeChild();
+    const nextRunner = await openRunner(analysisSpawn({ child }));
+    const next = await nextRunner.start(REQUEST, "/tmp/base/build-config.json");
+    expect(next.state).toBe("running");
+    child.emit("close", 0, null);
+    await awaitTerminal(nextRunner, next.analysisId);
+  });
 });
 
 describe("C65-2 — complete parse buffer vs diagnostic tail", () => {

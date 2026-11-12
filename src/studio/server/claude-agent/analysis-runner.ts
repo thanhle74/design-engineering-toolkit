@@ -358,6 +358,20 @@ export class AgentAnalysisRunner {
       snapshot.allowedFigmaTool = preflight.allowedFigmaTool;
       snapshot.claudeVersion = preflight.claudeCode.version;
       await this.finalizeAnalysisId(snapshot);
+      // A cancellation that landed while the start was still at preflight
+      // (the placeholder is visible to cancel() as soon as the slot is
+      // reserved) must abort the start — never spawn a child the operator
+      // already asked to stop. Journal the honest terminal state, release,
+      // and refuse.
+      if (snapshot.cancelled) {
+        snapshot.state = "cancelled";
+        snapshot.finishedAt = new Date().toISOString();
+        await this.queueJournal(snapshot).catch(() => {});
+        throw new AgentWorkflowError(
+          "analysis-cancelled",
+          "The analysis was cancelled while it was starting; nothing was spawned."
+        );
+      }
       // C65-4: deny every connected NON-Figma MCP server by name so its
       // tools are absent from the child's toolset (verified live on 2.1.322
       // that a server-level `mcp__<name>` deny removes the whole server).

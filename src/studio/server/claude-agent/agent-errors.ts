@@ -32,6 +32,7 @@ export class AgentWorkflowError extends Error {
     | "analysis-not-found"
     | "analysis-not-approvable"
     | "analysis-not-cancellable"
+    | "analysis-cancelled"
     | "base-source-mismatch"
     | "invalid-request";
 
@@ -63,6 +64,9 @@ const STATUS_BY_AGENT_CODE: Record<AgentWorkflowError["code"], number> = {
   "analysis-not-found": 404,
   "analysis-not-approvable": 409,
   "analysis-not-cancellable": 409,
+  // A start that was cancelled while still at preflight (C65-1 queued
+  // placeholder) — nothing was ever spawned.
+  "analysis-cancelled": 409,
   // C65-3: the requested Figma source is not the base project's verified
   // binding — a client-correctable mistake, never a server fault.
   "base-source-mismatch": 422,
