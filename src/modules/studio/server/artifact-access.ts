@@ -24,7 +24,10 @@ export const ARTIFACT_PARSE_EXTENSIONS = [".json"] as const;
 
 /**
  * Extensions the reader may hand out as artifact downloads. Deliberately
- * narrow: text/schema-ish outputs the det CLI actually writes.
+ * narrow: text/schema-ish outputs the det CLI actually writes. [70] adds the
+ * CMS installer bundle artifacts: `.php` (the generated operator installer —
+ * served as inert octet-stream bytes, never executed here) and `.md` (the
+ * operator README).
  */
 export const DOWNLOAD_EXTENSIONS = [
    ".json",
@@ -34,6 +37,8 @@ export const DOWNLOAD_EXTENSIONS = [
    ".svg",
    ".txt",
    ".html",
+   ".php",
+   ".md",
 ] as const;
 
 /** Content-Type served per allowlisted extension. */
@@ -47,6 +52,8 @@ export const DOWNLOAD_CONTENT_TYPES: Readonly<
    ".svg": "image/svg+xml",
    ".txt": "text/plain; charset=utf-8",
    ".html": "text/html; charset=utf-8",
+   ".php": "application/octet-stream",
+   ".md": "text/markdown; charset=utf-8",
 };
 
 /** Hard cap for any single artifact file the reader parses or serves. */
