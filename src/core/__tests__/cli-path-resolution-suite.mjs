@@ -14,7 +14,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
-const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
+import { REPO_ROOT as ROOT } from "./repo-root.mjs";
 const DET_CLI = path.join(ROOT, "bin", "det.js");
 
 export default async function registerCliPathResolutionSuite(checkAsync) {
@@ -100,8 +100,8 @@ export default async function registerCliPathResolutionSuite(checkAsync) {
       [
         DET_CLI,
         "inspect",
-        "--profile", path.join(ROOT, "tests/fixtures/negative/profile-synthetic-magento-like.fixture.json"),
-        "--project", path.join(ROOT, "tests/fixtures/synthetic-magento-like"),
+        "--profile", path.join(ROOT, "src/core/__tests__/fixtures/negative/profile-synthetic-magento-like.fixture.json"),
+        "--project", path.join(ROOT, "src/core/__tests__/fixtures/synthetic-magento-like"),
         "--out", outDir,
         "--json",
       ],

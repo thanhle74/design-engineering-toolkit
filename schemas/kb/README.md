@@ -75,7 +75,7 @@ platform values.
 ## Validation strategy
 
 - **CI:** the KB schemas are registered in the same ajv registry as the converter/CLI families;
-  `tests/kb-suite.mjs` validates positive fixtures and rejects negative twins (missing tenantId,
+  `src/modules/knowledge/__tests__/kb-suite.mjs` validates positive fixtures and rejects negative twins (missing tenantId,
   dangling relation, cross-class `mapsTo`, oversized licensed free-text, secret markers, wrong
   project scope, cross-partition records).
 - **Runtime:** `det kb ingest` validates at write time and refuses invalid records (never

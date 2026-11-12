@@ -8,10 +8,10 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { main } from "../dist/src/core/cli/main.js";
-import { validateContract } from "../dist/src/core/schema-registry.js";
+import { main } from "../../../../dist/src/core/cli/main.js";
+import { validateContract } from "../../../../dist/src/core/schema-registry.js";
 
-const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
+import { REPO_ROOT as ROOT } from "../../../../src/core/__tests__/repo-root.mjs";
 const EXAMPLE_CONFIG = path.join(ROOT, "examples/build/project.example.json");
 const COMMITTED_NATIVE = path.join(ROOT, "examples/converter/compose-output.issue28-home.example.json");
 

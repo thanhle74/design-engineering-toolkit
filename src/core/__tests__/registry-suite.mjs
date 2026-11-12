@@ -11,11 +11,11 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import { getAjv, contractId, contractAliases, REPO_ROOT } from "../dist/src/core/schema-registry.js";
-import { schemaRefFor } from "../dist/src/core/run-envelope.js";
-import { validateRegistry } from "../dist/src/core/semantic.js";
+import { getAjv, contractId, contractAliases, REPO_ROOT } from "../../../dist/src/core/schema-registry.js";
+import { schemaRefFor } from "../../../dist/src/core/run-envelope.js";
+import { validateRegistry } from "../../../dist/src/core/semantic.js";
 
-const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
+import { REPO_ROOT as ROOT } from "./repo-root.mjs";
 const registry = JSON.parse(fs.readFileSync(path.join(ROOT, "schemas", "registry.json"), "utf8"));
 
 // Golden compatibility pin (issue #41): these alias -> $id pairs ARE the byte-for-byte

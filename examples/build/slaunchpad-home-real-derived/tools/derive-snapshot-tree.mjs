@@ -24,7 +24,7 @@
 //
 // Deterministic output: fixed key order, 1-space indent, trailing newline. Re-running the
 // script over the same NodeIR reproduces the committed tree document byte-for-byte (locked
-// by tests/real-derived-suite.mjs R56-T1).
+// by src/modules/studio/__tests__/real-derived-suite.mjs R56-T1).
 //
 // Usage: node derive-snapshot-tree.mjs <node-ir.json> <out-tree.json> <sourceId> <revisionId>
 import fs from "node:fs";

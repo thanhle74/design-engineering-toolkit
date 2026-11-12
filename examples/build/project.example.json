@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
   "profileId": "g28-home-preview",
-  "profile": "../../tests/fixtures/g28-home-design-source/profile-g28-home-fixture.json",
+  "profile": "../../src/modules/magento/__tests__/fixtures/g28-home-design-source/profile-g28-home-fixture.json",
   "designSource": {
     "mode": "snapshot",
-    "project": "../../tests/fixtures/g28-home-design-source",
+    "project": "../../src/modules/magento/__tests__/fixtures/g28-home-design-source",
     "designFile": "design-tree-home-desktop.fixture.json",
     "designNode": "245:2"
   },
   "capabilityProbe": {
-    "project": "../../tests/fixtures/g3-magento-like"
+    "project": "../../src/modules/magento/__tests__/fixtures/g3-magento-like"
   },
-  "bindings": "../../tests/fixtures/g28-home-design-source/g28-component-bindings.fixture.json",
-  "content": "../../tests/fixtures/g28-home-design-source/g28-home-content.fixture.json",
-  "projection": "../../tests/fixtures/g28-home-design-source/g28-home-projection.fixture.json"
+  "bindings": "../../src/modules/magento/__tests__/fixtures/g28-home-design-source/g28-component-bindings.fixture.json",
+  "content": "../../src/modules/magento/__tests__/fixtures/g28-home-design-source/g28-home-content.fixture.json",
+  "projection": "../../src/modules/magento/__tests__/fixtures/g28-home-design-source/g28-home-projection.fixture.json"
 }

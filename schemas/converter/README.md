@@ -17,7 +17,7 @@ Field definitions and the G2 materialization record for `NodeIR`, `PageStructure
 | [`source-review.schema.json`](source-review.schema.json) | `det extract` (G2 accountability report) | Humans reviewing classification/exclusions; gate evidence |
 | [`common.defs.json`](common.defs.json) | — | Shared `$defs` for the whole family |
 
-Worked examples: [`examples/converter/`](../../examples/converter/) (a real-platform registry derived from the [5] W-B audit, and a resolver report) and `tests/fixtures/synthetic-flatcms/` (a synthetic second platform proving core neutrality). The V1 family ([`../`](../)) stays frozen at its own major — the families are independent (ADR-005-011).
+Worked examples: [`examples/converter/`](../../examples/converter/) (a real-platform registry derived from the [5] W-B audit, and a resolver report) and `src/core/__tests__/fixtures/synthetic-flatcms/` (a synthetic second platform proving core neutrality). The V1 family ([`../`](../)) stays frozen at its own major — the families are independent (ADR-005-011).
 
 ## Versioning
 

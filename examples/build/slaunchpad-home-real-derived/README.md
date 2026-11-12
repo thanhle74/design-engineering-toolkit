@@ -5,7 +5,7 @@ Figma read of the Slaunchpad Homepage (root `245:2`, provider revision
 `2417494580183108397`, 337/337 nodes accounted, 12 sections), materialized into the exact
 inputs `det build --config` consumes, so the existing Studio `/build` can run a
 **real-derived** project end to end — clearly distinct from the fixture demo
-(`g28-example`, built from `tests/fixtures/g28-home-design-source`).
+(`g28-example`, built from `src/modules/magento/__tests__/fixtures/g28-home-design-source`).
 
 This directory is portable: every path in `build-config.json` is relative to this file, so
 copying the whole directory anywhere (e.g. into the Studio build-projects catalog) works
@@ -22,7 +22,7 @@ without edits. No credentials, no provider identifiers, no machine-specific abso
 | `content-manifest.json` | observed-only content | the three hero text layers (observed as the design layer names at the pinned revision); labeled offline placeholder media URLs (the reviewed [25]/[28] pattern — the operator supplies real assets before any CMS write). Craftsmanship copy and CTA label/link copy are **absent** from the committed extraction and are deliberately not supplied |
 | `semantic-projection.json` | the recorded role decision | bounded to the two investigated candidate sections (`SECTION/Hero/Primary` hero shape; `SECTION/Craftsmanship` two-column shape); every assignment carries its observed-evidence reason |
 
-## Provenance proof (locked by `tests/real-derived-suite.mjs`)
+## Provenance proof (locked by `src/modules/studio/__tests__/real-derived-suite.mjs`)
 
 - The committed tree document re-derives **byte-for-byte** from the committed #18 NodeIR
   (R56-T1).

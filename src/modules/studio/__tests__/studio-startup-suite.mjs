@@ -12,9 +12,9 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { main } from "../dist/src/core/cli/main.js";
+import { main } from "../../../../dist/src/core/cli/main.js";
 
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+import { REPO_ROOT as ROOT } from "../../../../src/core/__tests__/repo-root.mjs";
 const STUDIO_SCRIPT = path.join(ROOT, "scripts", "studio.mjs");
 const SETUP_SCRIPT = path.join(ROOT, "scripts", "setup.mjs");
 const PROJECT = path.join(ROOT, "examples", "build", "slaunchpad-home-real-derived");

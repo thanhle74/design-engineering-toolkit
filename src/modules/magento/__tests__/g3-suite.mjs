@@ -9,14 +9,16 @@ import assert from "node:assert";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { main } from "../dist/src/core/cli/main.js";
-import { stableContentHash, canonicalStringify, stripVolatile } from "../dist/src/core/canonical.js";
-import { deriveNodeId } from "../dist/src/core/design-source/extract.js";
+import { main } from "../../../../dist/src/core/cli/main.js";
+import { stableContentHash, canonicalStringify, stripVolatile } from "../../../../dist/src/core/canonical.js";
+import { deriveNodeId } from "../../../../dist/src/core/design-source/extract.js";
 
+import { REPO_ROOT as ROOT } from "../../../../src/core/__tests__/repo-root.mjs";
 const FIX = path.join(path.dirname(new URL(import.meta.url).pathname), "fixtures");
 const G3 = path.join(FIX, "g3-hero-design-source");
 const G3_CHECKOUT = path.join(FIX, "g3-magento-like");
-const PROFILE = path.join(FIX, "negative/profile-g3-hero-fixture.fixture.json");
+const CORE_FIXTURES = path.join(ROOT, "src", "core", "__tests__", "fixtures");
+const PROFILE = path.join(CORE_FIXTURES, "negative/profile-g3-hero-fixture.fixture.json");
 
 // Expected accountability for the RAW-observed hero tree at the observed-not-pinned fixture
 // revision (hand-derived from the observed kinds/names, asserted exact): 13 nodes inventoried;
@@ -394,10 +396,10 @@ export default async function registerG3Suite(checkAsync) {
       ]);
       assert.equal(code, 0, `exit ${code}: ${err.slice(0, 300)}`);
       const fresh = JSON.parse(out).output.report;
-      const committed = JSON.parse(fs.readFileSync(path.join(FIX, "..", "..", "examples/converter/compose-output.g3-hero.example.json"), "utf8"));
+      const committed = JSON.parse(fs.readFileSync(path.join(ROOT, "examples/converter/compose-output.g3-hero.example.json"), "utf8"));
       assert.equal(canonicalStringify(stripVolatile(fresh)), canonicalStringify(stripVolatile(committed)), "committed example drifts from a fresh compose");
       // The example validates against its contract.
-      const { validateContract } = await import("../dist/src/core/schema-registry.js");
+      const { validateContract } = await import("../../../../dist/src/core/schema-registry.js");
       const check = validateContract("compose-output", committed);
       assert.ok(check.valid, `committed example must validate: ${check.errors.slice(0, 3).join("; ")}`);
       const manifestCheck = validateContract("content-manifest", JSON.parse(fs.readFileSync(path.join(G3, "hero-content.fixture.json"), "utf8")));
@@ -426,11 +428,11 @@ export default async function registerG3Suite(checkAsync) {
       if (m) hits.push(`${rel}: ${[...new Set(m)].join(",")}`);
     };
     for (const f of ["content-manifest.schema.json", "compose-input.schema.json", "compose-output.schema.json", "semantic-projection.schema.json", "tool-run.schema.json"]) {
-      scan(`schemas/cli/${f}`, fs.readFileSync(path.join(FIX, "..", "..", "schemas/cli", f), "utf8"));
+      scan(`schemas/cli/${f}`, fs.readFileSync(path.join(ROOT, "schemas/cli", f), "utf8"));
     }
-    scan("dist/src/core/cli/commands/compose.js", fs.readFileSync(path.join(FIX, "..", "..", "dist/src/core/cli/commands/compose.js"), "utf8"));
-    for (const f of fs.readdirSync(G3).filter((x) => x.endsWith(".fixture.json") && x.startsWith("design-tree"))) scan(`tests/fixtures/g3-hero-design-source/${f}`, fs.readFileSync(path.join(G3, f), "utf8"));
-    scan("tests/fixtures/g3-hero-design-source/hero-content.fixture.json", fs.readFileSync(path.join(G3, "hero-content.fixture.json"), "utf8"));
+    scan("dist/src/core/cli/commands/compose.js", fs.readFileSync(path.join(ROOT, "dist/src/core/cli/commands/compose.js"), "utf8"));
+    for (const f of fs.readdirSync(G3).filter((x) => x.endsWith(".fixture.json") && x.startsWith("design-tree"))) scan(`src/modules/magento/__tests__/fixtures/g3-hero-design-source/${f}`, fs.readFileSync(path.join(G3, f), "utf8"));
+    scan("src/modules/magento/__tests__/fixtures/g3-hero-design-source/hero-content.fixture.json", fs.readFileSync(path.join(G3, "hero-content.fixture.json"), "utf8"));
     assert.deepEqual(hits, [], "neutrality violations:\n" + hits.join("\n"));
     return "0 matches across schemas/core/design-source surfaces";
   });

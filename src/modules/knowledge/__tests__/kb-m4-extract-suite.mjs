@@ -9,12 +9,13 @@ import assert from "node:assert";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { validateContract } from "../dist/src/core/schema-registry.js";
-import { resolveRootAliases, expandTildePath, BASELINE_DENY_GLOBS } from "../dist/src/modules/knowledge/path-gateway.js";
-import { runExtract, KB_SOURCE_SCAN_CONTRACT_ID } from "../dist/src/modules/knowledge/extract.js";
-import { main } from "../dist/src/core/cli/main.js";
+import { validateContract } from "../../../../dist/src/core/schema-registry.js";
+import { resolveRootAliases, expandTildePath, BASELINE_DENY_GLOBS } from "../../../../dist/src/modules/knowledge/path-gateway.js";
+import { runExtract, KB_SOURCE_SCAN_CONTRACT_ID } from "../../../../dist/src/modules/knowledge/extract.js";
+import { main } from "../../../../dist/src/core/cli/main.js";
 
-const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
+// Committed W-B synthetic checkout fixture, relocated next to this suite by [68].
+const FIX = path.join(path.dirname(new URL(import.meta.url).pathname), "fixtures", "m4");
 const FIXED_SCANNED_AT = "2026-11-06T01:00:00.000Z";
 const DIGEST = "ab12cd34ef56ab12cd34ef56ab12cd34ef56ab12cd34ef56ab12cd34ef56ab12"; // 64 hex
 const SECRET_MARKER = "SuperSecret99";
@@ -189,7 +190,7 @@ function extractManifest(overrides = {}) {
       relations: "relations.json",
       report: "extract-report.json",
     },
-    denyGlobs: ["tests/**"],
+    denyGlobs: ["src/**/__tests__/fixtures/negative/**"],
     notes: "orchestrator test plan",
   };
   return { ...base, ...overrides };
@@ -323,7 +324,7 @@ export default async function registerM4ExtractSuite(checkAsync) {
       // End-to-end through the REAL adapter (W-B fixture checkout) — the config lane resolves
       // the alias, the orchestrator spawns magento-kb-source out-of-process, and the scan
       // succeeds (integrator rework: the real scanner adapter now exists in the repo).
-      const fixtureCheckout = path.join(ROOT, "tests", "fixtures", "m4", "checkout");
+      const fixtureCheckout = path.join(FIX, "checkout");
       writeJson(path.join(good, ".toolkit", "local.json"), { roots: { src: fixtureCheckout } });
       const fixturePlan = stagePlan({
         schemaVersion: 1,
@@ -375,7 +376,7 @@ export default async function registerM4ExtractSuite(checkAsync) {
   });
 
   await checkAsync("M4E-05", "unresolvable scan subPath → exit 1 INPUT_PATH_NOT_RESOLVED before any spawn, only the run receipt persists; --dry-run accepted by the kb flag whitelist (integrator rework: the real scanner adapter is registered now, so the exit-3 adapter-failure mapping is proven at the injected-runner seam in M4E-06)", async () => {
-    const src = path.join(ROOT, "tests", "fixtures", "m4", "checkout");
+    const src = path.join(FIX, "checkout");
     const plan = stagePlan({
       schemaVersion: 1,
       extractId: "m4e05-bad-subpath",
@@ -521,7 +522,7 @@ export default async function registerM4ExtractSuite(checkAsync) {
     assert.equal(platformCall.scan.rootAlias, "src", "alias name carried for digest keys + payload echo");
     assert.equal(platformCall.scan.root, fs.realpathSync(src), "resolved absolute root");
     assert.equal(uiCall.scan.subPath, "vendor/hyva");
-    const expectedGlobs = [...BASELINE_DENY_GLOBS, "tests/**"];
+    const expectedGlobs = [...BASELINE_DENY_GLOBS, "src/**/__tests__/fixtures/negative/**"];
     for (const call of calls) assert.deepEqual(call.scan.denyGlobs, expectedGlobs, "baseline + manifest denyGlobs merged");
     assert.equal(r.reportSchemaValid, true, "artifact-eligible report");
     return "happy path deterministic write + pinned stdin payload verified";

@@ -17,5 +17,5 @@
     "relations": { "path": "relations.json", "label": "cross-KB relation records (synthetic)" }
   },
   "denyGlobs": [],
-  "notes": "Public synthetic example manifest for the committed kb/ store. Resolve the registry alias per run: --root reg=<repo>/tests/fixtures/synthetic-magento-like. No owner paths, no licensed bytes, no real client material."
+  "notes": "Public synthetic example manifest for the committed kb/ store. Resolve the registry alias per run: --root reg=<repo>/src/core/__tests__/fixtures/synthetic-magento-like. No owner paths, no licensed bytes, no real client material."
 }

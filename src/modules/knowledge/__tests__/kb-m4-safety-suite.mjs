@@ -8,9 +8,9 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
-import { main } from "../dist/src/core/cli/main.js";
+import { main } from "../../../../dist/src/core/cli/main.js";
 
-const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
+import { REPO_ROOT as ROOT } from "../../../../src/core/__tests__/repo-root.mjs";
 
 // Synthetic secret markers (fixture sentinel strings — no real credential material anywhere).
 const SECRET_MARKERS = [

@@ -6,15 +6,17 @@ import assert from "node:assert";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { canonicalStringify } from "../dist/src/core/canonical.js";
-import { validateContract } from "../dist/src/core/schema-registry.js";
-import { main } from "../dist/src/core/cli/main.js";
+import { canonicalStringify } from "../../../../dist/src/core/canonical.js";
+import { validateContract } from "../../../../dist/src/core/schema-registry.js";
+import { main } from "../../../../dist/src/core/cli/main.js";
 
-const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
-const FIX = path.join(ROOT, "tests", "fixtures");
+import { REPO_ROOT as ROOT } from "../../../../src/core/__tests__/repo-root.mjs";
+const FIX = path.join(path.dirname(new URL(import.meta.url).pathname), "fixtures");
+// Shared contract fixtures (negative/, synthetic-*) are owned by the core suite home; KB-specific data lives beside this suite.
+const CORE_FIXTURES = path.join(ROOT, "src", "core", "__tests__", "fixtures");
 const EX_KB = path.join(ROOT, "examples", "kb");
 const KB_STORE = path.join(ROOT, "kb");
-const REG_ROOT = path.join(FIX, "synthetic-magento-like");
+const REG_ROOT = path.join(CORE_FIXTURES, "synthetic-magento-like");
 const KB_NEG = path.join(FIX, "kb", "negative");
 const KB_DIRTY = path.join(FIX, "kb", "dirty");
 

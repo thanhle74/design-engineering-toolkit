@@ -18,7 +18,8 @@ registry/probe, binding map, content manifest, projection). The preview installa
 Magento checkout is NOT part of the build — it is an explicitly OPERATOR_GATED gap recorded in
 the manifest (see `examples/local-preview/README.md`).
 
-Packaging (no npm publish): `npm pack --workspace @det/core` ([60]) produces the portable
-`det-core-<version>.tgz` (bin/ + dist/ + schemas/ + adapters/*/descriptor.json); install it into a
-consuming project (`npm install <tarball>`) and run its `bin/det.js` — schemas resolve from the
-package root, never the caller's cwd (locked by tests/pack-portability-suite.mjs).
+Packaging ([60]→[63]): a distributable CLI package is explicitly NOT a supported artifact — the
+root `package.json` is `private: true` and the `npm pack --workspace @det/core` tarball ([60])
+no longer exists and is not pretended ([63] superseded the pack-portability gate). What those
+checks actually protected — the CLI resolving its contracts outside the caller's cwd — is locked
+by `src/core/__tests__/cli-path-resolution-suite.mjs`.

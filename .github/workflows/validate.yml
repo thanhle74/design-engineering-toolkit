@@ -2,12 +2,14 @@
 # runs the contract suite (T-01..T-22 #9 CLI/adapter/deny-list/determinism + G2-T23..T-28 #14
 # design-source extraction: accountability, chrome exclusion, stable ids, negative graphs,
 # scope escapes, plan-on-PageStructure, source neutrality) the KB-01..KB-29 engine tests, and the portability scans.
-# npm test = tsc core build + the contract suites incl. the [63] foreign-cwd root path-resolution
-# suite (ONE root package + ONE root lockfile; src/core + adapters/ + schemas/ are root dirs —
-# the [60] packed-@det/core artifact no longer exists and is deliberately not claimed).
+# npm test = tsc core build + the contract suites (discovered module-owned at
+# src/**/__tests__/*.suite.mjs by scripts/run-contract-tests.mjs, [68]) incl. the [63]
+# foreign-cwd root path-resolution suite (ONE root package + ONE root lockfile; src/core and
+# the feature modules src/modules/** with module-owned adapters are internal dirs — the [60]
+# packed-@det/core artifact no longer exists and is deliberately not claimed).
 # The task/issue prefix is never hardcoded here (spec §8): this workflow is issue-agnostic.
 #
-# The second job gates the Studio UI module (src/studio + app/ + components/ — internal modules
+# The second job gates the Studio UI module (src/modules/studio + app/ — internal modules
 # of the ONE root application since [63], installed by the same single root lockfile):
 # full vitest suite + typecheck + lint + production build on the exact PR tip.
 name: validate-contracts
@@ -34,7 +36,7 @@ jobs:
         run: node bin/det.js --version
       - name: JSON parse sanity (all committed JSON)
         run: |
-          find schemas examples profiles projects tests/fixtures -name '*.json' -print0 | while IFS= read -r -d '' f; do
+          find schemas examples profiles projects src -name '*.json' -print0 | while IFS= read -r -d '' f; do
             node -e "JSON.parse(require('fs').readFileSync(process.argv[1],'utf8'))" "$f" || exit 1
           done
 

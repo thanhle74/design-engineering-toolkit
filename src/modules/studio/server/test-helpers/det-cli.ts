@@ -24,8 +24,26 @@ export const REPO_ROOT = path.resolve(HELPER_DIR, "..", "..", "..", "..", "..");
 export const DET_ENTRY = path.join(REPO_ROOT, "bin", "det.js");
 export const EXAMPLE_BUILD_CONFIG = path.join(REPO_ROOT, "examples", "build", "project.example.json");
 
-/** G28 fixture inputs (all config-relative paths resolved from the example config). */
-export const G28_FIXTURE_DIR = path.join(REPO_ROOT, "tests", "fixtures", "g28-home-design-source");
+/** G28 fixture inputs ([68]: fixtures co-located with the owning magento module's suites). */
+export const G28_FIXTURE_DIR = path.join(
+  REPO_ROOT,
+  "src",
+  "modules",
+  "magento",
+  "__tests__",
+  "fixtures",
+  "g28-home-design-source"
+);
+/** G3 probe fixture, same co-location rule. */
+const G3_PROBE_DIR = path.join(
+  REPO_ROOT,
+  "src",
+  "modules",
+  "magento",
+  "__tests__",
+  "fixtures",
+  "g3-magento-like"
+);
 
 export function requireDetCli(): void {
   if (!existsSync(DET_ENTRY)) {
@@ -63,7 +81,7 @@ export function exampleBuildConfigBody(): string {
         designFile: "design-tree-home-desktop.fixture.json",
         designNode: "245:2",
       },
-      capabilityProbe: { project: path.join(REPO_ROOT, "tests", "fixtures", "g3-magento-like") },
+      capabilityProbe: { project: G3_PROBE_DIR },
       bindings: path.join(G28_FIXTURE_DIR, "g28-component-bindings.fixture.json"),
       content: path.join(G28_FIXTURE_DIR, "g28-home-content.fixture.json"),
       projection: path.join(G28_FIXTURE_DIR, "g28-home-projection.fixture.json"),

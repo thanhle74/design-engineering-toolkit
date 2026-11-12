@@ -8,7 +8,7 @@ import os from "node:os";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 
-const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
+import { REPO_ROOT as ROOT } from "../../../../src/core/__tests__/repo-root.mjs";
 const GUARD = path.join(ROOT, "scripts", "kb-license-guard.mjs");
 
 // Invented sentences (purely synthetic, acme-style). Long enough that a default 96-byte window

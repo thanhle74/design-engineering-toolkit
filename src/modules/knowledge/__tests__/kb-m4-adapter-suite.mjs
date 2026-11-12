@@ -1,6 +1,6 @@
 // Issue #19 M4 suite: the magento-kb-source scanner adapter over the synthetic fixture checkout.
 // Registers async checks on the shared run-all runner: the four scan kinds (magento-platform /
-// pagebuilder-native / secomm-uiwidget / hyva-ui) against tests/fixtures/m4, the safety gateway
+// pagebuilder-native / secomm-uiwidget / hyva-ui) against the module-owned fixtures/m4 checkout tree, the safety gateway
 // (deny-before-read, symlink containment, per-file sha256 digests), the honest UNKNOWN fallback
 // for unsupported shapes, the adaptedFrom edge contract, payload determinism, the unknown-option
 // scan-error gate, raw record-schema re-validation, and the end-to-end ingest of extract outputs
@@ -10,13 +10,13 @@ import { createHash } from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { runAdapter } from "../dist/src/core/adapter-runtime.js";
-import { validateContract, getAjv } from "../dist/src/core/schema-registry.js";
-import { idGrammarError } from "../dist/src/modules/knowledge/ids.js";
-import { main } from "../dist/src/core/cli/main.js";
+import { runAdapter } from "../../../../dist/src/core/adapter-runtime.js";
+import { validateContract, getAjv } from "../../../../dist/src/core/schema-registry.js";
+import { idGrammarError } from "../../../../dist/src/modules/knowledge/ids.js";
+import { main } from "../../../../dist/src/core/cli/main.js";
 
-const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
-const FIX = path.join(ROOT, "tests", "fixtures", "m4");
+import { REPO_ROOT as ROOT } from "../../../../src/core/__tests__/repo-root.mjs";
+const FIX = path.join(path.dirname(new URL(import.meta.url).pathname), "fixtures", "m4");
 const CHECKOUT = path.join(FIX, "checkout");
 const EXTRACT_MANIFEST = path.join(FIX, "extract-manifest.json");
 const INGEST_MANIFEST = path.join(FIX, "ingest-manifest.json");

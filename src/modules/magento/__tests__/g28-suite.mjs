@@ -14,8 +14,9 @@ import assert from "node:assert";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { main } from "../dist/src/core/cli/main.js";
-import { canonicalStringify, stripVolatile } from "../dist/src/core/canonical.js";
+import { REPO_ROOT as ROOT } from "../../../../src/core/__tests__/repo-root.mjs";
+import { main } from "../../../../dist/src/core/cli/main.js";
+import { canonicalStringify, stripVolatile } from "../../../../dist/src/core/canonical.js";
 
 const FIX = path.join(path.dirname(new URL(import.meta.url).pathname), "fixtures");
 const G28 = path.join(FIX, "g28-home-design-source");
@@ -285,9 +286,9 @@ export default async function registerG28Suite(checkAsync) {
       const { code, out, err } = await runCli([...composeArgsFor(extractDir, registryPath), "--json"]);
       assert.equal(code, 0, `exit ${code}: ${err.slice(0, 300)}`);
       const fresh = JSON.parse(out).output.report;
-      const committed = JSON.parse(fs.readFileSync(path.join(FIX, "..", "..", "examples/converter/compose-output.issue28-home.example.json"), "utf8"));
+      const committed = JSON.parse(fs.readFileSync(path.join(ROOT, "examples/converter/compose-output.issue28-home.example.json"), "utf8"));
       assert.equal(canonicalStringify(stripVolatile(fresh)), canonicalStringify(stripVolatile(committed)), "committed example drifts from a fresh compose");
-      const { validateContract } = await import("../dist/src/core/schema-registry.js");
+      const { validateContract } = await import("../../../../dist/src/core/schema-registry.js");
       const check = validateContract("compose-output", committed);
       assert.ok(check.valid, `committed example must validate: ${check.errors.slice(0, 3).join("; ")}`);
       for (const [name, file, contract] of [
@@ -312,13 +313,13 @@ export default async function registerG28Suite(checkAsync) {
       if (m) hits.push(`${rel}: ${[...new Set(m)].join(",")}`);
     };
     for (const f of fs.readdirSync(G28).filter((x) => x.endsWith(".json") && (x.startsWith("design-tree") || x.startsWith("g28-home-content") || x.startsWith("g28-home-projection")))) {
-      scan(`tests/fixtures/g28-home-design-source/${f}`, fs.readFileSync(path.join(G28, f), "utf8"));
+      scan(`src/modules/magento/__tests__/fixtures/g28-home-design-source/${f}`, fs.readFileSync(path.join(G28, f), "utf8"));
     }
     // Documented exception: the design's own footer copyright line is raw observed source copy
     // (a layer NAME carried verbatim per the raw-faithful fidelity rule; the scan exists to
     // catch owner-context leakage, not the source's own public brand string). Any OTHER hit in
     // the tree is a violation.
-    const treeHits = hits.find((h) => h.startsWith("tests/fixtures/g28-home-design-source/design-tree-home-desktop.fixture.json"));
+    const treeHits = hits.find((h) => h.startsWith("src/modules/magento/__tests__/fixtures/g28-home-design-source/design-tree-home-desktop.fixture.json"));
     if (treeHits) {
       const tree = fs.readFileSync(path.join(G28, "design-tree-home-desktop.fixture.json"), "utf8");
       const outsideCopyright = [...tree.matchAll(new RegExp(neutralTerms.source, "gi"))].filter((m) => !tree.slice(Math.max(0, m.index - 80), m.index + 160).includes("SLAUNCH. ALL RIGHTS RESERVED"));

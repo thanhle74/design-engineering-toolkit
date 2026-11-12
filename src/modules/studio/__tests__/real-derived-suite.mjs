@@ -9,12 +9,12 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
-import { stableContentHash } from "../dist/src/core/canonical.js";
-import { validateContract } from "../dist/src/core/schema-registry.js";
-import { validateRegistry } from "../dist/src/core/semantic.js";
-import { main } from "../dist/src/core/cli/main.js";
+import { stableContentHash } from "../../../../dist/src/core/canonical.js";
+import { validateContract } from "../../../../dist/src/core/schema-registry.js";
+import { validateRegistry } from "../../../../dist/src/core/semantic.js";
+import { main } from "../../../../dist/src/core/cli/main.js";
 
-const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
+import { REPO_ROOT as ROOT } from "../../../../src/core/__tests__/repo-root.mjs";
 const PROJECT = path.join(ROOT, "examples/build/slaunchpad-home-real-derived");
 const LIVE = path.join(ROOT, "evidence/issue-18/live-read-verified");
 const SOURCE_REVISION = "2417494580183108397";

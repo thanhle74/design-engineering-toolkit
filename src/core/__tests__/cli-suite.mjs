@@ -5,9 +5,10 @@ import assert from "node:assert";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { main } from "../dist/src/core/cli/main.js";
-import { runAdapter, validateAdapterEntry } from "../dist/src/core/adapter-runtime.js";
-import { stableContentHash } from "../dist/src/core/canonical.js";
+import { REPO_ROOT as ROOT } from "./repo-root.mjs";
+import { main } from "../../../dist/src/core/cli/main.js";
+import { runAdapter, validateAdapterEntry } from "../../../dist/src/core/adapter-runtime.js";
+import { stableContentHash } from "../../../dist/src/core/canonical.js";
 
 const FIX = path.join(path.dirname(new URL(import.meta.url).pathname), "fixtures");
 const MAGENTO_LIKE = path.join(FIX, "synthetic-magento-like");
@@ -175,7 +176,7 @@ export default async function registerCliSuite(checkAsync) {
     const report = JSON.parse(r.out).output;
     assert.equal(report.coverage.total, 5);
     // Determinism: same canonical hash as the committed resolver example (hash excludes generatedAt).
-    const committed = JSON.parse(fs.readFileSync(path.join(FIX, "..", "..", "examples/converter/resolution-report.synthetic-flatcms.example.json"), "utf8"));
+    const committed = JSON.parse(fs.readFileSync(path.join(ROOT, "examples/converter/resolution-report.synthetic-flatcms.example.json"), "utf8"));
     const strip = (x) => JSON.stringify({ ...x, generatedAt: undefined });
     assert.equal(strip(report), strip(committed), "report drifts from committed example");
     // No-write default.
@@ -232,13 +233,13 @@ export default async function registerCliSuite(checkAsync) {
       permissions: { readOnly: true },
     };
     const input = { schemaVersion: 1, profileId: "t", platformId: "fake", source: { sourceId: "s", path: process.cwd() } };
-    const crash = await runAdapter(process.cwd(), { ...baseDescriptor, entry: "tests/fixtures/fake-adapter/crash.mjs" }, input);
+    const crash = await runAdapter(process.cwd(), { ...baseDescriptor, entry: "src/core/__tests__/fixtures/fake-adapter/crash.mjs" }, input);
     assert.ok(!crash.ok && crash.diagnostics.some((d) => d.code === "ADAPTER_EXIT_NONZERO"), JSON.stringify(crash.diagnostics));
-    const timeout = await runAdapter(process.cwd(), { ...baseDescriptor, entry: "tests/fixtures/fake-adapter/timeout.mjs" }, input, { timeoutMs: 300 });
+    const timeout = await runAdapter(process.cwd(), { ...baseDescriptor, entry: "src/core/__tests__/fixtures/fake-adapter/timeout.mjs" }, input, { timeoutMs: 300 });
     assert.ok(!timeout.ok && timeout.diagnostics.some((d) => d.code === "ADAPTER_TIMEOUT"), JSON.stringify(timeout.diagnostics));
-    const bad = await runAdapter(process.cwd(), { ...baseDescriptor, entry: "tests/fixtures/fake-adapter/badjson.mjs" }, input);
+    const bad = await runAdapter(process.cwd(), { ...baseDescriptor, entry: "src/core/__tests__/fixtures/fake-adapter/badjson.mjs" }, input);
     assert.ok(!bad.ok && bad.diagnostics.some((d) => d.code === "ADAPTER_OUTPUT_INVALID_JSON"), JSON.stringify(bad.diagnostics));
-    const wrong = await runAdapter(process.cwd(), { ...baseDescriptor, entry: "tests/fixtures/fake-adapter/wrongcontract.mjs" }, input);
+    const wrong = await runAdapter(process.cwd(), { ...baseDescriptor, entry: "src/core/__tests__/fixtures/fake-adapter/wrongcontract.mjs" }, input);
     assert.ok(!wrong.ok && wrong.diagnostics.some((d) => d.code === "ADAPTER_OUTPUT_CONTRACT_VIOLATION"), JSON.stringify(wrong.diagnostics));
     return "4 runtime failure paths explicit";
   });
@@ -365,9 +366,9 @@ export default async function registerCliSuite(checkAsync) {
       permissions: { readOnly: true },
     };
     const input = { schemaVersion: 1, profileId: "t", platformId: "fake", source: { sourceId: "s", path: process.cwd() } };
-    const flood = await runAdapter(process.cwd(), { ...base, entry: "tests/fixtures/fake-adapter/flood.mjs" }, input, { maxStdoutBytes: 50_000, timeoutMs: 10_000 });
+    const flood = await runAdapter(process.cwd(), { ...base, entry: "src/core/__tests__/fixtures/fake-adapter/flood.mjs" }, input, { maxStdoutBytes: 50_000, timeoutMs: 10_000 });
     assert.ok(!flood.ok && flood.diagnostics.some((d) => d.code === "ADAPTER_OUTPUT_OVERFLOW"), JSON.stringify(flood.diagnostics));
-    const crash = await runAdapter(process.cwd(), { ...base, entry: "tests/fixtures/fake-adapter/crash.mjs" }, input);
+    const crash = await runAdapter(process.cwd(), { ...base, entry: "src/core/__tests__/fixtures/fake-adapter/crash.mjs" }, input);
     assert.ok(!crash.ok && crash.diagnostics.some((d) => d.code === "ADAPTER_EXIT_NONZERO"), JSON.stringify(crash.diagnostics));
     assert.ok(crash.stderrTail && crash.stderrTail.includes("fake adapter crashed"), "stderr tail returned for the TERMINAL");
     const receiptText = JSON.stringify(crash.diagnostics);
@@ -406,7 +407,7 @@ export default async function registerCliSuite(checkAsync) {
     scanDir(path.join(process.cwd(), "schemas/cli"), neutralTerms);
     // Shipped code and committed data must never embed the owner's machine path.
     const ownerPath = /\/home\/thanhle/;
-    for (const dir of ["src/core", "src/modules", "schemas", "bin", "tests/fixtures", "examples", "profiles"]) scanDir(path.join(process.cwd(), dir), ownerPath);
+    for (const dir of ["src", "schemas", "bin", "examples", "profiles"]) scanDir(path.join(process.cwd(), dir), ownerPath);
     // Adapters must not ship licensed Hyvä source: only thin declaration scanning exists.
     const adapterFiles = [];
     const collect = (d) => {

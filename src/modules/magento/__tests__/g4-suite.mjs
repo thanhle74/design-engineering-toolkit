@@ -13,8 +13,9 @@ import assert from "node:assert";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { main } from "../dist/src/core/cli/main.js";
-import { stableContentHash } from "../dist/src/core/canonical.js";
+import { REPO_ROOT as ROOT } from "../../../../src/core/__tests__/repo-root.mjs";
+import { main } from "../../../../dist/src/core/cli/main.js";
+import { stableContentHash } from "../../../../dist/src/core/canonical.js";
 
 const FIX = path.join(path.dirname(new URL(import.meta.url).pathname), "fixtures");
 const G4 = path.join(FIX, "g4-craftsmanship-design-source");
@@ -242,10 +243,10 @@ export default async function registerG4Suite(checkAsync) {
       const { code, out, err } = await runCli([...composeArgsFor(extractDir, registryPath), "--json"]);
       assert.equal(code, 0, `exit ${code}: ${err.slice(0, 300)}`);
       const fresh = JSON.parse(out).output.report;
-      const committed = JSON.parse(fs.readFileSync(path.join(FIX, "..", "..", "examples/converter/compose-output.g4-craftsmanship.example.json"), "utf8"));
-      const { canonicalStringify, stripVolatile } = await import("../dist/src/core/canonical.js");
+      const committed = JSON.parse(fs.readFileSync(path.join(ROOT, "examples/converter/compose-output.g4-craftsmanship.example.json"), "utf8"));
+      const { canonicalStringify, stripVolatile } = await import("../../../../dist/src/core/canonical.js");
       assert.equal(canonicalStringify(stripVolatile(fresh)), canonicalStringify(stripVolatile(committed)), "committed example drifts from a fresh compose");
-      const { validateContract } = await import("../dist/src/core/schema-registry.js");
+      const { validateContract } = await import("../../../../dist/src/core/schema-registry.js");
       const check = validateContract("compose-output", committed);
       assert.ok(check.valid, `committed example must validate: ${check.errors.slice(0, 3).join("; ")}`);
       for (const [name, file, contract] of [
@@ -270,7 +271,7 @@ export default async function registerG4Suite(checkAsync) {
       if (m) hits.push(`${rel}: ${[...new Set(m)].join(",")}`);
     };
     for (const f of fs.readdirSync(G4).filter((x) => x.endsWith(".fixture.json") && (x.startsWith("design-tree") || x.startsWith("craftsmanship-content")))) {
-      scan(`tests/fixtures/g4-craftsmanship-design-source/${f}`, fs.readFileSync(path.join(G4, f), "utf8"));
+      scan(`src/modules/magento/__tests__/fixtures/g4-craftsmanship-design-source/${f}`, fs.readFileSync(path.join(G4, f), "utf8"));
     }
     assert.deepEqual(hits, [], "neutrality violations:\n" + hits.join("\n"));
     return "0 matches across the new design-source surfaces";
