@@ -49,5 +49,5 @@ Produce a *curated, evidence-backed* inventory of a source file — what is genu
 
 ## Outputs
 
-- `source-manifest` payload (validated against [`schemas/source-manifest.schema.json`](../../schemas/source-manifest.schema.json))
+- `source-manifest` payload (validated against [`resources/schemas/source-manifest.schema.json`](../../resources/schemas/source-manifest.schema.json))
 - A human-readable audit document per source (see the worked example) linked from the manifest's `audit.auditDocUrl`.

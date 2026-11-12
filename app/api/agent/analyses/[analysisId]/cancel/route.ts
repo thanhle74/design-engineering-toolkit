@@ -5,8 +5,8 @@
  * with the snapshot; 404 unknown id; 409 when no live analysis matches
  * (already terminal).
  */
-import { agentErrorResponse, AgentWorkflowError } from "@/src/studio/server/claude-agent/agent-errors";
-import { getAgentAnalysisRunner } from "@/src/studio/server/claude-agent/analysis-runner";
+import { agentErrorResponse, AgentWorkflowError } from "@/src/modules/studio/server/claude-agent/agent-errors";
+import { getAgentAnalysisRunner } from "@/src/modules/studio/server/claude-agent/analysis-runner";
 
 export async function POST(
   request: Request,

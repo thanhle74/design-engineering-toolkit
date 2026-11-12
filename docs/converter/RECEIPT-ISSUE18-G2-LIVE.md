@@ -28,7 +28,7 @@
 | G2-T31d | **13 blocked paths fail closed**: missing token, 401, 404, 429, response over cap, malformed body, in-band provider error, redirect refused, requested node absent, no revision pin, root outside include scopes, traversal-shaped file key, non-numeric node id |
 | G2-T31e | full CLI extract: full inventory (18/18), chrome excluded from plan, media slot derived, honest custom-required instances, byte-stable determinism across runs |
 | G2-T31f | live extract→plan chain: registry + binding pins accepted on a live-derived `PageStructure`; zero proven bindings honestly reported (`coverage.total = 0`) |
-| G2-T31g | new surfaces stay free of secrets/owner identifiers; evidence/receipt policy (provider provenance pins allowed, token-shaped secrets never) enforced by scan |
+| G2-T31g | new surfaces stay free of secrets/owner identifiers; docs/evidence/receipt policy (provider provenance pins allowed, token-shaped secrets never) enforced by scan |
 
 ## 3. Live execution attempt — exact evidence
 
@@ -36,7 +36,7 @@ Local (gitignored) profile pinned to the Owner-GOed scope (`scopes.include = ["2
 
 ```
 node bin/det.js extract \
-  --profile projects/slaunchpad-fashion/local/figma-live-245.profile.json \
+  --profile resources/projects/slaunchpad-fashion/local/figma-live-245.profile.json \
   --project <local-cache-dir> \
   --adapter design-source-figma-live \
   --design-file <file-key> --design-node 245:2 --json
@@ -46,7 +46,7 @@ node bin/det.js extract \
 
 > `FIGMA_TOKEN is not set in the environment — the live provider read requires a caller-supplied read-only token; failing closed (credentials are never accepted on argv, in profiles or in receipts).`
 
-Sanitized run envelope (no paths, no credentials, no source data): [`evidence/issue-18/live-read-blocked.tool-run.json`](../../evidence/issue-18/live-read-blocked.tool-run.json).
+Sanitized run envelope (no paths, no credentials, no source data): [`docs/evidence/issue-18/live-read-blocked.tool-run.json`](../../docs/evidence/issue-18/live-read-blocked.tool-run.json).
 
 ## 4. Why BLOCKED, and the single unblock action
 
@@ -77,7 +77,7 @@ Following the §4 unblock action, the Owner provisioned a provider token into th
 
 **Result: exit 3, zero design artifacts, fail closed.** Terminal-only adapter stderr named the exact blocker: `provider rejected the read (HTTP 403) — token missing scope, expired, or not valid for this file; failing closed.` Read-only operator diagnosis via the provider identity endpoint (`GET /v1/me`, no design file touched): **HTTP 401 with provider reason `Token has expired`** — the provisioned token is expired, not missing and not mis-scoped.
 
-Sanitized run envelope (no paths, no credentials, no source data): [`evidence/issue-18/live-read-blocked-2026-11-10.tool-run.json`](../../evidence/issue-18/live-read-blocked-2026-11-10.tool-run.json).
+Sanitized run envelope (no paths, no credentials, no source data): [`docs/evidence/issue-18/live-read-blocked-2026-11-10.tool-run.json`](../../docs/evidence/issue-18/live-read-blocked-2026-11-10.tool-run.json).
 
 **Status: `BLOCKED_WITH_REASON: FIGMA_TOKEN_EXPIRED` — `LIVE_FIGMA_READ_ONLY_VERIFIED` NOT claimed** (same issue rule as §4: credentials/revision unavailable → fail closed and report the exact blocker). One design-source read attempt was made (the bounded single GET); the identity-endpoint check was token health only; no other page/frame/node was accessed; no writes anywhere.
 
@@ -98,8 +98,8 @@ The Owner provisioned a currently valid read-only provider token (identity check
 - **Gate:** `npm test` = **179/179** (172 on merged main + the 7 #18 live-adapter offline checks); CI `contracts` SUCCESS on the pushed tip.
 
 **Committed evidence (sanitized — no token, no raw provider response, no assets; file key/node/revision pins only):**
-`evidence/issue-18/live-read-verified/{node-ir,page-structure,source-review}.json` + [`evidence/issue-18/live-read-verified.tool-run.json`](../../evidence/issue-18/live-read-verified.tool-run.json).
+`docs/evidence/issue-18/live-read-verified/{node-ir,page-structure,source-review}.json` + [`docs/evidence/issue-18/live-read-verified.tool-run.json`](../../docs/evidence/issue-18/live-read-verified.tool-run.json).
 
-**Known follow-up gap (pre-existing on `main`, not introduced here, not required by this gate):** `examples/converter/capability-registry.magento-pagebuilder.example.json` (the #9 registry) fails `validateRegistry` — 61× `EVIDENCE_MISSING` (`proofLevel: registered` without `config-declaration` evidence kind). Live `det plan` resolution against a repaired real registry is therefore deferred; the extract→plan chain itself is proven offline (G2-T31f, part of the 179 checks), and the live-derived `PageStructure` is plan-ready with honest zero bindings.
+**Known follow-up gap (pre-existing on `main`, not introduced here, not required by this gate):** `resources/examples/converter/capability-registry.magento-pagebuilder.example.json` (the #9 registry) fails `validateRegistry` — 61× `EVIDENCE_MISSING` (`proofLevel: registered` without `config-declaration` evidence kind). Live `det plan` resolution against a repaired real registry is therefore deferred; the extract→plan chain itself is proven offline (G2-T31f, part of the 179 checks), and the live-derived `PageStructure` is plan-ready with honest zero bindings.
 
 **Boundaries honored:** read-only one bounded GET per run (adapter has no write path); no layer rename/edit; no mobile `245:16`; no CMS/DB/storefront writes; nothing written without `--out`; **stop at plan** — Page Builder serialization, CMS creation and Admin Edit→Save→Reload remain separately Owner-gated G3/G4.

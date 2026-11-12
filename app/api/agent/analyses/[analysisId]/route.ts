@@ -6,10 +6,10 @@
  * version-pinned snapshot source — computed the exact way the materializer
  * decides, so the operator approves with the real numbers in view).
  */
-import { previewApproval } from "@/src/studio/server/claude-agent/plan-materializer";
-import { agentErrorResponse, AgentWorkflowError } from "@/src/studio/server/claude-agent/agent-errors";
-import { getAgentAnalysisRunner } from "@/src/studio/server/claude-agent/analysis-runner";
-import { isApprovableOutcome } from "@/src/studio/shared/contracts";
+import { previewApproval } from "@/src/modules/studio/server/claude-agent/plan-materializer";
+import { agentErrorResponse, AgentWorkflowError } from "@/src/modules/studio/server/claude-agent/agent-errors";
+import { getAgentAnalysisRunner } from "@/src/modules/studio/server/claude-agent/analysis-runner";
+import { isApprovableOutcome } from "@/src/modules/studio/shared/contracts";
 
 export async function GET(
   request: Request,

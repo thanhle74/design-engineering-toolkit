@@ -30,5 +30,12 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules", "dist", "src/core", "adapters"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "src/core",
+    "src/modules/figma",
+    "src/modules/magento",
+    "src/modules/knowledge"
+  ]
 }

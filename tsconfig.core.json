@@ -14,6 +14,11 @@
     "skipLibCheck": true,
     "types": ["node"]
   },
-  "include": ["src/core/**/*.ts", "adapters/**/*.ts"],
+  "include": [
+    "src/core/**/*.ts",
+    "src/modules/figma/**/*.ts",
+    "src/modules/magento/**/*.ts",
+    "src/modules/knowledge/**/*.ts"
+  ],
   "exclude": ["node_modules", "dist", "tests"]
 }

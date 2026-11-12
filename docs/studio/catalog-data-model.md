@@ -6,7 +6,7 @@
 
 This is the minimal coherent subset of the #30 catalogue schema that issue #50
 asks for, reconciled against the actually-shipped `det build` bundle contract
-(`schemas/cli/build-manifest.schema.json`) instead of the pre-#28/#40 annex
+(`resources/schemas/cli/build-manifest.schema.json`) instead of the pre-#28/#40 annex
 prose. KB records and artifact BYTES never live in the DB — canonical
 JSON/JSONL KB and immutable bundle files stay authoritative.
 

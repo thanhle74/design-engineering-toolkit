@@ -3,8 +3,8 @@
  *
  * Returns the full StudioRunView read model for one run (fixture or live).
  */
-import { getDetRunReader } from "@/src/studio/server/det-run-reader-factory";
-import { detRunErrorResponse } from "@/src/studio/server/api-error";
+import { getDetRunReader } from "@/src/modules/studio/server/det-run-reader-factory";
+import { detRunErrorResponse } from "@/src/modules/studio/server/api-error";
 
 
 export async function GET(

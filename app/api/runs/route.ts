@@ -4,8 +4,8 @@
  * Returns the run summaries the configured DetRunReader offers (newest first).
  * Fixture mode (STUDIO_DET_RUNS_DIR unset) returns the labeled DEMO run.
  */
-import { getDetRunReader } from "@/src/studio/server/det-run-reader-factory";
-import { detRunErrorResponse } from "@/src/studio/server/api-error";
+import { getDetRunReader } from "@/src/modules/studio/server/det-run-reader-factory";
+import { detRunErrorResponse } from "@/src/modules/studio/server/api-error";
 
 
 export async function GET(request: Request): Promise<Response> {

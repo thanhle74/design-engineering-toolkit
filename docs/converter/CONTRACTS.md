@@ -1,6 +1,6 @@
 # Converter contracts — reference (Issue #5, G1 + Issue #14, G2)
 
-**Status:** normative reference for the converter contract family. Materialized schemas live in [`schemas/converter/`](../../schemas/converter/) (see its [README](../../schemas/converter/README.md) for closed enums, deterministic serialization and validation strategy). G1 materialized the registry family; **G2 (issue #14) materialized `NodeIR`, `PageStructure` and the `SourceReview` accountability report** after the synthetic design-source gate (§6 below records the materialization deltas). The G1 harness shape (§4) is still accepted by `det plan` additively until its staged retirement.
+**Status:** normative reference for the converter contract family. Materialized schemas live in [`resources/schemas/converter/`](../../resources/schemas/converter) (see its [README](../../resources/schemas/converter/README.md) for closed enums, deterministic serialization and validation strategy). G1 materialized the registry family; **G2 (issue #14) materialized `NodeIR`, `PageStructure` and the `SourceReview` accountability report** after the synthetic design-source gate (§6 below records the materialization deltas). The G1 harness shape (§4) is still accepted by `det plan` additively until its staged retirement.
 
 Pipeline (one roadmap): **Capability Registry → Structural Mapping → Functional Round-trip → Visual Fidelity**.
 
@@ -17,9 +17,9 @@ Read-only, scope-bounded accessor to any approved design source; the only legal 
 
 **Rules:** the port has **no mutating operation at all** — read-only is structural, not a runtime promise. Every record carries its revision; mixing revisions in one stage run is an `EVIDENCE_MISSING`-class failure. Errors are diagnostics, never fabricated nodes.
 
-**Transport note (G2):** when a design source is read across the out-of-process adapter boundary (TECH-ADR ADR-4), the adapter returns a bounded `DesignSourceSnapshot` document (`schemas/cli/design-source-snapshot.schema.json` — CLI **transport** family). That snapshot is NOT the port and not a schema for the port (ADR-014-002): the core constructs `SnapshotDesignSourcePort` from it, and all semantic decisions stay in the core extractor.
+**Transport note (G2):** when a design source is read across the out-of-process adapter boundary (TECH-ADR ADR-4), the adapter returns a bounded `DesignSourceSnapshot` document (`resources/schemas/cli/design-source-snapshot.schema.json` — CLI **transport** family). That snapshot is NOT the port and not a schema for the port (ADR-014-002): the core constructs `SnapshotDesignSourcePort` from it, and all semantic decisions stay in the core extractor.
 
-## 2. `NodeIR` — MATERIALIZED at G2 (`schemas/converter/node-ir.schema.json`, major 1; issue #14)
+## 2. `NodeIR` — MATERIALIZED at G2 (`resources/schemas/converter/node-ir.schema.json`, major 1; issue #14)
 
 Platform-neutral semantic tree of an approved design page: structure + layout primitives + content slots, zero target-platform vocabulary. Visual pixels are not component semantics.
 
@@ -39,7 +39,7 @@ Platform-neutral semantic tree of an approved design page: structure + layout pr
 
 Extracted-vs-observed distinctions reuse the V1 provenance *classes* (`observed | derived | illustrative`) via slot/evidence `method` fields — no new class vocabulary.
 
-## 3. `PageStructure` — MATERIALIZED at G2 (`schemas/converter/page-structure.schema.json`, major 1; issue #14)
+## 3. `PageStructure` — MATERIALIZED at G2 (`resources/schemas/converter/page-structure.schema.json`, major 1; issue #14)
 
 Resolved intermediate artifact: sections with stable ids, ordered elements, content/media references, responsive composition, resolution status. **Explicitly not raw `cms_page.content` or any platform serialization** — platform rendering is G3 adapter work behind its own GO.
 
@@ -74,7 +74,7 @@ Rules: elements are a flat list per section; `childrenElementIds` expresses nest
 
 ## 5. Compatibility decisions (one vocabulary)
 
-1. **Family split:** converter contracts are a new family (`schemas/converter/`, own integer major). V1 stays frozen at major 1 — converter evidence locators are scheme-based (`source://`, `design://`, `doc://`, `https://`), while V1 `sourceRef` is Figma-typed; forcing them together would break V1 for zero gain (ADR-005-011). Convention reuse, not `$ref` coupling.
+1. **Family split:** converter contracts are a new family (`resources/schemas/converter/`, own integer major). V1 stays frozen at major 1 — converter evidence locators are scheme-based (`source://`, `design://`, `doc://`, `https://`), while V1 `sourceRef` is Figma-typed; forcing them together would break V1 for zero gain (ADR-005-011). Convention reuse, not `$ref` coupling.
 2. **One coverage vocabulary:** ResolutionReport coverage keys equal registry `category` values exactly (`native`, `widget`, `chrome`, `custom-required`, `unsupported`) — the spec's earlier `custom` shorthand was aligned to `custom-required`.
 3. **Source-component vocabulary per stage:** G1 bindings use V1 `component-defs` component ids; G2 bindings use NodeIR node ids of kind `component`. Both match the schema pattern; each stage declares which vocabulary it feeds.
 4. **NodeIR/PageStructure identity:** opaque hashed ids derived from source locators (never platform ids in the clear); stable across revisions; `NODE_ID_COLLISION` is a hard error.
@@ -88,7 +88,7 @@ The field tables above were written **before** any design-source read existed (A
 3. **`node.componentRefNodeId`** (new optional field): for instances, the inventoried kind-`component` definition they reference. References outside the extracted scope are recorded as `REFERENCE_ONLY` — never fabricated.
 4. **`PageStructure` element nesting** (`childrenElementIds`) and **`variantAssignment`** adopt the G1 harness precedent so the same resolver semantics keep working on materialized payloads.
 5. **`PageStructure.inputs`**: `nodeIrContentHash` is required; `registryRevisionId` / `bindingMapContentHash` are present iff those inputs were supplied. Pins are **stable content hashes** (observation timestamps removed) so re-extraction of the same source revision reproduces them.
-6. **`SourceReview`** (`schemas/converter/source-review.schema.json`, major 1 — new payload): the every-node accountability ledger. Exactly one entry per `NodeIR` node with `semanticClass` (closed: `SITE_CHROME | EDITORIAL_SECTION | SHARED_COMPONENT | PRESENTATIONAL | UNKNOWN_OR_AMBIGUOUS`) and `disposition` (closed: `MAPPED | EXCLUDED_WITH_REASON | DECORATION_MERGED | REFERENCE_ONLY | NEEDS_REVIEW`), a required reason sentence, the naming hint when one was weighed, and an optional `provisionalTarget` reusing the registry `category` vocabulary (`custom-required` = no proven target; `requiresRuntimeData` = data-provider-pending). Counts must equal the pinned NodeIR's node count.
+6. **`SourceReview`** (`resources/schemas/converter/source-review.schema.json`, major 1 — new payload): the every-node accountability ledger. Exactly one entry per `NodeIR` node with `semanticClass` (closed: `SITE_CHROME | EDITORIAL_SECTION | SHARED_COMPONENT | PRESENTATIONAL | UNKNOWN_OR_AMBIGUOUS`) and `disposition` (closed: `MAPPED | EXCLUDED_WITH_REASON | DECORATION_MERGED | REFERENCE_ONLY | NEEDS_REVIEW`), a required reason sentence, the naming hint when one was weighed, and an optional `provisionalTarget` reusing the registry `category` vocabulary (`custom-required` = no proven target; `requiresRuntimeData` = data-provider-pending). Counts must equal the pinned NodeIR's node count.
 7. **Classification precedence (normative, deterministic)** — combined evidence only: own visibility → inherited branch (chrome / hidden / ambiguous / definition subtree) → top-level rules (SITE/ hint ⇒ chrome **only with top-level position AND container evidence** — a SITE/ label on a non-container is `UNKNOWN_OR_AMBIGUOUS`/`NEEDS_REVIEW`, never excluded by label alone, and stays NEEDS_REVIEW even when a capability binding resolves it — ambiguous ownership is never promoted to MAPPED (Coordinator C1 + C1-final); SECTION/ + container ⇒ editorial; bare-name container ⇒ UNKNOWN_OR_AMBIGUOUS) → unknown kind ⇒ unknown + `NEEDS_REVIEW` → dangling/invalid componentRef ⇒ `NEEDS_REVIEW` → shared-component instance ⇒ `SHARED_COMPONENT` (MAPPED only with a proven target) → presentational leaves ⇒ `DECORATION_MERGED` → content-slot children ⇒ mapped slots of their parent.
 8. **Id derivation** is exactly as pre-G2 documented: `n-` + SHA-256(`sourceId ␟ designLocator ␟ kind`)[:12] (revision-independent), `s-` + SHA-256(`sourceId ␟ designLocator ␟ order`)[:12], separator U+241F; collision ⇒ hard `NODE_ID_COLLISION` reject. Duplicate locators and dangling/cyclic child references fail closed (`EVIDENCE_MISSING`) before any mapping.
 9. **The closed 21-code diagnostic registry is unchanged.** G2 reuses existing codes only: `EVIDENCE_MISSING` (broken graphs, stale pins), `LOCATOR_OUT_OF_SCOPE` (root mismatch, port scope escapes), `NODE_ID_COLLISION` (guard), `NOT_VERIFIED` (unmapped kinds, unresolved refs, custom-required pendency — warnings, never silent), `SCHEMA_VERSION_UNSUPPORTED` (unknown majors). No new converter diagnostic code was needed, so no major bump was forced.

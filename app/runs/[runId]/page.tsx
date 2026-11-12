@@ -1,14 +1,14 @@
 import { Col, Flex, Row } from "antd";
 import { connection } from "next/server";
 
-import { DetRunReaderError, type StudioRunView } from "@/src/studio/shared/contracts";
-import { getDetRunReader } from "@/src/studio/server/det-run-reader-factory";
-import { DesignTree } from "@/src/studio/modules/design-tree";
+import { DetRunReaderError, type StudioRunView } from "@/src/modules/studio/shared/contracts";
+import { getDetRunReader } from "@/src/modules/studio/server/det-run-reader-factory";
+import { DesignTree } from "@/src/modules/studio/modules/design-tree";
 import {
   MappingReview,
   ProvenanceFooter,
-} from "@/src/studio/modules/mapping-review";
-import { PreviewPanel } from "@/src/studio/modules/preview";
+} from "@/src/modules/studio/modules/mapping-review";
+import { PreviewPanel } from "@/src/modules/studio/modules/preview";
 import { ClientArtifactManifest } from "./client-artifact-manifest";
 import { BuildBundleSection } from "./build-bundle-section";
 import { RunHeader } from "./run-header";

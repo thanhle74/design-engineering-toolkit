@@ -21,7 +21,7 @@ authorization.
    (`behavior.cmsEditable`, `availability.state`); cross-class Page Builder ↔ developer-owned
    references are `neighborOf`, and `mapsTo`/`adaptedFrom`/`equivalentOf` across the class
    boundary are **engine-rejected** (`CLASS_BOUNDARY_EDGE_FORBIDDEN`, KB-11).
-2. **Source-backed, revision-pinned** — typed record envelopes (schemas/kb, Draft 2020-12,
+2. **Source-backed, revision-pinned** — typed record envelopes (resources/schemas/kb, Draft 2020-12,
    `additionalProperties:false`, integer-major): stable version-free IDs + verbatim `nativeId`,
    `sourceRef` (rootAlias-relative locators), `proofLevel` DETECTED/ASSUMED/TESTED/UNKNOWN,
    per-record `evidence.uncertainty` (mandatory), lifecycle + review status. Unsupported claims
@@ -71,7 +71,7 @@ node bin/det.js kb query --store kb --kb platform --where category=content --tex
 #     cap:magento-pagebuilder:banner-full-width, cap:magento-pagebuilder:banner-minimal),
 #     each with proofLevel DETECTED, enablement {state:enabled, source:config-scan},
 #     ≥1 uncertainty string, file/line store location.
-# Q2 — "Which Hyvä UI hero variants exist locally and what evidence/source points to them?"
+# Q2 — "Which Hyvä UI hero variants exist locally and what docs/evidence/source points to them?"
 node bin/det.js kb query --store kb --kb ui --where sourcePackage.kind=hyva-ui --text hero --json
 #   → uic:hyva-ui:hero, variants [A-default, B-overlay], license {regime:commercial,
 #     derivedArtifactPolicy:metadata-only}, behavior.cmsEditable=false, DETECTED + uncertainty.

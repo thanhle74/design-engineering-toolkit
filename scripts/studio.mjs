@@ -10,7 +10,7 @@
 //   1. asserts Node >= 22.13 (Studio/Next 16 engine requirement);
 //   2. installs dependencies once if missing (one root `npm ci` against the
 //      single root lockfile — [63] there is exactly one package/lockfile);
-//   3. rebuilds the `det` dist/ when missing or stale vs src/core//adapters/
+//   3. rebuilds the `det` dist/ when missing or stale vs src/core//src/modules engine sources/
 //      (`npm run build:core`; the CLI that both `node bin/det.js` and the
 //      Studio build runner use);
 //   4. defaults STUDIO_DET_RUNS_DIR to <root>/out/studio-runs (created on
@@ -31,7 +31,7 @@ import { fileURLToPath } from "node:url";
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(SCRIPT_DIR, "..");
-const STUDIO_MODULE_DIR = path.join(ROOT, "src", "studio");
+const STUDIO_MODULE_DIR = path.join(ROOT, "src", "modules", "studio");
 const DET_DIST_ENTRY = path.join(ROOT, "dist", "src", "core", "cli", "main.js");
 const RUNS_DIR_DEFAULT = path.join(ROOT, "out", "studio-runs");
 // Node engines floor of the root package (Next 16); the headless core itself needs >=20.
@@ -88,7 +88,7 @@ function newestMtime(dirs, pattern) {
 function isCoreDistFresh() {
   if (!existsSync(DET_DIST_ENTRY)) return false;
   const srcNewest = newestMtime(
-    [path.join(ROOT, "src", "core"), path.join(ROOT, "adapters")],
+    [path.join(ROOT, "src", "core"), path.join(ROOT, "src", "modules", "figma"), path.join(ROOT, "src", "modules", "magento"), path.join(ROOT, "src", "modules", "knowledge")],
     /\.ts$/
   );
   const distNewest = newestMtime([path.join(ROOT, "dist")], /\.js$/);
@@ -116,7 +116,7 @@ function npmRun(args, label) {
  * passed through untouched; only STUDIO_DET_RUNS_DIR gets a repository-root
  * default when unset (the directory is created lazily in run modes, never in
  * print-env). The build-config catalogue needs no env: the Studio server
- * discovers the committed examples/build catalogue in place ([58]).
+ * discovers the committed resources/examples/build catalogue in place ([58]).
  */
 function resolveEnv({ createDirs }) {
   const env = { ...process.env };

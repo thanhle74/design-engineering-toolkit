@@ -140,7 +140,7 @@ download-verified against `build-manifest.json`.
 root with `npm run dev` (one-time `npm run setup` first). Then:
 
 - **Catalogue (in place, [58]).** The build-config catalogue is the union of
-  the committed repository examples (`examples/build/*` — the revision-pinned
+  the committed repository examples (`resources/examples/build/*` — the revision-pinned
   real-derived Slaunchpad project is listed and buildable IN PLACE, never
   copied into `out/`) plus caller-configured entries from
   `STUDIO_BUILD_PROJECTS_DIR` when set. Unrelated fixture directories are
@@ -190,7 +190,7 @@ Notes on honesty and scope (also enforced in code and tests):
   the engine resolves and authoritatively validates them at build time.
 - The committed repository catalogue is **read-only**: builds write only
   under the configured runs root (and optional explicit SQLite path), never
-  into `examples/build/`.
+  into `resources/examples/build/`.
 - One build at a time per Studio process; a second request while busy fails
   with **409** and the live job state. Job journals live under
   `<STUDIO_DET_RUNS_DIR>/.build-jobs/` and are never exposed as runs or
@@ -252,7 +252,7 @@ codes, paths, env var names, HTTP codes, CLI flags, artifact names and the
 - antd primitives are used directly — no `components/ui` library, only tiny feature-specific wrappers where needed; `components/layout/` — studio shell plus `studio-providers` (the [61] root providers wrapping the antd `App`; no `ConfigProvider` theme)
 - `src/modules/` — feature lanes: `conversions`, `design-tree`, `mapping-review`, `preview`, `artifacts`
 - `src/server/` — server-only boundary: `DetRunReader` implementations (fixture + directory), the `[40]` build-bundle reader, build-config catalog, local build runner, path guards
-- `src/shared/contracts/` — frozen `StudioRunView` read model derived from `schemas/cli/*` + `schemas/converter/*` (with the `[40]` additive optional `build` block)
+- `src/shared/contracts/` — frozen `StudioRunView` read model derived from `resources/schemas/cli/*` + `resources/schemas/converter/*` (with the `[40]` additive optional `build` block)
 
 Tests: `npx vitest run <path>` for a lane; `npm test` for the whole studio
 suite. The `[40]` build-control tests drive the REAL `det CLI` — build the

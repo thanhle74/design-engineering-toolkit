@@ -1,0 +1,19 @@
+<!--
+  DET Preview Theme — the toolkit's one independent, reusable Hyvä child theme for rendering and
+  QA-ing converter-generated CMS/UI output (issue #28). "Independent" means independent from any
+  customer/child theme code and from local theme configuration — it still lawfully extends the
+  licensed Hyvä base theme installed in the operator's own checkout (parent: Hyva/default). This
+  is NOT a theme per conversion: one preview theme serves every conversion run; its scoped CSS is
+  a portable handoff artifact, never a customer-theme target.
+
+  Scope (product policy, docs/specs/PRODUCT-ARCHITECTURE-AND-SCOPE.md "two DISTINCT deliverables"):
+  - Native Page Builder CMS content renders through the platform's own structural markup and the
+    Hyvä base theme's Page Builder support; this theme adds ONLY scoped presentational CSS.
+  - Site chrome (header/footer/navigation) is inherited from the Hyvä base theme; fidelity deltas
+    vs. the design's chrome are recorded in the run's gap report, never coded into a client theme.
+-->
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:framework:Config/etc/theme.xsd">
+    <title>DET Preview Theme</title>
+    <parent>Hyva/default</parent>
+</theme>

@@ -14,13 +14,13 @@ import path from "node:path";
 
 vi.mock("server-only", () => ({}));
 
-import { STUDIO_DET_RUNS_DIR_ENV } from "@/src/studio/server/det-run-reader-factory";
-import { STUDIO_BUILD_PROJECTS_DIR_ENV } from "@/src/studio/server/build-catalog";
-import { STUDIO_BUILD_TIMEOUT_MS_ENV } from "@/src/studio/server/build-runner";
-import { exampleBuildConfigBody, requireDetCli } from "@/src/studio/server/test-helpers/det-cli";
+import { STUDIO_DET_RUNS_DIR_ENV } from "@/src/modules/studio/server/det-run-reader-factory";
+import { STUDIO_BUILD_PROJECTS_DIR_ENV } from "@/src/modules/studio/server/build-catalog";
+import { STUDIO_BUILD_TIMEOUT_MS_ENV } from "@/src/modules/studio/server/build-runner";
+import { exampleBuildConfigBody, requireDetCli } from "@/src/modules/studio/server/test-helpers/det-cli";
 
 import { GET, POST } from "./route";
-import { getBuildRunner } from "@/src/studio/server/build-runner";
+import { getBuildRunner } from "@/src/modules/studio/server/build-runner";
 
 let runsRoot: string;
 let projectsRoot: string;

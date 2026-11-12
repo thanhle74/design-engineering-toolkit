@@ -2,7 +2,7 @@
 
 **Status:** source-backed G1 inventory. **Proof ceiling: `REGISTERED`** — everything below was verified by read-only source inspection only ([5] W-B audit, 2026-11-03). No Admin round-trip, CMS write or Figma access happened in this gate, so no entry may claim `STRUCTURALLY_MAPPED` or beyond.
 **Audited source:** caller-supplied local checkout `slaunch-checkout` = git `66aff1ebd4cda9152a5e70635766b8030b10ff88` (branch `development`, 2026-10-30). The path is per-run profile configuration — never a toolkit default.
-**Machine-readable payload:** [`examples/converter/capability-registry.magento-pagebuilder.example.json`](../../examples/converter/capability-registry.magento-pagebuilder.example.json) (61 capabilities, 114 evidence locators, schema-validated by the repo test gate).
+**Machine-readable payload:** [`resources/examples/converter/capability-registry.magento-pagebuilder.example.json`](../../resources/knowledge/magento/pagebuilder/capability-registry.magento-pagebuilder.example.json) (61 capabilities, 114 evidence locators, schema-validated by the repo test gate).
 
 ## 1. Platform baseline (verified)
 

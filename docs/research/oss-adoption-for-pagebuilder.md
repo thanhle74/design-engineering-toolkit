@@ -51,7 +51,7 @@ Figma read-only node scopes: 245:2 (+ mobile 245:16)
 ## Implement in Issue #5 (in this order)
 
 1. **OSS source spike, bounded:** inspect only code paths needed for normalized geometry and stable component binding; record upstream commit SHA, direct source link, license and expected tests. Output `REUSE / ADAPT / REFERENCE_ONLY / DEFER / REJECT` per candidate. Do not repeat broad research.
-2. **Own contracts:** `NodeIR`, `ComponentBindingMap` (materialized: [`schemas/converter/`](../../schemas/converter/)), `CapabilityRegistry`, `ResolutionReport` and `PageStructure` (field drafts: [CONTRACTS.md](../converter/CONTRACTS.md)); keep project-specific mappings in a profile, never toolkit core.
+2. **Own contracts:** `NodeIR`, `ComponentBindingMap` (materialized: [`resources/schemas/converter/`](../../resources/schemas/converter)), `CapabilityRegistry`, `ResolutionReport` and `PageStructure` (field drafts: [CONTRACTS.md](../converter/CONTRACTS.md)); keep project-specific mappings in a profile, never toolkit core.
 3. **Structural extractor:** start with `245:2`, use `245:16` only for responsive correspondence, deterministic output, nested/flex/columns/full-bleed/absolute placement preserved. Proof via fixtures and tests; no CSS polish.
 4. **Resolver:** bind into **verified local** Page Builder content types + appearances and `Secomm_UiWidget` *enabled registry*, marking `REGISTERED` separately from `ADMIN_ROUNDTRIP_VERIFIED`.
 5. **Coverage report:** for every section show Figma node ID, target capability, variant, data/media/interaction requirements, evidence, reasons and exact unsupported features.
@@ -68,8 +68,8 @@ Figma read-only node scopes: 245:2 (+ mobile 245:16)
 
 ## Relevant project source of truth
 
-- Toolkit [architecture](../ARCHITECTURE.md), [safety](../safety-and-scope.md), existing `schemas/*`.
-- SLAUNCH [Issue #42](https://github.com/thanhle74/slaunchpad/issues/42), [#32](https://github.com/thanhle74/slaunchpad/issues/32), approved `.ai/specs/SPEC-FEAT-J06WXZ-secomm-ui-widgets.md`, `FEAT-J06WXZ-component-eligibility-matrix.md`, `FEAT-J06WXZ-solution-design.md`.
+- Toolkit [architecture](../ARCHITECTURE.md), [safety](../safety-and-scope.md), existing `resources/schemas/*`.
+- SLAUNCH [Issue #42](https://github.com/thanhle74/slaunchpad/issues/42), [#32](https://github.com/thanhle74/slaunchpad/issues/32), approved `.ai/docs/specs/SPEC-FEAT-J06WXZ-secomm-ui-widgets.md`, `FEAT-J06WXZ-component-eligibility-matrix.md`, `FEAT-J06WXZ-solution-design.md`.
 - Local source path belongs **only** in project profile: `/home/thanhle/Sites/Magento/slaunchpad`.
 - **Design Freeze:** never edit `245:2` or other approved Figma frames.
 

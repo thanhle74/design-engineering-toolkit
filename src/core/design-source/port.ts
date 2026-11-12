@@ -1,7 +1,7 @@
 // DesignSourcePort — the read-only, scope-bounded accessor to an approved design source
 // (docs/converter/CONTRACTS.md §1). It stays an INTERFACE, never a schema (ADR-005-013): the
 // only legal way any stage touches design content. The out-of-process transport counterpart is
-// schemas/cli/design-source-snapshot.schema.json; SnapshotDesignSourcePort wraps a validated
+// resources/schemas/cli/design-source-snapshot.schema.json; SnapshotDesignSourcePort wraps a validated
 // snapshot as a port implementation so the deterministic extractor stays transport-agnostic.
 //
 // Read-only is structural: the port has no mutating operation at all. Every record carries the

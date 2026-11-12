@@ -18,8 +18,8 @@ domains — one physical format:
 | **KB-3 Project** | WHAT THIS CLIENT NEEDS & APPROVED (tenant-isolated) | `kb/project/<projectId>/records.jsonl` |
 | relations | typed cross-KB edges (first-class records) | `kb/relations/records.jsonl` |
 
-Contracts: [`schemas/kb/`](../../schemas/kb/README.md) (frozen major 1 from the reviewed #7
-drafts). Spec lineage: [`specs/knowledge-foundation/`](../../specs/knowledge-foundation/README.md).
+Contracts: [`resources/schemas/kb/`](../../resources/schemas/kb/README.md) (frozen major 1 from the reviewed #7
+drafts). Spec lineage: [`docs/specs/knowledge-foundation/`](../../docs/specs/knowledge-foundation/README.md).
 
 ## Commands (read-only core; nothing is written without `--out`)
 
@@ -27,14 +27,14 @@ drafts). Spec lineage: [`specs/knowledge-foundation/`](../../specs/knowledge-fou
 npm run build   # once per checkout
 
 # 1. Deterministic ingest from a manifest (the ONLY way records enter a store)
-node bin/det.js kb ingest --manifest examples/kb/manifest.json \
+node bin/det.js kb ingest --manifest resources/examples/kb/manifest.json \
   --root reg="$(pwd)/tests/fixtures/synthetic-magento-like" \
   --json                          # report only (no-write default)
-node bin/det.js kb ingest --manifest examples/kb/manifest.json \
+node bin/det.js kb ingest --manifest resources/examples/kb/manifest.json \
   --root reg="$HOME/your/magento-checkout-audit" --out kb    # regenerate the store
 
 # 2. Digest-driven sync: changed sources mark their pinned records STALE (never upgrades)
-node bin/det.js kb sync --store kb --manifest examples/kb/manifest.json \
+node bin/det.js kb sync --store kb --manifest resources/examples/kb/manifest.json \
   --root reg=... --out kb         # writes only when something went stale
 
 # 3. Deterministic structured query — provenance on every hit, KB-3 default-deny
@@ -89,7 +89,7 @@ human summary; act on diagnostic codes (`DENIED_PATH_SKIPPED`, `INGEST_PARTIAL_D
 
 1. *"What registered banner components can this Magento Page Builder project use?"* → KB-1 query
    (Q1 above): exact banner capabilities with enablement, evidence locators and uncertainty.
-2. *"Which Hyvä UI hero variants exist locally and what evidence/source points to them?"* → KB-2
+2. *"Which Hyvä UI hero variants exist locally and what docs/evidence/source points to them?"* → KB-2
    query (Q2): variants, `license.regime=commercial`, `derivedArtifactPolicy=metadata-only`,
    `behavior.cmsEditable=false` — visual resemblance never implies editability.
 3. *"Which project requirement/decision constrains the selected hero?"* → relation traversal (Q3)

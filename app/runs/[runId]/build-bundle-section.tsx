@@ -4,7 +4,7 @@ import { SafetyCertificateOutlined, WarningOutlined } from "@ant-design/icons";
 import { Alert, Card, Collapse, Flex, List, Table, Tag, Typography } from "antd";
 import type { TableColumnsType } from "antd";
 
-import type { StudioBuildStageView, StudioRunView } from "@/src/studio/shared/contracts";
+import type { StudioBuildStageView, StudioRunView } from "@/src/modules/studio/shared/contracts";
 
 /**
  * [40] Build-bundle section — rendered ONLY when the run view carries the

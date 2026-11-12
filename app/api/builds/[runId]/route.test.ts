@@ -9,7 +9,7 @@ import path from "node:path";
 
 vi.mock("server-only", () => ({}));
 
-import { STUDIO_DET_RUNS_DIR_ENV } from "@/src/studio/server/det-run-reader-factory";
+import { STUDIO_DET_RUNS_DIR_ENV } from "@/src/modules/studio/server/det-run-reader-factory";
 
 import { GET } from "./route";
 

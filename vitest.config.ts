@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 import react from "@vitejs/plugin-react-swc";
 import { defineConfig } from "vitest/config";
 
-// [63] single application: the Studio module lives at src/studio; the alias root is the
+// [63]/[68] single application: the Studio module lives at src/modules/studio; the alias root is the
 // repository root (matches the root tsconfig paths `@/*` → `./*`).
 const appRoot = path.dirname(fileURLToPath(import.meta.url));
 
@@ -15,7 +15,6 @@ export default defineConfig({
     include: [
       "src/**/*.test.{ts,tsx}",
       "app/**/*.test.{ts,tsx}",
-      "components/**/*.test.{ts,tsx}",
     ],
     css: false,
   },

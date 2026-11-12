@@ -23,7 +23,7 @@ reconciliation:
 - `scripts/kb-license-guard.mjs`, synthetic `tests/fixtures/m4/**` checkout (no real source, no
   licensed bytes, no client data — every fixture is a labeled synthetic dummy), 4 M4 test suites
   (adapter / extract / license / safety), docs (`docs/knowledge/README.md`, this family's receipts,
-  `schemas/kb/README.md` 1.1.0 history), gitignored local lanes (`.toolkit/`, `local-kb/`).
+  `resources/schemas/kb/README.md` 1.1.0 history), gitignored local lanes (`.toolkit/`, `local-kb/`).
 
 Nothing was rebuilt or refactored: G2/G3/G4/G28/Studio, the build orchestrator and the #41/#42
 package-local schema-registry SSOT are untouched by this integration beyond the additive
@@ -40,7 +40,7 @@ no add/add, no delete/modify cases existed.
 | `src/core/cli/args.ts` | `compose`/`build` commands + value flags | kb verb `extract` + header comment | Both; comment de-duplicated (merge artifact); `KB_VERBS` = ingest\|sync\|query\|validate\|extract |
 | `src/core/cli/main.ts` | `compose`/`build` usage + imports + switch cases | `det kb extract` usage + 3-lane root-alias precedence paragraph (`--root` > `DET_KB_ROOT_*` > gitignored `.toolkit/local.json`) | Both usage sections; precedence paragraph keeps the PR's superset wording (covers all kb verbs) |
 | `src/core/cli/commands/kb.ts` | `SCHEMA_REFS` removed — schema identity now solely registry-resolved (#41) | `extract` verb + `kbExtract()` + `runExtract` import | Auto-merged coherently: `kbExtract` uses the existing `kbArtifact(role, payload)` helper; no schema URL re-declared anywhere |
-| `src/core/schema-registry.ts` | rewritten to registry-SSOT loader + `contractId()` alias→path→$id (#41/#42) | + two hardcoded ids (`kb-extract-manifest`, `kb-source-scan`) + own `contractId()` on the old map | **Main's version taken verbatim**; PR's hardcoded-map hunk dropped (obsolete — would have resurrected the pre-#41 architecture). The two contract names enter through `schemas/registry.json` aliases instead (§3) |
+| `src/core/schema-registry.ts` | rewritten to registry-SSOT loader + `contractId()` alias→path→$id (#41/#42) | + two hardcoded ids (`kb-extract-manifest`, `kb-source-scan`) + own `contractId()` on the old map | **Main's version taken verbatim**; PR's hardcoded-map hunk dropped (obsolete — would have resurrected the pre-#41 architecture). The two contract names enter through `resources/schemas/registry.json` aliases instead (§3) |
 | `tests/run-all.mjs` | G3/G4/G28/build/#41-registry suite blocks | 4 M4 suite blocks | Both blocks, in order: baseline → G2 → KB → G3 → G4 → G28 → build → #41 registry → M4 (license, safety, extract, adapter) |
 
 ## 3. Post-merge reconciliations (main-side gates the accepted M4 work pre-dates)
@@ -48,19 +48,19 @@ no add/add, no delete/modify cases existed.
 The #41 registry gate (`tests/registry-suite.mjs`) was merged to main **after** PR #22 branched, so
 the accepted M4 work never faced it. Two bounded, additive reconciliations — no gate weakened:
 
-1. **Registry SSOT aliases (REG-01/REG-02 golden set).** `schemas/registry.json` gains
+1. **Registry SSOT aliases (REG-01/REG-02 golden set).** `resources/schemas/registry.json` gains
    `kb-extract-manifest`, `kb-source-scan` (substituting for the dropped hardcoded ids) and
    `kb-source-scan-request`; `GOLDEN_IDS` in the registry suite gains the same three. New schema
-   files under `schemas/kb/` load into Ajv via the existing directory scan; `contractId()` needs no
+   files under `resources/schemas/kb/` load into Ajv via the existing directory scan; `contractId()` needs no
    code change.
 2. **Adapter input transport declared (REG-06).** Every shipped adapter descriptor must name a
    registered `inputContract`. The M4 scanner's stdin shape was already pinned in code
    (`KbScanRequest`, defensively hand-validated by `scan.ts`, exact-payload-asserted by M4E-10) but
    had no declared contract — the descriptor schema itself made `inputContract` optional pre-#41.
-   Resolution: new `schemas/kb/kb-source-scan-request.schema.json` materializing exactly that wire
+   Resolution: new `resources/schemas/kb/kb-source-scan-request.schema.json` materializing exactly that wire
    format (verified against `extract.ts` construction and `scan.ts` validation, no behavior change,
    `runAdapter` still validates only the output contract), registered in the SSOT, and declared in
-   `adapters/magento-kb-source/descriptor.json`. `schemas/kb/README.md` table rows added for the
+   `adapters/magento-kb-source/descriptor.json`. `resources/schemas/kb/README.md` table rows added for the
    three M4 engine contracts.
 
 ## 4. What was explicitly NOT done
@@ -81,7 +81,7 @@ the accepted M4 work never faced it. Two bounded, additive reconciliations — n
 | Studio `npm ci && npm test` | **184/184 vitest tests, 21 files passed** (incl. real det-output interop + real det build E2E) |
 | Studio `typecheck` / `lint` / `build` | clean / clean / production build OK |
 | `det build --config` offline (root) | exit 0; 3 stages completed; 9/9 per-file-byte hashes MATCH |
-| npm-pack relocation sanity | tarball 82 files: all 10 `schemas/kb/*.json` + `schemas/registry.json` + 4 adapter descriptors present; **no owner-absolute path in any runtime surface** (`dist/`, `schemas/`, `adapters/`, `bin/` — README's documented policy-disclosure line pre-dates this task and is not a runtime surface); fresh consumer `npm install --omit=dev` clean (0 vulnerabilities); `det build` from consumer cwd: exit 0, 9/9 hashes MATCH, `native-content.html` sha256 identical to the repo-root build (`78b3ad118a3d8a29…`, matching the #38 receipt head) — byte-determinism across relocation |
+| npm-pack relocation sanity | tarball 82 files: all 10 `resources/schemas/kb/*.json` + `resources/schemas/registry.json` + 4 adapter descriptors present; **no owner-absolute path in any runtime surface** (`dist/`, `resources/schemas/`, `adapters/`, `bin/` — README's documented policy-disclosure line pre-dates this task and is not a runtime surface); fresh consumer `npm install --omit=dev` clean (0 vulnerabilities); `det build` from consumer cwd: exit 0, 9/9 hashes MATCH, `native-content.html` sha256 identical to the repo-root build (`78b3ad118a3d8a29…`, matching the #38 receipt head) — byte-determinism across relocation |
 | M4 gates specifically | license + safety + extract + adapter suites all green (deny-before-read, leak markers absent from every payload, symlink escape skipped, fail-closed writes, digest pins, byte-determinism) |
 
 ## 6. Exact-tip CI (Draft PR)

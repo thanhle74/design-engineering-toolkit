@@ -1,7 +1,7 @@
 // Minimal deterministic resolver used by the G1 negative-case test plan — now the production
 // structural-mapping core (issue #9). Scope (deliberate): binding-map validation + structure
 // resolution against a pinned registry, producing a ResolutionReport per
-// schemas/converter/resolution-report.schema.json. It resolves structure-section/element
+// resources/schemas/converter/resolution-report.schema.json. It resolves structure-section/element
 // fixtures — a real NodeIR/PageStructure pipeline is G2 work.
 // Ported verbatim (logic-identical) from the #5 G1 harness (tests/lib/resolver.mjs); parity is
 // proven by the unchanged T-01..T-08 checks and the committed example hash comparison.

@@ -9,9 +9,9 @@
  * never names a server path. While a build runs, the single-slot runner
  * answers 409 with the active job. Responses: 202 {runId, state} on accept.
  */
-import { buildControlErrorResponse } from "@/src/studio/server/api-error";
-import { BuildConfigCatalog, STUDIO_BUILD_PROJECTS_DIR_ENV } from "@/src/studio/server/build-catalog";
-import { getBuildRunner } from "@/src/studio/server/build-runner";
+import { buildControlErrorResponse } from "@/src/modules/studio/server/api-error";
+import { BuildConfigCatalog, STUDIO_BUILD_PROJECTS_DIR_ENV } from "@/src/modules/studio/server/build-catalog";
+import { getBuildRunner } from "@/src/modules/studio/server/build-runner";
 
 export async function GET(request: Request): Promise<Response> {
   void request.headers.get("accept");

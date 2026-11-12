@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { connection } from "next/server";
 
-import { DetRunReaderError } from "@/src/studio/shared/contracts";
-import { BuildConfigCatalog, STUDIO_BUILD_PROJECTS_DIR_ENV } from "@/src/studio/server/build-catalog";
+import { DetRunReaderError } from "@/src/modules/studio/shared/contracts";
+import { BuildConfigCatalog, STUDIO_BUILD_PROJECTS_DIR_ENV } from "@/src/modules/studio/server/build-catalog";
 
-import { AgentWorkflow } from "@/src/studio/modules/agent";
+import { AgentWorkflow } from "@/src/modules/studio/modules/agent";
 
 export const metadata: Metadata = { title: "Phân tích Figma bằng AI" };
 

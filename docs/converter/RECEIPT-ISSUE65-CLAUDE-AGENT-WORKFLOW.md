@@ -55,7 +55,7 @@ Production server (`next build` + `next start`, PORT=3100, `STUDIO_DET_RUNS_DIR=
 4. **Approval preview** — **87/87 pinned, droppedNodeIds []** (every proposed node id exists in the version-pinned tree).
 5. **Approve** — 202 `build-1794450088363`; approval record `derivedFrom: "agent-plan"`, `planContentHash d940ac44…`, 87/87, base project untouched (verified).
 6. **Real engine** — `det build` **exit 0** (0.72s), manifest `source.revisionId 2417494580183108397` (PINNED), gaps verbatim: `COMPOSITION_SKIPS_PRESENT · 2`, `COMPOSITION_EXCLUSIONS_PRESENT · 15`, `COMPOSITION_GAPS_PRESENT · 151`, both PREVIEW operator gates. The run page renders genuine per-node dispositions incl. a real `NEEDS_REVIEW` (`Proto / Button/Primary`). **No false 12/12 — the engine reports partial coverage exactly as designed.**
-7. **Visual/DOM evidence** — `apps/studio/docs/screenshots/65-agent-ready.png` (green status card + form), `65-agent-plan.png` (12-section proposal table, machine tokens verbatim, Vietnamese copy), `65-run-dispositions.png` (LIVE engine truth); `evidence/issue-65/dom-evidence.txt` (scoped post-render DOM markers: green tags ×2, blocked-marker absent, `plan-ready`/`PAGE/Home/Desktop`/`mcp-observed-unpinned` present, `plan-ungrounded` absent, all three gap codes + NEEDS_REVIEW present); sanitized `evidence/issue-65/live-analysis-plan.json` + `live-analysis-approval.json` (machine paths → `<repo-root>`/`<runs-root>`).
+7. **Visual/DOM evidence** — `apps/studio/docs/screenshots/65-agent-ready.png` (green status card + form), `65-agent-plan.png` (12-section proposal table, machine tokens verbatim, Vietnamese copy), `65-run-dispositions.png` (LIVE engine truth); `docs/evidence/issue-65/dom-evidence.txt` (scoped post-render DOM markers: green tags ×2, blocked-marker absent, `plan-ready`/`PAGE/Home/Desktop`/`mcp-observed-unpinned` present, `plan-ungrounded` absent, all three gap codes + NEEDS_REVIEW present); sanitized `docs/evidence/issue-65/live-analysis-plan.json` + `live-analysis-approval.json` (machine paths → `<repo-root>`/`<runs-root>`).
 
 **Real vs stubbed evidence labels:** §3 items 1–7 are REAL (live claude process, live Figma MCP HTTP, live engine). CI runs the same code paths STUBBED via the spawn seam (documented above); CI cannot access Figma MCP, so nothing in CI claims live behavior. The injected-instruction refusal and the tool-upsell refusal are REAL observed agent behavior (this session's earlier Probe A + this E2E's limitations entry).
 
@@ -84,7 +84,7 @@ No Figma writes (agent read-only by allowed tool + prompt + permission mode; the
 3. `apps/studio/src/shared/contracts/index.ts` — +1 barrel line `export * from "./agent-plan";`.
 4. `apps/studio/README.md` — new "AI workflow ([65])" section (docs only).
 
-Everything else is NEW: `src/shared/contracts/agent-plan{,.test}.ts`, `src/server/claude-agent/*` (6 files + 4 test files), `src/modules/agent/*` (barrel + reasons + 2 components + 2 test files), `app/agent/page.tsx`, `app/api/agent/**` (5 routes + 5 test files), `apps/studio/docs/screenshots/65-*.png`, `evidence/issue-65/*`.
+Everything else is NEW: `src/shared/contracts/agent-plan{,.test}.ts`, `src/server/claude-agent/*` (6 files + 4 test files), `src/modules/agent/*` (barrel + reasons + 2 components + 2 test files), `app/agent/page.tsx`, `app/api/agent/**` (5 routes + 5 test files), `apps/studio/docs/screenshots/65-*.png`, `docs/evidence/issue-65/*`.
 
 ## 8. Known observations (honest, non-blocking)
 
@@ -165,7 +165,7 @@ chunks → fail-closed `stdout-truncated`, never parsed.
 ### 11.4 C65-3 — verified source-identity binding (BLOCKER fixed)
 
 New committed per-base record `source-identity.json`
-(`examples/build/slaunchpad-home-real-derived/`): `figmaFileKey
+(`resources/examples/build/slaunchpad-home-real-derived/`): `figmaFileKey
 vNPtfBRpYM3PsExirVqhmt`, `figmaRootNodeId 245:2`, `providerRevisionId
 2417494580183108397`, provenance = the authorized #18 read-only extract
 (merged main `8aaaf2e`). New server module `source-identity.ts`
@@ -253,7 +253,7 @@ Production server (`next start`, port 3100, fresh runs root
 6. **Download byte-verification** — `GET /api/runs/build-1794455593850/
    artifacts/03-composition%2Fnative-content.html` → 200, **11,507 bytes,
    sha256 `4d9cf26c…` == manifest declaration == disk bundle** (3-way).
-7. **Evidence (this round, sanitized)** — `evidence/issue-65/correction/
+7. **Evidence (this round, sanitized)** — `docs/evidence/issue-65/correction/
    {dom-evidence.txt, live-analysis-plan.json, live-analysis-approval.json}`
    (machine paths → `<repo-root>`/`<runs-root>`); screenshots
    `docs/studio/screenshots/65-agent-ready-correction.png`,

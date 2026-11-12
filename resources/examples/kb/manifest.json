@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "manifestId": "synthetic-kb-examples",
+  "platform": { "id": "magento", "version": "2.4.8-p5" },
+  "visibilityPolicy": "example-only",
+  "inputs": {
+    "capabilityRegistry": {
+      "path": "expected-registry.json",
+      "rootAlias": "reg",
+      "label": "det inspect CapabilityRegistry fixture (synthetic Magento-like project) — bridged read-only into KB-1"
+    },
+    "uiInventory": { "path": "ui-inventory.json", "label": "KB-2 metadata-only component inventory (synthetic)" },
+    "projectRecords": [
+      { "path": "project-records.synthetic-fashion.json", "label": "KB-3 synthetic fashion project (example visibility)" },
+      { "path": "project-records.aurora-tea.json", "label": "KB-3 synthetic non-Magento project (neutrality twin)" }
+    ],
+    "relations": { "path": "relations.json", "label": "cross-KB relation records (synthetic)" }
+  },
+  "denyGlobs": [],
+  "notes": "Public synthetic example manifest for the committed kb/ store. Resolve the registry alias per run: --root reg=<repo>/src/core/__tests__/fixtures/synthetic-magento-like. No owner paths, no licensed bytes, no real client material."
+}

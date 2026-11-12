@@ -10,8 +10,8 @@
 
 **No engine, adapter, schema or Studio-code changes.** The missing link was materializing the committed #18 evidence into the exact inputs the existing product already consumes, plus locks that keep it honest:
 
-1. **`examples/build/slaunchpad-home-real-derived/`** — one self-contained, portable, revision-pinned build project:
-   - `snapshot-project/figma-home-desktop.245-2.tree.json` — the offline design-source tree document derived **verbatim** from `evidence/issue-18/live-read-verified/node-ir.json` (337 nodes, root `245:2`, provider revision `2417494580183108397`), by
+1. **`resources/examples/build/slaunchpad-home-real-derived/`** — one self-contained, portable, revision-pinned build project:
+   - `snapshot-project/figma-home-desktop.245-2.tree.json` — the offline design-source tree document derived **verbatim** from `docs/evidence/issue-18/live-read-verified/node-ir.json` (337 nodes, root `245:2`, provider revision `2417494580183108397`), by
    - `tools/derive-snapshot-tree.mjs` — the committed, deterministic provenance tool (componentRef values recovered verbatim from the committed NodeIR diagnostics; kind aliases chosen so the core's own kind table and identity hashes reproduce exactly);
    - `profile.json` (`slaunchpad-fashion`, snapshot design source; platform-checkout path stays the placeholder sentinel);
    - `capability-registry.json` — produced by **one read-only `det inspect`** of the Owner's local checkout at git HEAD `933b36e78211e571e4fab9a78866a02dc1b5e054` (80 capabilities, all `source://slaunch-checkout/...` locators, no absolute paths), committed so the build is portable;
@@ -21,7 +21,7 @@
    - `README.md` — provenance table, honesty boundaries, short-form runbook.
 2. **`tests/real-derived-suite.mjs`** (6 checks, wired into `tests/run-all.mjs`) — locks the whole chain offline: byte-identical tree re-derivation (T1), extraction stable-hash parity with the committed #18 artifacts (T2), the build bundle's honest partial composition + revision pin (T3), pin consistency + machine-path-free portability (T4), observed-only content (T5), plan coverage 0 over the committed chain (T6).
 3. **`docs/runbook-real-derived-studio-build.md`** — the operator runbook (Fedora-tested): start Studio, choose the labeled real-derived project, Build, read stage table / per-section Compose-vs-Review columns / gap list / byte-verified downloads; includes the headless CLI equivalent and troubleshooting.
-4. **`evidence/issue-56/`** — the actual UI-driven operator run's bundle evidence (`build-manifest.json`, `compose-report.json`, `native-content.html`, both stage tool-run envelopes) + scoped DOM evidence text; `docs/screenshots/56-*.png` — catalog with both labeled entries, fixture run page, real-derived run page.
+4. **`docs/evidence/issue-56/`** — the actual UI-driven operator run's bundle evidence (`build-manifest.json`, `compose-report.json`, `native-content.html`, both stage tool-run envelopes) + scoped DOM evidence text; `docs/screenshots/56-*.png` — catalog with both labeled entries, fixture run page, real-derived run page.
 5. **`apps/studio/README.md`** — one paragraph pointing at the committed real-derived project and the runbook (no behavior text changed).
 
 ## 2. First run of the CURRENT product as an operator (issue step 1, at base commit `7c573e3`)
@@ -55,8 +55,8 @@ The reviewed composer shapes hard-code the probe-derived capability namespace (`
 
 ## 5. Verification chain
 
-- Root gate: `npm test` → **186/186 checks pass** (180 pre-existing + R56-T1…T6), including REG-09 ([54] lock unchanged), the [28] build suite, neutrality scan (scope unchanged — schemas + generic example; the project-specific dir is evidence, like `projects/slaunchpad-fashion/`), determinism and negative cases.
-- `det build --config examples/build/slaunchpad-home-real-derived/build-config.json --out <tmp>` → exit 0, three stages, per-file-byte manifest verified (also executed from the committed location, self-contained).
+- Root gate: `npm test` → **186/186 checks pass** (180 pre-existing + R56-T1…T6), including REG-09 ([54] lock unchanged), the [28] build suite, neutrality scan (scope unchanged — schemas + generic example; the project-specific dir is evidence, like `resources/projects/slaunchpad-fashion/`), determinism and negative cases.
+- `det build --config resources/examples/build/slaunchpad-home-real-derived/build-config.json --out <tmp>` → exit 0, three stages, per-file-byte manifest verified (also executed from the committed location, self-contained).
 - Studio: `npm run build` (production), `npm start` + Orca-browser operator run (DOM evidence + screenshots above), `npx vitest run` full suite, `npm run lint`, `npm run typecheck` — all pass (details in §6).
 - Extraction parity: stable hashes of the bundle's `02-extraction/node-ir.json` == committed #18 `node-ir.json` (R56-T3), plus full three-artifact parity in the pin-free shape (R56-T2).
 
@@ -95,7 +95,7 @@ CI note: the two exact-head jobs (`contracts`, `studio` in `.github/workflows/va
 ```bash
 npm ci && npm run build && npm test                     # 186/186 incl. R56-T1…T6
 node bin/det.js build \
-  --config examples/build/slaunchpad-home-real-derived/build-config.json \
+  --config resources/examples/build/slaunchpad-home-real-derived/build-config.json \
   --out /tmp/r56-review                                 # exit 0; check build-manifest.json source pin
 # operator path: docs/runbook-real-derived-studio-build.md
 ```

@@ -1,6 +1,6 @@
 # Design Engineering Toolkit — Architecture (V1 SSOT)
 
-> **Status:** APPROVED & MERGED via [PR #3](https://github.com/thanhle74/design-engineering-toolkit/pull/3) (2026-10-28); issue #1 closed. Retained as the historical V1 SSOT until formally superseded; converter work evolves in [specs/ISSUE-5-converter-architecture.md](../specs/ISSUE-5-converter-architecture.md).
+> **Status:** APPROVED & MERGED via [PR #3](https://github.com/thanhle74/design-engineering-toolkit/pull/3) (2026-10-28); issue #1 closed. Retained as the historical V1 SSOT until formally superseded; converter work evolves in [docs/specs/ISSUE-5-converter-architecture.md](../docs/specs/ISSUE-5-converter-architecture.md).
 > This document is the single source of truth for V1 architecture, contracts, and boundaries. Other docs and schemas are normative annexes linked from here. Nothing in this repository has been executed against a live target; all Figma findings come from read-only audits.
 
 ## 1. Purpose and V1 boundary
@@ -21,7 +21,7 @@ Discover Figma style guide
 ## 2. Design principles
 
 1. **Design-first.** Contracts describe design intent (semantic roles, variants, states), not any frontend's serialization format.
-2. **Project data lives in profiles, never in core.** Toolkit core contains no brand colors, fonts, copy, or business rules. Two projects must be able to run the same pipeline with nothing but different profile files (validated by the two examples in [`profiles/`](../profiles/)).
+2. **Project data lives in profiles, never in core.** Toolkit core contains no brand colors, fonts, copy, or business rules. Two projects must be able to run the same pipeline with nothing but different profile files (validated by the two examples in [`resources/profiles/`](../resources/profiles/)).
 3. **Curate, don't dump.** Source Figma is audited and classified before extraction; demonstration artwork and one-off drafts are excluded from contracts by default.
 4. **Observed ≠ machine-readable.** A swatch *drawn* in Figma is not a Figma variable. The SECOMM audit found **zero Figma variables and zero styles** in the reference file — the toolkit must distinguish these and record how each token was obtained (`observed` from a real style/variable, `derived` from documented artwork, `illustrative` placeholder pending extraction).
 5. **Evidence over claims.** Every stage emits an artifact; every gate has a measurement; nothing is "done" without a receipt a human can check.
@@ -32,9 +32,9 @@ Discover Figma style guide
 | Layer | Contents | May contain project data? |
 |---|---|---|
 | **Core** (this repo) | Orchestrator spec, JSON schemas, audit method, quality gates, safety rules | No |
-| **Profile** (`profiles/*.json`) | Per-project sources, business context, aesthetic direction, destination, content policy, gate thresholds | Yes — everything project-specific |
+| **Profile** (`resources/profiles/*.json`) | Per-project sources, business context, aesthetic direction, destination, content policy, gate thresholds | Yes — everything project-specific |
 | **Sources** | Read-only Figma files (style guides, references), referenced by fileKey + node scopes | Referenced, never mutated |
-| **Contracts** (`examples/`, produced per run) | `source-manifest`, `design-tokens`, `component-defs` JSON payloads | Per-project *data* under *neutral* schemas |
+| **Contracts** (`resources/examples/`, produced per run) | `source-manifest`, `design-tokens`, `component-defs` JSON payloads | Per-project *data* under *neutral* schemas |
 | **Destination** | A Figma file approved for writes (V1: a fresh file created only after an explicit GO) | Project output |
 
 ## 4. Pipeline and orchestrator
@@ -58,7 +58,7 @@ One entrypoint — a `design-toolkit` orchestrator skill (authored in implementa
 
 ## 5. Contracts
 
-Four versioned JSON Schemas (Draft 2020-12) under [`schemas/`](../schemas/). All payloads carry `schemaVersion` (integer **major**; minor/patch tracked in [schemas/README.md](../schemas/README.md) — additive-only within a major). Validation strategy: JSON Schema via `ajv` in CI once implementation phase P1 lands; until then examples in [`examples/`](../examples/) are hand-validated against the schemas.
+Four versioned JSON Schemas (Draft 2020-12) under [`resources/schemas/`](../resources/schemas). All payloads carry `schemaVersion` (integer **major**; minor/patch tracked in [resources/schemas/README.md](../resources/schemas/README.md) — additive-only within a major). Validation strategy: JSON Schema via `ajv` in CI once implementation phase P1 lands; until then examples in [`resources/examples/`](../resources/examples/) are hand-validated against the schemas.
 
 | Contract | File | Purpose | Key fields |
 |---|---|---|---|

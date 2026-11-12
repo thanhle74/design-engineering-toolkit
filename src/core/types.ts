@@ -1,4 +1,4 @@
-// Shared structural types mirroring the converter contract family (schemas/converter/*, major 1).
+// Shared structural types mirroring the converter contract family (resources/schemas/converter/*, major 1).
 // The JSON Schemas stay the canonical validation layer (ajv); these types exist so the
 // TypeScript core is type-checked against the same shapes it validates at runtime.
 // Platform-neutral by construction: no platform literals, no design-source ids, no filesystem paths.
@@ -249,7 +249,7 @@ export interface ConverterProfile {
   };
 }
 
-// --- G2: design-source structural extraction (schemas/converter/node-ir|page-structure|source-review, major 1) ---
+// --- G2: design-source structural extraction (resources/schemas/converter/node-ir|page-structure|source-review, major 1) ---
 // Materialized at the Structural Mapping gate (issue #14). Same discipline as above: the JSON
 // Schemas stay canonical (ajv); these types let the core stay type-checked against what it emits.
 
@@ -402,7 +402,7 @@ export interface SourceReview {
   diagnostics: Diagnostic[];
 }
 
-// --- G2: design-source transport snapshot (schemas/cli/design-source-snapshot, major 1) ---
+// --- G2: design-source transport snapshot (resources/schemas/cli/design-source-snapshot, major 1) ---
 // Adapter-defined (open) vocabulary; the core's extractor maps it onto the closed enums above.
 
 export interface DesignSourceSnapshotNode {
