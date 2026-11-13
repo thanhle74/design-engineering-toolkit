@@ -1,14 +1,21 @@
 // [72] W-C — products handler unit suite (vitest, hermetic fixtures).
 //
-// Asserts the VERBATIM emitted bytes of the products declarations (carousel = VERIFIED-REAL-ROW
-// minus the site css class with an EMPTY rule set; grid = VENDOR-CONFIG-VERIFIED derived bytes —
-// see docs/evidence/issue-72/source/wc-declarations.md), the row(contained) wrap, the typed
-// live-listing GAP entry, and the silent/fail-closed negatives. No product data anywhere.
+// [#72 C72-1/C72-2 correction] The suite proves the CORRECTED products contract:
+// - (a) core-only profile and (b) Smile/Elasticsuite-enabled profile emit the SAME portable
+//   bytes: the widget directive carries ONLY the Magento CORE CatalogWidget rule/condition
+//   classes (never any optional vendor class), bound through a recorded category_ids/sku
+//   selection, with the rule payload byte-shaped after real admin-saved category_ids-mode
+//   cms_page row 8 (demo-landing-page) — key order, field order, operator `==`.
+// - (c) unbound/unknown selection composes NOTHING (silent null per the seam contract): a
+//   rule-less widget is a REAL newest-products storefront listing, never emitted unbound.
+// - capability-absent still fails closed with UNSUPPORTED_CAPABILITY.
+// See docs/evidence/issue-72/source/wc-declarations.md + integrator-receipt.md (C72 section).
 import { describe, expect, it } from "vitest";
 
 import { productsHandler } from "../products.js";
 import type {
    MappingEntry,
+   ProductsSelectionBinding,
    SectionComposeContext,
 } from "../../handler-context.js";
 import type { ComposerRole } from "../../handler-context.js";
@@ -63,11 +70,12 @@ interface CtxCapture {
    mapping: MappingEntry[];
 }
 
-/** Hand-built SectionComposeContext (no bindings exist on the frozen seam — by design). */
+/** Hand-built SectionComposeContext (the selection map rides the frozen seam, C72-2). */
 function makeCtx(
    root: Spec,
    roles: Record<string, ComposerRole> = {},
    enabledCaps: Record<string, boolean> = {},
+   selections: Record<string, ProductsSelectionBinding> = {},
 ): SectionComposeContext & CtxCapture {
    const nodes = flatten(root);
    const nodesById = new Map(nodes.map((n) => [n.nodeId, n]));
@@ -103,6 +111,9 @@ function makeCtx(
       mediaByRef: new Map(),
       linkByRef: new Map(),
       roleByLocator: new Map(Object.entries(roles) as [string, ComposerRole][]),
+      selectionByLocator: new Map(
+         Object.entries(selections) as [string, ProductsSelectionBinding][],
+      ),
       excludedLocators: new Set<string>(),
       ctaSubtreeLocators: new Set<string>(),
       pushDiagnostic: (d) => capture.diagnostics.push(d),
@@ -175,13 +186,20 @@ function productsSectionSpec(
 
 const WIDGET_TEMPLATE_EXT = ["p", "h", "t", "m", "l"].join("");
 
-const CAROUSEL_DECLARATION =
-   `<div data-content-type="products" data-appearance="carousel" data-autoplay="false" data-autoplay-speed="4000" data-infinite-loop="false" data-show-arrows="true" data-show-dots="true" data-carousel-mode="default" data-center-padding="90px" data-element="main">` +
-   `{{widget type="Magento\\CatalogWidget\\Block\\Product\\ProductsList" template="Magento_PageBuilder::catalog/product/widget/content/carousel.${WIDGET_TEMPLATE_EXT}" anchor_text="" id_path="" show_pager="0" products_count="8" condition_option="condition" condition_option_value="" type_name="Catalog Products Carousel" conditions_encoded="^[\`1\`:^[\`type\`:\`Smile||ElasticsuiteVirtualCategory||Model||Rule||WidgetCondition||Combine\`,\`aggregator\`:\`all\`,\`value\`:\`1\`,\`new_child\`:\`\`^]^]" sort_order="date_newest_top"}}</div>`;
+// The bound rule payload: the real admin-saved category_ids-mode row 8 structure with the
+// PORTABLE CORE condition classes (JSON text backslash pairs encode as `||` — C72-1).
+const CORE_COMBINE = "Magento||CatalogWidget||Model||Rule||Condition||Combine";
+const CORE_PRODUCT = "Magento||CatalogWidget||Model||Rule||Condition||Product";
+const boundConditionsEncoded = (attribute: string, value: string): string =>
+   `^[\`1\`:^[\`aggregator\`:\`all\`,\`new_child\`:\`\`,\`type\`:\`${CORE_COMBINE}\`,\`value\`:\`1\`^],\`1--1\`:^[\`operator\`:\`==\`,\`type\`:\`${CORE_PRODUCT}\`,\`attribute\`:\`${attribute}\`,\`value\`:\`${value}\`^]^]`;
 
-const GRID_DECLARATION =
+const CAROUSEL_DECLARATION = (attribute: string, value: string): string =>
+   `<div data-content-type="products" data-appearance="carousel" data-autoplay="false" data-autoplay-speed="4000" data-infinite-loop="false" data-show-arrows="true" data-show-dots="true" data-carousel-mode="default" data-center-padding="90px" data-element="main">` +
+   `{{widget type="Magento\\CatalogWidget\\Block\\Product\\ProductsList" template="Magento_PageBuilder::catalog/product/widget/content/carousel.${WIDGET_TEMPLATE_EXT}" anchor_text="" id_path="" show_pager="0" products_count="8" condition_option="${attribute}" condition_option_value="${value}" type_name="Catalog Products Carousel" conditions_encoded="${boundConditionsEncoded(attribute, value)}" sort_order="date_newest_top"}}</div>`;
+
+const GRID_DECLARATION = (attribute: string, value: string): string =>
    `<div data-content-type="products" data-appearance="grid" data-element="main">` +
-   `{{widget type="Magento\\CatalogWidget\\Block\\Product\\ProductsList" template="Magento_CatalogWidget::product/widget/content/grid.${WIDGET_TEMPLATE_EXT}" anchor_text="" id_path="" show_pager="0" products_count="5" condition_option="condition" condition_option_value="" type_name="Catalog Products List" conditions_encoded="^[\`1\`:^[\`type\`:\`Smile||ElasticsuiteVirtualCategory||Model||Rule||WidgetCondition||Combine\`,\`aggregator\`:\`all\`,\`value\`:\`1\`,\`new_child\`:\`\`^]^]" sort_order="position"}}</div>`;
+   `{{widget type="Magento\\CatalogWidget\\Block\\Product\\ProductsList" template="Magento_CatalogWidget::product/widget/content/grid.${WIDGET_TEMPLATE_EXT}" anchor_text="" id_path="" show_pager="0" products_count="5" condition_option="${attribute}" condition_option_value="${value}" type_name="Catalog Products List" conditions_encoded="${boundConditionsEncoded(attribute, value)}" sort_order="position"}}</div>`;
 
 const rowWrap = (declaration: string): string =>
    `<div data-content-type="row" data-appearance="contained" data-element="main">` +
@@ -191,17 +209,21 @@ const rowWrap = (declaration: string): string =>
 
 // ---- tests -------------------------------------------------------------------------------------
 
-describe("[72] W-C products handler", () => {
-   it("emits the carousel declaration byte-verbatim inside row(contained), with the listing GAP", () => {
-      const ctx = makeCtx(productsSectionSpec("products-carousel"), {
-         "930:3": "products-carousel",
-      });
+describe("[72] W-C products handler (C72 correction)", () => {
+   it("(a) core-only profile: bound category_ids selection emits the portable core-class carousel bytes inside row(contained)", () => {
+      const ctx = makeCtx(
+         productsSectionSpec("products-carousel"),
+         { "930:3": "products-carousel" },
+         {},
+         // Real row 8's selection ("41"), recorded binding shape.
+         { "930:3": { kind: "category_ids", value: "41" } },
+      );
       const out = productsHandler.compose(
          sectionFixture("SECTION/FeaturedProducts"),
          "s-root",
          ctx,
       );
-      expect(out).toBe(rowWrap(CAROUSEL_DECLARATION));
+      expect(out).toBe(rowWrap(CAROUSEL_DECLARATION("category_ids", "41")));
 
       const containerMapped = ctx.mapping.find(
          (m) => m.sourceNodeId === "s-cards" && m.disposition === "mapped",
@@ -211,55 +233,170 @@ describe("[72] W-C products handler", () => {
          appearanceId: "carousel",
          nativeElement: "main",
          nativeField:
-            "products carousel (declaration div + {{widget …}} directive)",
+            "products carousel (declaration div + bound {{widget …}} directive)",
       });
-      const listingGap = ctx.mapping.find(
-         (m) => m.sourceNodeId === "s-cards" && m.disposition === "gap",
+      // Card fidelity stays the typed GAP (runtime template owns it) — never faked statically.
+      // Three records: the container-level fidelity gap + one gap per observed card placeholder.
+      const fidelityGaps = ctx.mapping.filter(
+         (m) =>
+            m.disposition === "gap" &&
+            m.note?.includes("never faked as static cards") === true,
       );
-      expect(listingGap?.note).toContain(
-         "Products listing content requires a verified catalog data provider binding",
-      );
-      // Honest accounting: header + card internals gap-recorded, never dropped or faked.
-      expect(
-         ctx.mapping.filter(
-            (m) =>
-               m.disposition === "gap" &&
-               m.note?.includes("never faked as static cards") === true,
-         ).length,
-      ).toBe(2);
+      expect(fidelityGaps.map((m) => m.sourceNodeId).sort()).toEqual([
+         "s-card-1",
+         "s-card-2",
+         "s-cards",
+      ]);
       expect(
          ctx.diagnostics.some(
             (d) =>
                d.code === "NOT_VERIFIED" &&
-               d.message.includes("live product listing"),
-         ),
-      ).toBe(true);
-      expect(
-         ctx.diagnostics.some(
-            (d) =>
-               d.code === "NOT_VERIFIED" &&
-               d.message.includes(
-                  "fidelity delegates to the native products widget",
-               ),
+               d.message.includes("bound to the recorded category_ids"),
          ),
       ).toBe(true);
    });
 
-   it("emits the grid declaration byte-verbatim (vendor-config-verified bytes)", () => {
-      const ctx = makeCtx(productsSectionSpec("products-grid"), {
-         "930:3": "products-grid",
+   it("(a) core-only profile: bound sku selection emits the portable sku-mode grid bytes", () => {
+      const ctx = makeCtx(
+         productsSectionSpec("products-grid"),
+         { "930:3": "products-grid" },
+         {},
+         { "930:3": { kind: "sku", value: "ABC-1,ABC-2" } },
+      );
+      const out = productsHandler.compose(
+         sectionFixture("SECTION/FeaturedProducts"),
+         "s-root",
+         ctx,
+      );
+      expect(out).toBe(rowWrap(GRID_DECLARATION("sku", "ABC-1,ABC-2")));
+      expect(
+         ctx.mapping.find(
+            (m) => m.sourceNodeId === "s-cards" && m.disposition === "mapped",
+         )?.target?.appearanceId,
+      ).toBe("grid");
+   });
+
+   it("(b) Smile-enabled profile emits the SAME portable bytes — no optional vendor class ever appears in the output", () => {
+      // Same section, same selection; the profile difference lives in the TARGET's installed
+      // modules (outside DET's generic serializer by design). The emitted directive must be
+      // BYTE-IDENTICAL to the core-only profile and reference the core classes only — on an
+      // Elasticsuite checkout the runtime ConditionFactoryPlugin maps core -> vendor at
+      // decode time (vendor-verified), so emitting the vendor class would break everywhere
+      // else. (Real cms_page row 7 proves core-class bytes on the Smile-enabled checkout.)
+      const smileCtx = makeCtx(
+         productsSectionSpec("products-carousel"),
+         { "930:3": "products-carousel" },
+         {},
+         { "930:3": { kind: "category_ids", value: "41" } },
+      );
+      const smileOut = productsHandler.compose(
+         sectionFixture("SECTION/FeaturedProducts"),
+         "s-root",
+         smileCtx,
+      );
+      expect(smileOut).toBe(
+         rowWrap(CAROUSEL_DECLARATION("category_ids", "41")),
+      );
+      // The portability lock: NO optional vendor class fragment anywhere in the emitted bytes.
+      expect(smileOut).not.toContain("Elasticsuite");
+      expect(smileOut).not.toContain("Smile");
+      expect(smileOut).toContain(
+         "Magento||CatalogWidget||Model||Rule||Condition||Combine",
+      );
+   });
+
+   it("(c) unbound products decision composes NOTHING (silent null — executable widgets are never emitted unbound)", () => {
+      const ctx = makeCtx(productsSectionSpec("products-carousel"), {
+         "930:3": "products-carousel",
       });
       const out = productsHandler.compose(
          sectionFixture("SECTION/FeaturedProducts"),
          "s-root",
          ctx,
       );
-      expect(out).toBe(rowWrap(GRID_DECLARATION));
+      // Silent null per the frozen seam contract; the compose dispatcher's recorded-products
+      // guard owns the accountable typed-gap record + fallback blocking (compose-level suite).
+      expect(out).toBeNull();
+      expect(ctx.diagnostics).toHaveLength(0);
+      expect(ctx.mapping).toHaveLength(0);
+   });
+
+   it("(c) an invalid selection (unknown kind or empty value) fails closed exactly like unbound", () => {
+      // A projection carrying selection kind "condition" must never reach the seam as a
+      // composable binding — the compose input parser only forwards category_ids/sku; the
+      // handler treats anything else (and empty values) as unbound.
+      const ctx = makeCtx(
+         productsSectionSpec("products-carousel"),
+         { "930:3": "products-carousel" },
+         {},
+         // Unknown kind as it would arrive if a registry/schema drift ever leaked it.
+         { "930:3": { kind: "condition", value: "{}" } as never },
+      );
+      const out = productsHandler.compose(
+         sectionFixture("SECTION/FeaturedProducts"),
+         "s-root",
+         ctx,
+      );
+      expect(out).toBeNull();
+      expect(ctx.diagnostics).toHaveLength(0);
+      expect(ctx.mapping).toHaveLength(0);
+   });
+
+   it("(c) whitespace-only selection values fail closed", () => {
+      const ctx = makeCtx(
+         productsSectionSpec("products-grid"),
+         { "930:3": "products-grid" },
+         {},
+         { "930:3": { kind: "category_ids", value: "   " } },
+      );
       expect(
-         ctx.mapping.find(
-            (m) => m.sourceNodeId === "s-cards" && m.disposition === "mapped",
-         )?.target?.appearanceId,
-      ).toBe("grid");
+         productsHandler.compose(
+            sectionFixture("SECTION/FeaturedProducts"),
+            "s-root",
+            ctx,
+         ),
+      ).toBeNull();
+   });
+
+   it("mixed section: bound container composes, unbound sibling records the typed gap and composes nothing", () => {
+      const spec = productsSectionSpec("products-grid");
+      // Add a second projected container without a binding.
+      spec.children!.push({
+         nodeId: "s-cards-2",
+         kind: "container",
+         name: "SLOT/ProductCards2",
+         locator: "930:9",
+      });
+      const ctx = makeCtx(
+         spec,
+         {
+            "930:3": "products-grid",
+            "930:9": "products-carousel",
+         },
+         {},
+         { "930:3": { kind: "category_ids", value: "7" } },
+      );
+      const out = productsHandler.compose(
+         sectionFixture("SECTION/FeaturedProducts"),
+         "s-root",
+         ctx,
+      );
+      // Only the BOUND container composes; the unbound sibling contributes no fragment.
+      expect(out).toBe(rowWrap(GRID_DECLARATION("category_ids", "7")));
+      expect((out?.match(/data-content-type="products"/g) ?? []).length).toBe(
+         1,
+      );
+      const unboundGap = ctx.mapping.find(
+         (m) => m.sourceNodeId === "s-cards-2" && m.disposition === "gap",
+      );
+      expect(unboundGap?.note).toContain("NO recorded selection binding");
+      expect(
+         ctx.diagnostics.some(
+            (d) =>
+               d.code === "NOT_VERIFIED" &&
+               d.message.includes("no category_ids/sku selection binding"),
+         ),
+      ).toBe(true);
    });
 
    it("returns silent null with no products projection", () => {
@@ -279,6 +416,7 @@ describe("[72] W-C products handler", () => {
          productsSectionSpec("products-carousel"),
          { "930:3": "products-carousel" },
          { "magento_pagebuilder/products#carousel": false },
+         { "930:3": { kind: "category_ids", value: "41" } },
       );
       const out = productsHandler.compose(
          sectionFixture("SECTION/FeaturedProducts"),

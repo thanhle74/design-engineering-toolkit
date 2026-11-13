@@ -10,31 +10,30 @@
 // - slide (poster): real admin-saved cms_page rows (pages 2/35) — the full poster chain
 //   (main > link|empty_link > wrapper > overlay > poster-content > content + button), keyed
 //   wrapper/overlay/button style rules exactly like the real rows persist them.
-// - products (carousel): real admin-saved cms_page row (page 2) verbatim MINUS the site-specific
-//   css class, with an EMPTY rule set in conditions_encoded (editor-default state; the child
-//   category rule of the observed row is deliberately not replicated).
-// - products (grid): no real row exists on this instance (all 11 observed products blocks are
-//   carousel) — bytes derived from the content-type declaration (products.xml: grid main carries
-//   ONLY data-content-type/data-appearance) + the grid widget-directive converter's toDom
-//   literals (template/type_name) + the products form defaults (products_count 5, sort_order
-//   position). Marked VENDOR-CONFIG-VERIFIED, never real-row-verified.
+// - products (carousel): real admin-saved cms_page row verbatim MINUS the site-specific css
+//   class; [#72 C72-2 correction] the directive composes ONLY for a BOUND recorded selection —
+//   the rule payload is the byte-shaped synthesis of real category_ids-mode row 8
+//   (demo-landing-page) with the portable CORE condition classes (C72-1 verification in the
+//   products section below). Unbound products decisions compose NOTHING (an unbound rule-less
+//   widget is a real executable storefront listing, never a harmless placeholder).
+// - products (grid): no real grid row exists on this instance (all 11 observed products blocks
+//   are carousel) — declaration bytes derived from the content-type declaration (products.xml:
+//   grid main carries ONLY data-content-type/data-appearance) + the grid widget-directive
+//   converter's toDom literals (template/type_name) + the products form defaults
+//   (products_count 5, sort_order position). Marked VENDOR-CONFIG-VERIFIED, never
+//   real-row-verified.
 //
 // Everything here is PURE (elements.ts conventions: no closure state, no diagnostics, no
 // registry access) — handlers own the accountable records; these builders only emit bytes.
 import { esc, escText, buttonVariantClass } from "./elements.js";
 
-// The products widget directive's conditions payload in the editor-default state: the condition
-// combine node with NO child rules (no category ids — `condition_option="condition"` with an
-// empty value, per the real row's editable default), Magento's backtick encoding exactly as the
-// observed rows persist it ({ -> ^[, } -> ^], " -> `, \ -> ||... i.e. the JSON-escaped backslash
-// pair \\ encodes as ||). The combine type is the class the pinned checkout's editor actually
-// serializes (Smile\ElasticsuiteVirtualCategory's WidgetCondition\Combine, the Elasticsuite
-// virtual-type preference verified at vendor/smile/elasticsuite/src/module-elasticsuite-virtual-
-// category/etc/di.xml); on a checkout without Elasticsuite the editor would serialize
-// Magento\CatalogWidget\Model\Rule\Condition\Combine. No rule encoder is invented; this constant
-// is the verified empty state.
-const PRODUCTS_CONDITIONS_ENCODED_EMPTY_RULES =
-   "^[`1`:^[`type`:`Smile||ElasticsuiteVirtualCategory||Model||Rule||WidgetCondition||Combine`,`aggregator`:`all`,`value`:`1`,`new_child`:``^]^]";
+// [#72 C72-1 correction] The earlier Slaunchpad-derived empty-rule literal (which embedded the
+// optional Smile\ElasticsuiteVirtualCategory WidgetCondition\Combine class into the GENERIC
+// serializer) is REMOVED. The emitted rule/condition classes are now the verified portable
+// Magento CORE CatalogWidget classes (see the C72-1 verification block in the products section
+// below), and the directive composes only for a BOUND selection (C72-2) — the editor-default
+// unbound state is retired, because a rule-less widget directive is a REAL executable listing
+// (an empty combine attaches no SQL constraints; the base collection lists newest products).
 
 // The widget template paths are the vendor converters' own toDom literals — carousel:
 // Magento_PageBuilder/js/content-type/products/mass-converter/carousel-widget-directive.js;
@@ -154,23 +153,112 @@ export const slidePosterStyleRules = (i: SlidePosterInput): string[] => {
 
 export type ProductsAppearance = "grid" | "carousel";
 
+// [#72 C72-1 correction] The rule/condition classes the emitted widget directive references are
+// the MAGENTO CORE CatalogWidget classes — the only portable subset, verified three ways on the
+// 2.4.8-p5 source checkout:
+// 1. Magento's own PageBuilder form processor (view/adminhtml/web/js/form/provider/
+//    conditions-data-processor.js) hardcodes `Magento\\CatalogWidget\\Model\\Rule\\Condition\\Combine`
+//    and `...\\Condition\\Product` into the synthesized rule for category_ids/sku modes —
+//    core emits core classes even when optional vendor modules are installed.
+// 2. The optional Smile Elasticsuite module does NOT preference the core classes; it swaps them
+//    at RUNTIME (Plugin/Rule/ConditionFactoryPlugin::beforeCreate maps the core Combine/Product
+//    class names to its WidgetCondition twins when the widget decodes the rule). Core-class
+//    directives therefore resolve to the vendor-backed rule engine on Elasticsuite checkouts
+//    and to the plain core engine everywhere else. Emitting the vendor class name instead
+//    (the earlier Slaunchpad-derived literal, now removed) would fail on every checkout
+//    without that optional module — ConditionFactory::create would hit a missing class.
+// 3. Real admin-saved cms_page row 7 (`home-en-old`) persists a CORE-class rule on this very
+//    Elasticsuite-enabled checkout — living proof the portable bytes round-trip in the wild.
+const PRODUCTS_RULE_CONDITION_COMBINE_CLASS = [
+   "Magento",
+   "CatalogWidget",
+   "Model",
+   "Rule",
+   "Condition",
+   "Combine",
+].join("\\");
+const PRODUCTS_RULE_CONDITION_PRODUCT_CLASS = [
+   "Magento",
+   "CatalogWidget",
+   "Model",
+   "Rule",
+   "Condition",
+   "Product",
+].join("\\");
+
 /**
- * The products declaration div with its inner `{{widget …}}` directive, in the EDITABLE
- * editor-default state: NO product data, no listing content — the directive and its empty-rule
- * conditions are the persisted contract (registry dataContext.requiresRuntimeData=true; live
- * listing resolution is a typed GAP, never faked).
+ * Magento's backtick/wysiwyg encoding for the conditions_encoded payload, byte-identical to
+ * the vendor converters' own encodeWysiwygCharacters (widget-directive.js: { -> ^[, } -> ^],
+ * " -> `, \\ -> |, < -> &lt;, > -> &gt;). The vendor pipeline encodes the JSON-SERIALIZED
+ * rule text (conditions-data-processor: JSON.stringify(normalizer output)), so class
+ * backslashes appear doubled in the JSON text and encode as the observed `||` pairs.
+ */
+const encodeConditionsJsonText = (jsonText: string): string =>
+   jsonText
+      .replace(/\{/g, "^[")
+      .replace(/\}/g, "^]")
+      .replace(/"/g, "`")
+      .replace(/\\/g, "|")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+
+/**
+ * The persisted rule payload for a BOUND products selection — the vendor pipeline verbatim:
+ * the rule object (combine `1` first, product condition `1--1` second, per-node field order
+ * as the real admin-saved category_ids-mode cms_page row 8 `demo-landing-page` persists it),
+ * JSON.stringify'd, then backtick-encoded — with the PORTABLE CORE condition classes from
+ * the C72-1 verification above (row 8 itself carries the Elasticsuite twin classes; row 7
+ * proves core classes on the same checkout; the runtime ConditionFactoryPlugin maps core ->
+ * vendor either way).
+ */
+export const productsConditionsEncoded = (
+   kind: "category_ids" | "sku",
+   value: string,
+): string =>
+   encodeConditionsJsonText(
+      JSON.stringify({
+         "1": {
+            aggregator: "all",
+            new_child: "",
+            type: PRODUCTS_RULE_CONDITION_COMBINE_CLASS,
+            value: "1",
+         },
+         "1--1": {
+            operator: "==",
+            type: PRODUCTS_RULE_CONDITION_PRODUCT_CLASS,
+            attribute: kind,
+            value,
+         },
+      }),
+   );
+
+/**
+ * The products declaration div with its inner `{{widget …}}` directive. [#72 C72-2 correction]
+ * the declaration composes ONLY for a BOUND selection — the executable widget directive is
+ * never emitted unbound (a rule-less widget is a REAL storefront listing of newest products;
+ * vendor-verified: an empty combine attaches no SQL constraints to the base collection).
  *
- * - carousel: VERIFIED-REAL-ROW bytes (real cms_page row) minus the site css class the row
- *   carries (`!m-0 !text-left` — site-specific styling, not platform).
- * - grid: VENDOR-CONFIG-VERIFIED — the products.xml grid appearance declares ONLY
- *   data-content-type/data-appearance on main; the directive template/type_name come from the
- *   grid widget-directive converter's toDom literals; products_count 5 / sort_order position
- *   are the products form's defaults. All 11 observed products rows on this instance are
- *   carousel — no grid byte exists to copy.
+ * The directive carries `condition_option` + `condition_option_value` (the admin form's raw
+ * value shape) and the synthesized core-class rule — the exact structure real admin-saved
+ * category_ids-mode row 8 persists. Card/listing FIDELITY still delegates to the widget's
+ * runtime template (registry dataContext.requiresRuntimeData=true): no product cards, images,
+ * names or prices are ever composed statically.
+ *
+ * - carousel: declaration attributes from the VERIFIED-REAL-ROW carousel (real cms_page row,
+ *   minus the row's site css class); products_count 8 / sort_order date_newest_top as observed.
+ * - grid: VENDOR-CONFIG-VERIFIED — products.xml grid main declares ONLY data-content-type/
+ *   data-appearance; template/type_name from the grid widget-directive converter's toDom
+ *   literals; products_count 5 / sort_order position are the products form's defaults.
  */
 export const productsDeclarationHtml = (
    appearance: ProductsAppearance,
-): string =>
-   appearance === "carousel"
-      ? `<div data-content-type="products" data-appearance="carousel" data-autoplay="false" data-autoplay-speed="4000" data-infinite-loop="false" data-show-arrows="true" data-show-dots="true" data-carousel-mode="default" data-center-padding="90px" data-element="main">{{widget type="Magento\\CatalogWidget\\Block\\Product\\ProductsList" template="${CAROUSEL_TEMPLATE}" anchor_text="" id_path="" show_pager="0" products_count="8" condition_option="condition" condition_option_value="" type_name="Catalog Products Carousel" conditions_encoded="${PRODUCTS_CONDITIONS_ENCODED_EMPTY_RULES}" sort_order="date_newest_top"}}</div>`
-      : `<div data-content-type="products" data-appearance="grid" data-element="main">{{widget type="Magento\\CatalogWidget\\Block\\Product\\ProductsList" template="${GRID_TEMPLATE}" anchor_text="" id_path="" show_pager="0" products_count="5" condition_option="condition" condition_option_value="" type_name="Catalog Products List" conditions_encoded="${PRODUCTS_CONDITIONS_ENCODED_EMPTY_RULES}" sort_order="position"}}</div>`;
+   selection: { kind: "category_ids" | "sku"; value: string },
+): string => {
+   const conditions = productsConditionsEncoded(
+      selection.kind,
+      selection.value,
+   );
+   return appearance === "carousel"
+      ? `<div data-content-type="products" data-appearance="carousel" data-autoplay="false" data-autoplay-speed="4000" data-infinite-loop="false" data-show-arrows="true" data-show-dots="true" data-carousel-mode="default" data-center-padding="90px" data-element="main">{{widget type="Magento\\CatalogWidget\\Block\\Product\\ProductsList" template="${CAROUSEL_TEMPLATE}" anchor_text="" id_path="" show_pager="0" products_count="8" condition_option="${selection.kind}" condition_option_value="${esc(selection.value)}" type_name="Catalog Products Carousel" conditions_encoded="${conditions}" sort_order="date_newest_top"}}</div>`
+      : `<div data-content-type="products" data-appearance="grid" data-element="main">{{widget type="Magento\\CatalogWidget\\Block\\Product\\ProductsList" template="${GRID_TEMPLATE}" anchor_text="" id_path="" show_pager="0" products_count="5" condition_option="${selection.kind}" condition_option_value="${esc(selection.value)}" type_name="Catalog Products List" conditions_encoded="${conditions}" sort_order="position"}}</div>`;
+};

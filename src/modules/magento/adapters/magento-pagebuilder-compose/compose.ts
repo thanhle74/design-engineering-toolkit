@@ -110,6 +110,10 @@ interface ComposeInput {
          sourceLocator: string;
          role: ComposerRole;
          reason: string;
+         // [#72 C72-2 correction] products-grid/products-carousel assignments may carry a
+         // recorded selection binding; the products handler composes the executable widget
+         // ONLY when it is present (absent -> typed gap; never an unbound executable listing).
+         selection?: { kind: "category_ids" | "sku"; value: string };
       }[];
    };
    nodeIr: { nodes: NodeIRNode[]; rootNodeId: string };
@@ -309,6 +313,21 @@ const roleByLocator = new Map<string, ComposerRole>();
 for (const a of input.projection?.assignments ?? [])
    roleByLocator.set(a.sourceLocator, a.role);
 
+// [#72 C72-2 correction] Recorded product-selection bindings by locator — the products shape
+// handler composes the executable catalog widget ONLY from one of these (fail closed
+// otherwise: an unbound rule-less widget is a real newest-products listing, never emitted).
+const selectionByLocator = new Map<
+   string,
+   { kind: "category_ids" | "sku"; value: string }
+>();
+for (const a of input.projection?.assignments ?? []) {
+   if (
+      a.selection &&
+      (a.role === "products-grid" || a.role === "products-carousel")
+   )
+      selectionByLocator.set(a.sourceLocator, a.selection);
+}
+
 // ---- NodeIR helpers -------------------------------------------------------------------------
 const nodesById = new Map<string, NodeIRNode>();
 for (const n of input.nodeIr.nodes) nodesById.set(n.nodeId, n);
@@ -378,6 +397,7 @@ const sectionComposeContext = {
    mediaByRef,
    linkByRef,
    roleByLocator,
+   selectionByLocator,
    excludedLocators,
    ctaSubtreeLocators,
    pushDiagnostic: (d: Diagnostic): void => {
@@ -2941,6 +2961,43 @@ function composeSection(
          sectionComposeContext,
       );
       if (fragment !== null) return fragment;
+   }
+   // [#72 C72-2 correction] Recorded-products guard: a section carrying an explicit
+   // products-grid/products-carousel decision that NO handler composed SKIPS with the
+   // accountable typed gap here — the band/hero/text-band fallbacks below must never remap a
+   // recorded products intent to the wrong component, and the executable catalog widget is
+   // never emitted unbound (an empty rule lists newest products on the storefront). The
+   // handler itself stays silent-null per the frozen seam contract; the dispatcher owns the
+   // honest skip accounting, exactly as for every other shape.
+   const sectionCarriesProductsDecision = (() => {
+      let found = false;
+      walkSubtree(sectionNodeId, (n) => {
+         if (found || n.visible === false) return;
+         const loc = locatorOf(n);
+         if (loc === null) return;
+         const role = roleByLocator.get(loc);
+         if (role === "products-grid" || role === "products-carousel")
+            found = true;
+      });
+      return found;
+   })();
+   if (sectionCarriesProductsDecision) {
+      diagnostics.push(
+         nodeDiag(
+            "NOT_VERIFIED",
+            "warning",
+            `Section '${section.name}' carries a recorded products decision that was not composed — the native catalog widget directive is a REAL executable storefront listing (an empty rule lists newest products, vendor-verified), so it composes only from a recorded category_ids/sku selection binding on the projected container; skipped — never emitted unbound, never remapped to a fallback shape.`,
+            sectionNodeId,
+         ),
+      );
+      mapping.push({
+         sourceNodeId: sectionNodeId,
+         ...(sectionNode.name ? { sourceName: sectionNode.name } : {}),
+         ...(sectionLocator ? { sourceLocator: sectionLocator } : {}),
+         disposition: "skipped",
+         note: "Recorded products decision without a composable selection binding — the executable widget is deferred as a typed gap until the operator records a category_ids/sku selection (C72-2 fail-closed).",
+      });
+      return null;
    }
    // [#72] Recorded-decision flags (self-contained section walk — this runs before the
    // eligibility scan builds its own scope). Band decisions say "this text is a header/title

@@ -16,13 +16,18 @@ offline.
 | `source-identity.json` | **deliberately absent**: this project is offline-only. The one-click Studio Build flow binds to exactly ONE canonical source identity (`slaunchpad-home-real-derived`); a derived variant must never claim the same one-click binding. Do not add a source-identity here. |
 | everything else | byte-identical copies of the canonical project's pinned inputs (`snapshot-project/`, `tools/`, `profile.json`, `capability-registry.json`). |
 
-## Expected composition (the [72] AFTER state, locked by `real-derived-72-suite.mjs`)
+## Expected composition (the [72] AFTER state, C72-corrected)
 
-6 of 12 sections compose through legacy + #72 handlers (hero banner, 2× two-column,
-column-grid, header-band+products, heading units); the other 6 carry explicit honest-skip
-records (Lookbook hotspot/widget domain, Newsletter form, ProductSpotlight double-CTA
-banner limit, BrandStatement/ThePeople/FeaturedCollections mixed shapes without a dedicated
-composer). See `docs/evidence/issue-72/source/mapping-table.md`.
+5 of 12 sections compose through legacy + #72 handlers (hero banner, BrandStatement text-band,
+CampaignEditorial + Craftsmanship two-columns, Newsletter text-band); the other 7 carry
+explicit honest-skip records (Lookbook hotspot/widget domain, Newsletter form GAP,
+ProductSpotlight double-CTA banner limit, BrandStatement/ThePeople/FeaturedCollections mixed
+shapes without a dedicated composer, and — since the **C72 correction** — FeaturedProducts:
+its recorded `products-grid` decision carries no category_ids/sku selection binding, and the
+native catalog-widget directive is a REAL executable storefront listing, so it composes ONLY
+from a recorded selection — 19 markers: row×5, banner×1, text×2, column-group×2,
+column-line×2, column×4, image×3). See `docs/evidence/issue-72/source/mapping-table.md`
+and the C72 section of `docs/evidence/issue-72/integrator-receipt.md`.
 
 ## Run
 

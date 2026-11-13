@@ -50,7 +50,14 @@ const flatten = (spec, parentId = null) => [
 
 function makeCtx(
    spec,
-   { roles = {}, texts = {}, media = {}, links = {}, enabledCaps = {} } = {},
+   {
+      roles = {},
+      texts = {},
+      media = {},
+      links = {},
+      enabledCaps = {},
+      selections = {},
+   } = {},
 ) {
    const nodes = flatten(spec);
    const nodesById = new Map(nodes.map((n) => [n.nodeId, n]));
@@ -100,6 +107,8 @@ function makeCtx(
       ),
       linkByRef: new Map(Object.entries(links)),
       roleByLocator,
+      // [#72 C72-2] recorded product-selection bindings ride the frozen seam.
+      selectionByLocator: new Map(Object.entries(selections)),
       excludedLocators: new Set(),
       ctaSubtreeLocators,
       diagnostics: [],
@@ -239,13 +248,23 @@ const SLIDER_ROLE_CAPS = {
    "910:5": "cta",
 };
 
-const CAROUSEL_DECLARATION =
-   `<div data-content-type="products" data-appearance="carousel" data-autoplay="false" data-autoplay-speed="4000" data-infinite-loop="false" data-show-arrows="true" data-show-dots="true" data-carousel-mode="default" data-center-padding="90px" data-element="main">` +
-   `{{widget type="Magento\\CatalogWidget\\Block\\Product\\ProductsList" template="Magento_PageBuilder::catalog/product/widget/content/carousel.phtml" anchor_text="" id_path="" show_pager="0" products_count="8" condition_option="condition" condition_option_value="" type_name="Catalog Products Carousel" conditions_encoded="^[\`1\`:^[\`type\`:\`Smile||ElasticsuiteVirtualCategory||Model||Rule||WidgetCondition||Combine\`,\`aggregator\`:\`all\`,\`value\`:\`1\`,\`new_child\`:\`\`^]^]" sort_order="date_newest_top"}}</div>`;
+// [#72 C72-1/C72-2 correction] Bound declaration bytes: the rule payload is the real
+// category_ids-mode row 8 structure with the PORTABLE CORE condition classes (JSON text
+// backslash pairs encode as `||`); Smile/Elasticsuite classes never appear — the optional
+// vendor module swaps them at RUNTIME (ConditionFactoryPlugin), so the vendor name in a
+// generic directive would break every core-only checkout.
+const CORE_COMBINE = "Magento||CatalogWidget||Model||Rule||Condition||Combine";
+const CORE_PRODUCT = "Magento||CatalogWidget||Model||Rule||Condition||Product";
+const boundConditionsEncoded = (attribute, value) =>
+   `^[\`1\`:^[\`aggregator\`:\`all\`,\`new_child\`:\`\`,\`type\`:\`${CORE_COMBINE}\`,\`value\`:\`1\`^],\`1--1\`:^[\`operator\`:\`==\`,\`type\`:\`${CORE_PRODUCT}\`,\`attribute\`:\`${attribute}\`,\`value\`:\`${value}\`^]^]`;
 
-const GRID_DECLARATION =
+const CAROUSEL_DECLARATION = (attribute, value) =>
+   `<div data-content-type="products" data-appearance="carousel" data-autoplay="false" data-autoplay-speed="4000" data-infinite-loop="false" data-show-arrows="true" data-show-dots="true" data-carousel-mode="default" data-center-padding="90px" data-element="main">` +
+   `{{widget type="Magento\\CatalogWidget\\Block\\Product\\ProductsList" template="Magento_PageBuilder::catalog/product/widget/content/carousel.phtml" anchor_text="" id_path="" show_pager="0" products_count="8" condition_option="${attribute}" condition_option_value="${value}" type_name="Catalog Products Carousel" conditions_encoded="${boundConditionsEncoded(attribute, value)}" sort_order="date_newest_top"}}</div>`;
+
+const GRID_DECLARATION = (attribute, value) =>
    `<div data-content-type="products" data-appearance="grid" data-element="main">` +
-   `{{widget type="Magento\\CatalogWidget\\Block\\Product\\ProductsList" template="Magento_CatalogWidget::product/widget/content/grid.phtml" anchor_text="" id_path="" show_pager="0" products_count="5" condition_option="condition" condition_option_value="" type_name="Catalog Products List" conditions_encoded="^[\`1\`:^[\`type\`:\`Smile||ElasticsuiteVirtualCategory||Model||Rule||WidgetCondition||Combine\`,\`aggregator\`:\`all\`,\`value\`:\`1\`,\`new_child\`:\`\`^]^]" sort_order="position"}}</div>`;
+   `{{widget type="Magento\\CatalogWidget\\Block\\Product\\ProductsList" template="Magento_CatalogWidget::product/widget/content/grid.phtml" anchor_text="" id_path="" show_pager="0" products_count="5" condition_option="${attribute}" condition_option_value="${value}" type_name="Catalog Products List" conditions_encoded="${boundConditionsEncoded(attribute, value)}" sort_order="position"}}</div>`;
 
 // ---- checks -------------------------------------------------------------------------------------
 
@@ -321,15 +340,38 @@ export default async function registerWcSuite(checkAsync) {
 
    checkAsync(
       "WC-T2",
-      "products declarations byte-verbatim (carousel real-row minus site class; grid vendor-config), row-wrapped",
+      "products declarations byte-verbatim for a BOUND selection (portable core-class rule, real row-8 structure), row-wrapped; unbound composes nothing",
       async () => {
          assert.equal(
-            productsDeclarationHtml("carousel"),
-            CAROUSEL_DECLARATION,
+            productsDeclarationHtml("carousel", {
+               kind: "category_ids",
+               value: "41",
+            }),
+            CAROUSEL_DECLARATION("category_ids", "41"),
          );
-         assert.equal(productsDeclarationHtml("grid"), GRID_DECLARATION);
+         assert.equal(
+            productsDeclarationHtml("grid", { kind: "sku", value: "A-1,B-2" }),
+            GRID_DECLARATION("sku", "A-1,B-2"),
+         );
+         // Portability lock: no optional vendor class fragment in any emitted byte.
+         for (const decl of [
+            CAROUSEL_DECLARATION("category_ids", "41"),
+            GRID_DECLARATION("sku", "A-1,B-2"),
+         ]) {
+            assert.ok(
+               !decl.includes("Elasticsuite") && !decl.includes("Smile"),
+               "the generic serializer must never emit optional vendor condition classes (C72-1)",
+            );
+            assert.ok(
+               decl.includes(
+                  "Magento||CatalogWidget||Model||Rule||Condition||Combine",
+               ),
+               "the rule references the portable CORE condition classes",
+            );
+         }
          const ctx = makeCtx(productsSpec(), {
             roles: { "930:3": "products-carousel" },
+            selections: { "930:3": { kind: "category_ids", value: "41" } },
          });
          const out = productsHandler.compose(
             section("SECTION/FeaturedProducts"),
@@ -338,17 +380,8 @@ export default async function registerWcSuite(checkAsync) {
          );
          assert.equal(
             out,
-            `<div data-content-type="row" data-appearance="contained" data-element="main"><div data-enable-parallax="0" data-parallax-speed="0.5" data-background-images="{}" data-background-type="image" data-video-loop="true" data-video-play-only-visible="true" data-video-lazy-load="true" data-video-fallback-src="" data-element="inner">${CAROUSEL_DECLARATION}</div></div>`,
+            `<div data-content-type="row" data-appearance="contained" data-element="main"><div data-enable-parallax="0" data-parallax-speed="0.5" data-background-images="{}" data-background-type="image" data-video-loop="true" data-video-play-only-visible="true" data-video-lazy-load="true" data-video-fallback-src="" data-element="inner">${CAROUSEL_DECLARATION("category_ids", "41")}</div></div>`,
             "carousel declaration must sit inside row(contained) > inner, byte-verbatim",
-         );
-         const listingGap = ctx.mapping.find(
-            (m) => m.sourceNodeId === "s-cards" && m.disposition === "gap",
-         );
-         assert.ok(
-            listingGap?.note.includes(
-               "Products listing content requires a verified catalog data provider binding",
-            ),
-            "the live listing must be a typed GAP mapping entry",
          );
          assert.ok(
             ctx.mapping.some(
@@ -358,7 +391,23 @@ export default async function registerWcSuite(checkAsync) {
             ),
             "card internals gap-recorded, never faked",
          );
-         return "carousel+grid declarations verbatim, row-wrapped, listing GAP recorded";
+         // (c) unbound: the handler stays silent null (the dispatcher's recorded-products guard
+         // owns the accountable typed-gap record + fallback blocking at compose level).
+         const unbound = makeCtx(productsSpec(), {
+            roles: { "930:3": "products-carousel" },
+         });
+         assert.equal(
+            productsHandler.compose(
+               section("SECTION/FeaturedProducts"),
+               "s-root",
+               unbound,
+            ),
+            null,
+            "unbound products decision composes NOTHING (C72-2 fail closed)",
+         );
+         assert.equal(unbound.diagnostics.length, 0);
+         assert.equal(unbound.mapping.length, 0);
+         return "bound carousel+grid declarations verbatim (core classes only), row-wrapped; unbound silent null";
       },
    );
 

@@ -143,6 +143,7 @@ function makeCtx(
       ),
       linkByRef: new Map(Object.entries(opts.links ?? {})),
       roleByLocator,
+      selectionByLocator: new Map(), // products-only seam; the slider tests are unbound.
       excludedLocators: new Set<string>(),
       ctaSubtreeLocators,
       pushDiagnostic: (d) => capture.diagnostics.push(d),

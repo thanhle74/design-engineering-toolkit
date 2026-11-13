@@ -6,22 +6,29 @@
 // repetition or container direction — the projection vocabulary (committed in #72's v1.5.0
 // additive extension) carries the recorded decision; no projection -> silent null.
 //
-// Emitted chain: one row(contained) > row inner > products declaration per projected container,
-// in document order. Parent evidence: the pinned registry declares NO parents policy
-// (allowedChildren: [] on every entry), so the wrapping mirrors the VERIFIED-REAL-ROW parent
-// chain (real cms_page rows persist products directly inside row(contained) > inner; products
-// itself denies children per products.xml <children default_policy="deny"/>).
+// Emitted chain (ONLY for a BOUND selection — [72] C72-2 correction): one row(contained) > row
+// inner > products declaration per projected container carrying a recorded selection binding
+// (ctx.selectionByLocator), in document order. Parent evidence: the pinned registry declares
+// NO parents policy (allowedChildren: [] on every entry), so the wrapping mirrors the
+// VERIFIED-REAL-ROW parent chain (real cms_page rows persist products directly inside
+// row(contained) > inner; products itself denies children per products.xml
+// <children default_policy="deny"/>).
 //
-// HONESTY RULE (frozen contract; registry dataContext.requiresRuntimeData=true): the emitted
-// declaration is the EDITABLE editor-default state — no product cards, images, names or prices
-// are ever composed. Live product LISTING requires a catalog data provider; the frozen handler
-// seam carries no binding input at all (SectionComposeContext exposes no bindings), and the
-// component-binding-map schema has no provider field (propsTransform targets acceptedProps, and
-// magento_pagebuilder/products declares acceptedProps: []) — so the listing is a typed GAP
-// mapping entry per container, never approximated.
+// C72-2 GATE (fail closed): the `{{widget …ProductsList…}}` directive is a REAL executable
+// storefront listing, not an inert placeholder — vendor-verified on the 2.4.8-p5 source
+// checkout, an empty rule combine attaches NO SQL constraints and the base collection lists
+// the newest products (Magento/CatalogWidget/Block/Product/ProductsList::getBaseCollection +
+// getConditions). A products decision WITHOUT a recorded selection binding therefore composes
+// NOTHING: the handler records the typed gap (so the intent is accountable, never silently
+// dropped) and returns null; the dispatcher's recorded-products guard (compose.ts) then keeps
+// the fallback shapes (text-band/hero) from claiming the section, so the section SKIPS
+// honestly instead of mapping to the wrong component. Only category_ids/sku bindings are
+// accepted (vendor-verified native modes; `condition` mode is refused — a free-form rule
+// payload is the C72-1 portability hazard).
 //
-// This handler is NOT wired into the compose dispatcher by this lane — the Integrator registers
-// handlers/registry.ts after review (frozen contract rule 5).
+// FIDELITY RULE (unchanged; registry dataContext.requiresRuntimeData=true): no product cards,
+// images, names or prices are ever composed — the card/listing internals delegate to the
+// native widget's runtime template and stay typed GAP mapping entries, never approximated.
 import type {
    NodeIRNode,
    PageStructureSection,
@@ -41,8 +48,11 @@ const ROW_ID = "magento_pagebuilder/row";
 const ROW_APPEARANCE = "contained";
 const PRODUCTS_ID = "magento_pagebuilder/products";
 
-const LISTING_GAP_NOTE =
-   "Products listing content requires a verified catalog data provider binding; the frozen handler seam carries no binding input (and magento_pagebuilder/products declares acceptedProps: []), so the live listing stays a declared gap — the declaration composes in the editor-default state and no product data is invented.";
+const UNBOUND_GAP_NOTE =
+   "Products composes nothing without a recorded selection binding: the native catalog widget directive is a REAL executable storefront listing (an empty rule lists newest products — vendor-verified on 2.4.8-p5 ProductsList::getBaseCollection), so an unbound decision is deferred as a typed gap until the operator records category_ids or sku selection. Never emitted unbound.";
+
+const CARD_FIDELITY_GAP_NOTE =
+   "Inside the bound products container; the native widget's runtime template replaces the static card content at render time — never faked as static cards.";
 
 const locatorEntryBase = (
    node: NodeIRNode,
@@ -66,6 +76,8 @@ const diag = (message: string, nodeId: string): Diagnostic => ({
 interface ProjectedProducts {
    node: NodeIRNode;
    appearance: ProductsAppearance;
+   locator: string | null;
+   selection: { kind: "category_ids" | "sku"; value: string } | null;
 }
 
 /** Document-order products-projected visible containers inside the section subtree. */
@@ -79,11 +91,21 @@ const collectProjectedContainers = (
       const loc = ctx.locatorOf(node);
       if (loc === null) return;
       const role = ctx.roleByLocator.get(loc);
-      if (role === "products-grid" || role === "products-carousel")
+      if (role === "products-grid" || role === "products-carousel") {
+         const recorded = ctx.selectionByLocator.get(loc) ?? null;
          found.push({
             node,
             appearance: role === "products-grid" ? "grid" : "carousel",
+            locator: loc,
+            // Fail closed on anything but the two verified native binding kinds (C72-2).
+            selection:
+               recorded !== null &&
+               (recorded.kind === "category_ids" || recorded.kind === "sku") &&
+               recorded.value.trim().length > 0
+                  ? { kind: recorded.kind, value: recorded.value.trim() }
+                  : null,
          });
+      }
    });
    return found;
 };
@@ -97,13 +119,19 @@ export const productsHandler: SectionShapeHandler = {
       ctx: SectionComposeContext,
    ): string | null {
       // ---- signature (silent null when it does not match) --------------------------------------
+      // A products-projected section where NO container carries a valid recorded selection
+      // stays SILENT null (the seam contract): the dispatcher's recorded-products guard owns
+      // the accountable typed-gap record and keeps the fallback shapes away. Never compose an
+      // unbound executable widget (C72-2).
       const containers = collectProjectedContainers(sectionNodeId, ctx);
       if (containers.length === 0) return null;
+      const bound = containers.filter((c) => c.selection !== null);
+      if (bound.length === 0) return null;
 
       // ---- registry gate, fail closed BEFORE any emission --------------------------------------
       if (!ctx.requireCap(ROW_ID, ROW_APPEARANCE)) return null;
       for (const appearance of ["grid" as const, "carousel" as const].filter(
-         (a) => containers.some((c) => c.appearance === a),
+         (a) => bound.some((c) => c.appearance === a),
       )) {
          if (!ctx.requireCap(PRODUCTS_ID, appearance)) return null;
       }
@@ -123,15 +151,15 @@ export const productsHandler: SectionShapeHandler = {
             nativeElement: "main",
             nativeField: "row (row > products container chain)",
          },
-         note: `Section composed as native row(contained) > products x${containers.length} per the pinned declarations (registry declares no parents policy; the row wrap mirrors the real admin-saved rows' parent chain); the row provides the platform's standard top-level container.`,
+         note: `Section composed as native row(contained) > products x${bound.length} per the pinned declarations (registry declares no parents policy; the row wrap mirrors the real admin-saved rows' parent chain); the row provides the platform's standard top-level container.`,
       });
 
       // ---- per-container records + fragments -----------------------------------------------------
       const inProducts = new Set<string>();
       const fragments: string[] = [];
-      for (const { node, appearance } of containers) {
+      for (const { node, appearance, locator, selection } of bound) {
          const loc = ctx.locatorOf(node);
-         // The container's declaration itself -> the native products content type.
+         // The container's declaration itself -> the native products content type (BOUND).
          ctx.pushMapping({
             ...locatorEntryBase(node, ctx),
             disposition: "mapped",
@@ -139,21 +167,23 @@ export const productsHandler: SectionShapeHandler = {
                capabilityId: PRODUCTS_ID,
                appearanceId: appearance,
                nativeElement: "main",
-               nativeField: `products ${appearance} (declaration div + {{widget …}} directive)`,
+               nativeField: `products ${appearance} (declaration div + bound {{widget …}} directive)`,
             },
-            note: `Projected products container composed as native products(${appearance}); the directive persists the editable editor-default state (empty rule set — no product data).`,
+            note: `Projected products container composed as native products(${appearance}) bound to the recorded ${selection!.kind} selection ("${selection!.value}"): the directive carries condition_option/condition_option_value and the synthesized core-class rule, byte-shaped after real admin-saved category_ids-mode cms_page row 8 (demo-landing-page). Card/listing fidelity delegates to the widget's runtime template (typed gap below), never composed statically.`,
          });
-         // Live listing: typed GAP (no verified provider binding exists in the frozen seam).
+         // Card-fidelity: typed GAP (runtime template owns it) — the listing itself is BOUND.
          ctx.pushMapping({
             ...locatorEntryBase(node, ctx),
             disposition: "gap",
-            note: LISTING_GAP_NOTE,
+            note: CARD_FIDELITY_GAP_NOTE,
          });
          ctx.pushDiagnostic(
             diag(
                `Products container '${node.name}' (${
-                  loc ?? "no locator"
-               }): the ${appearance} declaration composes, but the live product listing requires a verified catalog data provider binding — which products listing shows is a typed gap, never faked.`,
+                  locator ?? "no locator"
+               }): the ${appearance} directive composes bound to the recorded ${
+                  selection!.kind
+               } selection; the storefront listing follows the widget's native rule engine (category/sku filter, visibility and anchor expansion are native behavior), and static card fidelity stays a typed gap delegated to the runtime template.`,
                node.nodeId,
             ),
          );
@@ -200,10 +230,33 @@ export const productsHandler: SectionShapeHandler = {
          fragments.push(
             `<div data-content-type="row" data-appearance="contained" data-element="main">` +
                `<div data-enable-parallax="0" data-parallax-speed="0.5" data-background-images="{}" data-background-type="image" data-video-loop="true" data-video-play-only-visible="true" data-video-lazy-load="true" data-video-fallback-src="" data-element="inner">` +
-               productsDeclarationHtml(appearance) +
+               productsDeclarationHtml(appearance, selection!) +
                `</div>` +
                `</div>`,
          );
+      }
+
+      // ---- unbound containers in a composing (mixed) section: accountable typed gap ---------------
+      // The section composes (at least one bound container), so records are allowed here. An
+      // unbound sibling container composes NOTHING — recorded, never silently dropped (C72-2).
+      for (const { node, locator, appearance } of containers.filter(
+         (c) => c.selection === null,
+      )) {
+         ctx.pushMapping({
+            ...locatorEntryBase(node, ctx),
+            disposition: "gap",
+            note: `Projected products ${appearance} container has NO recorded selection binding; ${UNBOUND_GAP_NOTE}`,
+         });
+         ctx.pushDiagnostic(
+            diag(
+               `Products container '${node.name}' (${
+                  locator ?? "no locator"
+               }): recorded ${appearance} decision has no category_ids/sku selection binding — not composed (an unbound widget directive would publish an unfiltered storefront listing); record a selection binding to enable it.`,
+               node.nodeId,
+            ),
+         );
+         inProducts.add(node.nodeId);
+         ctx.walkSubtree(node.nodeId, (inner) => inProducts.add(inner.nodeId));
       }
 
       // ---- non-products nodes: honest gap accounting ----------------------------------------------

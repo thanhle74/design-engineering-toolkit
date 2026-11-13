@@ -1,0 +1,19 @@
+{
+ "capturedAt": "2026-11-13",
+ "url": "https://slaunchpad.thanhaloha.io.vn/det_preview/det-qa-72-home",
+ "httpStatus": 200,
+ "htmlBytes": 358261,
+ "pageTitle": "DET QA 72 Homepage",
+ "pageContentTypeCounts": {
+  "banner": 2,
+  "column": 4,
+  "column-group": 2,
+  "column-line": 2,
+  "image": 3,
+  "row": 5,
+  "slider": 1,
+  "text": 2
+ },
+ "note": "C72-corrected build: the executable products widget is gated (no selection binding recorded in source), so the page carries NO widget directive and the storefront HTTP render completes fully \u2014 the pre-existing Hyva swatch abort (widget-bearing pages) does not apply to this page; it remains a documented environment GAP for any page carrying a catalog widget.",
+ "swatchAbortPresent": false
+}

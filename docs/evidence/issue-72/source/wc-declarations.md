@@ -1,5 +1,21 @@
 # W-C declaration deep-dive — slider / slide / products (issue #72)
 
+> **[#72] C72 CORRECTION (2026-11-13).** Coordinator review C72-1/C72-2 superseded three
+> statements below (amended in place, originals preserved as quoted context):
+> 1. The generic serializer no longer emits the Smile/Elasticsuite condition class (old §3
+>    deviation 2: "We emit the observed class (pinned checkout truth)") — it now emits the
+>    verified PORTABLE Magento CORE CatalogWidget classes in every profile (C72-1; three-way
+>    vendor verification in the correction block of `compose/elements-native.ts`).
+> 2. The "editor-default" EMPTY-rule directive is retired (C72-2): vendor-verified, an empty
+>    combine attaches no SQL constraints, so an unbound `{{widget …ProductsList…}}` is a REAL
+>    executable newest-products storefront listing — never emitted unbound. The directive
+>    composes ONLY for a recorded category_ids/sku selection binding, and the rule payload is
+>    byte-shaped after real category_ids-mode row 8 (demo-landing-page).
+> 3. §6's "binding schema verified absent" described the OLD frozen seam; the correction adds
+>    the selection binding to the SEMANTIC PROJECTION contract (schema v1.6.0,
+>    `selectionByLocator` on the handler seam) — the component-binding map schema itself is
+>    unchanged and still carries no provider concept.
+
 Worker lane W-C's verification receipt behind `compose/elements-native.ts`,
 `compose/handlers/slider-slide.ts` and `compose/handlers/products.ts`. Complements W-A's sweep
 (`native-declarations-observed.md`): everything below was verified directly against the local
@@ -108,18 +124,21 @@ the emitted builder byte-for-byte. The brief's shape matches; verified additions
 Source rows: cms_page 2 (x4), 7 (x3), 8 (x1), 35 (x3) — **all 11 observed products blocks on
 this instance are `data-appearance="carousel"`**; no grid instance exists in any row.
 
-Emitted bytes = the page-2 row verbatim with exactly two documented deviations:
+Emitted bytes = the page-2 row verbatim with exactly two documented deviations
+(**amended by the C72 correction, see the header note: deviation 2 is superseded — the emitted
+directive is now BOUND, carrying a synthesized category_ids/sku rule with portable CORE
+condition classes byte-shaped after real row 8**):
 
 1. SITE-SPECIFIC class dropped: the row carries `class="!m-0 !text-left"` (Launchpad tailwind
    authoring). The declaration XML's `css_classes` is empty by default, and the configurable
    reader emits no class attribute for a default insertion — platform-correct default is NO
    class attribute. Verified: `products.xml` grid/carousel `main` elements declare only
    styles + `data-content-type`/`data-appearance` (+ carousel attrs) + html + css_classes.
-2. EMPTY rule set in `conditions_encoded` (per the brief): the observed row encodes the combine
-   plus one child category rule (`1--1` → category_ids 38, editor-configured). We emit the
-   combine entry ONLY — exactly the observed encoding shape (backtick encoding, same key order
-   `type, aggregator, value, new_child`) with no child rule:
-   `^[`1`:^[`type`:`Smile||…WidgetCondition||Combine`,`aggregator`:`all`,`value`:`1`,`new_child`:``^]^]`.
+2. ~~EMPTY rule set in `conditions_encoded` (per the brief)~~ — **SUPERSEDED (C72-2)**: the
+   emitted directive is never unbound (an empty combine lists newest products — real, not a
+   placeholder). The emitted `conditions_encoded` is the row-8 rule STRUCTURE (combine `1` +
+   product condition `1--1`, per-node field order as row 8 persists it) with the attribute
+   values from the operator's recorded selection.
 
 Everything else is the row's persisted bytes, including values that are editor choices rather
 than form defaults (kept because VERIFIED-REAL-ROW bytes are the contract's preferred evidence):
@@ -136,16 +155,17 @@ form — the carousel form `extends="pagebuilder_products_form"`, verified in
   `{ → ^[`, `} → ^]`, `“ → ` `, `\ → |` (a JSON-escaped `\\` therefore persists as `||`), plus
   `< → &lt;`, `> → &gt;` (not present in our payload). The `conditions_encoded` value is stored
   RAW inside the double-quoted attribute (not HTML-escaped) — confirmed by the real-row bytes.
-- The combine class `Smile||ElasticsuiteVirtualCategory||Model||Rule||WidgetCondition||Combine`
-  is what THIS checkout's editor serializes (every observed row carries it): Elasticsuite
-  substitutes the widget-condition models via virtual types —
-  `vendor/smile/elasticsuite/src/module-elasticsuite-virtual-category/etc/di.xml` (lines ~140-157:
-  `WidgetCondition\CombineFactory` → instanceName
-  `Smile\ElasticsuiteVirtualCategory\Model\Rule\WidgetCondition\Combine`). On a checkout without
-  Elasticsuite the editor would serialize `Magento\CatalogWidget\Model\Rule\Condition\Combine`
-  (per `Magento_PageBuilder/js/form/provider/conditions-data-processor.js`). We emit the
-  observed class (pinned checkout truth) and document the divergence here; either way the
-  declaration is Admin-editable (the fromDom decoder just reads the type string).
+- The combine class ~~`Smile||ElasticsuiteVirtualCategory||Model||Rule||WidgetCondition||Combine`
+  … We emit the observed class (pinned checkout truth)~~ — **SUPERSEDED (C72-1)**: the generic
+  serializer now emits `Magento||CatalogWidget||Model||Rule||Condition||Combine` (+ the
+  `…Condition||Product` child) in EVERY profile. Portability verified three ways on this very
+  checkout: (a) Magento's own `conditions-data-processor.js` hardcodes the CORE classes for
+  category_ids/sku modes; (b) the Elasticsuite `ConditionFactoryPlugin` maps CORE → vendor at
+  condition-creation runtime (no di preference on the core classes), so core-class directives
+  resolve to the vendor-backed engine here and to plain core everywhere else; (c) real row 7
+  (`home-en-old`) persists a CORE-class rule on this Elasticsuite-enabled checkout. Emitting the
+  vendor class (the pre-correction behavior) would fail on every checkout without the optional
+  module.
 
 ## 4. products (grid) — VENDOR-CONFIG-VERIFIED (no real row exists)
 
@@ -172,8 +192,9 @@ from three independent vendor sources, cross-checked:
    `sort_order` position. Carousel overrides products_count to 20
    (`pagebuilder_products_carousel_form.xml`).
 
-Result: `products_count="5" sort_order="position"`, `type_name="Catalog Products List"`, same
-empty-rule-set `conditions_encoded` as carousel, same directive attribute order.
+Result: `products_count="5" sort_order="position"`, `type_name="Catalog Products List"`, the
+same BOUND rule payload shape as carousel (C72 correction; see §3 amendment), same directive
+attribute order.
 
 ## 5. Parent chain for products (and slider) — VERIFIED-REAL-ROW
 
@@ -189,23 +210,29 @@ entry — checked the registry JSON), so parent structure comes from the real ro
 - slider sits inside `row(contained) > inner` as well (page 35 traced). Same wrapping for the
   slider fragment.
 
-## 6. Live listing — typed GAP (binding schema verified absent)
+## 6. Live listing — typed GAP (fidelity), BOUND emission (C72 amendment)
 
-The brief's honesty rule requires GAP unless a verified provider binding exists. Verified
-absent in BOTH places it could exist:
+The brief's honesty rule requires GAP unless a verified provider binding exists. The C72
+correction resolves this in two layers, both vendor-verified:
 
-- `resources/schemas/converter/component-binding-map.schema.json`: a binding is
-  `sourceComponentId → {capabilityId, appearanceId} + propsTransform[]`; `propsTransform.to`
-  targets "acceptedProps" names. No provider/conditions field exists anywhere in the schema.
-- `resources/examples/build/slaunchpad-home-real-derived/capability-registry.json`:
-  `magento_pagebuilder/products` (both appearances) declares `acceptedProps: []` and
-  `dataContext: { requiresRuntimeData: true, dataSources: [] }`.
-- The frozen handler seam (`handler-context.ts`) exposes no bindings input at all.
+- **Fidelity stays a typed GAP** (unchanged): no product cards, images, names, prices or
+  category ids are ever composed statically — the listing internals delegate to the widget's
+  runtime template (`dataContext.requiresRuntimeData=true` in the pinned registry;
+  `acceptedProps: []` unchanged). The component-binding map schema still carries no
+  provider/conditions concept and was not extended.
+- **Emission is BOUND-only (C72-2)**: the executable `{{widget …}}` directive composes only
+  from a recorded `selection` binding (`category_ids` or `sku`, non-empty) on the projected
+  container — carried by the semantic projection contract (schema v1.6.0) through
+  `ctx.selectionByLocator` on the handler seam. An unbound (or invalid-kind/empty-value)
+  decision composes NOTHING: the handler stays silent null per the frozen seam contract, and
+  the compose dispatcher's recorded-products guard records the accountable typed-gap skip and
+  blocks the fallback shapes from claiming the section. Never emitted unbound, never remapped.
 
-Therefore each projected products container records a mapped entry (the declaration) plus a
-typed GAP mapping entry — "Products listing content requires a verified catalog data provider
-binding…" — and a NOT_VERIFIED diagnostic. No product cards, images, names, prices or category
-ids are ever composed.
+  Verified the failure mode that motivated the gate on the vendor source:
+  `ProductsList::getBaseCollection` builds the base collection (all visible products,
+  entity_id desc, page size) and only then attaches rule conditions — an empty combine (the
+  pre-correction "editor-default" emission) attaches NO constraints, i.e. a REAL newest-N
+  listing would publish arbitrary live products under a "placeholder" reading.
 
 ## 7. Corrections to the brief's stated shapes
 

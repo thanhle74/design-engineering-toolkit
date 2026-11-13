@@ -54,6 +54,28 @@ export interface MappingEntry {
    note?: string;
 }
 
+/**
+ * [#72 C72-2 correction] The recorded product-selection binding a products decision MUST
+ * carry before the executable catalog widget is emitted. Only the two native modes with
+ * vendor-verified storefront semantics are accepted (PageBuilder's products form +
+ * conditions-data-processor synthesize the same rule; real admin-saved cms_page row 8
+ * `demo-landing-page` is the byte reference for category_ids mode):
+ * - `category_ids`: the widget's rule filters to those categories (anchor expansion and
+ *   visibility are native runtime behavior).
+ * - `sku`: the widget's rule filters to those SKUs.
+ * `condition` mode is deliberately NOT accepted: a free-form rule payload can encode any
+ * vendor-specific condition class, which is exactly the C72-1 portability hazard. An
+ * unbound products decision (no selection) composes NOTHING — a rule-less widget directive
+ * is a REAL executable listing (vendor-verified: an empty combine attaches no SQL
+ * constraints and the base collection lists newest products), so emitting one without an
+ * explicit recorded selection would silently publish arbitrary live products.
+ */
+export interface ProductsSelectionBinding {
+   kind: "category_ids" | "sku";
+   /** Non-empty, trimmed, comma-separated id/sku string — the admin form's raw value shape. */
+   value: string;
+}
+
 export interface SectionComposeContext {
    // ---- node inventory + document-order helpers (read-only views of the compose input) ----
    nodesById: Map<string, NodeIRNode>;
@@ -77,6 +99,12 @@ export interface SectionComposeContext {
 
    // ---- explicit semantic projection ----
    roleByLocator: Map<string, ComposerRole>;
+   /**
+    * [#72 C72-2 correction] Recorded product-selection bindings by locator (only
+    * products-grid/products-carousel assignments may carry one). Absent -> products
+    * composes NOTHING (typed gap; never an unbound executable widget).
+    */
+   selectionByLocator: ReadonlyMap<string, ProductsSelectionBinding>;
    /** Locators excluded as decoration-projected (their whole subtrees are pre-excluded). */
    excludedLocators: Set<string>;
    /** Locators composing THROUGH a projected CTA instance (subtrees accounted once there). */

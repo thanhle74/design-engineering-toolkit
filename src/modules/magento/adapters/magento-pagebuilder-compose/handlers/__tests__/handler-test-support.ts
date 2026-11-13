@@ -7,7 +7,11 @@ import type {
    NodeIRNode,
    PageStructureSection,
 } from "../../../../../core/types.js";
-import type { ComposerRole, MappingEntry } from "../../handler-context.js";
+import type {
+   ComposerRole,
+   MappingEntry,
+   ProductsSelectionBinding,
+} from "../../handler-context.js";
 import type { HandlerContext } from "../../shapes/handler-support.js";
 
 export const ALL_CAPS = [
@@ -105,6 +109,7 @@ export interface CtxOptions {
       }
    >;
    roles?: Record<string, ComposerRole>; // locator -> explicit projection
+   selections?: Record<string, ProductsSelectionBinding>; // locator -> recorded binding (C72-2)
 }
 
 export function makeCtx(
@@ -190,6 +195,7 @@ export function makeCtx(
       mediaByRef: new Map(Object.entries(opts.media ?? {})),
       linkByRef: new Map(Object.entries(opts.links ?? {})),
       roleByLocator: new Map(Object.entries(opts.roles ?? {})),
+      selectionByLocator: new Map(Object.entries(opts.selections ?? {})),
       excludedLocators,
       ctaSubtreeLocators,
       pushDiagnostic: (d: Diagnostic): void => {
