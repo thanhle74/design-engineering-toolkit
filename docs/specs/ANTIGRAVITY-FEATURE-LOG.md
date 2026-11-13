@@ -2,13 +2,13 @@
 
 > **Purpose:** working ledger for rapid **feature implementation AND bug fixes** in the Design Engineering Toolkit (DET). Antigravity is the fast **implementer**: build real functionality, run it, correct defects. This file records exactly what was changed so ChatGPT/Claude Code can later consolidate a well-scoped **architecture / code-quality / regression-hardening issue**. **NOT** a mandate to stop at prototypes or to fix bugs only.
 >
-> **Base:** start the Antigravity feature-development phase **after issue #72 / PR #73 is independently reviewed and merged to `main`**. Record that actual merged commit below. This document can be created before the merge; its existence does not authorize merging an unfinished PR.
+> **Base:** issue #72 **CLOSED** / PR #73 **MERGED** after independent Coordinator review, `main` merge commit `b9ccc23e85b8d550a31ac400fc70bd96634655b0`. **Antigravity rapid feature development can start from this baseline**. This ledger records new features AND fixes without pre-emptive architectural refactoring.
 >
 > **Repository:** `thanhle74/design-engineering-toolkit`
 
 ## Baseline (fill once when Antigravity phase begins)
 
-- Baseline `main` SHA: `TBD — after #72 merge`
+- Baseline `main` SHA: `b9ccc23e85b8d550a31ac400fc70bd96634655b0` (post-#72 merge; subsequent documentation commits may advance main without code changes).
 - Tool/environment: Antigravity in the DET repository; local Slaunchpad Magento is **test-only**.
 - Product flow to preserve: Figma → grounded AI/semantic mapping → deterministic Magento Page Builder → downloadable operator-executed PHP installer.
 - Architecture target: `src/modules/core` (neutral contracts/engine) · `src/modules/figma` (source extraction) · `src/modules/magento` (native Page Builder composition / PHP installer) · `src/modules/studio` (Next/Ant Design UI and orchestration). Keep contracts, provider assumptions and source evidence explicit.
