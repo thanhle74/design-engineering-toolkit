@@ -1,0 +1,1300 @@
+{
+  "schemaVersion": 1,
+  "profileId": "slaunchpad-fashion",
+  "sourceRevisionId": "2417494580183108397",
+  "derivedFrom": {
+    "nodeIr": "docs/evidence/issue-18/live-read-verified/node-ir.json",
+    "nodeIrContentHash": "63854986b88057f0c412c9ce40e937200fa3151f40b7fd3cafb8cf4940ea17ba",
+    "pageStructure": "docs/evidence/issue-18/live-read-verified/page-structure.json",
+    "sourceReview": "docs/evidence/issue-18/live-read-verified/source-review.json",
+    "contentManifest": "resources/examples/build/slaunchpad-home-real-derived/content-manifest.json",
+    "semanticProjection": "resources/examples/build/slaunchpad-home-real-derived/semantic-projection.json",
+    "capabilityRegistry": "resources/examples/build/slaunchpad-home-real-derived/capability-registry.json"
+  },
+  "conventions": {
+    "predictedDisposition": "composable = the section signature is structurally handled by an existing composer shape or expressible in pinned native families once evidence inputs (role projections, manifest copy/media) are supplied; gap = the signature requires a handler/family that does not exist today (peer-repeated groups, products widget conditions, form input) or carries un-representable content. Input-level blockers are always listed in gapReasons.",
+    "carouselObservation": "Sections whose layout container is absolute/row and holds peer-repeated same-name children are marked as carousel OBSERVATIONS only; NodeIR carries no geometry, so overlap cannot be observed and the slider-vs-grid decision belongs to the Coordinator.",
+    "peerGroupFilter": "Peer groups list only non-icon member groups: glyph stroke Vectors and their pairs inside arrow Frames are icon internals, not card peers. Hotspot marker pairs are cited in the Lookbook gapReasons instead.",
+    "mediaNodeKinds": "media = a media-kind node; slot-frame = an empty (or icon-only) SLOT/ container functioning as a media slot frame."
+  },
+  "sections": [
+    {
+      "sectionId": "s-df13cd3ab58d",
+      "order": 0,
+      "name": "SECTION/Hero/Primary",
+      "locator": "245:5",
+      "irNodeId": "n-d6420d8409b4",
+      "sectionLayoutDirection": "absolute",
+      "childCount": 4,
+      "visibleDescendantCount": 16,
+      "totalDescendantCount": 16,
+      "pageStructureElementIds": [
+        "n-8fe6bad893e2",
+        "n-8cbe9fda6d83"
+      ],
+      "dispositions": {
+        "MAPPED": 10,
+        "DECORATION_MERGED": 5,
+        "NEEDS_REVIEW": 1
+      },
+      "mediaNodes": [
+        {
+          "nodeId": "n-8fe6bad893e2",
+          "locator": "254:40",
+          "name": "SLOT/HeroMedia",
+          "nodeKind": "slot-frame",
+          "valueRef": "design://figma-home-desktop/254:40",
+          "carried": "{{media url=wysiwyg/slaunchpad-home-real-derived/hero-bg-placeholder.jpg}}"
+        }
+      ],
+      "textNodes": [
+        {
+          "nodeId": "n-fafe83890504",
+          "locator": "254:43",
+          "name": "CHAPTER 01 / AW 2026",
+          "valueRef": "design://figma-home-desktop/254:43",
+          "carried": "CHAPTER 01 / AW 2026"
+        },
+        {
+          "nodeId": "n-e1d7daf26b02",
+          "locator": "254:44",
+          "name": "The Quiet Grandeur",
+          "valueRef": "design://figma-home-desktop/254:44",
+          "carried": "The Quiet Grandeur"
+        },
+        {
+          "nodeId": "n-2939001f1d25",
+          "locator": "254:45",
+          "name": "Refined tailoring, knitwear and leather for the season.",
+          "valueRef": "design://figma-home-desktop/254:45",
+          "carried": "Refined tailoring, knitwear and leather for the season."
+        },
+        {
+          "nodeId": "n-069615e32dda",
+          "locator": "I254:47;251:77",
+          "name": "Label",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-8e0199f5ce01",
+          "locator": "254:59",
+          "name": "SCROLL",
+          "valueRef": null,
+          "carried": null
+        }
+      ],
+      "peerGroups": [],
+      "existingShapeMatch": "hero",
+      "intendedNativeTree": "row(contained) > banner(poster) — banner carries background image + poster overlay content (overline/heading/body folded as overlay text) + single slide-button for the CTA",
+      "predictedDisposition": "composable",
+      "gapReasons": [
+        "hero media slot n-8fe6bad893e2 (254:40) carries no asset bytes — manifest entry is a labeled offline placeholder; operator-supplied local asset required before any CMS write",
+        "CTA instance n-d0f613010b51 has no label/link entries in content-manifest — banner button cannot be composed without a link (no unlinked pseudo-button)",
+        "DECOR/ScrollIndicator n-19c686552981 (icon + SCROLL text) is presentation-only: decoration-merged, no native target",
+        "manifest carries the three hero texts (254:43/44/45) but semantic-projection roles exist only from the #70 bounded projection — the general composer still needs these projected for detection"
+      ]
+    },
+    {
+      "sectionId": "s-812c04890b36",
+      "order": 1,
+      "name": "SECTION/BrandStatement",
+      "locator": "245:6",
+      "irNodeId": "n-f08fdf072e3e",
+      "sectionLayoutDirection": "column",
+      "childCount": 2,
+      "visibleDescendantCount": 3,
+      "totalDescendantCount": 3,
+      "pageStructureElementIds": [],
+      "dispositions": {
+        "MAPPED": 3
+      },
+      "mediaNodes": [],
+      "textNodes": [
+        {
+          "nodeId": "n-0b9486f7540d",
+          "locator": "254:60",
+          "name": "THE HOUSE",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-74ae79d9e56c",
+          "locator": "254:61",
+          "name": "Luxury is what remains when everything unnecessary has been removed.",
+          "valueRef": null,
+          "carried": null
+        }
+      ],
+      "peerGroups": [],
+      "existingShapeMatch": "text-band",
+      "intendedNativeTree": "row(contained) > text(default) — both loose text layers composed as one WYSIWYG band",
+      "predictedDisposition": "composable",
+      "gapReasons": [
+        "no semantic-projection assignments exist for this section (projection was bounded to Hero/Primary + Craftsmanship) — text-band detector needs role-resolved text evidence first",
+        "content-manifest has NO entries for either text (254:60 'THE HOUSE', 254:61 statement) — copy exists only as layer names, not carried values"
+      ]
+    },
+    {
+      "sectionId": "s-3ca9401bcf2c",
+      "order": 2,
+      "name": "SECTION/Hero/Secondary",
+      "locator": "394:386",
+      "irNodeId": "n-7255f8eed0ee",
+      "sectionLayoutDirection": "absolute",
+      "childCount": 5,
+      "visibleDescendantCount": 10,
+      "totalDescendantCount": 10,
+      "pageStructureElementIds": [
+        "n-cf1f5f71570d"
+      ],
+      "dispositions": {
+        "MAPPED": 6,
+        "NEEDS_REVIEW": 2,
+        "DECORATION_MERGED": 2
+      },
+      "mediaNodes": [
+        {
+          "nodeId": "n-cf1f5f71570d",
+          "locator": "394:387",
+          "name": "SLOT/SecondaryHeroMedia",
+          "nodeKind": "slot-frame",
+          "valueRef": null,
+          "carried": null
+        }
+      ],
+      "textNodes": [
+        {
+          "nodeId": "n-f324d04bddba",
+          "locator": "394:388",
+          "name": "CHAPTER 02 / THE COLLECTION",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-89386341e221",
+          "locator": "394:389",
+          "name": "The Modern Silhouette",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-f5957607a0ef",
+          "locator": "394:390",
+          "name": "An exploration of modern form and effortless style.",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-c72c71d7302a",
+          "locator": "I394:391;354:373",
+          "name": "CTA Label",
+          "valueRef": null,
+          "carried": null
+        }
+      ],
+      "peerGroups": [],
+      "existingShapeMatch": "hero",
+      "intendedNativeTree": "row(contained) > banner(poster) — media slot as banner background, three loose texts folded into poster overlay content, CTA arrow-link composed as the banner button (or buttons(inline) inside overlay content)",
+      "predictedDisposition": "composable",
+      "gapReasons": [
+        "overlay texts are loose section children (no SLOT content wrapper), so detection relies on projected roles (background-media/content-lead/heading/body) which are NOT yet projected for this section",
+        "manifest carries no entries for 394:388/394:389/394:390 — chapter overline, heading, body exist only as layer names",
+        "CTA component n-f2831f913814 label/link absent from manifest",
+        "media slot n-cf1f5f71570d (394:387) empty — no manifest media entry"
+      ]
+    },
+    {
+      "sectionId": "s-63f4f98ec020",
+      "order": 3,
+      "name": "SECTION/FeaturedCollections",
+      "locator": "245:9",
+      "irNodeId": "n-09e39d9b5ae8",
+      "sectionLayoutDirection": "column",
+      "childCount": 2,
+      "visibleDescendantCount": 45,
+      "totalDescendantCount": 45,
+      "pageStructureElementIds": [
+        "n-263fd5b8ac94"
+      ],
+      "dispositions": {
+        "MAPPED": 29,
+        "NEEDS_REVIEW": 5,
+        "DECORATION_MERGED": 11
+      },
+      "mediaNodes": [
+        {
+          "nodeId": "n-15669bb8d778",
+          "locator": "I436:460;436:396",
+          "name": "Img",
+          "nodeKind": "media",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-772579615da5",
+          "locator": "I436:472;436:418",
+          "name": "Img",
+          "nodeKind": "media",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-70e15bec186e",
+          "locator": "I436:484;436:440",
+          "name": "Img",
+          "nodeKind": "media",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-5da41eaba48f",
+          "locator": "453:394",
+          "name": "SLOT/EditorialFabricDetail",
+          "nodeKind": "slot-frame",
+          "valueRef": null,
+          "carried": null
+        }
+      ],
+      "textNodes": [
+        {
+          "nodeId": "n-90b90d50fdfa",
+          "locator": "I256:96;250:28",
+          "name": "OVERLINE",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-885688182361",
+          "locator": "I256:96;250:29",
+          "name": "Section Title",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-97cc41794766",
+          "locator": "I256:96;251:101;251:72",
+          "name": "VIEW ALL",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-5ca8e84c0240",
+          "locator": "I436:460;436:399",
+          "name": "Women",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-f39ee4954622",
+          "locator": "I436:460;436:400",
+          "name": "24 PIECES",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-ada49576c39d",
+          "locator": "I436:472;436:421",
+          "name": "Men",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-9a6b27f43a4d",
+          "locator": "I436:472;436:422",
+          "name": "24 PIECES",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-696d474366de",
+          "locator": "I436:484;436:443",
+          "name": "Accessories",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-04dfb363358e",
+          "locator": "I436:484;436:444",
+          "name": "24 PIECES",
+          "valueRef": null,
+          "carried": null
+        }
+      ],
+      "peerGroups": [
+        {
+          "nodeId": "n-67b36a50633d",
+          "pattern": "Proto / Collection Tile",
+          "count": 3,
+          "memberNodeIds": [
+            "n-67b36a50633d",
+            "n-8384ef484928",
+            "n-1e50d32d955c"
+          ],
+          "parentNodeId": "n-263fd5b8ac94",
+          "parentName": "SLOT/CollectionTiles"
+        }
+      ],
+      "existingShapeMatch": "none",
+      "intendedNativeTree": "candidate A (carousel reading): row(contained) > slider(default) > slide(poster) x3 (one per Proto / Collection Tile; tile label+count in slide content, link on slide). Candidate B (static grid reading): row(contained) > heading(default) + column-group(default) > column-line(default) > column(full-height) x3, each column > image(full-width) + text; trailing SLOT/EditorialFabricDetail composes as a fourth image or is excluded",
+      "predictedDisposition": "gap",
+      "gapReasons": [
+        "peer-repeated card group (3 x 'Proto / Collection Tile' n-67b36a50633d/n-8384ef484928/n-1e50d32d955c inside absolute container n-263fd5b8ac94) matches none of the four composer shapes, which key on distinct named slots",
+        "carousel vs static-grid intent is not decidable from NodeIR (no geometry; absolute-direction container with peer-repeated children is an OBSERVATION, not a runtime fact) — Coordinator must decide slider vs column-grid mapping",
+        "tile media nodes n-15669bb8d778 / n-772579615da5 / n-70e15bec186e have no content-manifest entries",
+        "tile copy (Women/Men/Accessories, '24 PIECES') and Section Header copy (OVERLINE / Section Title / VIEW ALL) exist only as layer names — no manifest entries",
+        "'VIEW ALL' arrow-link has no manifest link — buttons(inline) > button-item cannot compose unlinked",
+        "trailing empty slot frame n-5da41eaba48f SLOT/EditorialFabricDetail (453:394) has no projection and no manifest media"
+      ]
+    },
+    {
+      "sectionId": "s-9e92039d0743",
+      "order": 4,
+      "name": "SECTION/FeaturedProducts",
+      "locator": "245:7",
+      "irNodeId": "n-9caec5a9c33f",
+      "sectionLayoutDirection": "column",
+      "childCount": 2,
+      "visibleDescendantCount": 51,
+      "totalDescendantCount": 51,
+      "pageStructureElementIds": [
+        "n-8c476f5e021f"
+      ],
+      "dispositions": {
+        "MAPPED": 35,
+        "NEEDS_REVIEW": 10,
+        "DECORATION_MERGED": 6
+      },
+      "mediaNodes": [
+        {
+          "nodeId": "n-724c55a56cb7",
+          "locator": "I254:72;348:313",
+          "name": "Img",
+          "nodeKind": "media",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-48d52538c969",
+          "locator": "I254:81;348:313",
+          "name": "Img",
+          "nodeKind": "media",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-2f05e34fdeed",
+          "locator": "I254:90;348:313",
+          "name": "Img",
+          "nodeKind": "media",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-1456238d5833",
+          "locator": "I254:99;348:313",
+          "name": "Img",
+          "nodeKind": "media",
+          "valueRef": null,
+          "carried": null
+        }
+      ],
+      "textNodes": [
+        {
+          "nodeId": "n-b3d3d9e59203",
+          "locator": "I254:62;250:28",
+          "name": "OVERLINE",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-17263c593b8e",
+          "locator": "I254:62;250:29",
+          "name": "Section Title",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-c03c73810a2a",
+          "locator": "I254:62;251:101;251:72",
+          "name": "VIEW ALL",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-d0dffd2e5123",
+          "locator": "I254:72;250:8",
+          "name": "Product Name",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-8d1e0fe525e2",
+          "locator": "I254:72;250:9",
+          "name": "Category",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-2c3e4a50bfd6",
+          "locator": "I254:72;250:10",
+          "name": "$0,000",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-04451b4ce5a7",
+          "locator": "I254:81;250:8",
+          "name": "Product Name",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-75835629bf10",
+          "locator": "I254:81;250:9",
+          "name": "Category",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-e362027a9c6c",
+          "locator": "I254:81;250:10",
+          "name": "$0,000",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-f95103a81da8",
+          "locator": "I254:90;250:8",
+          "name": "Product Name",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-09a94a3b4af1",
+          "locator": "I254:90;250:9",
+          "name": "Category",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-f01d03b51e54",
+          "locator": "I254:90;250:10",
+          "name": "$0,000",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-de81ae0d53dc",
+          "locator": "I254:99;250:8",
+          "name": "Product Name",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-1c8a08eb8bab",
+          "locator": "I254:99;250:9",
+          "name": "Category",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-59b29d5ee8b3",
+          "locator": "I254:99;250:10",
+          "name": "$0,000",
+          "valueRef": null,
+          "carried": null
+        }
+      ],
+      "peerGroups": [
+        {
+          "nodeId": "n-e93ce88d4dbf",
+          "pattern": "Proto / Product Card",
+          "count": 4,
+          "memberNodeIds": [
+            "n-e93ce88d4dbf",
+            "n-a307c9df3067",
+            "n-1d62d0912764",
+            "n-2947ec0e39e5"
+          ],
+          "parentNodeId": "n-8c476f5e021f",
+          "parentName": "SLOT/ProductCards"
+        }
+      ],
+      "existingShapeMatch": "none",
+      "intendedNativeTree": "row(contained) > heading(default) (section title) + products(grid) — products persists as a widget directive (Magento\\CatalogWidget\\Block\\Product\\ProductsList) inside its div; the four static cards are replaced by the widget's own runtime template",
+      "predictedDisposition": "gap",
+      "gapReasons": [
+        "products requires runtime catalog data + widget conditions: registry magento_pagebuilder/products (grid/carousel) dataContext.requiresRuntimeData=true; persisted declaration carries conditions_encoded with backtick encoding and needs a live widget provider — no product conditions exist in the committed evidence",
+        "content-manifest carries zero product entries — the four card copies (Product Name / Category / $0,000) are placeholder layer names (n-e93ce88d4dbf/n-a307c9df3067/n-1d62d0912764/n-2947ec0e39e5)",
+        "card-internal wishlist heart toggle and price text are not expressible through the products widget (widget renders its own product template) — fidelity is delegated to the widget, observed card internals are decoration-merged",
+        "static fallback (column-line x4 with image+text per card) is composable but loses product-listing semantics — Coordinator decision"
+      ]
+    },
+    {
+      "sectionId": "s-322a0d65ee53",
+      "order": 5,
+      "name": "SECTION/CampaignEditorial",
+      "locator": "299:300",
+      "irNodeId": "n-d55b3385999e",
+      "sectionLayoutDirection": "absolute",
+      "childCount": 5,
+      "visibleDescendantCount": 10,
+      "totalDescendantCount": 10,
+      "pageStructureElementIds": [
+        "n-68e74e3ed742",
+        "n-f6aa9399b404"
+      ],
+      "dispositions": {
+        "MAPPED": 6,
+        "NEEDS_REVIEW": 2,
+        "DECORATION_MERGED": 2
+      },
+      "mediaNodes": [
+        {
+          "nodeId": "n-68e74e3ed742",
+          "locator": "299:301",
+          "name": "SLOT/CampaignMedia/Primary",
+          "nodeKind": "slot-frame",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-f6aa9399b404",
+          "locator": "299:302",
+          "name": "SLOT/CampaignMedia/Secondary",
+          "nodeKind": "slot-frame",
+          "valueRef": null,
+          "carried": null
+        }
+      ],
+      "textNodes": [
+        {
+          "nodeId": "n-a83d90dbcac5",
+          "locator": "299:304",
+          "name": "Overline",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-56f74800eb54",
+          "locator": "299:305",
+          "name": "Title",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-e18516c2993e",
+          "locator": "I354:386;354:373",
+          "name": "CTA Label",
+          "valueRef": null,
+          "carried": null
+        }
+      ],
+      "peerGroups": [],
+      "existingShapeMatch": "two-column",
+      "intendedNativeTree": "row(contained) > column-group(default) > column-line(default) > column(full-height) x2 — SLOT/CampaignMedia/Primary + SLOT/CampaignMedia/Secondary as the two columns (image(full-width) each), loose Overline/Title folded into a text(default) in the primary column, CTA as buttons(inline) > button-item(default)",
+      "predictedDisposition": "composable",
+      "gapReasons": [
+        "design overlays text + CTA across both media slots (absolute section) — two-column shape stacks text inside a column, so overlay-vs-split fidelity gap is expected and must be declared, not silently accepted",
+        "manifest has no entries for 299:301/299:302 (media slots), 299:304 (Overline), 299:305 (Title), or the CTA label/link (n-853f3ab5046c)",
+        "no semantic-projection roles for this section (column-primary/column-secondary projections exist only for Craftsmanship)"
+      ]
+    },
+    {
+      "sectionId": "s-fe254aac1209",
+      "order": 6,
+      "name": "SECTION/Lookbook",
+      "locator": "299:311",
+      "irNodeId": "n-4604a314e990",
+      "sectionLayoutDirection": "absolute",
+      "childCount": 2,
+      "visibleDescendantCount": 32,
+      "totalDescendantCount": 32,
+      "pageStructureElementIds": [
+        "n-c89e2fc95ac3"
+      ],
+      "dispositions": {
+        "MAPPED": 16,
+        "NEEDS_REVIEW": 2,
+        "DECORATION_MERGED": 14
+      },
+      "mediaNodes": [
+        {
+          "nodeId": "n-07ee4a2984c4",
+          "locator": "299:323",
+          "name": "SLOT/LookMedia/01",
+          "nodeKind": "slot-frame",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-aeab0ba79953",
+          "locator": "299:330",
+          "name": "SLOT/LookMedia/02",
+          "nodeKind": "slot-frame",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-aaaa0ca13539",
+          "locator": "299:337",
+          "name": "SLOT/LookMedia/03",
+          "nodeKind": "slot-frame",
+          "valueRef": null,
+          "carried": null
+        }
+      ],
+      "textNodes": [
+        {
+          "nodeId": "n-4617bdf8269d",
+          "locator": "I299:312;250:28",
+          "name": "OVERLINE",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-ec2d3ada4b2a",
+          "locator": "I299:312;250:29",
+          "name": "Section Title",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-d24f444937c8",
+          "locator": "I299:312;251:101;251:72",
+          "name": "VIEW ALL",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-11838e9677a3",
+          "locator": "299:328",
+          "name": "Caption",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-f18f7c3e5cd3",
+          "locator": "299:335",
+          "name": "Caption",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-c6910d490258",
+          "locator": "299:342",
+          "name": "Caption",
+          "valueRef": null,
+          "carried": null
+        }
+      ],
+      "peerGroups": [
+        {
+          "nodeId": "n-187a96303843",
+          "pattern": "SLOT/LookbookLook",
+          "count": 3,
+          "memberNodeIds": [
+            "n-187a96303843",
+            "n-6b1a3795ef47",
+            "n-b14dd19aa328"
+          ],
+          "parentNodeId": "n-c89e2fc95ac3",
+          "parentName": "SLOT/LookbookCards"
+        }
+      ],
+      "existingShapeMatch": "none",
+      "intendedNativeTree": "candidate A (carousel reading): row(contained) > slider(default) > slide(poster) x3 — each SLOT/LookbookLook/NN as a slide with Caption text in slide content; hotspots cannot ride along. Candidate B (static): row(contained) > column-group > column-line > column x3 with image(full-width) + caption text per column",
+      "predictedDisposition": "gap",
+      "gapReasons": [
+        "peer-repeated look group (SLOT/LookbookLook/01 n-187a96303843, /02 n-6b1a3795ef47, /03 n-b14dd19aa328 inside absolute container n-c89e2fc95ac3) matches no existing shape",
+        "12 hotspot icons (per look: 2 Hotspot + 2 Hotspot Halo — n-68d413ca0d41/n-e39694ef5aa4/n-3377bd02ef59/n-f37d82e88c17 in /01, n-0f19e24b88ec/n-ed226c4255d4/n-c87b24fabdfd/n-284e49c724f4 in /02, n-325a6f066b47/n-6f1d35c52412/n-ecf3b47c3eec/n-0e34c8a64d05 in /03) are interactive shoppable-image markers — no native PB family represents them; only decoration-merge is available, which loses their function",
+        "carousel vs static intent not decidable from NodeIR — OBSERVATION only; Coordinator decision",
+        "all three media slot frames are empty and captions (299:328/299:335/299:342) have no manifest entries",
+        "Section Header copy + VIEW ALL link absent from manifest"
+      ]
+    },
+    {
+      "sectionId": "s-08e578513c2d",
+      "order": 7,
+      "name": "SECTION/EditorialMosaic",
+      "locator": "245:10",
+      "irNodeId": "n-8fec2ddef48c",
+      "sectionLayoutDirection": "column",
+      "childCount": 2,
+      "visibleDescendantCount": 23,
+      "totalDescendantCount": 23,
+      "pageStructureElementIds": [
+        "n-eae639ffd2e6"
+      ],
+      "dispositions": {
+        "MAPPED": 19,
+        "NEEDS_REVIEW": 2,
+        "DECORATION_MERGED": 2
+      },
+      "mediaNodes": [
+        {
+          "nodeId": "n-0a2a7ac31212",
+          "locator": "284:407",
+          "name": "SLOT/MosaicColumn/01",
+          "nodeKind": "slot-frame",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-4ba02c61f612",
+          "locator": "284:408",
+          "name": "Editorial Tile",
+          "nodeKind": "media",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-873a4616b196",
+          "locator": "284:409",
+          "name": "Editorial Tile",
+          "nodeKind": "media",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-f6c51f48d892",
+          "locator": "284:410",
+          "name": "SLOT/MosaicColumn/02",
+          "nodeKind": "slot-frame",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-ae90ea0a418c",
+          "locator": "284:411",
+          "name": "Editorial Tile",
+          "nodeKind": "media",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-e695fc10e366",
+          "locator": "284:412",
+          "name": "Editorial Tile",
+          "nodeKind": "media",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-62e358862fd9",
+          "locator": "284:413",
+          "name": "SLOT/MosaicColumn/03",
+          "nodeKind": "slot-frame",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-fa8aba8ba0e5",
+          "locator": "284:414",
+          "name": "Editorial Tile",
+          "nodeKind": "media",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-ffade5183e70",
+          "locator": "284:415",
+          "name": "Editorial Tile",
+          "nodeKind": "media",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-eecb3f577a42",
+          "locator": "284:416",
+          "name": "SLOT/MosaicColumn/04",
+          "nodeKind": "slot-frame",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-811e7366bea6",
+          "locator": "284:417",
+          "name": "Editorial Tile",
+          "nodeKind": "media",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-da0135704f05",
+          "locator": "284:418",
+          "name": "Editorial Tile",
+          "nodeKind": "media",
+          "valueRef": null,
+          "carried": null
+        }
+      ],
+      "textNodes": [
+        {
+          "nodeId": "n-1e8fadcce165",
+          "locator": "I256:139;250:28",
+          "name": "OVERLINE",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-7f6997160c93",
+          "locator": "I256:139;250:29",
+          "name": "Section Title",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-4072d0c6d218",
+          "locator": "I256:139;251:101;251:72",
+          "name": "VIEW ALL",
+          "valueRef": null,
+          "carried": null
+        }
+      ],
+      "peerGroups": [
+        {
+          "nodeId": "n-0a2a7ac31212",
+          "pattern": "SLOT/MosaicColumn",
+          "count": 4,
+          "memberNodeIds": [
+            "n-0a2a7ac31212",
+            "n-f6c51f48d892",
+            "n-62e358862fd9",
+            "n-eecb3f577a42"
+          ],
+          "parentNodeId": "n-eae639ffd2e6",
+          "parentName": "SLOT/MosaicGrid"
+        },
+        {
+          "nodeId": "n-4ba02c61f612",
+          "pattern": "Editorial Tile",
+          "count": 2,
+          "memberNodeIds": [
+            "n-4ba02c61f612",
+            "n-873a4616b196"
+          ],
+          "parentNodeId": "n-0a2a7ac31212",
+          "parentName": "SLOT/MosaicColumn/01"
+        },
+        {
+          "nodeId": "n-ae90ea0a418c",
+          "pattern": "Editorial Tile",
+          "count": 2,
+          "memberNodeIds": [
+            "n-ae90ea0a418c",
+            "n-e695fc10e366"
+          ],
+          "parentNodeId": "n-f6c51f48d892",
+          "parentName": "SLOT/MosaicColumn/02"
+        },
+        {
+          "nodeId": "n-fa8aba8ba0e5",
+          "pattern": "Editorial Tile",
+          "count": 2,
+          "memberNodeIds": [
+            "n-fa8aba8ba0e5",
+            "n-ffade5183e70"
+          ],
+          "parentNodeId": "n-62e358862fd9",
+          "parentName": "SLOT/MosaicColumn/03"
+        },
+        {
+          "nodeId": "n-811e7366bea6",
+          "pattern": "Editorial Tile",
+          "count": 2,
+          "memberNodeIds": [
+            "n-811e7366bea6",
+            "n-da0135704f05"
+          ],
+          "parentNodeId": "n-eecb3f577a42",
+          "parentName": "SLOT/MosaicColumn/04"
+        }
+      ],
+      "existingShapeMatch": "column-grid",
+      "intendedNativeTree": "row(contained) > column-group(default) > column-line(default) > column(full-height) x4 — SLOT/MosaicColumn/01..04 as the four named slots (Rule A grid), each column > image(full-width) x2 stacked; Section Header composes as a leading text band (row(contained) > text(default)) above the grid row",
+      "predictedDisposition": "composable",
+      "gapReasons": [
+        "all 8 Editorial Tile media nodes (n-4ba02c61f612/n-873a4616b196 / n-ae90ea0a418c/n-e695fc10e366 / n-fa8aba8ba0e5/n-ffade5183e70 / n-811e7366bea6/n-da0135704f05) lack content-manifest entries",
+        "Section Header copy (OVERLINE / Section Title / VIEW ALL) absent from manifest; VIEW ALL link missing blocks button-item",
+        "grid-line grouping (4 columns in one line vs 2+2) needs observed overlap bands — column-grid Rule A requires width/overlap evidence the flat NodeIR does not carry; width apportionment must come from slot evidence"
+      ]
+    },
+    {
+      "sectionId": "s-1f0a2498ae66",
+      "order": 8,
+      "name": "SECTION/Craftsmanship",
+      "locator": "299:343",
+      "irNodeId": "n-d855a3667d4a",
+      "sectionLayoutDirection": "absolute",
+      "childCount": 2,
+      "visibleDescendantCount": 8,
+      "totalDescendantCount": 8,
+      "pageStructureElementIds": [
+        "n-f7fdb3800b45",
+        "n-40b044ec302f"
+      ],
+      "dispositions": {
+        "MAPPED": 8
+      },
+      "mediaNodes": [
+        {
+          "nodeId": "n-f7fdb3800b45",
+          "locator": "299:344",
+          "name": "SLOT/CraftMedia",
+          "nodeKind": "slot-frame",
+          "valueRef": "design://figma-home-desktop/299:344",
+          "carried": "{{media url=wysiwyg/slaunchpad-home-real-derived/craft-media-placeholder.jpg}}"
+        },
+        {
+          "nodeId": "n-3c41ed25fdd0",
+          "locator": "299:349",
+          "name": "SLOT/DetailStitch",
+          "nodeKind": "slot-frame",
+          "valueRef": "design://figma-home-desktop/299:349",
+          "carried": "{{media url=wysiwyg/slaunchpad-home-real-derived/detail-stitch-placeholder.jpg}}"
+        },
+        {
+          "nodeId": "n-14c929658e1b",
+          "locator": "299:350",
+          "name": "SLOT/DetailFabric",
+          "nodeKind": "slot-frame",
+          "valueRef": "design://figma-home-desktop/299:350",
+          "carried": "{{media url=wysiwyg/slaunchpad-home-real-derived/detail-fabric-placeholder.jpg}}"
+        }
+      ],
+      "textNodes": [
+        {
+          "nodeId": "n-18601b1c6170",
+          "locator": "299:346",
+          "name": "Overline",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-163864cf1358",
+          "locator": "299:347",
+          "name": "Title",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-a141b1429fa2",
+          "locator": "299:348",
+          "name": "Body",
+          "valueRef": null,
+          "carried": null
+        }
+      ],
+      "peerGroups": [],
+      "existingShapeMatch": "two-column",
+      "intendedNativeTree": "row(contained) > column-group(default) > column-line(default) > column(full-height) x2 — SLOT/CraftMedia as column-primary (image(full-width), manifest 299:344), SLOT/CraftContent as column-secondary (text(default) folding overline/title/body + image(full-width) x2 for SLOT/DetailStitch 299:349 and SLOT/DetailFabric 299:350)",
+      "predictedDisposition": "composable",
+      "gapReasons": [
+        "CraftContent display copy is NOT carried: 299:346 (Overline) / 299:347 (Title) / 299:348 (Body) have no content-manifest entries — explicit known gap from the #70 projection notes",
+        "CTA absent from design (no button instance in this section) — nothing to compose; noted so its absence is not read as a dropped element"
+      ]
+    },
+    {
+      "sectionId": "s-bef01391dbd2",
+      "order": 9,
+      "name": "SECTION/ThePeople",
+      "locator": "522:542",
+      "irNodeId": "n-c5a2d284b49a",
+      "sectionLayoutDirection": "absolute",
+      "childCount": 14,
+      "visibleDescendantCount": 15,
+      "totalDescendantCount": 15,
+      "pageStructureElementIds": [
+        "n-f29c9d88ca11",
+        "n-757b6d413c8b",
+        "n-81d2b44d9c1c",
+        "n-080f9b340992"
+      ],
+      "dispositions": {
+        "MAPPED": 15
+      },
+      "mediaNodes": [
+        {
+          "nodeId": "n-f29c9d88ca11",
+          "locator": "522:547",
+          "name": "SLOT/PeopleLook/01-Tailoring",
+          "nodeKind": "slot-frame",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-757b6d413c8b",
+          "locator": "522:549",
+          "name": "SLOT/PeopleLook/02-Menswear",
+          "nodeKind": "slot-frame",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-81d2b44d9c1c",
+          "locator": "522:551",
+          "name": "SLOT/PeopleLook/03-Street",
+          "nodeKind": "slot-frame",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-080f9b340992",
+          "locator": "522:553",
+          "name": "SLOT/PeopleLook/04-Everyday",
+          "nodeKind": "slot-frame",
+          "valueRef": null,
+          "carried": null
+        }
+      ],
+      "textNodes": [
+        {
+          "nodeId": "n-448916c4fcde",
+          "locator": "522:543",
+          "name": "THE PEOPLE",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-1afab465a359",
+          "locator": "522:544",
+          "name": "Worn in Their Own Way",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-3f84e84b0eb8",
+          "locator": "522:545",
+          "name": "Personal perspectives on modern dressing.",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-fc105d9f1feb",
+          "locator": "522:546",
+          "name": "04 LOOKS",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-5e1c45f378d5",
+          "locator": "522:548",
+          "name": "LOOK 01 — WOMEN'S TAILORING",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-e560cfd0da5f",
+          "locator": "522:550",
+          "name": "LOOK 02 — MINIMAL MENSWEAR",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-fb8cab4ccd0b",
+          "locator": "522:552",
+          "name": "LOOK 03 — CONTEMPORARY STREET",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-3aaef987817a",
+          "locator": "522:554",
+          "name": "LOOK 04 — EVERYDAY LUXURY",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-1a50af8c3a4d",
+          "locator": "522:555",
+          "name": "EXPLORE THE LOOKS →",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-bd6a3b5c909f",
+          "locator": "522:556",
+          "name": "PLACEHOLDER — RIGHTS UNVERIFIED",
+          "valueRef": null,
+          "carried": null
+        }
+      ],
+      "peerGroups": [
+        {
+          "nodeId": "n-f29c9d88ca11",
+          "pattern": "SLOT/PeopleLook",
+          "count": 4,
+          "memberNodeIds": [
+            "n-f29c9d88ca11",
+            "n-757b6d413c8b",
+            "n-81d2b44d9c1c",
+            "n-080f9b340992"
+          ],
+          "parentNodeId": "n-c5a2d284b49a",
+          "parentName": "SECTION/ThePeople"
+        }
+      ],
+      "existingShapeMatch": "none",
+      "intendedNativeTree": "candidate (grid reading): row(contained) > heading(default) + column-group > column-line > column x4, each column > image(full-width) + text(caption) + buttons(inline) > button-item(EXPLORE THE LOOKS, link required). Candidate (carousel reading): row(contained) > slider(default) > slide(poster) x4",
+      "predictedDisposition": "gap",
+      "gapReasons": [
+        "interleaved peer pattern (4 x SLOT/PeopleLook/NN slot frames n-f29c9d88ca11/n-757b6d413c8b/n-81d2b44d9c1c each paired with a separate LOOK NN caption text n-5e1c45f378d5/n-e560cfd0da5f/n-fb8cab4ccd0b/n-3aaef987817a as SIBLINGS of the section) matches no existing shape — captions are not contained by their look slots",
+        "media slot frames are all empty — no manifest media entries for 522:547/522:549/522:551/522:553",
+        "text n-bd6a3b5c909f 'PLACEHOLDER — RIGHTS UNVERIFIED' (522:556) must be resolved (asset rights) or excluded before any composition — an unresolved rights placeholder cannot be emitted",
+        "all copy (THE PEOPLE / Worn in Their Own Way / subline / 04 LOOKS / captions / EXPLORE THE LOOKS) exists only as layer names — no manifest entries; EXPLORE THE LOOKS link target missing"
+      ]
+    },
+    {
+      "sectionId": "s-a0cca2d0b670",
+      "order": 10,
+      "name": "SECTION/ProductSpotlight",
+      "locator": "245:12",
+      "irNodeId": "n-a871434262b9",
+      "sectionLayoutDirection": "absolute",
+      "childCount": 4,
+      "visibleDescendantCount": 19,
+      "totalDescendantCount": 19,
+      "pageStructureElementIds": [
+        "n-7febca8cae89",
+        "n-d496a05ea77a"
+      ],
+      "dispositions": {
+        "MAPPED": 12,
+        "DECORATION_MERGED": 5,
+        "NEEDS_REVIEW": 2
+      },
+      "mediaNodes": [
+        {
+          "nodeId": "n-7febca8cae89",
+          "locator": "257:122",
+          "name": "SLOT/SpotlightMedia",
+          "nodeKind": "slot-frame",
+          "valueRef": null,
+          "carried": null
+        }
+      ],
+      "textNodes": [
+        {
+          "nodeId": "n-3f43b90dc479",
+          "locator": "257:124",
+          "name": "N°1",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-ed7e3a9dc5f1",
+          "locator": "257:126",
+          "name": "SIGNATURE OUTERWEAR",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-8cc6d27cdd2d",
+          "locator": "257:127",
+          "name": "The Signature Trench",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-0f5e279541ac",
+          "locator": "257:129",
+          "name": "Relaxed tailoring in warm neutrals — the defining layer of the season.",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-fd91e42e7005",
+          "locator": "I257:131;251:82",
+          "name": "Label",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-f16f7d40007a",
+          "locator": "I257:136;251:92",
+          "name": "Label",
+          "valueRef": null,
+          "carried": null
+        }
+      ],
+      "peerGroups": [],
+      "existingShapeMatch": "hero",
+      "intendedNativeTree": "row(contained) > banner(poster) — SLOT/SpotlightMedia as banner background, SpotlightContent texts folded into poster overlay content; CTA pair composes as the banner's single slide-button for the primary, secondary CTA declared as a fidelity gap (banner supports one button element)",
+      "predictedDisposition": "composable",
+      "gapReasons": [
+        "two CTA instances observed (n-1f3401244093 Proto / Button/Primary Light, n-9d65ac65a88e Proto / Button/Ghost Light inside SLOT/SpotlightActions n-6156f075634b) vs banner poster's single button slot — second button needs overlay-content composition or is a declared gap",
+        "'N°1' index text n-3f43b90dc479 (257:124) and Fade icon n-bc1a311b08c9 (257:123) are presentation-only — decoration-merge loses the editorial index marker unless folded into overlay content",
+        "manifest carries NO entries for this section: media slot 257:122 empty, texts 257:126/257:127/257:129 exist only as layer names, CTA labels/links absent",
+        "no semantic-projection roles for this section"
+      ]
+    },
+    {
+      "sectionId": "s-09383274911f",
+      "order": 11,
+      "name": "SECTION/Newsletter",
+      "locator": "245:14",
+      "irNodeId": "n-76db1dc93c55",
+      "sectionLayoutDirection": "column",
+      "childCount": 4,
+      "visibleDescendantCount": 12,
+      "totalDescendantCount": 12,
+      "pageStructureElementIds": [
+        "n-2bedcf5216a2"
+      ],
+      "dispositions": {
+        "MAPPED": 8,
+        "NEEDS_REVIEW": 2,
+        "DECORATION_MERGED": 2
+      },
+      "mediaNodes": [],
+      "textNodes": [
+        {
+          "nodeId": "n-3df7fe7d0c07",
+          "locator": "257:181",
+          "name": "THE CIRCULAR",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-cbc964e1413f",
+          "locator": "257:182",
+          "name": "Letters from the House",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-73eb53da11cd",
+          "locator": "257:183",
+          "name": "New arrivals, styling notes and private previews — one letter a month.",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-a0d59baf211a",
+          "locator": "I354:419;354:411",
+          "name": "Email address",
+          "valueRef": null,
+          "carried": null
+        },
+        {
+          "nodeId": "n-2fea70ba0e25",
+          "locator": "I257:187;251:77",
+          "name": "Label",
+          "valueRef": null,
+          "carried": null
+        }
+      ],
+      "peerGroups": [],
+      "existingShapeMatch": "text-band",
+      "intendedNativeTree": "row(contained) > text(default) for the three texts + the form region has NO honest native composition: email input + submit are not expressible in the pinned native families (html would embed arbitrary HTML against composer policy; block requires an existing CMS block entity — neither exists in evidence)",
+      "predictedDisposition": "gap",
+      "gapReasons": [
+        "form slot n-2bedcf5216a2 (Proto / Input — Email n-60ca83bf11ac + Proto / Button/Primary n-96ed4e9ffade) has no native PB family: no input/form type among the pinned families; only block or html could host a newsletter form, and neither evidence entity exists",
+        "all three texts (THE CIRCULAR 257:181 / Letters from the House 257:182 / body 257:183) exist only as layer names — no manifest entries",
+        "button label/link absent from manifest"
+      ]
+    }
+  ]
+}

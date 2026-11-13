@@ -20,5 +20,11 @@
       "src/modules/magento/**/*.ts",
       "src/modules/knowledge/**/*.ts"
    ],
-   "exclude": ["node_modules", "dist", "tests"]
+   "exclude": [
+      "node_modules",
+      "dist",
+      "tests",
+      "src/**/__tests__",
+      "src/**/*.test.ts"
+   ]
 }

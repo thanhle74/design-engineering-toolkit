@@ -32,6 +32,9 @@ export const AGENT_PROJECTION_ROLES = [
    "inline-media",
    "grid-column",
    "grid-caption",
+   "slide",
+   "products-grid",
+   "products-carousel",
 ] as const;
 
 export const AGENT_CONTENT_KINDS = ["text", "media", "link"] as const;

@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "profileId": "slaunchpad-fashion",
+  "sourceRevisionId": "2417494580183108397",
+  "entries": [
+    {
+      "valueRef": "design://figma-home-desktop/I256:96;250:28",
+      "kind": "text",
+      "text": "OVERLINE",
+      "note": "Observed as the design layer name at the pinned revision (IR node n-90b90d50fdfa, SECTION/FeaturedCollections Section Header band) - text equals the committed NodeIR node name verbatim per the R56 honesty lock. The name is a generic Section Header instance label, NOT final copy: an operator must supply real section copy before any CMS write. Drafted for #72 (W-D); NOT applied to the committed content-manifest.json."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/I256:96;250:29",
+      "kind": "text",
+      "text": "Section Title",
+      "note": "Observed as the design layer name at the pinned revision (IR node n-885688182361, SECTION/FeaturedCollections Section Header band) - text equals the committed NodeIR node name verbatim per the R56 honesty lock. The name is a generic Section Header instance label, NOT final copy: an operator must supply real section copy before any CMS write. Drafted for #72 (W-D); NOT applied to the committed content-manifest.json."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/I254:62;250:28",
+      "kind": "text",
+      "text": "OVERLINE",
+      "note": "Observed as the design layer name at the pinned revision (IR node n-b3d3d9e59203, SECTION/FeaturedProducts Section Header band) - text equals the committed NodeIR node name verbatim per the R56 honesty lock. The name is a generic Section Header instance label, NOT final copy: an operator must supply real section copy before any CMS write. Drafted for #72 (W-D); NOT applied to the committed content-manifest.json."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/I254:62;250:29",
+      "kind": "text",
+      "text": "Section Title",
+      "note": "Observed as the design layer name at the pinned revision (IR node n-17263c593b8e, SECTION/FeaturedProducts Section Header band) - text equals the committed NodeIR node name verbatim per the R56 honesty lock. The name is a generic Section Header instance label, NOT final copy: an operator must supply real section copy before any CMS write. Drafted for #72 (W-D); NOT applied to the committed content-manifest.json."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/I299:312;250:28",
+      "kind": "text",
+      "text": "OVERLINE",
+      "note": "Observed as the design layer name at the pinned revision (IR node n-4617bdf8269d, SECTION/Lookbook Section Header band) - text equals the committed NodeIR node name verbatim per the R56 honesty lock. The name is a generic Section Header instance label, NOT final copy: an operator must supply real section copy before any CMS write. Drafted for #72 (W-D); NOT applied to the committed content-manifest.json."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/I299:312;250:29",
+      "kind": "text",
+      "text": "Section Title",
+      "note": "Observed as the design layer name at the pinned revision (IR node n-ec2d3ada4b2a, SECTION/Lookbook Section Header band) - text equals the committed NodeIR node name verbatim per the R56 honesty lock. The name is a generic Section Header instance label, NOT final copy: an operator must supply real section copy before any CMS write. Drafted for #72 (W-D); NOT applied to the committed content-manifest.json."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/I256:139;250:28",
+      "kind": "text",
+      "text": "OVERLINE",
+      "note": "Observed as the design layer name at the pinned revision (IR node n-1e8fadcce165, SECTION/EditorialMosaic Section Header band) - text equals the committed NodeIR node name verbatim per the R56 honesty lock. The name is a generic Section Header instance label, NOT final copy: an operator must supply real section copy before any CMS write. Drafted for #72 (W-D); NOT applied to the committed content-manifest.json."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/I256:139;250:29",
+      "kind": "text",
+      "text": "Section Title",
+      "note": "Observed as the design layer name at the pinned revision (IR node n-7f6997160c93, SECTION/EditorialMosaic Section Header band) - text equals the committed NodeIR node name verbatim per the R56 honesty lock. The name is a generic Section Header instance label, NOT final copy: an operator must supply real section copy before any CMS write. Drafted for #72 (W-D); NOT applied to the committed content-manifest.json."
+    }
+  ]
+}

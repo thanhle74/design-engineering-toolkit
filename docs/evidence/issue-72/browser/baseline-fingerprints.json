@@ -1,0 +1,530 @@
+{
+    "meta": {
+        "tool": "scripts/proof/issue72/snapshot-fingerprints.php",
+        "issue": 72,
+        "purpose": "read-only CMS isolation snapshot for DET issue #72 (store-5-only proof)",
+        "magento_root": "/home/thanhle/Sites/Magento/slaunchpad",
+        "db_name": "slaunchpad",
+        "read_only": true,
+        "generated_at_utc": "2026-11-12T16:04:20Z"
+    },
+    "fingerprint": {
+        "cms_pages": [
+            {
+                "page_id": 1,
+                "identifier": "no-route",
+                "title": "404 Not Found",
+                "is_active": 1,
+                "store_ids": [
+                    0
+                ],
+                "content_sha256": "10d491a4375913840f764deccb63d70749a94d8474a160e552304d9364111a2d",
+                "updated_at": "2026-08-19 14:09:53"
+            },
+            {
+                "page_id": 2,
+                "identifier": "home",
+                "title": "Home Page",
+                "is_active": 1,
+                "store_ids": [
+                    1
+                ],
+                "content_sha256": "2a9c293a79e82e19e6105f34a2ae553d31dff8c48b81adbf069a4e5cf9da1331",
+                "updated_at": "2026-10-26 10:12:37"
+            },
+            {
+                "page_id": 3,
+                "identifier": "enable-cookies",
+                "title": "Enable Cookies",
+                "is_active": 1,
+                "store_ids": [
+                    4
+                ],
+                "content_sha256": "e5e4e21c9421ca11eaa9b9aa0af7fd564d4c2254c3f5281d3e995b06dc95488f",
+                "updated_at": "2026-09-08 15:21:19"
+            },
+            {
+                "page_id": 4,
+                "identifier": "privacy-policy-cookie-restriction-mode",
+                "title": "Privacy Policy",
+                "is_active": 1,
+                "store_ids": [
+                    4
+                ],
+                "content_sha256": "ed7aaf3e9df88fb94a206606b5a88a0b15349ab2814f8e85126b211f6c65a67b",
+                "updated_at": "2026-09-08 15:19:40"
+            },
+            {
+                "page_id": 5,
+                "identifier": "about-us",
+                "title": "About us",
+                "is_active": 1,
+                "store_ids": [
+                    4
+                ],
+                "content_sha256": "bb5f6b53a9e9732acdd570c5198c4d7377860cafb24a6213253d5a538ff3aa64",
+                "updated_at": "2026-10-21 17:09:01"
+            },
+            {
+                "page_id": 6,
+                "identifier": "customer-service",
+                "title": "Customer Service",
+                "is_active": 1,
+                "store_ids": [
+                    4
+                ],
+                "content_sha256": "ac6b3d09ee537b40aae86b1db7a253278272e12d44cffe04af60844efc29ca1d",
+                "updated_at": "2026-09-08 15:17:29"
+            },
+            {
+                "page_id": 7,
+                "identifier": "home-en-old",
+                "title": "Home Page EN Old",
+                "is_active": 0,
+                "store_ids": [
+                    4
+                ],
+                "content_sha256": "7770a982e54db7116e1c78ed4c52fd1e6409c8e827508ca0cffc8d3897aa5a3f",
+                "updated_at": "2026-10-26 09:35:31"
+            },
+            {
+                "page_id": 8,
+                "identifier": "demo-landing-page",
+                "title": "Demo landing page",
+                "is_active": 1,
+                "store_ids": [
+                    0,
+                    1,
+                    4
+                ],
+                "content_sha256": "eda4758c77512e2de606d5cc063b9e17e556e5a702302c535a36c0fac2c86dce",
+                "updated_at": "2026-09-07 17:05:31"
+            },
+            {
+                "page_id": 9,
+                "identifier": "secomm-ui",
+                "title": "Secomm UI",
+                "is_active": 1,
+                "store_ids": [
+                    0
+                ],
+                "content_sha256": "a4939c42b06ab5b5b9cfee5383ac43a3d3176f5474477b0f790fea82f71e35c6",
+                "updated_at": "2026-09-17 16:41:37"
+            },
+            {
+                "page_id": 10,
+                "identifier": "secomm-convert-page",
+                "title": "Secomm Convert Page",
+                "is_active": 1,
+                "store_ids": [
+                    0
+                ],
+                "content_sha256": "800e05065dd810c43224389bd3e74d466e73e636808564da4abb4b8ecd4c137b",
+                "updated_at": "2026-10-26 11:35:20"
+            },
+            {
+                "page_id": 11,
+                "identifier": "about-us",
+                "title": "Giới thiệu Launch Pad",
+                "is_active": 1,
+                "store_ids": [
+                    1
+                ],
+                "content_sha256": "9b71bb2f9cad9004a912add736e3db7f0a864cd1358aff5361ed8f83d5b57bf2",
+                "updated_at": "2026-10-26 14:12:27"
+            },
+            {
+                "page_id": 12,
+                "identifier": "customer-service",
+                "title": "Dịch vụ khách hàng",
+                "is_active": 1,
+                "store_ids": [
+                    1
+                ],
+                "content_sha256": "ac6b3d09ee537b40aae86b1db7a253278272e12d44cffe04af60844efc29ca1d",
+                "updated_at": "2026-09-08 15:17:50"
+            },
+            {
+                "page_id": 13,
+                "identifier": "privacy-policy-cookie-restriction-mode",
+                "title": "Chính sách bảo mật",
+                "is_active": 1,
+                "store_ids": [
+                    1
+                ],
+                "content_sha256": "ed7aaf3e9df88fb94a206606b5a88a0b15349ab2814f8e85126b211f6c65a67b",
+                "updated_at": "2026-09-08 15:20:14"
+            },
+            {
+                "page_id": 14,
+                "identifier": "enable-cookies",
+                "title": "Bật Cookie",
+                "is_active": 1,
+                "store_ids": [
+                    1
+                ],
+                "content_sha256": "e5e4e21c9421ca11eaa9b9aa0af7fd564d4c2254c3f5281d3e995b06dc95488f",
+                "updated_at": "2026-09-08 15:21:40"
+            },
+            {
+                "page_id": 15,
+                "identifier": "shopping-guide",
+                "title": "Shopping Guide",
+                "is_active": 1,
+                "store_ids": [
+                    0
+                ],
+                "content_sha256": "7af3c871d16f1b8e5232754b46afd017bb4bf2f6c5e00ca11238041b06b25833",
+                "updated_at": "2026-09-09 17:23:16"
+            },
+            {
+                "page_id": 16,
+                "identifier": "shipping-policy",
+                "title": "Chính sách giao hàng",
+                "is_active": 1,
+                "store_ids": [
+                    1
+                ],
+                "content_sha256": "1da1f83d078ab9a189d0264cc434d3b2e9aeb02dea25e4591dd06fde0b03c557",
+                "updated_at": "2026-10-20 14:28:27"
+            },
+            {
+                "page_id": 17,
+                "identifier": "payment-policy",
+                "title": "Chính sách thanh toán",
+                "is_active": 1,
+                "store_ids": [
+                    1
+                ],
+                "content_sha256": "61ba47a3d7b63b38af86d5093071f0536776b081371c34e67b1ea21b3c08db88",
+                "updated_at": "2026-10-20 14:27:32"
+            },
+            {
+                "page_id": 18,
+                "identifier": "privacy-personal-data-policy",
+                "title": "Chính sách bảo mật",
+                "is_active": 1,
+                "store_ids": [
+                    1
+                ],
+                "content_sha256": "13b043dce391781625c8d2fa16a018d60faaf019eedfd816035a04fc0458cb4b",
+                "updated_at": "2026-10-20 11:08:35"
+            },
+            {
+                "page_id": 19,
+                "identifier": "terms-of-use",
+                "title": "Terms of Use",
+                "is_active": 1,
+                "store_ids": [
+                    1
+                ],
+                "content_sha256": "8148fcd68ab484aeb34b0ad66880d1a95d06cf539d7c3059d3ae4e5b8a673fc6",
+                "updated_at": "2026-10-20 10:02:57"
+            },
+            {
+                "page_id": 20,
+                "identifier": "cookie-policy",
+                "title": "Chính sách Cookie",
+                "is_active": 1,
+                "store_ids": [
+                    1
+                ],
+                "content_sha256": "13abab2ba4c20fca3ee8cc5c9114b8294e2711e6033520c947f62493292d7147",
+                "updated_at": "2026-10-20 14:20:33"
+            },
+            {
+                "page_id": 21,
+                "identifier": "frequently-asked-questions",
+                "title": "FAQs",
+                "is_active": 1,
+                "store_ids": [
+                    0
+                ],
+                "content_sha256": "fdf8bf1991ea5d5f10e64da873b91d593d5273d78bc1da8bb98331ac3872203b",
+                "updated_at": "2026-09-10 10:50:49"
+            },
+            {
+                "page_id": 22,
+                "identifier": "return-refund",
+                "title": "Return & Refund Policy",
+                "is_active": 1,
+                "store_ids": [
+                    1
+                ],
+                "content_sha256": "e907ac09d05bf672ebd05ef23d6f82ae98b8ade8735c1129805444a777b46ab0",
+                "updated_at": "2026-10-20 09:33:41"
+            },
+            {
+                "page_id": 23,
+                "identifier": "warranty-policy",
+                "title": "Warranty Policy",
+                "is_active": 1,
+                "store_ids": [
+                    4
+                ],
+                "content_sha256": "0f775e0f7616513173c65536d33f7fc61b13307ecb8aa9830b13b9763cb469a4",
+                "updated_at": "2026-09-10 11:12:35"
+            },
+            {
+                "page_id": 24,
+                "identifier": "operation-regulation",
+                "title": "E-commerce Website Operation Regulations",
+                "is_active": 1,
+                "store_ids": [
+                    4
+                ],
+                "content_sha256": "5bdaca840ddf0ace3fbb447755c07c559f8a697e0fa52d395a5d63cc90dc9599",
+                "updated_at": "2026-09-10 11:17:20"
+            },
+            {
+                "page_id": 25,
+                "identifier": "complaint-resolution-policy",
+                "title": "Complaint Resolution Policy",
+                "is_active": 1,
+                "store_ids": [
+                    4
+                ],
+                "content_sha256": "2213bc7e121994fe57fcbf7e2e60e09c03a252f21602151ba2fcadb4b1242e11",
+                "updated_at": "2026-09-10 11:19:32"
+            },
+            {
+                "page_id": 26,
+                "identifier": "shipping-policy",
+                "title": "Shipping Policy",
+                "is_active": 1,
+                "store_ids": [
+                    4
+                ],
+                "content_sha256": "72bc1f7b6b7a7e5a03a93c0e101d7a289acaee20789249ff1689babd1ee6d21b",
+                "updated_at": "2026-10-20 14:22:36"
+            },
+            {
+                "page_id": 27,
+                "identifier": "payment-policy",
+                "title": "Payment Policy",
+                "is_active": 1,
+                "store_ids": [
+                    4
+                ],
+                "content_sha256": "caab8cdbcdc4793cabf9ef81ceb5b15d45cd26386910d63ea7c537b6f46df76b",
+                "updated_at": "2026-10-20 09:09:21"
+            },
+            {
+                "page_id": 28,
+                "identifier": "return-refund",
+                "title": "Return & Refund Policy",
+                "is_active": 1,
+                "store_ids": [
+                    4
+                ],
+                "content_sha256": "f8a38e94f6e4df81f37014245e9c7a69831688a93298feb0f0e81fe15d5b7528",
+                "updated_at": "2026-10-20 09:18:43"
+            },
+            {
+                "page_id": 29,
+                "identifier": "warranty-policy",
+                "title": "Chính sách bảo hành",
+                "is_active": 1,
+                "store_ids": [
+                    1
+                ],
+                "content_sha256": "22b49724f5e118d00d5e24dadb25878cb73f8fbb8c795ea5764534eb3d958fce",
+                "updated_at": "2026-10-20 09:45:37"
+            },
+            {
+                "page_id": 30,
+                "identifier": "complaint-resolution-policy",
+                "title": "Complaint Resolution Policy",
+                "is_active": 1,
+                "store_ids": [
+                    1
+                ],
+                "content_sha256": "21518cfc7ac6b7bde8b8f0e3e250b9beb41a750bf2a64f219abd7d211eb580c5",
+                "updated_at": "2026-10-20 09:53:02"
+            },
+            {
+                "page_id": 31,
+                "identifier": "terms-of-use",
+                "title": "Terms of Use",
+                "is_active": 1,
+                "store_ids": [
+                    4
+                ],
+                "content_sha256": "d97b47639dba9c80499e1a9a12a299838345e7fc7319356370a6cda78053a4d2",
+                "updated_at": "2026-10-20 10:11:02"
+            },
+            {
+                "page_id": 32,
+                "identifier": "privacy-personal-data-policy",
+                "title": "Privacy & Personal Data Policy",
+                "is_active": 1,
+                "store_ids": [
+                    4
+                ],
+                "content_sha256": "2b870b3ea37eddf769ff02d8fde8c3443b465d856bf2866b9d5f5acaafe724c0",
+                "updated_at": "2026-10-20 10:14:48"
+            },
+            {
+                "page_id": 33,
+                "identifier": "operation-regulation",
+                "title": "Quy chế hoạt động website thương mại điện tử",
+                "is_active": 1,
+                "store_ids": [
+                    1
+                ],
+                "content_sha256": "6934d99113eaeb4e3ccfb323aaf509267b4bb0ec695bd249774f387ff64e4354",
+                "updated_at": "2026-10-20 10:41:49"
+            },
+            {
+                "page_id": 34,
+                "identifier": "cookie-policy",
+                "title": "Cookie Policy",
+                "is_active": 1,
+                "store_ids": [
+                    4
+                ],
+                "content_sha256": "51d77108b082802e983dd7f4c18dd47a5b1c201ae1fcdf0d86b92db24aea2be1",
+                "updated_at": "2026-10-20 14:33:40"
+            },
+            {
+                "page_id": 35,
+                "identifier": "home-6ad89b83d8c5d",
+                "title": "Home Page old VI",
+                "is_active": 0,
+                "store_ids": [
+                    1
+                ],
+                "content_sha256": "482925d4a8ad75a5d472c019a6e06a19e19d36d7eb6b37e80a89a020a27adcfd",
+                "updated_at": "2026-10-22 17:30:56"
+            },
+            {
+                "page_id": 36,
+                "identifier": "home",
+                "title": "Home Page EN",
+                "is_active": 1,
+                "store_ids": [
+                    4
+                ],
+                "content_sha256": "79d073a42a6eb484c66e4cdda987461d9a814de48d7a558ada2a9e2631799f88",
+                "updated_at": "2026-10-26 10:11:23"
+            },
+            {
+                "page_id": 37,
+                "identifier": "careers",
+                "title": "Career",
+                "is_active": 1,
+                "store_ids": [
+                    0
+                ],
+                "content_sha256": "97949380c447ce5eab8f4f9ba8824812f6de1e9d60bc3c83646c24a8b3ffd687",
+                "updated_at": "2026-10-29 14:13:16"
+            },
+            {
+                "page_id": 38,
+                "identifier": "det-g3-hero-smoke",
+                "title": "DET G3 Hero Smoke (Local Only)",
+                "is_active": 1,
+                "store_ids": [
+                    1
+                ],
+                "content_sha256": "11913a35241399406bb5285942dd5962a23b41b6bf76f2f8eef6ac6a92b8c159",
+                "updated_at": "2026-11-06 16:21:53"
+            },
+            {
+                "page_id": 39,
+                "identifier": "det-g4-craftsmanship-smoke",
+                "title": "DET Craftsmanship Smoke (Local Only)",
+                "is_active": 1,
+                "store_ids": [
+                    1
+                ],
+                "content_sha256": "292662392393db050a4529079b99923d772aeb95bc4a1d3bd343a7e67e56d70d",
+                "updated_at": "2026-11-06 17:07:44"
+            },
+            {
+                "page_id": 40,
+                "identifier": "det-g4-craftsmanship-smoke2",
+                "title": "DET Craftsmanship Smoke — det-g4-craftsmanship-smoke2 (Local Only)",
+                "is_active": 1,
+                "store_ids": [
+                    1
+                ],
+                "content_sha256": "a21a835e981db67932946b0231f2149f7073897d3ae514c72a9bc6d2fb51c7e3",
+                "updated_at": "2026-11-09 10:00:13"
+            },
+            {
+                "page_id": 41,
+                "identifier": "det-g3-hero-smoke2",
+                "title": "DET G3 Hero Smoke 2 — pb-style (Local Only)",
+                "is_active": 1,
+                "store_ids": [
+                    1
+                ],
+                "content_sha256": "3f2e4aad11c13839b7dc72afe0cfd2b9690207c9455ac89b19b1684dbe7f75e6",
+                "updated_at": "2026-11-09 09:49:43"
+            },
+            {
+                "page_id": 42,
+                "identifier": "det-home-preview",
+                "title": "DET Home Preview (Local Only)",
+                "is_active": 1,
+                "store_ids": [
+                    5
+                ],
+                "content_sha256": "14e8126edcc4c1ba8c5b998e8b2c80cf72621f90699db65cee8eadbdf940cd45",
+                "updated_at": "2026-11-09 11:41:01"
+            },
+            {
+                "page_id": 45,
+                "identifier": "det-pb-roundtrip-46",
+                "title": "DET PB Roundtrip 46 (Local Only)",
+                "is_active": 1,
+                "store_ids": [
+                    5
+                ],
+                "content_sha256": "78b3ad118a3d8a29e1e3db0a963f562d399b49bd50f1dda5347287a82afa34f4",
+                "updated_at": "2026-11-10 11:31:36"
+            }
+        ],
+        "store5_config": {
+            "design/head/demonotice": "0",
+            "design/theme/theme_id": "7",
+            "hyva_theme_general/demo_content/show_homepage_demo_content": "0",
+            "web/default/cms_home_page": "det-home-preview"
+        },
+        "default_inherited_config": {
+            "web/secure/base_url": "https://slaunchpad.thanhaloha.io.vn/",
+            "web/unsecure/base_url": "https://slaunchpad.thanhaloha.io.vn/"
+        },
+        "counts": {
+            "cms_page_rows": 43,
+            "cms_page_store_rows": 45,
+            "page_store_rows_by_store_id": {
+                "0": 7,
+                "1": 20,
+                "4": 16,
+                "5": 2
+            }
+        }
+    },
+    "preexisting_issue70_artifacts": [
+        {
+            "page_id": 35,
+            "identifier": "home-6ad89b83d8c5d",
+            "title": "Home Page old VI",
+            "store_ids": [
+                1
+            ],
+            "content_sha256": "482925d4a8ad75a5d472c019a6e06a19e19d36d7eb6b37e80a89a020a27adcfd"
+        },
+        {
+            "page_id": 36,
+            "identifier": "home",
+            "title": "Home Page EN",
+            "store_ids": [
+                4
+            ],
+            "content_sha256": "79d073a42a6eb484c66e4cdda987461d9a814de48d7a558ada2a9e2631799f88"
+        }
+    ]
+}

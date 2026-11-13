@@ -1,0 +1,38 @@
+{
+    "mode": "read-only-frontend-filter-render",
+    "identifier": "det-qa-72-home",
+    "store": 5,
+    "page_id": 50,
+    "stored_bytes": 5659,
+    "stored_content_type_counts": {
+        "row": 5,
+        "banner": 1,
+        "text": 2,
+        "column-group": 2,
+        "column-line": 2,
+        "column": 4,
+        "image": 3
+    },
+    "full_filter_render": {
+        "ok": true,
+        "error": null,
+        "html_bytes": 5797
+    },
+    "widget_stripped_filter_render": {
+        "ok": true,
+        "error": null,
+        "html_bytes": 5797,
+        "content_type_counts": {
+            "row": 5,
+            "banner": 1,
+            "text": 2,
+            "column-group": 2,
+            "column-line": 2,
+            "column": 4,
+            "image": 3
+        },
+        "has_pb_style_block": true,
+        "has_banner_text_marker": true,
+        "has_text_marker": true
+    }
+}

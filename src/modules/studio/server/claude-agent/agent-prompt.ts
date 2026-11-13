@@ -40,7 +40,7 @@ export function buildAgentTaskPrompt(input: AgentTaskInput): string {
       "- Figma layer names like SECTION/... SITE/... SLOT/... DECOR/... are hints, not proof: use structural evidence (children, text/instance/media composition, geometry) and state what you observed in every reason field.",
       '- For every "section" child, record: the observed layer name verbatim (name), the child node id (sourceNodeId), the observed layout intent from geometry (layout),',
       '  generic capabilityHints (like banner-hero, two-column, product-grid; confidence "observed" only when the structure directly shows it, otherwise "conjecture"),',
-      "  proposed projection assignments mapping concrete descendant node ids to composition roles (heading, body, cta, content-lead, background-media, decoration, column-primary, column-secondary, inline-media, grid-column, grid-caption) each with its observed reason,",
+      "  proposed projection assignments mapping concrete descendant node ids to composition roles (heading, body, cta, content-lead, background-media, decoration, column-primary, column-secondary, inline-media, grid-column, grid-caption, slide, products-grid, products-carousel) each with its observed reason,",
       "  and contentRefs: concrete content observed on those descendants (kind text/media/link; short excerpt of at most 200 characters for text; for media record ONLY the node id, never any asset URL).",
       "- siteChrome: header/footer/global-nav children, each with the reason it is chrome.",
       "- unresolved: every child you could not classify, with the reason.",

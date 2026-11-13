@@ -24,6 +24,9 @@ const PROJECT = path.join(
    "slaunchpad-home-real-derived",
 );
 const CANONICAL_ID = "slaunchpad-home-real-derived";
+// [#72] the deliberate SECOND committed build project: same pinned source, extended recorded
+// projection/manifest proving the #72 generalized handlers; store-5 isolated installer target.
+const EXTENDED_ID = "slaunchpad-home-72-extended";
 // src/modules/studio/server/artifact-access.ts RUN_ID_PATTERN (same id space).
 const RUN_ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/;
 
@@ -117,7 +120,7 @@ export default async function registerStudioStartupSuite(checkAsync) {
 
    checkAsync(
       "R58-T3",
-      "canonical catalogue shape: exactly one committed resources/examples/build entry, id-safe, no stale duplicates",
+      "canonical catalogue shape: the committed build-catalogue entries, id-safe, no stale duplicates",
       () => {
          const entries = fs
             .readdirSync(path.join(ROOT, "resources", "examples", "build"), {
@@ -139,8 +142,9 @@ export default async function registerStudioStartupSuite(checkAsync) {
             )
             .map((d) => d.name)
             .sort();
-         assert.deepEqual(entries, [CANONICAL_ID]);
+         assert.deepEqual(entries, [EXTENDED_ID, CANONICAL_ID]);
          assert.match(CANONICAL_ID, RUN_ID_PATTERN);
+         assert.match(EXTENDED_ID, RUN_ID_PATTERN);
          // the committed config stays self-contained/in place (config-relative paths)
          const config = JSON.parse(
             fs.readFileSync(path.join(PROJECT, "build-config.json"), "utf8"),

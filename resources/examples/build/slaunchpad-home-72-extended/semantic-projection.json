@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 1,
+  "profileId": "slaunchpad-fashion",
+  "sourceRevisionId": "2417494580183108397",
+  "notes": "[72] extended recorded decision for the slaunchpad-home-72-extended offline project. Derived from the committed #18 live-read evidence: W-A structural matrix + W-D deterministic role-hint output + coordinator review. Keeps the committed real-derived assignments byte-verbatim, adds the W-D header-band and products-grid recorded decisions, and the CampaignEditorial two-column slot decisions. Carousel intent is NOT recorded (slide roles absent by design: carousel is not decidable from NodeIR geometry; the slider capability ships tested but composes nothing on this source). Operator must supply real section copy and media before any CMS write; placeholder labels/names are observed layer names, never invented copy.",
+  "assignments": [
+    {
+      "sourceLocator": "design://figma-home-desktop/254:40",
+      "role": "background-media",
+      "reason": "Full-bleed media slot frame observed behind the overlaid hero content column (SLOT/HeroMedia, first child of SECTION/Hero/Primary)."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/254:43",
+      "role": "content-lead",
+      "reason": "Overline text ('CHAPTER 01 / AW 2026') first in the hero content column, above the display heading."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/254:44",
+      "role": "heading",
+      "reason": "Hero display heading ('The Quiet Grandeur'), the second text in the hero content column."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/254:45",
+      "role": "body",
+      "reason": "Supporting copy ('Refined tailoring, knitwear and leather for the season.') under the heading."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/299:344",
+      "role": "column-primary",
+      "reason": "Left media slot frame (SLOT/CraftMedia) of SECTION/Craftsmanship; observed first column slot."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/299:345",
+      "role": "column-secondary",
+      "reason": "Right content slot frame (SLOT/CraftContent) of SECTION/Craftsmanship; observed second column slot."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/299:346",
+      "role": "content-lead",
+      "reason": "Text layer role-named 'Overline' inside SLOT/CraftContent; the display copy is not carried by the extraction, so no manifest text entry exists (explicit gap)."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/299:347",
+      "role": "heading",
+      "reason": "Text layer role-named 'Title' inside SLOT/CraftContent; copy not carried by the extraction (explicit gap)."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/299:348",
+      "role": "body",
+      "reason": "Text layer role-named 'Body' inside SLOT/CraftContent; copy not carried by the extraction (explicit gap)."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/299:349",
+      "role": "inline-media",
+      "reason": "Detail media slot frame (SLOT/DetailStitch) inside the secondary column; composes as a native image element."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/299:350",
+      "role": "inline-media",
+      "reason": "Detail media slot frame (SLOT/DetailFabric) inside the secondary column; composes as a native image element."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/I256:96;250:28",
+      "role": "content-lead",
+      "reason": "Repeated Section Header band of SECTION/FeaturedCollections (component instance IR node n-91fb85066e67, locator 256:96): text node n-90b90d50fdfa (locator design://figma-home-desktop/I256:96;250:28, layer name 'OVERLINE') is the first text of the leading loose-text cluster (2 texts) at the top of the section, above the display title.",
+      "note": "W-D role-hint output: header-band suggestion (confidence conjecture - position-based; no convention-prefixed layer name carries the role on this source) recorded here as the coordinator-drafted decision for #72. The layer name is a generic Section Header instance label, not final copy; real section copy stays an operator-supplied gap."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/I256:96;250:29",
+      "role": "heading",
+      "reason": "Repeated Section Header band of SECTION/FeaturedCollections (component instance IR node n-91fb85066e67, locator 256:96): text node n-885688182361 (locator design://figma-home-desktop/I256:96;250:29, layer name 'Section Title') is the second text of the same leading loose-text cluster, directly under the proposed content-lead.",
+      "note": "W-D role-hint output: header-band suggestion (confidence conjecture - position-based) recorded here as the coordinator-drafted decision for #72."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/I254:62;250:28",
+      "role": "content-lead",
+      "reason": "Repeated Section Header band of SECTION/FeaturedProducts (component instance IR node n-ce1e3a12d0f0, locator 254:62): text node n-b3d3d9e59203 (locator design://figma-home-desktop/I254:62;250:28, layer name 'OVERLINE') is the first text of the leading loose-text cluster (2 texts) at the top of the section, above the display title.",
+      "note": "W-D role-hint output: header-band suggestion (confidence conjecture - position-based; no convention-prefixed layer name carries the role on this source) recorded here as the coordinator-drafted decision for #72. The layer name is a generic Section Header instance label, not final copy; real section copy stays an operator-supplied gap."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/I254:62;250:29",
+      "role": "heading",
+      "reason": "Repeated Section Header band of SECTION/FeaturedProducts (component instance IR node n-ce1e3a12d0f0, locator 254:62): text node n-17263c593b8e (locator design://figma-home-desktop/I254:62;250:29, layer name 'Section Title') is the second text of the same leading loose-text cluster, directly under the proposed content-lead.",
+      "note": "W-D role-hint output: header-band suggestion (confidence conjecture - position-based) recorded here as the coordinator-drafted decision for #72."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/254:71",
+      "role": "products-grid",
+      "reason": "Recorded operator/AI-reviewable decision, not a structural guess: container node n-8c476f5e021f (SLOT/ProductCards, locator 254:71) holds the only peer-card group whose container declares direction row - four identical product-card instances (n-e93ce88d4dbf 254:72, n-a307c9df3067 254:81, n-1d62d0912764 254:90, n-2947ec0e39e5 254:99; each carries visible image and text descendants).",
+      "note": "W-D role-hint output flagged this container ONLY as a products-candidate hint with confidence conjecture (the helper never auto-assigns products roles); this assignment is the deliberate recorded decision for #72. Grid (not carousel) is recorded because the container declares direction row with the four peers in one band; card grid vs carousel is otherwise undecidable from NodeIR (W-A matrix observation 4), so products-carousel is NOT recorded. Live product listing content remains an explicit gap until a verified provider binding exists (registry requiresRuntimeData=true for both appearances); the widget declaration composes editable-without-product-data per the #72 scope."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/I299:312;250:28",
+      "role": "content-lead",
+      "reason": "Repeated Section Header band of SECTION/Lookbook (component instance IR node n-e0ee24c9880d, locator 299:312): text node n-4617bdf8269d (locator design://figma-home-desktop/I299:312;250:28, layer name 'OVERLINE') is the first text of the leading loose-text cluster (2 texts) at the top of the section, above the display title.",
+      "note": "W-D role-hint output: header-band suggestion (confidence conjecture - position-based; no convention-prefixed layer name carries the role on this source) recorded here as the coordinator-drafted decision for #72. The layer name is a generic Section Header instance label, not final copy; real section copy stays an operator-supplied gap."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/I299:312;250:29",
+      "role": "heading",
+      "reason": "Repeated Section Header band of SECTION/Lookbook (component instance IR node n-e0ee24c9880d, locator 299:312): text node n-ec2d3ada4b2a (locator design://figma-home-desktop/I299:312;250:29, layer name 'Section Title') is the second text of the same leading loose-text cluster, directly under the proposed content-lead.",
+      "note": "W-D role-hint output: header-band suggestion (confidence conjecture - position-based) recorded here as the coordinator-drafted decision for #72."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/I256:139;250:28",
+      "role": "content-lead",
+      "reason": "Repeated Section Header band of SECTION/EditorialMosaic (component instance IR node n-87ea2e7ecabb, locator 256:139): text node n-1e8fadcce165 (locator design://figma-home-desktop/I256:139;250:28, layer name 'OVERLINE') is the first text of the leading loose-text cluster (2 texts) at the top of the section, above the display title.",
+      "note": "W-D role-hint output: header-band suggestion (confidence conjecture - position-based; no convention-prefixed layer name carries the role on this source) recorded here as the coordinator-drafted decision for #72. The layer name is a generic Section Header instance label, not final copy; real section copy stays an operator-supplied gap."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/I256:139;250:29",
+      "role": "heading",
+      "reason": "Repeated Section Header band of SECTION/EditorialMosaic (component instance IR node n-87ea2e7ecabb, locator 256:139): text node n-7f6997160c93 (locator design://figma-home-desktop/I256:139;250:29, layer name 'Section Title') is the second text of the same leading loose-text cluster, directly under the proposed content-lead.",
+      "note": "W-D role-hint output: header-band suggestion (confidence conjecture - position-based) recorded here as the coordinator-drafted decision for #72."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/299:301",
+      "role": "column-primary",
+      "reason": "SLOT/CampaignMedia/Primary slot frame observed as the first media slot frame of SECTION/CampaignEditorial (NodeIR n-68e74e3ed742); W-A structural evidence + coordinator recorded decision, mirroring the committed Craftsmanship two-column pattern."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/299:302",
+      "role": "column-secondary",
+      "reason": "SLOT/CampaignMedia/Secondary slot frame observed as the second media slot frame of SECTION/CampaignEditorial (NodeIR n-f6aa9399b404); W-A structural evidence + coordinator recorded decision, mirroring the committed Craftsmanship two-column pattern."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/254:60",
+      "role": "content-lead",
+      "reason": "'THE HOUSE' overline text observed first in SECTION/BrandStatement (NodeIR n-0b9486f7540d); W-A structural evidence + coordinator recorded decision — loose two-text statement band, no media, no SLOT contract names."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/254:61",
+      "role": "heading",
+      "reason": "Brand statement display text observed as the second text of SECTION/BrandStatement (NodeIR n-74ae79d9e56c); W-A structural evidence + coordinator recorded decision."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/257:181",
+      "role": "content-lead",
+      "reason": "'THE CIRCULAR' overline text observed first in SECTION/Newsletter (NodeIR n-3df7fe7d0c07); W-A structural evidence + coordinator recorded decision."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/257:182",
+      "role": "heading",
+      "reason": "'Letters from the House' display heading observed as the second text of SECTION/Newsletter (NodeIR n-cbc964e1413f); W-A structural evidence + coordinator recorded decision."
+    },
+    {
+      "sourceLocator": "design://figma-home-desktop/257:183",
+      "role": "body",
+      "reason": "Supporting copy observed as the third text of SECTION/Newsletter (NodeIR n-73eb53da11cd); the section's email form instances stay unprojected — no native PB form content type exists in the pinned registry, so they are honest gaps."
+    }
+  ]
+}

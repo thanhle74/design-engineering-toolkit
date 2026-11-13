@@ -1,26 +1,51 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://raw.githubusercontent.com/thanhle74/design-engineering-toolkit/main/schemas/cli/semantic-projection.schema.json",
-  "$comment": "Design Engineering Toolkit CLI family — SemanticProjection. Major version 1. Explicit, reason-carrying human decision that assigns composer roles to OBSERVED design-source locators (issue #23 coordinator fidelity correction): source documents whose layer names/child types do not carry the SLOT-role naming convention (raw text names, button component instances, unlabeled decoration) stay RAW and faithful; this document — reviewed and pinned to the same source revision — is the auditable projection from observed locators to semantic roles. It never invents nodes, content or asset URLs, and every assignment must state its observed reason. Platform-neutral: roles are generic composition vocabulary, never platform identifiers. Version 1.3.0 (issue #25) additively extends the role vocabulary with the two-column composition roles column-primary / column-secondary (which observed slot containers become the native columns, primary first) and inline-media (which observed frames inside a column become native image elements). Version 1.4.0 (issue #28) additively extends the vocabulary with the column-grid roles grid-column (an observed slot container/instance that becomes ONE native column of a multi-column grid line; lines are grouped deterministically from the observed common parent + vertical overlap bands) and grid-caption (a loose text node that composes inside the grid column geometrically containing it, recorded per assignment).",
+  "$comment": "Design Engineering Toolkit CLI family — SemanticProjection. Major version 1. Explicit, reason-carrying human decision that assigns composer roles to OBSERVED design-source locators (issue #23 coordinator fidelity correction): source documents whose layer names/child types do not carry the SLOT-role naming convention (raw text names, button component instances, unlabeled decoration) stay RAW and faithful; this document — reviewed and pinned to the same source revision — is the auditable projection from observed locators to semantic roles. It never invents nodes, content or asset URLs, and every assignment must state its observed reason. Platform-neutral: roles are generic composition vocabulary, never platform identifiers. Version 1.3.0 (issue #25) additively extends the role vocabulary with the two-column composition roles column-primary / column-secondary (which observed slot containers become the native columns, primary first) and inline-media (which observed frames inside a column become native image elements). Version 1.4.0 (issue #28) additively extends the vocabulary with the column-grid roles grid-column (an observed slot container/instance that becomes ONE native column of a multi-column grid line; lines are grouped deterministically from the observed common parent + vertical overlap bands) and grid-caption (a loose text node that composes inside the grid column geometrically containing it, recorded per assignment). Version 1.5.0 (issue #72) additively extends the vocabulary with the carousel and native-listing decisions slide (an observed container that composes as ONE native slide of a slider; carousel intent is not decidable from NodeIR geometry alone, so the role carries the recorded decision), products-grid and products-carousel (an observed container that composes as a native products grid/carousel declaration backed by the platform's catalog widget; the declaration is editable without product data, and any live listing content stays an explicit gap until a verified provider binding exists). [#72] v1.6.0 adds the OPTIONAL products selection binding (kind category_ids|sku + non-empty value) on products-grid/products-carousel assignments; the products handler fails closed without it.",
   "title": "Design Engineering Toolkit — Semantic Projection",
   "type": "object",
-  "required": ["schemaVersion", "profileId", "sourceRevisionId", "assignments"],
+  "required": [
+    "schemaVersion",
+    "profileId",
+    "sourceRevisionId",
+    "assignments"
+  ],
   "additionalProperties": false,
   "properties": {
-    "schemaVersion": { "type": "integer", "const": 1 },
-    "profileId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$", "description": "Must equal the profile id of the run that produced the pinned PageStructure." },
-    "sourceRevisionId": { "type": "string", "minLength": 1, "description": "Must equal PageStructure.source.revisionId — a projection is only valid for the observation it reviewed." },
-    "notes": { "type": "string", "description": "Free-text context for reviewers; never parsed." },
+    "schemaVersion": {
+      "type": "integer",
+      "const": 1
+    },
+    "profileId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "description": "Must equal the profile id of the run that produced the pinned PageStructure."
+    },
+    "sourceRevisionId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Must equal PageStructure.source.revisionId — a projection is only valid for the observation it reviewed."
+    },
+    "notes": {
+      "type": "string",
+      "description": "Free-text context for reviewers; never parsed."
+    },
     "assignments": {
       "type": "array",
-      "items": { "$ref": "#/$defs/assignment" },
+      "items": {
+        "$ref": "#/$defs/assignment"
+      },
       "description": "One assignment per source locator. Duplicate locators are a caller error (INPUT_CONTRACT_VIOLATION); the composer refuses to choose."
     }
   },
   "$defs": {
     "assignment": {
       "type": "object",
-      "required": ["sourceLocator", "role", "reason"],
+      "required": [
+        "sourceLocator",
+        "role",
+        "reason"
+      ],
       "additionalProperties": false,
       "properties": {
         "sourceLocator": {
@@ -29,11 +54,55 @@
           "description": "The design:// locator of an observed node — exactly as carried by that node's pinned NodeIR evidence."
         },
         "role": {
-          "enum": ["background-media", "content-lead", "heading", "body", "cta", "decoration", "column-primary", "column-secondary", "inline-media", "grid-column", "grid-caption"],
-          "description": "Generic composition role. decoration excludes the node AND its whole subtree from content (recorded, never silently dropped); cta resolves its label text from the content manifest; column-primary/column-secondary mark the two observed slot containers that become the native columns (primary first); inline-media marks an observed media frame inside a projected column that composes as a native image element; grid-column (1.4.0) marks an observed slot container/instance that becomes ONE native column of a column-grid shape; grid-caption (1.4.0) marks a loose text node that composes inside the grid column geometrically containing it."
+          "enum": [
+            "background-media",
+            "content-lead",
+            "heading",
+            "body",
+            "cta",
+            "decoration",
+            "column-primary",
+            "column-secondary",
+            "inline-media",
+            "grid-column",
+            "grid-caption",
+            "slide",
+            "products-grid",
+            "products-carousel"
+          ],
+          "description": "Generic composition role. decoration excludes the node AND its whole subtree from content (recorded, never silently dropped); cta resolves its label text from the content manifest; column-primary/column-secondary mark the two observed slot containers that become the native columns (primary first); inline-media marks an observed media frame inside a projected column that composes as a native image element; grid-column (1.4.0) marks an observed slot container/instance that becomes ONE native column of a column-grid shape; grid-caption (1.4.0) marks a loose text node that composes inside the grid column geometrically containing it. slide (1.5.0) marks an observed container that becomes ONE native slide inside a slider shape; products-grid/products-carousel (1.5.0, revised 1.6.0) mark an observed container that becomes a native products grid/carousel declaration backed by the platform's catalog widget; the widget composes ONLY with the v1.6.0 selection binding (category_ids or sku — the two vendor-verified native modes), because an unbound rule-less widget is a REAL executable storefront listing (newest products), never a harmless placeholder; card/listing fidelity still delegates to the widget's runtime template."
         },
-        "reason": { "type": "string", "minLength": 1, "description": "The observed fact this assignment rests on — a projection without a stated reason is not a reviewable decision." },
-        "note": { "type": "string", "description": "Free-text context; never parsed." }
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The observed fact this assignment rests on — a projection without a stated reason is not a reviewable decision."
+        },
+        "note": {
+          "type": "string",
+          "description": "Free-text context; never parsed."
+        },
+        "selection": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "value"
+          ],
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "category_ids",
+                "sku"
+              ]
+            },
+            "value": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "$comment": "[72] v1.6.0: recorded product-selection binding for products-grid/products-carousel decisions. The executable catalog widget composes ONLY from this binding (category_ids or sku — the two vendor-verified native modes); an unbound products decision composes nothing (an unbound rule-less widget is a real newest-products storefront listing). Never synthesized from design geometry."
+        }
       }
     }
   }

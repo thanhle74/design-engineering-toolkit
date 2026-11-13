@@ -58,9 +58,23 @@
 //   only volatile field in the payload is source.accessedAt (stripped by the core's stable hash).
 // - Proof ceiling: this output is STRUCTURAL composition evidence only.
 import fs from "node:fs";
-import { createHash } from "node:crypto";
 import { validateContract } from "../../../core/schema-registry.js";
 import { sortDiagnostics } from "../../../core/canonical.js";
+import {
+   auxNodeId,
+   buttonVariantClass,
+   buttonsElementHtml,
+   esc,
+   escText,
+   imageElementHtml,
+   pbStyleKey,
+   SEP,
+   sha256Hex,
+   textElementHtml,
+   type TextRun,
+} from "./elements.js";
+import type { ComposerRole, MappingEntry } from "./handler-context.js";
+import { SECTION_SHAPE_HANDLERS } from "./handlers/registry.js";
 import type {
    Capability,
    Diagnostic,
@@ -94,19 +108,12 @@ interface ComposeInput {
    projection?: {
       assignments: {
          sourceLocator: string;
-         role:
-            | "background-media"
-            | "content-lead"
-            | "heading"
-            | "body"
-            | "cta"
-            | "decoration"
-            | "column-primary"
-            | "column-secondary"
-            | "inline-media"
-            | "grid-column"
-            | "grid-caption";
+         role: ComposerRole;
          reason: string;
+         // [#72 C72-2 correction] products-grid/products-carousel assignments may carry a
+         // recorded selection binding; the products handler composes the executable widget
+         // ONLY when it is present (absent -> typed gap; never an unbound executable listing).
+         selection?: { kind: "category_ids" | "sku"; value: string };
       }[];
    };
    nodeIr: { nodes: NodeIRNode[]; rootNodeId: string };
@@ -115,20 +122,6 @@ interface ComposeInput {
       source: { sourceId: string; revisionId: string; accessedAt: string };
    };
    content: { entries: ManifestEntry[] };
-}
-
-interface MappingEntry {
-   sourceNodeId: string;
-   sourceName?: string;
-   sourceLocator?: string;
-   disposition: "mapped" | "gap" | "decoration-merged" | "excluded" | "skipped";
-   target?: {
-      capabilityId: string;
-      appearanceId: string;
-      nativeElement?: string;
-      nativeField?: string;
-   };
-   note?: string;
 }
 
 function fail(message: string): never {
@@ -181,9 +174,6 @@ function stripVolatile(value: unknown): unknown {
       return out;
    }
    return value;
-}
-function sha256Hex(value: string): string {
-   return createHash("sha256").update(value).digest("hex");
 }
 function stableHash(payload: unknown): string {
    return sha256Hex(JSON.stringify(canonicalize(stripVolatile(payload))));
@@ -317,21 +307,26 @@ for (const e of input.content.entries) {
 }
 
 // ---- Explicit semantic projection (optional; the recorded human decision) --------------------
-type ComposerRole =
-   | "background-media"
-   | "content-lead"
-   | "heading"
-   | "body"
-   | "cta"
-   | "decoration"
-   | "column-primary"
-   | "column-secondary"
-   | "inline-media"
-   | "grid-column"
-   | "grid-caption";
+// ComposerRole + MappingEntry vocabulary now lives in ./handler-context.ts ([72] frozen seam
+// shared with the modular section-shape handlers).
 const roleByLocator = new Map<string, ComposerRole>();
 for (const a of input.projection?.assignments ?? [])
    roleByLocator.set(a.sourceLocator, a.role);
+
+// [#72 C72-2 correction] Recorded product-selection bindings by locator — the products shape
+// handler composes the executable catalog widget ONLY from one of these (fail closed
+// otherwise: an unbound rule-less widget is a real newest-products listing, never emitted).
+const selectionByLocator = new Map<
+   string,
+   { kind: "category_ids" | "sku"; value: string }
+>();
+for (const a of input.projection?.assignments ?? []) {
+   if (
+      a.selection &&
+      (a.role === "products-grid" || a.role === "products-carousel")
+   )
+      selectionByLocator.set(a.sourceLocator, a.selection);
+}
 
 // ---- NodeIR helpers -------------------------------------------------------------------------
 const nodesById = new Map<string, NodeIRNode>();
@@ -386,6 +381,34 @@ function walkSubtree(rootId: string, visit: (node: NodeIRNode) => void): void {
    visitChildren(rootId);
 }
 
+// ---- [#72] Modular section-shape handler context (frozen seam, ./handler-context.ts) ---------
+// ONE context per run, built from this module's indexes and offered to every registered
+// handler (./handlers/registry.ts). Handlers read the same views the legacy composers use and
+// append accountable records through pushDiagnostic/pushMapping — they never print and never
+// mutate compose state otherwise. The role resolver rides on the context so handlers reuse the
+// single role-resolution source (explicit projection > SLOT naming-contract table) without a
+// second copy of the table.
+const sectionComposeContext = {
+   nodesById,
+   locatorOf,
+   walkSubtree,
+   requireCap,
+   textByRef,
+   mediaByRef,
+   linkByRef,
+   roleByLocator,
+   selectionByLocator,
+   excludedLocators,
+   ctaSubtreeLocators,
+   pushDiagnostic: (d: Diagnostic): void => {
+      diagnostics.push(d);
+   },
+   pushMapping: (m: MappingEntry): void => {
+      mapping.push(m);
+   },
+   resolveComposerRole,
+};
+
 // SLOT/<role> naming-contract role (design-source naming spec): the segment after the prefix,
 // lowercased and reduced to [a-z0-9]. Absent prefix -> null (reported, never guessed).
 function slotRole(node: NodeIRNode): string | null {
@@ -436,90 +459,10 @@ function resolveComposerRole(node: NodeIRNode): ComposerRole | undefined {
    return r ? (TEXT_ROLE_TABLE[r] as ComposerRole | undefined) : undefined;
 }
 
-// ---- HTML escaping (fixed; attribute values vs text content) --------------------------------
-const esc = (s: string): string =>
-   s
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#39;");
-const escText = (s: string): string =>
-   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-
-const SEP = "\u241f"; // canonical separator (U+241F), same convention as the core docs/evidence/derivation ids
-
-// Deterministic master-format style key (issue #25 NaN correction): the Admin stage rehydrates
-// element styles EXCLUSIVELY from the `<style>` block keyed by data-pb-style (stage-builder
-// convertToInlineStyles -> data-<viewport>-style -> configurable reader), never from inline
-// style attributes (which the reader clobbers: `setAttribute("style", getAttribute("data-…-style"))`
-// with a null fallback). Keys are 7-char CSS-ident-safe uppercase tokens ("P" + 6 hex of the
-// source node id) — deterministic across runs, unique per node, the same shape the platform's
-// own uniqueid keys take in stored content (real cms_page rows).
-function pbStyleKey(nodeKeySource: string): string {
-   return "P" + sha256Hex(nodeKeySource).slice(0, 6).toUpperCase();
-}
-
-// Deterministic auxiliary mapping id for composed structures that have no single source node
-// (band/synthesized-complement containers): same 12-hex id space as derived node ids, namespaced
-// by the "aux" key prefix so it cannot collide with source-derived ids.
-function auxNodeId(nodeKeySource: string): string {
-   return `n-${sha256Hex(`aux${SEP}${nodeKeySource}`).slice(0, 12)}`;
-}
-
-// ---- Shared element emit helpers (one definition for every section shape) --------------------
-// The image/text bytes are exactly the shapes the G3/G4 shapes have always emitted (extracted
-// verbatim so both-column and grid composers share one canonical markup); the buttons block is
-// the platform's own declaration-backed pair (buttons appearance "inline" > button-item default,
-// declarations verified on the pinned checkout before use) whose persisted shape mirrors the
-// canonical editor-saved content in the target checkout (real cms_page: buttons container with
-// data-same-width, button-item main keyed {display:inline-block}, link keyed {text-align:center},
-// button_type css class on the link, virtual link attributes href/target/data-link-type).
-interface TextRun {
-   role: "content-lead" | "heading" | "body";
-   text: string;
-}
-const imageElementHtml = (mediaUrl: string): string =>
-   `<figure data-content-type="image" data-appearance="full-width" data-element="main"><img class="pagebuilder-mobile-hidden" src="${esc(mediaUrl)}" alt="" title="" data-element="desktop_image"></figure>`;
-const textElementHtml = (runs: TextRun[]): string =>
-   `<div data-content-type="text" data-appearance="default" data-element="main">${runs.map((run) => (run.role === "heading" ? `<h2>${escText(run.text)}</h2>` : `<p>${escText(run.text)}</p>`)).join("")}</div>`;
-// A button composes ONLY with a manifest link entry (no invented targets, no empty-link shell —
-// a CTA whose link is missing is an explicit gap, never an unlinked pseudo-button). The variant
-// css class maps the manifest buttonVariant to the platform's own button_type classes; the Admin
-// button_type field stays fully editable either way.
-const buttonVariantClass = (
-   variant: "primary" | "secondary" | undefined,
-): string =>
-   variant === "secondary"
-      ? "pagebuilder-button-secondary"
-      : "pagebuilder-button-primary";
-function buttonsElementHtml(
-   buttonsSectionNodeId: string,
-   buttons: {
-      keySource: string;
-      label: string;
-      linkUrl: string;
-      linkTarget?: string;
-      variant: "primary" | "secondary" | undefined;
-   }[],
-): string {
-   const styleRules: string[] = [];
-   const items = buttons.map((b) => {
-      const mainKey = pbStyleKey(`${b.keySource}:button-item`);
-      const linkKey = pbStyleKey(`${b.keySource}:button-link`);
-      styleRules.push(
-         `#html-body [data-pb-style=${mainKey}]{display:inline-block}`,
-      );
-      styleRules.push(
-         `#html-body [data-pb-style=${linkKey}]{text-align:center}`,
-      );
-      const target = b.linkTarget
-         ? ` target="${esc(b.linkTarget)}"`
-         : ` target=""`;
-      return `<div data-content-type="button-item" data-appearance="default" data-element="main" data-pb-style="${mainKey}"><a class="${buttonVariantClass(b.variant)}" href="${esc(b.linkUrl)}"${target} data-link-type="default" data-element="link" data-pb-style="${linkKey}"><span data-element="link_text">${escText(b.label)}</span></a></div>`;
-   });
-   return `<style>${styleRules.join("")}</style><div data-content-type="buttons" data-appearance="inline" data-same-width="false" data-element="main">${items.join("")}</div>`;
-}
+// ---- Shared emit helpers (extracted verbatim to ./elements.ts, issue #72) --------------------
+// esc, escText, SEP, pbStyleKey, auxNodeId, imageElementHtml, textElementHtml,
+// buttonVariantClass, buttonsElementHtml and the shared TextRun shape are imported from
+// ./elements.js — one canonical definition per element markup for every section-shape composer.
 
 // ---- G4 two-column composition (issue #25) ---------------------------------------------------
 // Emits row(contained) > column-group(default) > column-line(default) > column(full-height) x2
@@ -3003,10 +2946,97 @@ function composeSection(
    if (gridColumns.length > 0) {
       return composeColumnGridSection(section, sectionNodeId, gridColumns);
    }
+   // [#72] Registered modular section-shape handlers (./handlers/registry.ts), deterministic
+   // array order: the first non-null fragment wins and becomes the section output exactly like
+   // the legacy paths above. A null return is a SILENT shape-miss — no diagnostics, no mapping
+   // — and the legacy dispatch below proceeds unchanged, so an empty registry is byte-identical
+   // to the pre-#72 dispatcher. The projected legacy shapes above keep precedence by design:
+   // an explicit recorded projection (column/column-grid roles) always overrides a structural
+   // reading, and every structural handler additionally declines sections carrying those
+   // projected roles.
+   for (const handler of SECTION_SHAPE_HANDLERS) {
+      const fragment = handler.compose(
+         section,
+         sectionNodeId,
+         sectionComposeContext,
+      );
+      if (fragment !== null) return fragment;
+   }
+   // [#72 C72-2 correction] Recorded-products guard: a section carrying an explicit
+   // products-grid/products-carousel decision that NO handler composed SKIPS with the
+   // accountable typed gap here — the band/hero/text-band fallbacks below must never remap a
+   // recorded products intent to the wrong component, and the executable catalog widget is
+   // never emitted unbound (an empty rule lists newest products on the storefront). The
+   // handler itself stays silent-null per the frozen seam contract; the dispatcher owns the
+   // honest skip accounting, exactly as for every other shape.
+   const sectionCarriesProductsDecision = (() => {
+      let found = false;
+      walkSubtree(sectionNodeId, (n) => {
+         if (found || n.visible === false) return;
+         const loc = locatorOf(n);
+         if (loc === null) return;
+         const role = roleByLocator.get(loc);
+         if (role === "products-grid" || role === "products-carousel")
+            found = true;
+      });
+      return found;
+   })();
+   if (sectionCarriesProductsDecision) {
+      diagnostics.push(
+         nodeDiag(
+            "NOT_VERIFIED",
+            "warning",
+            `Section '${section.name}' carries a recorded products decision that was not composed — the native catalog widget directive is a REAL executable storefront listing (an empty rule lists newest products, vendor-verified), so it composes only from a recorded category_ids/sku selection binding on the projected container; skipped — never emitted unbound, never remapped to a fallback shape.`,
+            sectionNodeId,
+         ),
+      );
+      mapping.push({
+         sourceNodeId: sectionNodeId,
+         ...(sectionNode.name ? { sourceName: sectionNode.name } : {}),
+         ...(sectionLocator ? { sourceLocator: sectionLocator } : {}),
+         disposition: "skipped",
+         note: "Recorded products decision without a composable selection binding — the executable widget is deferred as a typed gap until the operator records a category_ids/sku selection (C72-2 fail-closed).",
+      });
+      return null;
+   }
+   // [#72] Recorded-decision flags (self-contained section walk — this runs before the
+   // eligibility scan builds its own scope). Band decisions say "this text is a header/title
+   // band"; a media node found beneath them is page structure (tile/card imagery), never that
+   // text's background — composing the section as a banner would map it to the wrong component.
+   // Both pinned hero fixtures (G3/G28) project background-media explicitly, so pinned bytes are
+   // unchanged; a loose unprojected hero keeps the first-media fallback exactly as before.
+   const bandDecisionFlags = (): {
+      bandRoles: boolean;
+      backgroundMedia: boolean;
+      visibleMedia: boolean;
+   } => {
+      let bandRoles = false;
+      let backgroundMedia = false;
+      let visibleMedia = false;
+      walkSubtree(sectionNodeId, (n) => {
+         if (n.visible === false) return;
+         const loc = locatorOf(n);
+         if (loc !== null) {
+            const role = roleByLocator.get(loc);
+            if (role === "content-lead" || role === "heading") bandRoles = true;
+            if (role === "background-media") backgroundMedia = true;
+         }
+         if (n.kind === "media" && (loc === null || !excludedLocators.has(loc)))
+            visibleMedia = true;
+      });
+      return { bandRoles, backgroundMedia, visibleMedia };
+   };
    // Band guard: a direct-child container that carries its own manifest media entry, or that
    // contains structured (non-CTA) role-resolved text, marks a hero/column-shaped section — the
    // band shape must not silently flatten it. Such sections honestly skip instead.
    const textBandBlocked = (): string | null => {
+      // [#72] the same recorded-decision guard feeds the band guard: band-projected text with
+      // visible media structure beneath it (and no recorded background-media decision) is a
+      // mixed band+cards section no #72 shape composes — a band-only output would drop the
+      // cards, so the section honestly skips with the recorded reason.
+      const flags = bandDecisionFlags();
+      if (flags.bandRoles && !flags.backgroundMedia && flags.visibleMedia)
+         return "visible media structure under recorded band decisions without a recorded background-media decision (no dedicated band+cards shape composes it)";
       for (const child of directVisibleChildren) {
          if (child.kind !== "container" && child.kind !== "component") continue;
          const childLoc = locatorOf(child);
@@ -3080,7 +3110,19 @@ function composeSection(
       const role = resolveRole(n);
       return role !== undefined && role !== "background-media";
    });
-   if (bgCandidates.length === 0 || textCandidates.length === 0) {
+   // [#72] recorded-decision hero guard (see bandDecisionFlags above): band-projected text
+   // without a recorded background-media decision never composes as a hero banner — the media
+   // beneath a band is structure, not background. The section then falls to the guarded
+   // text-band attempt (pure band) or the honest skip below (mixed band+media structure).
+   const heroDeclinedByBandDecision = (() => {
+      const flags = bandDecisionFlags();
+      return flags.bandRoles && !flags.backgroundMedia;
+   })();
+   if (
+      heroDeclinedByBandDecision ||
+      bgCandidates.length === 0 ||
+      textCandidates.length === 0
+   ) {
       // Issue #28: guarded text-band attempt before the honest skip (no background media and no
       // blocking container structure — loose role-resolved text/CTA content only).
       if (!bandBlocker) {

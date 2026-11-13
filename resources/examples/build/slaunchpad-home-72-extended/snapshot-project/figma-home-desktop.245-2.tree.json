@@ -1,0 +1,9468 @@
+{
+ "revisionId": "2417494580183108397",
+ "nodes": [
+  {
+   "locator": "I346:389;346:379",
+   "kind": "vector",
+   "name": "Hover Underline",
+   "visible": false,
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:99;348:311;251:11",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:81;250:8",
+   "kind": "text",
+   "name": "Product Name",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I436:484;436:444",
+   "kind": "text",
+   "name": "24 PIECES",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I346:325;346:321",
+   "kind": "vector",
+   "name": "Hover Underline",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "BOTTOM",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:47;251:77",
+   "kind": "text",
+   "name": "Label",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "CENTER",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I436:460;436:397",
+   "kind": "vector",
+   "name": "Gradient",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I256:96;251:101;251:74",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I346:309;346:305",
+   "kind": "vector",
+   "name": "Hover Underline",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "BOTTOM",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "299:323",
+   "kind": "frame",
+   "name": "SLOT/LookMedia/01",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "299:324",
+    "299:325",
+    "299:326",
+    "299:327"
+   ]
+  },
+  {
+   "locator": "522:553",
+   "kind": "frame",
+   "name": "SLOT/PeopleLook/04-Everyday",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:90;250:9",
+   "kind": "text",
+   "name": "Category",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "245:9",
+   "kind": "frame",
+   "name": "SECTION/FeaturedCollections",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 1
+      }
+     ],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "256:96",
+    "256:105"
+   ]
+  },
+  {
+   "locator": "284:407",
+   "kind": "frame",
+   "name": "SLOT/MosaicColumn/01",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "284:408",
+    "284:409"
+   ]
+  },
+  {
+   "locator": "257:229",
+   "kind": "frame",
+   "name": "SLOT/FooterLegal",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 0.8889
+      }
+     ],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "257:230",
+    "257:231",
+    "257:232"
+   ]
+  },
+  {
+   "locator": "I346:389;346:385",
+   "kind": "vector",
+   "name": "Hover Underline",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "BOTTOM",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "257:231",
+   "kind": "text",
+   "name": "PRIVACY — TERMS — COOKIES",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "254:60",
+   "kind": "text",
+   "name": "THE HOUSE",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I436:460;436:404",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "299:341",
+   "kind": "vector",
+   "name": "Hotspot",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "299:331",
+   "kind": "vector",
+   "name": "Hotspot Halo",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "257:129",
+   "kind": "text",
+   "name": "Relaxed tailoring in warm neutrals — the defining layer of the season.",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I256:139;251:101",
+   "kind": "component",
+   "name": "Link/Arrow",
+   "componentRef": "251:71",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "visible"
+    }
+   },
+   "children": [
+    "I256:139;251:101;251:72",
+    "I256:139;251:101;251:73"
+   ]
+  },
+  {
+   "locator": "I254:99;250:3",
+   "kind": "frame",
+   "name": "Image",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 1
+      }
+     ],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I254:99;348:313",
+    "I254:99;250:4"
+   ]
+  },
+  {
+   "locator": "257:218",
+   "kind": "text",
+   "name": "Shipping & Returns",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "299:328",
+   "kind": "text",
+   "name": "Caption",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:99;348:313",
+   "kind": "media",
+   "name": "Img",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "299:350",
+   "kind": "frame",
+   "name": "SLOT/DetailFabric",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I346:357;346:353",
+   "kind": "vector",
+   "name": "Hover Underline",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "BOTTOM",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I436:460;436:396",
+   "kind": "media",
+   "name": "Img",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I257:194;251:69",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "299:347",
+   "kind": "text",
+   "name": "Title",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:62;250:29",
+   "kind": "text",
+   "name": "Section Title",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 1
+      }
+     ],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "299:346",
+   "kind": "text",
+   "name": "Overline",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "299:322",
+   "kind": "frame",
+   "name": "SLOT/LookbookLook/01",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "299:323",
+    "299:328"
+   ]
+  },
+  {
+   "locator": "254:57",
+   "kind": "frame",
+   "name": "DECOR/ScrollIndicator",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "254:58",
+    "254:59"
+   ]
+  },
+  {
+   "locator": "522:555",
+   "kind": "text",
+   "name": "EXPLORE THE LOOKS →",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "522:544",
+   "kind": "text",
+   "name": "Worn in Their Own Way",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:99;250:9",
+   "kind": "text",
+   "name": "Category",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "257:202",
+   "kind": "text",
+   "name": "Modern luxury, quietly considered.",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "254:90",
+   "kind": "component",
+   "name": "Proto / Product Card",
+   "componentRef": "250:2",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 0.2359
+      }
+     ],
+     "overflow": "visible"
+    }
+   },
+   "children": [
+    "I254:90;250:3",
+    "I254:90;250:7"
+   ]
+  },
+  {
+   "locator": "436:484",
+   "kind": "component",
+   "name": "Proto / Collection Tile",
+   "componentRef": "436:438",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I436:484;436:439",
+    "I436:484;436:441",
+    "I436:484;436:442",
+    "I436:484;436:445"
+   ]
+  },
+  {
+   "locator": "254:46",
+   "kind": "frame",
+   "name": "SLOT/HeroActions",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "254:47"
+   ]
+  },
+  {
+   "locator": "I256:139;250:28",
+   "kind": "text",
+   "name": "OVERLINE",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "257:131",
+   "kind": "component",
+   "name": "Proto / Button/Primary Light",
+   "componentRef": "251:81",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "visible"
+    }
+   },
+   "children": [
+    "I257:131;251:82",
+    "I257:131;251:83"
+   ]
+  },
+  {
+   "locator": "I256:139;251:101;251:73",
+   "kind": "frame",
+   "name": "Frame",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I256:139;251:101;251:74",
+    "I256:139;251:101;251:75"
+   ]
+  },
+  {
+   "locator": "I254:72;250:4",
+   "kind": "frame",
+   "name": "Wishlist",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I254:72;348:311"
+   ]
+  },
+  {
+   "locator": "I254:90;250:3",
+   "kind": "frame",
+   "name": "Image",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 1
+      }
+     ],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I254:90;348:313",
+    "I254:90;250:4"
+   ]
+  },
+  {
+   "locator": "I257:131;251:84",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "256:105",
+   "kind": "frame",
+   "name": "SLOT/CollectionTiles",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 0.8889
+      }
+     ],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "436:460",
+    "436:472",
+    "436:484",
+    "453:394"
+   ]
+  },
+  {
+   "locator": "I299:312;251:101",
+   "kind": "component",
+   "name": "Link/Arrow",
+   "componentRef": "251:71",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "visible"
+    }
+   },
+   "children": [
+    "I299:312;251:101;251:72",
+    "I299:312;251:101;251:73"
+   ]
+  },
+  {
+   "locator": "257:194",
+   "kind": "component",
+   "name": "Logo/White",
+   "componentRef": "251:63",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I257:194;251:64",
+    "I257:194;251:65",
+    "I257:194;251:66",
+    "I257:194;251:67",
+    "I257:194;251:68",
+    "I257:194;251:69",
+    "I257:194;251:70"
+   ]
+  },
+  {
+   "locator": "299:334",
+   "kind": "vector",
+   "name": "Hotspot",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I257:187;251:80",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "346:325",
+   "kind": "component",
+   "name": "Proto / Nav Link — WOMEN",
+   "componentRef": "346:316",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "visible"
+    }
+   },
+   "children": [
+    "I346:325;346:314",
+    "I346:325;346:315",
+    "I346:325;346:321"
+   ]
+  },
+  {
+   "locator": "254:45",
+   "kind": "text",
+   "name": "Refined tailoring, knitwear and leather for the season.",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "254:99",
+   "kind": "component",
+   "name": "Proto / Product Card",
+   "componentRef": "250:2",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 0.2359
+      }
+     ],
+     "overflow": "visible"
+    }
+   },
+   "children": [
+    "I254:99;250:3",
+    "I254:99;250:7"
+   ]
+  },
+  {
+   "locator": "I254:72;348:311",
+   "kind": "component",
+   "name": "Proto / icon — Heart Toggle",
+   "componentRef": "251:12",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I254:72;348:311;251:11"
+   ]
+  },
+  {
+   "locator": "257:209",
+   "kind": "text",
+   "name": "Accessories",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "257:215",
+   "kind": "text",
+   "name": "Careers",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "257:184",
+   "kind": "frame",
+   "name": "SLOT/NewsletterForm",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "354:419",
+    "257:187"
+   ]
+  },
+  {
+   "locator": "I254:72;250:10",
+   "kind": "text",
+   "name": "$0,000",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:81;348:311;251:11",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I256:96;250:27",
+   "kind": "frame",
+   "name": "Left",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 0.8883
+      }
+     ],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I256:96;250:28",
+    "I256:96;250:29"
+   ]
+  },
+  {
+   "locator": "I346:341;346:330",
+   "kind": "text",
+   "name": "MEN",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "257:217",
+   "kind": "text",
+   "name": "CARE",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:90;348:313",
+   "kind": "media",
+   "name": "Img",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:28;251:4",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I257:187;251:77",
+   "kind": "text",
+   "name": "Label",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "CENTER",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "254:34",
+   "kind": "component",
+   "name": "Proto / icon — Heart Toggle",
+   "componentRef": "251:12",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I254:34;251:11"
+   ]
+  },
+  {
+   "locator": "254:58",
+   "kind": "vector",
+   "name": "Rectangle",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "257:207",
+   "kind": "text",
+   "name": "Women",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I256:139;250:27",
+   "kind": "frame",
+   "name": "Left",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 0.8984
+      }
+     ],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I256:139;250:28",
+    "I256:139;250:29"
+   ]
+  },
+  {
+   "locator": "299:338",
+   "kind": "vector",
+   "name": "Hotspot Halo",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "257:226",
+   "kind": "text",
+   "name": "YouTube",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "299:326",
+   "kind": "vector",
+   "name": "Hotspot Halo",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I256:139;251:101;251:75",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I257:194;251:70",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I346:389;346:378",
+   "kind": "text",
+   "name": "OUR STORY",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "254:27",
+   "kind": "frame",
+   "name": "SLOT/HeaderActions",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "254:28",
+    "254:31",
+    "254:34",
+    "254:36"
+   ]
+  },
+  {
+   "locator": "I257:194;251:66",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I256:96;251:101;251:73",
+   "kind": "frame",
+   "name": "Frame",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I256:96;251:101;251:74",
+    "I256:96;251:101;251:75"
+   ]
+  },
+  {
+   "locator": "257:225",
+   "kind": "text",
+   "name": "Pinterest",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "522:554",
+   "kind": "text",
+   "name": "LOOK 04 — EVERYDAY LUXURY",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I257:131;251:83",
+   "kind": "frame",
+   "name": "Frame",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "RIGHT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "CENTER",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I257:131;251:84",
+    "I257:131;251:85"
+   ]
+  },
+  {
+   "locator": "299:349",
+   "kind": "frame",
+   "name": "SLOT/DetailStitch",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "254:11",
+   "kind": "frame",
+   "name": "SLOT/Navigation",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "346:309",
+    "346:325",
+    "346:341",
+    "346:357",
+    "346:373",
+    "346:389"
+   ]
+  },
+  {
+   "locator": "257:181",
+   "kind": "text",
+   "name": "THE CIRCULAR",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I299:312;251:101;251:74",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I436:460;436:403",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "257:124",
+   "kind": "text",
+   "name": "N°1",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "522:545",
+   "kind": "text",
+   "name": "Personal perspectives on modern dressing.",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I256:139;251:101;251:72",
+   "kind": "text",
+   "name": "VIEW ALL",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "299:345",
+   "kind": "frame",
+   "name": "SLOT/CraftContent",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "299:346",
+    "299:347",
+    "299:348",
+    "299:349",
+    "299:350"
+   ]
+  },
+  {
+   "locator": "I254:36;251:16",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "257:216",
+   "kind": "frame",
+   "name": "SLOT/FooterLinks/Care",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "257:217",
+    "257:218",
+    "257:219",
+    "257:220",
+    "257:221"
+   ]
+  },
+  {
+   "locator": "I394:391;354:374",
+   "kind": "component",
+   "name": "icon/arrow-right",
+   "componentRef": "251:29",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I394:391;354:374;251:27",
+    "I394:391;354:374;251:28"
+   ]
+  },
+  {
+   "locator": "I254:19;251:64",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "522:543",
+   "kind": "text",
+   "name": "THE PEOPLE",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "257:206",
+   "kind": "text",
+   "name": "New In",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "245:15",
+   "kind": "frame",
+   "name": "SITE/Footer",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 1
+      }
+     ],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "257:192",
+    "257:228",
+    "257:229"
+   ]
+  },
+  {
+   "locator": "299:311",
+   "kind": "frame",
+   "name": "SECTION/Lookbook",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "299:312",
+    "299:321"
+   ]
+  },
+  {
+   "locator": "I299:312;250:28",
+   "kind": "text",
+   "name": "OVERLINE",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "257:224",
+   "kind": "text",
+   "name": "Instagram",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "257:223",
+   "kind": "text",
+   "name": "FOLLOW",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:81;348:313",
+   "kind": "media",
+   "name": "Img",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "284:408",
+   "kind": "media",
+   "name": "Editorial Tile",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "257:203",
+   "kind": "frame",
+   "name": "SLOT/FooterLinks",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "257:204",
+    "257:210",
+    "257:216",
+    "257:222"
+   ]
+  },
+  {
+   "locator": "I254:19;251:65",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "257:211",
+   "kind": "text",
+   "name": "HOUSE",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "257:230",
+   "kind": "text",
+   "name": "© 2026 SLAUNCH. ALL RIGHTS RESERVED.",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "254:41",
+   "kind": "vector",
+   "name": "Overlay",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:99;250:4",
+   "kind": "frame",
+   "name": "Wishlist",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I254:99;348:311"
+   ]
+  },
+  {
+   "locator": "I254:47;251:79",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I257:136;251:94",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:72;348:311;251:11",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:81;250:3",
+   "kind": "frame",
+   "name": "Image",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 1
+      }
+     ],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I254:81;348:313",
+    "I254:81;250:4"
+   ]
+  },
+  {
+   "locator": "I257:131;251:85",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "257:205",
+   "kind": "text",
+   "name": "SHOP",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I257:136;251:95",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:34;251:11",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I354:386;354:374;251:27",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "299:305",
+   "kind": "text",
+   "name": "Title",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I394:391;354:374;251:28",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "346:341",
+   "kind": "component",
+   "name": "Proto / Nav Link — MEN",
+   "componentRef": "346:332",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "visible"
+    }
+   },
+   "children": [
+    "I346:341;346:330",
+    "I346:341;346:331",
+    "I346:341;346:337"
+   ]
+  },
+  {
+   "locator": "I254:99;250:10",
+   "kind": "text",
+   "name": "$0,000",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I436:460;436:399",
+   "kind": "text",
+   "name": "Women",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "245:2",
+   "kind": "frame",
+   "name": "PAGE/Home/Desktop",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "245:3",
+    "245:4",
+    "245:5",
+    "245:6",
+    "394:386",
+    "245:9",
+    "245:7",
+    "299:300",
+    "299:311",
+    "245:10",
+    "299:343",
+    "522:542",
+    "245:12",
+    "245:14",
+    "245:15"
+   ]
+  },
+  {
+   "locator": "453:394",
+   "kind": "frame",
+   "name": "SLOT/EditorialFabricDetail",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I257:187;251:79",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "522:548",
+   "kind": "text",
+   "name": "LOOK 01 — WOMEN'S TAILORING",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "354:419",
+   "kind": "component",
+   "name": "Proto / Input — Email",
+   "componentRef": "354:412",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "visible"
+    }
+   },
+   "children": [
+    "I354:419;354:411"
+   ]
+  },
+  {
+   "locator": "257:130",
+   "kind": "frame",
+   "name": "SLOT/SpotlightActions",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "257:131",
+    "257:136"
+   ]
+  },
+  {
+   "locator": "I254:99;348:311",
+   "kind": "component",
+   "name": "Proto / icon — Heart Toggle",
+   "componentRef": "251:12",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I254:99;348:311;251:11"
+   ]
+  },
+  {
+   "locator": "I346:357;346:347",
+   "kind": "vector",
+   "name": "Hover Underline",
+   "visible": false,
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "284:413",
+   "kind": "frame",
+   "name": "SLOT/MosaicColumn/03",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "284:414",
+    "284:415"
+   ]
+  },
+  {
+   "locator": "I346:373;346:363",
+   "kind": "vector",
+   "name": "Hover Underline",
+   "visible": false,
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I354:386;354:374",
+   "kind": "component",
+   "name": "icon/arrow-right",
+   "componentRef": "251:29",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I354:386;354:374;251:27",
+    "I354:386;354:374;251:28"
+   ]
+  },
+  {
+   "locator": "I254:81;250:7",
+   "kind": "frame",
+   "name": "Body",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 1
+      }
+     ],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I254:81;250:8",
+    "I254:81;250:9",
+    "I254:81;250:10"
+   ]
+  },
+  {
+   "locator": "I436:484;436:448",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "436:460",
+   "kind": "component",
+   "name": "Proto / Collection Tile",
+   "componentRef": "436:394",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I436:460;436:395",
+    "I436:460;436:397",
+    "I436:460;436:398",
+    "I436:460;436:401"
+   ]
+  },
+  {
+   "locator": "299:324",
+   "kind": "vector",
+   "name": "Hotspot Halo",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "299:301",
+   "kind": "frame",
+   "name": "SLOT/CampaignMedia/Primary",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I436:484;436:443",
+   "kind": "text",
+   "name": "Accessories",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "299:329",
+   "kind": "frame",
+   "name": "SLOT/LookbookLook/02",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "299:330",
+    "299:335"
+   ]
+  },
+  {
+   "locator": "I257:194;251:65",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I436:472;436:423",
+   "kind": "frame",
+   "name": "Arrow",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "RIGHT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "CENTER",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I436:472;436:424"
+   ]
+  },
+  {
+   "locator": "I436:484;436:441",
+   "kind": "vector",
+   "name": "Gradient",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "299:339",
+   "kind": "vector",
+   "name": "Hotspot",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "257:219",
+   "kind": "text",
+   "name": "Repairs",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I436:484;436:440",
+   "kind": "media",
+   "name": "Img",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:72;348:313",
+   "kind": "media",
+   "name": "Img",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "394:386",
+   "kind": "frame",
+   "name": "SECTION/Hero/Secondary",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "394:387",
+    "394:388",
+    "394:389",
+    "394:390",
+    "394:391"
+   ]
+  },
+  {
+   "locator": "I254:90;348:311;251:11",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I346:325;346:314",
+   "kind": "text",
+   "name": "WOMEN",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "257:183",
+   "kind": "text",
+   "name": "New arrivals, styling notes and private previews — one letter a month.",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I394:391;354:374;251:27",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "254:19",
+   "kind": "component",
+   "name": "Logo/White",
+   "componentRef": "251:63",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I254:19;251:64",
+    "I254:19;251:65",
+    "I254:19;251:66",
+    "I254:19;251:67",
+    "I254:19;251:68",
+    "I254:19;251:69",
+    "I254:19;251:70"
+   ]
+  },
+  {
+   "locator": "I254:62;251:101;251:75",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "254:61",
+   "kind": "text",
+   "name": "Luxury is what remains when everything unnecessary has been removed.",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I436:472;436:419",
+   "kind": "vector",
+   "name": "Gradient",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "522:549",
+   "kind": "frame",
+   "name": "SLOT/PeopleLook/02-Menswear",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:81;250:9",
+   "kind": "text",
+   "name": "Category",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "254:36",
+   "kind": "component",
+   "name": "icon/bag",
+   "componentRef": "251:17",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I254:36;251:14",
+    "I254:36;251:15",
+    "I254:36;251:16"
+   ]
+  },
+  {
+   "locator": "245:14",
+   "kind": "frame",
+   "name": "SECTION/Newsletter",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 1
+      }
+     ],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "257:181",
+    "257:182",
+    "257:183",
+    "257:184"
+   ]
+  },
+  {
+   "locator": "I436:472;436:418",
+   "kind": "media",
+   "name": "Img",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I436:472;436:425",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I346:309;346:298",
+   "kind": "text",
+   "name": "NEW IN",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "346:357",
+   "kind": "component",
+   "name": "Proto / Nav Link — COLLECTIONS",
+   "componentRef": "346:348",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "visible"
+    }
+   },
+   "children": [
+    "I346:357;346:346",
+    "I346:357;346:347",
+    "I346:357;346:353"
+   ]
+  },
+  {
+   "locator": "346:373",
+   "kind": "component",
+   "name": "Proto / Nav Link — ACCESSORIES",
+   "componentRef": "346:364",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "visible"
+    }
+   },
+   "children": [
+    "I346:373;346:362",
+    "I346:373;346:363",
+    "I346:373;346:369"
+   ]
+  },
+  {
+   "locator": "I354:386;354:374;251:28",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I436:472;436:417",
+   "kind": "frame",
+   "name": "Image",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I436:472;436:418"
+   ]
+  },
+  {
+   "locator": "I254:19;251:69",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I256:139;250:29",
+   "kind": "text",
+   "name": "Section Title",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 1
+      }
+     ],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I436:460;436:401",
+   "kind": "frame",
+   "name": "Arrow",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "RIGHT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "CENTER",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I436:460;436:402"
+   ]
+  },
+  {
+   "locator": "I256:96;251:101;251:75",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "257:122",
+   "kind": "frame",
+   "name": "SLOT/SpotlightMedia",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "284:417",
+   "kind": "media",
+   "name": "Editorial Tile",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "522:551",
+   "kind": "frame",
+   "name": "SLOT/PeopleLook/03-Street",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I346:373;346:362",
+   "kind": "text",
+   "name": "ACCESSORIES",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "245:3",
+   "kind": "frame",
+   "name": "SITE/AnnouncementBar",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 1
+      }
+     ],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "254:10"
+   ]
+  },
+  {
+   "locator": "257:213",
+   "kind": "text",
+   "name": "Ateliers",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "257:212",
+   "kind": "text",
+   "name": "Our Story",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:62;251:101;251:74",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "436:472",
+   "kind": "component",
+   "name": "Proto / Collection Tile",
+   "componentRef": "436:416",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I436:472;436:417",
+    "I436:472;436:419",
+    "I436:472;436:420",
+    "I436:472;436:423"
+   ]
+  },
+  {
+   "locator": "I254:90;250:4",
+   "kind": "frame",
+   "name": "Wishlist",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I254:90;348:311"
+   ]
+  },
+  {
+   "locator": "354:386",
+   "kind": "component",
+   "name": "Proto / CTA — Arrow (Desktop)",
+   "componentRef": "354:375",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "visible"
+    }
+   },
+   "children": [
+    "I354:386;354:373",
+    "I354:386;354:374"
+   ]
+  },
+  {
+   "locator": "I254:19;251:70",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I256:96;251:101",
+   "kind": "component",
+   "name": "Link/Arrow",
+   "componentRef": "251:71",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "visible"
+    }
+   },
+   "children": [
+    "I256:96;251:101;251:72",
+    "I256:96;251:101;251:73"
+   ]
+  },
+  {
+   "locator": "I254:36;251:14",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "284:409",
+   "kind": "media",
+   "name": "Editorial Tile",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "256:139",
+   "kind": "component",
+   "name": "Section Header",
+   "componentRef": "250:26",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 0.8889
+      }
+     ],
+     "overflow": "visible"
+    }
+   },
+   "children": [
+    "I256:139;250:27",
+    "I256:139;251:101"
+   ]
+  },
+  {
+   "locator": "I256:96;250:29",
+   "kind": "text",
+   "name": "Section Title",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 1
+      }
+     ],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "394:389",
+   "kind": "text",
+   "name": "The Modern Silhouette",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:47;251:80",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "254:71",
+   "kind": "frame",
+   "name": "SLOT/ProductCards",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 0.8889
+      }
+     ],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "254:72",
+    "254:81",
+    "254:90",
+    "254:99"
+   ]
+  },
+  {
+   "locator": "254:42",
+   "kind": "frame",
+   "name": "SLOT/HeroContent",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "254:43",
+    "254:44",
+    "254:45",
+    "254:46"
+   ]
+  },
+  {
+   "locator": "257:127",
+   "kind": "text",
+   "name": "The Signature Trench",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:72;250:9",
+   "kind": "text",
+   "name": "Category",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I346:373;346:369",
+   "kind": "vector",
+   "name": "Hover Underline",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "BOTTOM",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "254:59",
+   "kind": "text",
+   "name": "SCROLL",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:47;251:78",
+   "kind": "frame",
+   "name": "Frame",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "RIGHT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "CENTER",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I254:47;251:79",
+    "I254:47;251:80"
+   ]
+  },
+  {
+   "locator": "254:40",
+   "kind": "frame",
+   "name": "SLOT/HeroMedia",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "245:10",
+   "kind": "frame",
+   "name": "SECTION/EditorialMosaic",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 1
+      }
+     ],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "256:139",
+    "284:406"
+   ]
+  },
+  {
+   "locator": "I256:96;250:28",
+   "kind": "text",
+   "name": "OVERLINE",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:72;250:3",
+   "kind": "frame",
+   "name": "Image",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 1
+      }
+     ],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I254:72;348:313",
+    "I254:72;250:4"
+   ]
+  },
+  {
+   "locator": "256:96",
+   "kind": "component",
+   "name": "Section Header",
+   "componentRef": "250:26",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 0.8889
+      }
+     ],
+     "overflow": "visible"
+    }
+   },
+   "children": [
+    "I256:96;250:27",
+    "I256:96;251:101"
+   ]
+  },
+  {
+   "locator": "I254:31;251:8",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:36;251:15",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:62;250:27",
+   "kind": "frame",
+   "name": "Left",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 0.9336
+      }
+     ],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I254:62;250:28",
+    "I254:62;250:29"
+   ]
+  },
+  {
+   "locator": "257:187",
+   "kind": "component",
+   "name": "Proto / Button/Primary",
+   "componentRef": "251:76",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "visible"
+    }
+   },
+   "children": [
+    "I257:187;251:77",
+    "I257:187;251:78"
+   ]
+  },
+  {
+   "locator": "I256:96;251:101;251:72",
+   "kind": "text",
+   "name": "VIEW ALL",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I436:484;436:442",
+   "kind": "frame",
+   "name": "Label",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I436:484;436:443",
+    "I436:484;436:444"
+   ]
+  },
+  {
+   "locator": "I299:312;251:101;251:73",
+   "kind": "frame",
+   "name": "Frame",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I299:312;251:101;251:74",
+    "I299:312;251:101;251:75"
+   ]
+  },
+  {
+   "locator": "I436:472;436:422",
+   "kind": "text",
+   "name": "24 PIECES",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "245:7",
+   "kind": "frame",
+   "name": "SECTION/FeaturedProducts",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 1
+      }
+     ],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "254:62",
+    "254:71"
+   ]
+  },
+  {
+   "locator": "257:193",
+   "kind": "frame",
+   "name": "SLOT/FooterBrand",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "257:194",
+    "257:202"
+   ]
+  },
+  {
+   "locator": "257:136",
+   "kind": "component",
+   "name": "Proto / Button/Ghost Light",
+   "componentRef": "251:91",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "visible"
+    }
+   },
+   "children": [
+    "I257:136;251:92",
+    "I257:136;251:93"
+   ]
+  },
+  {
+   "locator": "257:227",
+   "kind": "text",
+   "name": "Spotify",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I354:419;354:411",
+   "kind": "text",
+   "name": "Email address",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "299:348",
+   "kind": "text",
+   "name": "Body",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "254:81",
+   "kind": "component",
+   "name": "Proto / Product Card",
+   "componentRef": "250:2",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 0.2359
+      }
+     ],
+     "overflow": "visible"
+    }
+   },
+   "children": [
+    "I254:81;250:3",
+    "I254:81;250:7"
+   ]
+  },
+  {
+   "locator": "257:221",
+   "kind": "text",
+   "name": "Contact",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:90;250:7",
+   "kind": "frame",
+   "name": "Body",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 1
+      }
+     ],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I254:90;250:8",
+    "I254:90;250:9",
+    "I254:90;250:10"
+   ]
+  },
+  {
+   "locator": "299:304",
+   "kind": "text",
+   "name": "Overline",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "245:12",
+   "kind": "frame",
+   "name": "SECTION/ProductSpotlight",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 1
+      }
+     ],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "257:122",
+    "257:123",
+    "257:124",
+    "257:125"
+   ]
+  },
+  {
+   "locator": "299:337",
+   "kind": "frame",
+   "name": "SLOT/LookMedia/03",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "299:338",
+    "299:339",
+    "299:340",
+    "299:341"
+   ]
+  },
+  {
+   "locator": "I346:309;346:299",
+   "kind": "vector",
+   "name": "Hover Underline",
+   "visible": false,
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "245:4",
+   "kind": "frame",
+   "name": "SITE/Header",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 1
+      }
+     ],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "254:11",
+    "254:18",
+    "254:27"
+   ]
+  },
+  {
+   "locator": "I256:139;251:101;251:74",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "254:28",
+   "kind": "component",
+   "name": "icon/search",
+   "componentRef": "251:5",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I254:28;251:3",
+    "I254:28;251:4"
+   ]
+  },
+  {
+   "locator": "I436:472;436:421",
+   "kind": "text",
+   "name": "Men",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "284:411",
+   "kind": "media",
+   "name": "Editorial Tile",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "299:330",
+   "kind": "frame",
+   "name": "SLOT/LookMedia/02",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "299:331",
+    "299:332",
+    "299:333",
+    "299:334"
+   ]
+  },
+  {
+   "locator": "299:336",
+   "kind": "frame",
+   "name": "SLOT/LookbookLook/03",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "299:337",
+    "299:342"
+   ]
+  },
+  {
+   "locator": "I436:460;436:395",
+   "kind": "frame",
+   "name": "Image",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I436:460;436:396"
+   ]
+  },
+  {
+   "locator": "I254:62;250:28",
+   "kind": "text",
+   "name": "OVERLINE",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "254:31",
+   "kind": "component",
+   "name": "icon/user",
+   "componentRef": "251:9",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I254:31;251:7",
+    "I254:31;251:8"
+   ]
+  },
+  {
+   "locator": "254:18",
+   "kind": "frame",
+   "name": "SLOT/BrandLogo",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 0.0819
+      }
+     ],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "254:19"
+   ]
+  },
+  {
+   "locator": "I299:312;251:101;251:75",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I436:472;436:424",
+   "kind": "frame",
+   "name": "Frame",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I436:472;436:425",
+    "I436:472;436:426"
+   ]
+  },
+  {
+   "locator": "I254:81;348:311",
+   "kind": "component",
+   "name": "Proto / icon — Heart Toggle",
+   "componentRef": "251:12",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I254:81;348:311;251:11"
+   ]
+  },
+  {
+   "locator": "I254:28;251:3",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "257:123",
+   "kind": "vector",
+   "name": "Fade",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "257:208",
+   "kind": "text",
+   "name": "Men",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "522:556",
+   "kind": "text",
+   "name": "PLACEHOLDER — RIGHTS UNVERIFIED",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "346:389",
+   "kind": "component",
+   "name": "Proto / Nav Link — OUR STORY",
+   "componentRef": "346:380",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "visible"
+    }
+   },
+   "children": [
+    "I346:389;346:378",
+    "I346:389;346:379",
+    "I346:389;346:385"
+   ]
+  },
+  {
+   "locator": "346:309",
+   "kind": "component",
+   "name": "Proto / Nav Link — NEW IN",
+   "componentRef": "346:300",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "visible"
+    }
+   },
+   "children": [
+    "I346:309;346:298",
+    "I346:309;346:299",
+    "I346:309;346:305"
+   ]
+  },
+  {
+   "locator": "I436:460;436:398",
+   "kind": "frame",
+   "name": "Label",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I436:460;436:399",
+    "I436:460;436:400"
+   ]
+  },
+  {
+   "locator": "I254:62;251:101;251:72",
+   "kind": "text",
+   "name": "VIEW ALL",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "257:222",
+   "kind": "frame",
+   "name": "SLOT/FooterLinks/Follow",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "257:223",
+    "257:224",
+    "257:225",
+    "257:226",
+    "257:227"
+   ]
+  },
+  {
+   "locator": "I436:460;436:402",
+   "kind": "frame",
+   "name": "Frame",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I436:460;436:403",
+    "I436:460;436:404"
+   ]
+  },
+  {
+   "locator": "522:542",
+   "kind": "frame",
+   "name": "SECTION/ThePeople",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "522:543",
+    "522:544",
+    "522:545",
+    "522:546",
+    "522:547",
+    "522:548",
+    "522:549",
+    "522:550",
+    "522:551",
+    "522:552",
+    "522:553",
+    "522:554",
+    "522:555",
+    "522:556"
+   ]
+  },
+  {
+   "locator": "I254:19;251:67",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "299:342",
+   "kind": "text",
+   "name": "Caption",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I394:391;354:373",
+   "kind": "text",
+   "name": "CTA Label",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:99;250:7",
+   "kind": "frame",
+   "name": "Body",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 1
+      }
+     ],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I254:99;250:8",
+    "I254:99;250:9",
+    "I254:99;250:10"
+   ]
+  },
+  {
+   "locator": "299:333",
+   "kind": "vector",
+   "name": "Hotspot Halo",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "299:321",
+   "kind": "frame",
+   "name": "SLOT/LookbookCards",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "299:322",
+    "299:329",
+    "299:336"
+   ]
+  },
+  {
+   "locator": "I436:484;436:445",
+   "kind": "frame",
+   "name": "Arrow",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "RIGHT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "CENTER",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I436:484;436:446"
+   ]
+  },
+  {
+   "locator": "I436:472;436:420",
+   "kind": "frame",
+   "name": "Label",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I436:472;436:421",
+    "I436:472;436:422"
+   ]
+  },
+  {
+   "locator": "I254:62;251:101;251:73",
+   "kind": "frame",
+   "name": "Frame",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I254:62;251:101;251:74",
+    "I254:62;251:101;251:75"
+   ]
+  },
+  {
+   "locator": "257:182",
+   "kind": "text",
+   "name": "Letters from the House",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I346:341;346:337",
+   "kind": "vector",
+   "name": "Hover Underline",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "BOTTOM",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I436:484;436:447",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I436:484;436:439",
+   "kind": "frame",
+   "name": "Image",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I436:484;436:440"
+   ]
+  },
+  {
+   "locator": "254:62",
+   "kind": "component",
+   "name": "Section Header",
+   "componentRef": "250:26",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 0.8889
+      }
+     ],
+     "overflow": "visible"
+    }
+   },
+   "children": [
+    "I254:62;250:27",
+    "I254:62;251:101"
+   ]
+  },
+  {
+   "locator": "257:228",
+   "kind": "vector",
+   "name": "Divider",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 0.8889
+      }
+     ],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "394:387",
+   "kind": "frame",
+   "name": "SLOT/SecondaryHeroMedia",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:19;251:68",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I257:194;251:64",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:72;250:8",
+   "kind": "text",
+   "name": "Product Name",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "254:47",
+   "kind": "component",
+   "name": "Proto / Button/Primary",
+   "componentRef": "251:76",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "visible"
+    }
+   },
+   "children": [
+    "I254:47;251:77",
+    "I254:47;251:78"
+   ]
+  },
+  {
+   "locator": "I299:312;251:101;251:72",
+   "kind": "text",
+   "name": "VIEW ALL",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I346:325;346:315",
+   "kind": "vector",
+   "name": "Hover Underline",
+   "visible": false,
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:90;348:311",
+   "kind": "component",
+   "name": "Proto / icon — Heart Toggle",
+   "componentRef": "251:12",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I254:90;348:311;251:11"
+   ]
+  },
+  {
+   "locator": "I299:312;250:27",
+   "kind": "frame",
+   "name": "Left",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 0.8938
+      }
+     ],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I299:312;250:28",
+    "I299:312;250:29"
+   ]
+  },
+  {
+   "locator": "257:125",
+   "kind": "frame",
+   "name": "SLOT/SpotlightContent",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "257:126",
+    "257:127",
+    "257:129",
+    "257:130"
+   ]
+  },
+  {
+   "locator": "I254:19;251:66",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "299:300",
+   "kind": "frame",
+   "name": "SECTION/CampaignEditorial",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "299:301",
+    "299:302",
+    "299:304",
+    "299:305",
+    "354:386"
+   ]
+  },
+  {
+   "locator": "245:5",
+   "kind": "frame",
+   "name": "SECTION/Hero/Primary",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 1
+      }
+     ],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "254:40",
+    "254:41",
+    "254:42",
+    "254:57"
+   ]
+  },
+  {
+   "locator": "257:220",
+   "kind": "text",
+   "name": "Size Guide",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "299:343",
+   "kind": "frame",
+   "name": "SECTION/Craftsmanship",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "299:344",
+    "299:345"
+   ]
+  },
+  {
+   "locator": "284:418",
+   "kind": "media",
+   "name": "Editorial Tile",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:99;250:8",
+   "kind": "text",
+   "name": "Product Name",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "254:10",
+   "kind": "text",
+   "name": "NEW SEASON — AUTUMN/WINTER 2026",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "299:312",
+   "kind": "component",
+   "name": "Section Header",
+   "componentRef": "250:26",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "visible"
+    }
+   },
+   "children": [
+    "I299:312;250:27",
+    "I299:312;251:101"
+   ]
+  },
+  {
+   "locator": "I254:62;251:101",
+   "kind": "component",
+   "name": "Link/Arrow",
+   "componentRef": "251:71",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "visible"
+    }
+   },
+   "children": [
+    "I254:62;251:101;251:72",
+    "I254:62;251:101;251:73"
+   ]
+  },
+  {
+   "locator": "I354:386;354:373",
+   "kind": "text",
+   "name": "CTA Label",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "254:44",
+   "kind": "text",
+   "name": "The Quiet Grandeur",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I257:194;251:68",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:81;250:10",
+   "kind": "text",
+   "name": "$0,000",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "299:325",
+   "kind": "vector",
+   "name": "Hotspot",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "257:192",
+   "kind": "frame",
+   "name": "SLOT/FooterMain",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 0.8889
+      }
+     ],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "257:193",
+    "257:203"
+   ]
+  },
+  {
+   "locator": "522:550",
+   "kind": "text",
+   "name": "LOOK 02 — MINIMAL MENSWEAR",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "284:412",
+   "kind": "media",
+   "name": "Editorial Tile",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:72;250:7",
+   "kind": "frame",
+   "name": "Body",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 1
+      }
+     ],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I254:72;250:8",
+    "I254:72;250:9",
+    "I254:72;250:10"
+   ]
+  },
+  {
+   "locator": "I436:484;436:446",
+   "kind": "frame",
+   "name": "Frame",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I436:484;436:447",
+    "I436:484;436:448"
+   ]
+  },
+  {
+   "locator": "254:72",
+   "kind": "component",
+   "name": "Proto / Product Card",
+   "componentRef": "250:2",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 0.2359
+      }
+     ],
+     "overflow": "visible"
+    }
+   },
+   "children": [
+    "I254:72;250:3",
+    "I254:72;250:7"
+   ]
+  },
+  {
+   "locator": "284:406",
+   "kind": "frame",
+   "name": "SLOT/MosaicGrid",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "284:407",
+    "284:410",
+    "284:413",
+    "284:416"
+   ]
+  },
+  {
+   "locator": "I299:312;250:29",
+   "kind": "text",
+   "name": "Section Title",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 1
+      }
+     ],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "257:204",
+   "kind": "frame",
+   "name": "SLOT/FooterLinks/Shop",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "257:205",
+    "257:206",
+    "257:207",
+    "257:208",
+    "257:209"
+   ]
+  },
+  {
+   "locator": "299:340",
+   "kind": "vector",
+   "name": "Hotspot Halo",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:81;250:4",
+   "kind": "frame",
+   "name": "Wishlist",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I254:81;348:311"
+   ]
+  },
+  {
+   "locator": "299:332",
+   "kind": "vector",
+   "name": "Hotspot",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "257:126",
+   "kind": "text",
+   "name": "SIGNATURE OUTERWEAR",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I346:357;346:346",
+   "kind": "text",
+   "name": "COLLECTIONS",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "284:416",
+   "kind": "frame",
+   "name": "SLOT/MosaicColumn/04",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "284:417",
+    "284:418"
+   ]
+  },
+  {
+   "locator": "I257:187;251:78",
+   "kind": "frame",
+   "name": "Frame",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "RIGHT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "CENTER",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I257:187;251:79",
+    "I257:187;251:80"
+   ]
+  },
+  {
+   "locator": "I254:90;250:10",
+   "kind": "text",
+   "name": "$0,000",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "245:6",
+   "kind": "frame",
+   "name": "SECTION/BrandStatement",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [
+      {
+       "target": "parent-width",
+       "ratio": 1
+      }
+     ],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "254:60",
+    "254:61"
+   ]
+  },
+  {
+   "locator": "I257:136;251:92",
+   "kind": "text",
+   "name": "Label",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "CENTER",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "299:335",
+   "kind": "text",
+   "name": "Caption",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "394:391",
+   "kind": "component",
+   "name": "Proto / CTA — Arrow (Desktop)",
+   "componentRef": "354:375",
+   "properties": {
+    "layout": {
+     "direction": "row",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "visible"
+    }
+   },
+   "children": [
+    "I394:391;354:373",
+    "I394:391;354:374"
+   ]
+  },
+  {
+   "locator": "522:547",
+   "kind": "frame",
+   "name": "SLOT/PeopleLook/01-Tailoring",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "394:388",
+   "kind": "text",
+   "name": "CHAPTER 02 / THE COLLECTION",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "299:327",
+   "kind": "vector",
+   "name": "Hotspot",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I257:194;251:67",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I436:460;436:400",
+   "kind": "text",
+   "name": "24 PIECES",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I436:472;436:426",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "394:390",
+   "kind": "text",
+   "name": "An exploration of modern form and effortless style.",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "257:232",
+   "kind": "text",
+   "name": "ENGLISH — EUR (€)",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "299:302",
+   "kind": "frame",
+   "name": "SLOT/CampaignMedia/Secondary",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "284:410",
+   "kind": "frame",
+   "name": "SLOT/MosaicColumn/02",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "284:411",
+    "284:412"
+   ]
+  },
+  {
+   "locator": "299:344",
+   "kind": "frame",
+   "name": "SLOT/CraftMedia",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:90;250:8",
+   "kind": "text",
+   "name": "Product Name",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I257:136;251:93",
+   "kind": "frame",
+   "name": "Frame",
+   "properties": {
+    "layout": {
+     "direction": "absolute",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "RIGHT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "CENTER",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "I257:136;251:94",
+    "I257:136;251:95"
+   ]
+  },
+  {
+   "locator": "284:414",
+   "kind": "media",
+   "name": "Editorial Tile",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "254:43",
+   "kind": "text",
+   "name": "CHAPTER 01 / AW 2026",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "522:552",
+   "kind": "text",
+   "name": "LOOK 03 — CONTEMPORARY STREET",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "522:546",
+   "kind": "text",
+   "name": "04 LOOKS",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I257:131;251:82",
+   "kind": "text",
+   "name": "Label",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "CENTER",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "I254:31;251:7",
+   "kind": "vector",
+   "name": "Vector",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "absolute",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "SCALE",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "SCALE",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "257:214",
+   "kind": "text",
+   "name": "Sustainability",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "257:210",
+   "kind": "frame",
+   "name": "SLOT/FooterLinks/House",
+   "properties": {
+    "layout": {
+     "direction": "column",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "hidden"
+    }
+   },
+   "children": [
+    "257:211",
+    "257:212",
+    "257:213",
+    "257:214",
+    "257:215"
+   ]
+  },
+  {
+   "locator": "I346:341;346:331",
+   "kind": "vector",
+   "name": "Hover Underline",
+   "visible": false,
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  },
+  {
+   "locator": "284:415",
+   "kind": "media",
+   "name": "Editorial Tile",
+   "properties": {
+    "layout": {
+     "direction": "unknown",
+     "positioning": "static",
+     "constraints": [
+      {
+       "axis": "x",
+       "type": "LEFT",
+       "value": "constraint"
+      },
+      {
+       "axis": "y",
+       "type": "TOP",
+       "value": "constraint"
+      }
+     ],
+     "relativeSizes": [],
+     "overflow": "unknown"
+    }
+   },
+   "children": []
+  }
+ ]
+}
