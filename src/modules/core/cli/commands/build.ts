@@ -447,6 +447,7 @@ export async function commandBuild(
             inputs,
             gapsFromOutputs(outputs),
             bundleDir,
+            configDir,
             profileLoaded,
             config,
             stageExit(exit),
@@ -487,6 +488,7 @@ export async function commandBuild(
          inputs,
          gapsFromOutputs(outputs),
          bundleDir,
+         configDir,
          profileLoaded,
          config,
          stageExit(extractExit),
@@ -540,6 +542,7 @@ export async function commandBuild(
       inputs,
       gapsFromOutputs(outputs),
       bundleDir,
+      configDir,
       profileLoaded,
       config,
       stageExit(composeExit),
@@ -589,6 +592,7 @@ function finishBuild(
    inputs: FileRecord[],
    gaps: { code: string; message: string; count?: number }[],
    bundleDir: string,
+   configDir: string,
    profileLoaded: { profile: { profile: { id: string; platformId: string } } },
    config: BuildConfig,
    exitCode: 0 | 1 | 2 | 3,
@@ -760,6 +764,18 @@ function finishBuild(
                   // Frozen [70] provenance: composition-stage outputs produced by det build.
                   provenance: { via: "det-build", stage: "composition" },
                });
+            }
+            // Method 1: If input project carries a media/ directory, copy it to the bundle root
+            // so the operator-executed installer script can automatically sync assets into pub/media/
+            const srcMediaDir = path.join(configDir, "media");
+            if (fs.existsSync(srcMediaDir)) {
+               try {
+                  fs.cpSync(srcMediaDir, path.join(bundleDir, "media"), {
+                     recursive: true,
+                  });
+               } catch {
+                  // Best-effort bundle media sync
+               }
             }
          }
       }

@@ -330,7 +330,25 @@ if (in_array('--dry-run', $argv, true)) {
     // Dry run: the bootstrap file's presence is validated above; the Magento
     // application is NOT booted and NOTHING is written. The exact plan:
     $planContent = det_pb_embedded_content();
-    fwrite(STDOUT, json_encode([
+    $mediaPlan = [];
+    $mediaSourceDir = __DIR__ . '/media';
+    if (is_dir($mediaSourceDir)) {
+        $iterator = new \\RecursiveIteratorIterator(
+            new \\RecursiveDirectoryIterator($mediaSourceDir, \\FilesystemIterator::SKIP_DOTS),
+            \\RecursiveIteratorIterator::SELF_FIRST
+        );
+        foreach ($iterator as $item) {
+            if ($item->isFile()) {
+                $relPath = substr($item->getPathname(), strlen($mediaSourceDir) + 1);
+                $mediaPlan[] = [
+                    'source' => 'media/' . $relPath,
+                    'target' => 'pub/media/' . $relPath,
+                    'bytes' => $item->getSize(),
+                ];
+            }
+        }
+    }
+    $dryRunPlan = [
         'mode' => 'dry-run',
         'action' => 'none — dry-run validates placement and prints the plan only',
         'identifier' => DET_TARGET['identifier'],
@@ -339,7 +357,15 @@ if (in_array('--dry-run', $argv, true)) {
         'active' => DET_TARGET['active'],
         'contentBytes' => strlen($planContent),
         'contentSha256' => hash('sha256', $planContent),
-    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL);
+    ];
+    if (count($mediaPlan) > 0) {
+        $dryRunPlan['mediaAssets'] = [
+            'count' => count($mediaPlan),
+            'totalBytes' => array_sum(array_column($mediaPlan, 'bytes')),
+            'files' => array_slice(array_column($mediaPlan, 'target'), 0, 10),
+        ];
+    }
+    fwrite(STDOUT, json_encode($dryRunPlan, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . PHP_EOL);
     exit(0);
 }
 
@@ -493,6 +519,44 @@ final class DetCmsInstallerApp implements \\Magento\\Framework\\AppInterface
         /** @var \\Magento\\Cms\\Api\\PageRepositoryInterface $pageRepository */
         $pageRepository = $this->objectManager->create(\\Magento\\Cms\\Api\\PageRepositoryInterface::class);
 
+        // Media assets copy: automatically copy all files in __DIR__ . '/media' to <magentoRoot>/pub/media/
+        $mediaSourceDir = __DIR__ . '/media';
+        $magentoRoot = realpath(__DIR__ . '/..');
+        if ($magentoRoot !== false && is_dir($mediaSourceDir)) {
+            $pubMediaDir = $magentoRoot . '/pub/media';
+            $copiedMediaCount = 0;
+            $copiedMediaBytes = 0;
+            $iterator = new \\RecursiveIteratorIterator(
+                new \\RecursiveDirectoryIterator($mediaSourceDir, \\FilesystemIterator::SKIP_DOTS),
+                \\RecursiveIteratorIterator::SELF_FIRST
+            );
+            foreach ($iterator as $item) {
+                if ($item->isFile()) {
+                    $relPath = substr($item->getPathname(), strlen($mediaSourceDir) + 1);
+                    $targetPath = $pubMediaDir . '/' . $relPath;
+                    $targetDir = dirname($targetPath);
+                    if (!is_dir($targetDir)) {
+                        if (!@mkdir($targetDir, 0755, true) && !is_dir($targetDir)) {
+                            throw new \\RuntimeException('Failed to create directory: ' . $targetDir);
+                        }
+                    }
+                    if (!@copy($item->getPathname(), $targetPath)) {
+                        throw new \\RuntimeException('Failed to copy media asset to: ' . $targetPath);
+                    }
+                    @chmod($targetPath, 0644);
+                    $copiedMediaCount++;
+                    $copiedMediaBytes += $item->getSize();
+                }
+            }
+            if ($copiedMediaCount > 0) {
+                fwrite(STDOUT, sprintf(
+                    'det-cms-installer: copied %d media asset(s) (%d bytes) to pub/media/' . PHP_EOL,
+                    $copiedMediaCount,
+                    $copiedMediaBytes
+                ));
+            }
+        }
+
         if (count($candidates) === 1) {
             $page = $candidates[0]['page'];
             $action = 'updated';
@@ -521,6 +585,16 @@ final class DetCmsInstallerApp implements \\Magento\\Framework\\AppInterface
             hash('sha256', $content),
             DET_PROVENANCE_JSON
         ));
+
+        // Cache refresh: clean CMS and full-page cache so new page and media render immediately
+        try {
+            /** @var \\Magento\\Framework\\App\\Cache\\Manager $cacheManager */
+            $cacheManager = $this->objectManager->get(\\Magento\\Framework\\App\\Cache\\Manager::class);
+            $cacheManager->clean(['full_page', 'block_html']);
+            fwrite(STDOUT, 'det-cms-installer: cleaned cache types [full_page, block_html]' . PHP_EOL);
+        } catch (\\Throwable $cacheEx) {
+            fwrite(STDOUT, 'det-cms-installer: notice — cache clean skipped (' . $cacheEx->getMessage() . ')' . PHP_EOL);
+        }
     }
 }
 
@@ -651,6 +725,7 @@ chính bản cài Magento của bạn.
 | \`pagebuilder-content.html\` | nội dung Page Builder chính xác đến từng byte (bản sao của \`03-composition/native-content.html\`) |
 | \`mapping-and-gaps.json\` | sổ cái mapping thẳng thắn: cái gì đã map, cái nào là gap/excluded/skipped |
 | \`build-manifest.json\` | bảng kê toàn bộ bó kèm sha256 từng tệp để kiểm chứng |
+| \`media/\` (nếu có) | thư mục hình ảnh/media đi kèm (script tự động copy vào \`pub/media/\`) |
 
 ## Mục tiêu khai báo tường minh (không đoán)
 

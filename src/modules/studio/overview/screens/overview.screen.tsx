@@ -3,10 +3,12 @@
 import {
    ApiOutlined,
    FolderOpenOutlined,
+   HistoryOutlined,
+   RocketOutlined,
    ToolOutlined,
    WarningOutlined,
 } from "@ant-design/icons";
-import { Alert, Button, Card, Flex, Typography } from "antd";
+import { Alert, Button, Card, Col, Flex, Row, Typography } from "antd";
 
 import type { DetRunSummary } from "@/src/modules/studio/shared/contracts";
 import { RunModeBadge } from "@/src/modules/studio/mapping-review";
@@ -29,24 +31,26 @@ function unknownCount(value: number | null): string {
 
 function RunRow({ run }: { run: DetRunSummary }) {
    return (
-      <Typography.Link href={`/runs/${encodeURIComponent(run.runId)}`}>
-         <Flex wrap="wrap" justify="space-between" align="center" gap={8}>
-            <Flex align="center" gap={8} wrap="wrap">
-               <Typography.Text strong>{run.label}</Typography.Text>
-               <RunModeBadge mode={run.mode} />
+      <Card size="small" style={{ background: "#fafafa" }}>
+         <Typography.Link href={`/runs/${encodeURIComponent(run.runId)}`}>
+            <Flex wrap="wrap" justify="space-between" align="center" gap={8}>
+               <Flex align="center" gap={8} wrap="wrap">
+                  <Typography.Text strong>{run.label}</Typography.Text>
+                  <RunModeBadge mode={run.mode} />
+               </Flex>
+               <Flex align="center" gap={8} wrap="wrap">
+                  <Typography.Text type="secondary">
+                     lỗi {unknownCount(run.counts.errors)} · cảnh báo{" "}
+                     {unknownCount(run.counts.warnings)} · thông tin{" "}
+                     {unknownCount(run.counts.infos)}
+                  </Typography.Text>
+                  <Typography.Text type="secondary" code>
+                     {run.runId}
+                  </Typography.Text>
+               </Flex>
             </Flex>
-            <Flex align="center" gap={8} wrap="wrap">
-               <Typography.Text type="secondary">
-                  lỗi {unknownCount(run.counts.errors)} · cảnh báo{" "}
-                  {unknownCount(run.counts.warnings)} · thông tin{" "}
-                  {unknownCount(run.counts.infos)}
-               </Typography.Text>
-               <Typography.Text type="secondary" code>
-                  {run.runId}
-               </Typography.Text>
-            </Flex>
-         </Flex>
-      </Typography.Link>
+         </Typography.Link>
+      </Card>
    );
 }
 
@@ -61,30 +65,144 @@ export function OverviewScreen({
    readerErrorCode,
    readerMessage,
 }: OverviewViewProps) {
+   const latestRun = runs.length > 0 ? runs[0] : null;
+
    return (
       <Flex vertical gap={24}>
+         {/* Page Header / Welcome */}
          <section aria-labelledby="studio-overview-heading">
-            <Flex vertical gap={12} align="flex-start">
-               {/* layout only: neutralize UA heading margins so the Flex gap owns rhythm */}
+            <Flex vertical gap={4} align="flex-start">
                <h1 id="studio-overview-heading" style={{ margin: 0 }}>
-                  Tổng quan
+                  Tổng quan Studio
                </h1>
-               <Button
-                  type="default"
-                  href="/build"
-                  icon={<ToolOutlined aria-hidden="true" />}
+               <Typography.Paragraph
+                  type="secondary"
+                  style={{ margin: 0, fontSize: 14 }}
                >
-                  Tạo bản dựng
-               </Button>
+                  Nền tảng chuyển đổi tự động thiết kế Figma sang Magento Page
+                  Builder &amp; Hyvä Theme.
+               </Typography.Paragraph>
             </Flex>
          </section>
 
+         {/* 3 Quick Action Cards */}
+         <Row gutter={[16, 16]}>
+            <Col xs={24} md={8}>
+               <Card size="small" style={{ height: "100%" }}>
+                  <Flex
+                     vertical
+                     justify="space-between"
+                     style={{ height: "100%" }}
+                     gap={12}
+                  >
+                     <Flex vertical gap={6}>
+                        <Flex align="center" gap={8}>
+                           <RocketOutlined
+                              style={{ color: "#1677ff", fontSize: 18 }}
+                           />
+                           <Typography.Title level={5} style={{ margin: 0 }}>
+                              Tạo bản dựng mới
+                           </Typography.Title>
+                        </Flex>
+                        <Typography.Text
+                           type="secondary"
+                           style={{ fontSize: 13 }}
+                        >
+                           Nhập URL Figma để tự động phân tích, ánh xạ và biên
+                           dịch sang Page Builder.
+                        </Typography.Text>
+                     </Flex>
+                     <Button
+                        type="primary"
+                        href="/build"
+                        icon={<ToolOutlined />}
+                        block
+                     >
+                        Tạo bản dựng
+                     </Button>
+                  </Flex>
+               </Card>
+            </Col>
+            <Col xs={24} md={8}>
+               <Card size="small" style={{ height: "100%" }}>
+                  <Flex
+                     vertical
+                     justify="space-between"
+                     style={{ height: "100%" }}
+                     gap={12}
+                  >
+                     <Flex vertical gap={6}>
+                        <Flex align="center" gap={8}>
+                           <FolderOpenOutlined
+                              style={{ color: "#52c41a", fontSize: 18 }}
+                           />
+                           <Typography.Title level={5} style={{ margin: 0 }}>
+                              Dự án &amp; Trang Figma
+                           </Typography.Title>
+                        </Flex>
+                        <Typography.Text
+                           type="secondary"
+                           style={{ fontSize: 13 }}
+                        >
+                           Quản lý các bộ trang theo từng dự án Magento và khởi
+                           chạy build 1 click.
+                        </Typography.Text>
+                     </Flex>
+                     <Button href="/catalog" block>
+                        Quản lý dự án
+                     </Button>
+                  </Flex>
+               </Card>
+            </Col>
+            <Col xs={24} md={8}>
+               <Card size="small" style={{ height: "100%" }}>
+                  <Flex
+                     vertical
+                     justify="space-between"
+                     style={{ height: "100%" }}
+                     gap={12}
+                  >
+                     <Flex vertical gap={6}>
+                        <Flex align="center" gap={8}>
+                           <HistoryOutlined
+                              style={{ color: "#722ed1", fontSize: 18 }}
+                           />
+                           <Typography.Title level={5} style={{ margin: 0 }}>
+                              Lần chạy gần nhất
+                           </Typography.Title>
+                        </Flex>
+                        <Typography.Text
+                           type="secondary"
+                           style={{ fontSize: 13 }}
+                        >
+                           {latestRun
+                              ? `Lần chạy: ${latestRun.runId}`
+                              : "Chưa ghi nhận lần chạy nào trên hệ thống."}
+                        </Typography.Text>
+                     </Flex>
+                     {latestRun ? (
+                        <Button
+                           href={`/runs/${encodeURIComponent(latestRun.runId)}`}
+                           block
+                        >
+                           Xem kết quả lần chạy
+                        </Button>
+                     ) : (
+                        <Button href="/build" block>
+                           Bắt đầu lần chạy đầu tiên
+                        </Button>
+                     )}
+                  </Flex>
+               </Card>
+            </Col>
+         </Row>
+
+         {/* Recent Runs Card */}
          <Card
             size="small"
             title={
                <Flex align="center" gap={8}>
                   <FolderOpenOutlined aria-hidden="true" />
-                  {/* layout only: neutralize UA heading margins */}
                   <h2 style={{ margin: 0 }}>Lần chạy gần đây</h2>
                </Flex>
             }
@@ -94,7 +212,7 @@ export function OverviewScreen({
                   type="warning"
                   showIcon
                   icon={<ApiOutlined aria-hidden="true" />}
-                  message={`Chưa cấu hình trình đọc lần chạy (${readerErrorCode})`}
+                  title={`Chưa cấu hình trình đọc lần chạy (${readerErrorCode})`}
                   description={
                      <>
                         {readerMessage} Đặt biến môi trường{" "}
@@ -124,7 +242,7 @@ export function OverviewScreen({
             )}
          </Card>
 
-         {/* No Card title on purpose: ConversionForm renders its own h2 "Chuyển đổi mới" */}
+         {/* Legacy ConversionForm for compatibility with existing tests */}
          <Card size="small">
             <ConversionForm profiles={DEMO_PROFILES} />
          </Card>

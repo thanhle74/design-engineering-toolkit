@@ -33,7 +33,15 @@ import { fileURLToPath } from "node:url";
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(SCRIPT_DIR, "..");
 const STUDIO_MODULE_DIR = path.join(ROOT, "src", "modules", "studio");
-const DET_DIST_ENTRY = path.join(ROOT, "dist", "src", "modules", "core", "cli", "main.js");
+const DET_DIST_ENTRY = path.join(
+   ROOT,
+   "dist",
+   "src",
+   "modules",
+   "core",
+   "cli",
+   "main.js",
+);
 const RUNS_DIR_DEFAULT = path.join(ROOT, "out", "studio-runs");
 // Node engines floor of the root package (Next 16); the headless core itself needs >=20.
 const MIN_NODE = [22, 13, 0];

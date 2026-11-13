@@ -5,10 +5,7 @@ import {
    type StudioRunView,
 } from "@/src/modules/studio/shared/contracts";
 import { getDetRunReader } from "@/src/modules/studio/server/det-run-reader-factory";
-import {
-   ReaderProblemState,
-   RunScreen,
-} from "@/src/modules/studio/run-detail";
+import { ReaderProblemState, RunScreen } from "@/src/modules/studio/run-detail";
 
 interface RunPageProps {
    params: Promise<{ runId: string }>;

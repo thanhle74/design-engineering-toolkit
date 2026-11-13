@@ -47,9 +47,9 @@ Status: `php -l` clean. Verify mode executed (page 42 cross-checked against the 
 
 ## Evidence files (`docs/evidence/issue-72/browser/`)
 
-| File | What it is |
-|---|---|
+| File                         | What it is                                                                                                    |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------- |
 | `baseline-fingerprints.json` | first-run snapshot output (2026-11-12); re-verified identical to the live DB after every probe in the session |
-| `store5-home-frontend.png` | headless-Chrome screenshot (1440x2000) of the store-5 home (`/?___store=det_preview`), largely styled render |
-| `store5-home-dom.html` | DOM dump backing the Page Builder marker counts in the discovery doc |
-| `environment-discovery.md` | full browser + admin tooling discovery, store URLs, admin facts |
+| `store5-home-frontend.png`   | headless-Chrome screenshot (1440x2000) of the store-5 home (`/?___store=det_preview`), largely styled render  |
+| `store5-home-dom.html`       | DOM dump backing the Page Builder marker counts in the discovery doc                                          |
+| `environment-discovery.md`   | full browser + admin tooling discovery, store URLs, admin facts                                               |

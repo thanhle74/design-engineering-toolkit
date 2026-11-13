@@ -413,6 +413,17 @@ export class BuildFlowOrchestrator {
    async cancel(flowId: string): Promise<BuildFlowCancelOutcome> {
       const live = this.active;
       if (live !== null && live.snapshot.flowId === flowId) {
+         if (
+            live.snapshot.state === "completed" ||
+            live.snapshot.state === "failed" ||
+            live.snapshot.state === "cancelled" ||
+            live.snapshot.state === "interrupted"
+         ) {
+            return {
+               kind: "not-cancellable",
+               snapshot: this.snapshotCopy(live.snapshot),
+            };
+         }
          live.cancelRequested = true;
          if (!live.childCancelSent) {
             const stage = live.snapshot.currentStage;

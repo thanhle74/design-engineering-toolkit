@@ -119,6 +119,13 @@ describe("DesignTree — DEMO fixture", () => {
          expect(screen.getAllByText(disposition).length).toBeGreaterThan(0);
       }
    });
+
+   it("renders Figma interactive tree view when defaultView='tree'", () => {
+      render(<DesignTree run={DEMO_RUN_FIXTURE} defaultView="tree" />);
+      expect(screen.getByText("Cây thiết kế Figma (Figma Design Tree)")).toBeInTheDocument();
+      expect(screen.getByPlaceholderText("Tìm kiếm node Figma (tên, ID, loại)...")).toBeInTheDocument();
+      expect(screen.getByText("Chi tiết thành phần được chọn")).toBeInTheDocument();
+   });
 });
 
 describe("DesignTree — empty run", () => {

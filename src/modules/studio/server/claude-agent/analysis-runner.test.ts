@@ -304,9 +304,7 @@ describe("happy path — valid bound output", () => {
 });
 
 describe("ungrounded / invalid / hostile outputs", () => {
-   async function runWithStdout(
-      stdout: string,
-   ): Promise<{
+   async function runWithStdout(stdout: string): Promise<{
       state: string;
       outcome: string | null;
       grounded: boolean | null;

@@ -76,28 +76,35 @@ export function StudioShell({ children }: { children: React.ReactNode }) {
 
    return (
       <Layout style={{ minHeight: "100dvh" }}>
-         <header className="studio-content">
-            <Flex
-               align="center"
-               justify="space-between"
-               gap="middle"
-               wrap="wrap"
-            >
-               <Link href="/" aria-label="DET Studio home">
-                  <Space align="center" size="small">
-                     <AppstoreOutlined aria-hidden="true" />
-                     <Typography.Text strong>DET Studio</Typography.Text>
-                  </Space>
-               </Link>
-               <Menu
-                  aria-label="Studio"
-                  mode="horizontal"
-                  items={navMenuItems}
-                  selectedKeys={selectedKeys}
-                  style={{ flex: "auto", minWidth: 0 }}
-               />
-               <ReadinessIndicator />
-            </Flex>
+         <header className="studio-header">
+            <div className="studio-header-inner">
+               <Flex
+                  align="center"
+                  justify="space-between"
+                  gap="middle"
+                  style={{ width: "100%" }}
+               >
+                  <Link href="/" aria-label="DET Studio home">
+                     <Space align="center" size="small">
+                        <AppstoreOutlined
+                           aria-hidden="true"
+                           style={{ fontSize: 18, color: "#1677ff" }}
+                        />
+                        <Typography.Text strong style={{ fontSize: 16 }}>
+                           DET Studio
+                        </Typography.Text>
+                     </Space>
+                  </Link>
+                  <Menu
+                     aria-label="Studio"
+                     mode="horizontal"
+                     items={navMenuItems}
+                     selectedKeys={selectedKeys}
+                     style={{ flex: "auto", minWidth: 0, borderBottom: "none" }}
+                  />
+                  <ReadinessIndicator />
+               </Flex>
+            </div>
          </header>
          <Content>
             <div className="studio-content">{children}</div>

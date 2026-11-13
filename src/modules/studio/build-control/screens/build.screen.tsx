@@ -26,7 +26,8 @@
  * self-sufficient.
  */
 import { useCallback, useEffect, useState } from "react";
-import { Alert, Button, Flex, Typography } from "antd";
+import { CheckCircleOutlined, ThunderboltOutlined } from "@ant-design/icons";
+import { Alert, Button, Card, Col, Flex, Row, Steps, Typography } from "antd";
 
 import type {
    BuildFlowRunSnapshot,
@@ -177,9 +178,12 @@ function BuildScreenInner() {
             } catch {
                /* first paint stays empty; Build starts a fresh flow */
             }
-            const deep = new URLSearchParams(window.location.search).get(
-               "analysis",
-            );
+            const searchParams = new URLSearchParams(window.location.search);
+            const sourceParam = searchParams.get("source");
+            if (sourceParam && sourceParam.trim() !== "") {
+               setSourceInput(sourceParam.trim());
+            }
+            const deep = searchParams.get("analysis");
             if (deep !== null && ANALYSIS_ID_PATTERN.test(deep)) {
                setAnalysisId(deep);
                void loadAnalysis(deep);
@@ -327,13 +331,173 @@ function BuildScreenInner() {
             </Typography.Paragraph>
          </section>
 
-         <BuildLaunchForm
-            sourceInput={sourceInput}
-            onSourceInputChange={setSourceInput}
-            busy={busy}
-            starting={starting}
-            onBuild={startBuild}
-         />
+         <Row gutter={[24, 24]}>
+            <Col xs={24} lg={15}>
+               <Card size="small">
+                  <BuildLaunchForm
+                     sourceInput={sourceInput}
+                     onSourceInputChange={setSourceInput}
+                     busy={busy}
+                     starting={starting}
+                     onBuild={startBuild}
+                  />
+               </Card>
+            </Col>
+            <Col xs={24} lg={9}>
+               <Flex vertical gap={16}>
+                  <Card
+                     size="small"
+                     title={
+                        <Flex align="center" gap={8}>
+                           <ThunderboltOutlined style={{ color: "#fa8c16" }} />
+                           <span style={{ fontWeight: 600 }}>
+                              Trang mẫu có sẵn (Quick Presets)
+                           </span>
+                        </Flex>
+                     }
+                  >
+                     <Typography.Paragraph
+                        type="secondary"
+                        style={{ fontSize: 13, marginBottom: 12 }}
+                     >
+                        Chọn nhanh một trang đã xác thực trong dự án Slaunchpad
+                        Fashion để chạy thử nghiệm:
+                     </Typography.Paragraph>
+                     <Flex vertical gap={8}>
+                        <Button
+                           block
+                           style={{
+                              textAlign: "left",
+                              height: "auto",
+                              padding: "8px 12px",
+                           }}
+                           onClick={() =>
+                              setSourceInput(
+                                 "https://www.figma.com/design/vNPtfBRpYM3PsExirVqhmt/slaunchpad-home?node-id=245-2",
+                              )
+                           }
+                           disabled={busy || starting}
+                        >
+                           <Flex vertical align="flex-start" gap={2}>
+                              <Typography.Text strong style={{ fontSize: 13 }}>
+                                 Homepage — Hero &amp; Craftsmanship
+                              </Typography.Text>
+                              <Typography.Text
+                                 type="secondary"
+                                 code
+                                 style={{ fontSize: 11 }}
+                              >
+                                 node-id=245-2 (12 sections, 2 composed)
+                              </Typography.Text>
+                           </Flex>
+                        </Button>
+                        <Button
+                           block
+                           style={{
+                              textAlign: "left",
+                              height: "auto",
+                              padding: "8px 12px",
+                           }}
+                           onClick={() =>
+                              setSourceInput(
+                                 "https://www.figma.com/design/vNPtfBRpYM3PsExirVqhmt/slaunchpad-home?node-id=245-16",
+                              )
+                           }
+                           disabled={busy || starting}
+                        >
+                           <Flex vertical align="flex-start" gap={2}>
+                              <Typography.Text strong style={{ fontSize: 13 }}>
+                                 Homepage — Extended Sections
+                              </Typography.Text>
+                              <Typography.Text
+                                 type="secondary"
+                                 code
+                                 style={{ fontSize: 11 }}
+                              >
+                                 node-id=245-16 (bản mở rộng)
+                              </Typography.Text>
+                           </Flex>
+                        </Button>
+                        <Button
+                           block
+                           style={{
+                              textAlign: "left",
+                              height: "auto",
+                              padding: "8px 12px",
+                           }}
+                           onClick={() =>
+                              setSourceInput(
+                                 "https://www.figma.com/design/vNPtfBRpYM3PsExirVqhmt/slaunchpad-home?node-id=301-4",
+                              )
+                           }
+                           disabled={busy || starting}
+                        >
+                           <Flex vertical align="flex-start" gap={2}>
+                              <Typography.Text strong style={{ fontSize: 13 }}>
+                                 Product Listing Page (PLP)
+                              </Typography.Text>
+                              <Typography.Text
+                                 type="secondary"
+                                 code
+                                 style={{ fontSize: 11 }}
+                              >
+                                 node-id=301-4 (Hyvä PHTML)
+                              </Typography.Text>
+                           </Flex>
+                        </Button>
+                     </Flex>
+                  </Card>
+
+                  <Card
+                     size="small"
+                     title={
+                        <Flex align="center" gap={8}>
+                           <CheckCircleOutlined style={{ color: "#52c41a" }} />
+                           <span style={{ fontWeight: 600 }}>
+                              Quy trình chuyển đổi 6 bước
+                           </span>
+                        </Flex>
+                     }
+                  >
+                     <Steps
+                        size="small"
+                        orientation="vertical"
+                        current={-1}
+                        items={[
+                           {
+                              title: "1. Xác thực nguồn",
+                              content:
+                                 "Kiểm tra node-id và phân tích quyền truy cập",
+                           },
+                           {
+                              title: "2. Đọc thiết kế",
+                              content:
+                                 "Bóc tách cây layer sang cấu trúc chuẩn (NodeIR)",
+                           },
+                           {
+                              title: "3. AI phân tích",
+                              content: "Phát hiện ngữ nghĩa và bố cục các khối",
+                           },
+                           {
+                              title: "4. Chuẩn hóa & Mapping",
+                              content:
+                                 "Ánh xạ sang Page Builder rows & columns",
+                           },
+                           {
+                              title: "5. Sinh Page Builder",
+                              content:
+                                 "Biên dịch mã HTML và script cài đặt PHP",
+                           },
+                           {
+                              title: "6. Kết quả",
+                              content: "Sẵn sàng copy hoặc tải gói cài đặt",
+                           },
+                        ]}
+                     />
+                  </Card>
+               </Flex>
+            </Col>
+         </Row>
 
          {launchError !== null ? (
             <Alert

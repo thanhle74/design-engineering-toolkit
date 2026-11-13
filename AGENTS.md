@@ -41,6 +41,23 @@ This is the **one agent policy entrypoint** for this reusable, platform-neutral 
 - Preserve `docs/ARCHITECTURE.md` as historical V1 source; V2 spec evolves separately until formally superseding the V1 contract.
 - Prefer concise Vietnamese status reports; keep technical names, paths and source code in English. Never hide blockers or overclaim completion.
 
+## Antigravity feature & fix logging rule (MANDATORY)
+
+- **Mandatory Feature/Fix Ledger**: Mọi thay đổi code, sửa, xóa, fix bug, refactor hoặc build chức năng trong repository này đều **BẮT BUỘC** phải ghi chép, tạo và cập nhật log ngay vào [docs/specs/ANTIGRAVITY-FEATURE-LOG.md](docs/specs/ANTIGRAVITY-FEATURE-LOG.md).
+- **Thời điểm ghi nhận**: Ngay sau mỗi chức năng hoàn thành, mỗi bug được fix hoặc mỗi thay đổi substantive, agent lập tức ghi nhận/append một entry mới (AG-001, AG-002,...) vào mục `## Feature / Fix entries`.
+- **Cấu trúc entry bắt buộc**:
+   - `### AG-XXX — [Feature | Fix] Short descriptive title`
+   - `Status`: `DONE` | `PARTIAL` | `BLOCKED` (dựa trên hành vi quan sát thực tế).
+   - `Goal / intended behavior`: Mục tiêu kỳ vọng.
+   - `Implemented behavior`: Hành vi thực tế đã chạy được.
+   - `How to test`: URL, CLI lệnh chạy hoặc các bước test cụ thể.
+   - `Test result / evidence`: Bằng chứng thực tế (CLI/unit test output, browser, Admin Save→Reload).
+   - `Changed code`: Danh sách file/path bị ảnh hưởng (`src/modules/...`, `app/...`).
+   - `Branch / commit`: Branch/commit SHA thực tế.
+   - `Known issues / shortcuts / structural debt`: Nợ kỹ thuật hoặc hạn chế cần ghi nhận candidly.
+   - `Next functional follow-up`: Bước đi tiếp theo (nếu có).
+- **Nguyên tắc**: Báo cáo sự thật, khách quan, không tự phong PASS khi chưa test kiểm chứng. Feature và fix đều phải được ghi lại rõ ràng.
+
 ## Navigation
 
 - [Issue #5 architecture spec](docs/specs/ISSUE-5-converter-architecture.md)

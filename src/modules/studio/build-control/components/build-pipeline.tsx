@@ -9,13 +9,16 @@
  * percent, no elapsed arithmetic, no success the snapshot did not report.
  */
 import { useState } from "react";
-import { ReloadOutlined } from "@ant-design/icons";
+import {
+   CheckCircleFilled,
+   LoadingOutlined,
+   ReloadOutlined,
+} from "@ant-design/icons";
 import {
    Alert,
    Button,
    Card,
    Flex,
-   List,
    Row,
    Col,
    Steps,
@@ -63,12 +66,31 @@ function stageTimes(row: BuildFlowStageRecord) {
    );
 }
 
+function stageStepIcon(status: BuildFlowStageRecord["status"]) {
+   switch (status) {
+      case "running":
+         return <LoadingOutlined spin style={{ color: "#1677ff" }} />;
+      case "success":
+      case "warning":
+         return <CheckCircleFilled style={{ color: "#52c41a" }} />;
+      default:
+         return undefined;
+   }
+}
+
 function SelectedStageDetail({ row }: { row: BuildFlowStageRecord }) {
    return (
       <Flex vertical gap={8}>
          <Flex align="center" gap={8} wrap="wrap">
             <Typography.Text strong>{stageLabel(row.stage)}</Typography.Text>
-            <Tag color={stageStatusTagColor(row.status)}>
+            <Tag
+               icon={
+                  row.status === "running" ? (
+                     <LoadingOutlined spin />
+                  ) : undefined
+               }
+               color={stageStatusTagColor(row.status)}
+            >
                {stageStatusLabel(row.status)}
             </Tag>
          </Flex>
@@ -136,15 +158,13 @@ function ResultsPanel({ snapshot }: { snapshot: BuildFlowRunSnapshot }) {
                <Typography.Text>
                   Artifact của gói cài đặt Page Builder:
                </Typography.Text>
-               <List
-                  size="small"
-                  dataSource={artifactNames}
-                  renderItem={(name) => (
-                     <List.Item style={{ padding: "2px 0" }}>
+               <Flex vertical gap={4}>
+                  {artifactNames.map((name) => (
+                     <div key={name} style={{ padding: "2px 0" }}>
                         <Typography.Text code>{name}</Typography.Text>
-                     </List.Item>
-                  )}
-               />
+                     </div>
+                  ))}
+               </Flex>
                <Typography.Text type="secondary">
                   Tải xuống nằm ở trang lần chạy — artifact chỉ được phục vụ sau
                   khi xác minh khớp build-manifest.json.
@@ -235,6 +255,7 @@ export function BuildPipeline({
                         title: stageTitle(row),
                         content: stageTimes(row),
                         status: stageStepStatus(row.status),
+                        icon: stageStepIcon(row.status),
                      }))}
                      onChange={(index) =>
                         setSelected(snapshot.stages[index]?.stage ?? null)

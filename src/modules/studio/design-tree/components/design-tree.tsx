@@ -11,8 +11,9 @@
  * [61] Ant Design stock light appearance: the empty state is a calm info
  * Alert, not an error banner; section cards stack in a stock Flex column.
  */
-import { SearchOutlined } from "@ant-design/icons";
-import { Alert, Flex, Typography } from "antd";
+import { useState } from "react";
+import { ApartmentOutlined, AppstoreOutlined, SearchOutlined } from "@ant-design/icons";
+import { Alert, Flex, Segmented, Typography } from "antd";
 import type {
    StudioMappingView,
    StudioRunView,
@@ -20,6 +21,7 @@ import type {
 } from "@/src/modules/studio/shared/contracts";
 import { DesignNodeTable } from "./node-table";
 import { SectionCard } from "./section-card";
+import { FigmaTreeView } from "./figma-tree-view";
 
 const UNKNOWN_GROUP_ID = "design-tree-unassigned";
 
@@ -63,7 +65,15 @@ function EmptySectionsAlert({ unmappedCount }: { unmappedCount: number }) {
    );
 }
 
-export function DesignTree({ run }: { run: StudioRunView }) {
+export function DesignTree({
+   run,
+   defaultView = "cards",
+}: {
+   run: StudioRunView;
+   defaultView?: "tree" | "cards";
+}) {
+   const [viewMode, setViewMode] = useState<"tree" | "cards">(defaultView);
+
    // Ordered by the engine-supplied `order`; the array order is respected as a
    // stable tiebreak. No renumbering, no invented order.
    const sections: StudioSectionView[] = [...run.sections].sort(
@@ -91,10 +101,38 @@ export function DesignTree({ run }: { run: StudioRunView }) {
          aria-labelledby="studio-design-tree-heading"
          data-testid="design-tree"
       >
-         <h2>
-            Cây thiết kế gốc{" "}
-            <Typography.Text type="secondary">{summary}</Typography.Text>
-         </h2>
+         <Flex justify="space-between" align="center" wrap="wrap" gap="small" style={{ marginBottom: 16 }}>
+            <h2 style={{ margin: 0 }}>
+               Cây thiết kế gốc{" "}
+               <Typography.Text type="secondary">{summary}</Typography.Text>
+            </h2>
+            {sections.length > 0 && (
+               <Segmented
+                  value={viewMode}
+                  onChange={(val) => setViewMode(val as "tree" | "cards")}
+                  options={[
+                     {
+                        label: (
+                           <span>
+                              <ApartmentOutlined style={{ marginRight: 6 }} />
+                              Cây phân cấp (Tree View)
+                           </span>
+                        ),
+                        value: "tree",
+                     },
+                     {
+                        label: (
+                           <span>
+                              <AppstoreOutlined style={{ marginRight: 6 }} />
+                              Danh sách thẻ (Card View)
+                           </span>
+                        ),
+                        value: "cards",
+                     },
+                  ]}
+               />
+            )}
+         </Flex>
          {sections.length === 0 ? (
             <>
                <EmptySectionsAlert unmappedCount={unassigned.length} />
@@ -102,6 +140,12 @@ export function DesignTree({ run }: { run: StudioRunView }) {
                   <UnassignedGroup mappings={unassigned} />
                )}
             </>
+         ) : viewMode === "tree" ? (
+            <FigmaTreeView
+               sections={sections}
+               mappings={run.mappings}
+               unassigned={unassigned}
+            />
          ) : (
             <>
                <Flex vertical gap="middle">

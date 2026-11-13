@@ -12,7 +12,7 @@
  * Alert, the section separator an antd Divider — no custom styling.
  */
 import { SearchOutlined } from "@ant-design/icons";
-import { Alert, Divider, Typography } from "antd";
+import { Alert, Flex, Typography } from "antd";
 import type { StudioRunView } from "@/src/modules/studio/shared/contracts";
 import { DiagnosticsPanel } from "./diagnostics-panel";
 import { MappingReviewTable } from "./mapping-review-table";
@@ -25,31 +25,30 @@ export function MappingReview({ run }: { run: StudioRunView }) {
          aria-labelledby="studio-mapping-review-heading"
          data-testid="mapping-review"
       >
-         <h2>
-            Soát mapping{" "}
-            <Typography.Text type="secondary">
-               {run.mappings.length} mapping · {run.diagnostics.length} chẩn
-               đoán
-            </Typography.Text>
-         </h2>
-         {isEmpty ? (
-            <Alert
-               type="info"
-               showIcon
-               icon={<SearchOutlined aria-hidden="true" />}
-               data-testid="mapping-review-empty"
-               title="Không có node mapping hay chẩn đoán"
-               description="Lần chạy này không có mapping ghép và không có chẩn đoán nào. Không có gì bị ẩn — nguồn chưa tạo ra nội dung nào để soát."
-            />
-         ) : (
-            <>
-               <MappingReviewTable mappings={run.mappings} />
-               <Divider />
-               <DiagnosticsPanel diagnostics={run.diagnostics} />
-            </>
-         )}
-         <Divider />
-         <ProvenanceFooter run={run} />
+         <Flex vertical gap="middle">
+            <h2 style={{ margin: 0 }}>
+               Chi tiết ánh xạ (Mapping Review){" "}
+               <Typography.Text type="secondary" style={{ fontSize: 14 }}>
+                  {run.mappings.length} mapping · {run.diagnostics.length} chẩn đoán
+               </Typography.Text>
+            </h2>
+            {isEmpty ? (
+               <Alert
+                  type="info"
+                  showIcon
+                  icon={<SearchOutlined aria-hidden="true" />}
+                  data-testid="mapping-review-empty"
+                  title="Không có node mapping hay chẩn đoán"
+                  description="Lần chạy này không có mapping ghép và không có chẩn đoán nào. Không có gì bị ẩn — nguồn chưa tạo ra nội dung nào để soát."
+               />
+            ) : (
+               <>
+                  <MappingReviewTable mappings={run.mappings} />
+                  <DiagnosticsPanel diagnostics={run.diagnostics} />
+               </>
+            )}
+            <ProvenanceFooter run={run} />
+         </Flex>
       </section>
    );
 }

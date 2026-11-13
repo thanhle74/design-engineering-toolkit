@@ -46,7 +46,7 @@ export function ReaderProblemState({
                   <ApiOutlined aria-hidden="true" />
                )
             }
-            message={title}
+            title={title}
             description={
                <>
                   <p>{message}</p>

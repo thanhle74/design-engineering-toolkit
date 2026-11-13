@@ -1,16 +1,7 @@
 "use client";
 
 import { SafetyCertificateOutlined, WarningOutlined } from "@ant-design/icons";
-import {
-   Alert,
-   Card,
-   Collapse,
-   Flex,
-   List,
-   Table,
-   Tag,
-   Typography,
-} from "antd";
+import { Alert, Card, Collapse, Flex, Table, Tag, Typography } from "antd";
 import type { TableColumnsType } from "antd";
 
 import type {
@@ -139,7 +130,7 @@ export function BuildBundleSection({ run }: { run: StudioRunView }) {
                   type="error"
                   showIcon
                   icon={<WarningOutlined aria-hidden="true" />}
-                  message="Xác minh manifest thất bại"
+                  title="Xác minh manifest thất bại"
                   description="Ít nhất một output khai báo không khớp SHA-256/dung lượng đã ghi — gói có thể bị sửa hoặc đã cũ. Lượt tải các output trong manifest bị từ chối cho tới khi gói được build lại."
                />
             )}
@@ -157,11 +148,9 @@ export function BuildBundleSection({ run }: { run: StudioRunView }) {
                <h3 style={{ margin: 0 }}>
                   Khoảng trống {failedStages.length > 0 ? "" : "và ranh giới"}
                </h3>
-               <List
-                  size="small"
-                  dataSource={build.gaps}
-                  renderItem={(gap) => (
-                     <List.Item>
+               <Flex vertical gap={6}>
+                  {build.gaps.map((gap) => (
+                     <Card size="small" key={gap.code}>
                         <Flex vertical gap={4}>
                            <Typography.Text code>
                               {gap.code}
@@ -173,9 +162,9 @@ export function BuildBundleSection({ run }: { run: StudioRunView }) {
                               {gapLead(gap.code)}
                            </Typography.Text>
                         </Flex>
-                     </List.Item>
-                  )}
-               />
+                     </Card>
+                  ))}
+               </Flex>
                {build.gaps.length > 0 ? (
                   <Collapse
                      items={[
@@ -183,11 +172,9 @@ export function BuildBundleSection({ run }: { run: StudioRunView }) {
                            key: "chi-tiet-ky-thuat",
                            label: "Chi tiết kỹ thuật",
                            children: (
-                              <List
-                                 size="small"
-                                 dataSource={build.gaps}
-                                 renderItem={(gap) => (
-                                    <List.Item>
+                              <Flex vertical gap={8}>
+                                 {build.gaps.map((gap) => (
+                                    <div key={gap.code}>
                                        <Flex vertical gap={4}>
                                           <Typography.Text code>
                                              {gap.code}
@@ -196,9 +183,9 @@ export function BuildBundleSection({ run }: { run: StudioRunView }) {
                                              {gap.message}
                                           </Typography.Text>
                                        </Flex>
-                                    </List.Item>
-                                 )}
-                              />
+                                    </div>
+                                 ))}
+                              </Flex>
                            ),
                         },
                      ]}

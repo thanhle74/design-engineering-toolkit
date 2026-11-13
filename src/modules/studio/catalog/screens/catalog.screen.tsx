@@ -3,10 +3,14 @@
 import {
    ApiOutlined,
    DatabaseOutlined,
+   FolderOutlined,
+   HistoryOutlined,
    WarningOutlined,
 } from "@ant-design/icons";
-import { Alert, Card, Flex, Table, Tag, Typography } from "antd";
+import { Alert, Card, Flex, Table, Tabs, Tag, Typography } from "antd";
 import type { TableColumnsType } from "antd";
+
+import { ProjectManager } from "@/src/modules/studio/projects";
 
 import type {
    CatalogIntegrity,
@@ -204,98 +208,146 @@ export function CatalogScreen({
    stats,
 }: CatalogViewProps) {
    return (
-      <Flex vertical gap={32}>
+      <Flex vertical gap={24}>
          <section aria-labelledby="catalog-heading">
-            <Flex align="center" gap={8}>
-               <DatabaseOutlined aria-hidden="true" />
-               {/* layout only: neutralize UA heading margins so the Flex gap owns rhythm */}
-               <h1 id="catalog-heading" style={{ margin: 0 }}>
-                  Dự án &amp; lần chạy
-               </h1>
+            <Flex vertical gap={4} align="flex-start">
+               <Flex align="center" gap={8}>
+                  <DatabaseOutlined
+                     aria-hidden="true"
+                     style={{ fontSize: 20, color: "#1677ff" }}
+                  />
+                  <h1 id="catalog-heading" style={{ margin: 0 }}>
+                     Dự án &amp; Thư viện bản dựng
+                  </h1>
+               </Flex>
+               <Typography.Paragraph
+                  type="secondary"
+                  style={{ margin: 0, fontSize: 14 }}
+               >
+                  Quản lý các bộ trang Figma theo từng dự án Magento và theo dõi
+                  nhật ký các lần chạy chuyển đổi.
+               </Typography.Paragraph>
             </Flex>
          </section>
 
-         {!configured ? (
-            <Alert
-               type="info"
-               showIcon
-               icon={<ApiOutlined aria-hidden="true" />}
-               message="Catalog đang tắt"
-               description={offMessage}
-            />
-         ) : errorCode !== null ? (
-            <Alert
-               type="error"
-               showIcon
-               icon={<WarningOutlined aria-hidden="true" />}
-               message={`Không đọc được catalog (${errorCode})`}
-               description={errorMessage}
-            />
-         ) : (
-            <>
-               <Flex wrap="wrap" gap={16}>
-                  <span>
-                     <Typography.Text strong>
-                        {stats?.projects ?? 0}
-                     </Typography.Text>{" "}
-                     dự án
-                  </span>
-                  <span>
-                     <Typography.Text strong>
-                        {stats?.runs ?? 0}
-                     </Typography.Text>{" "}
-                     lần chạy (
-                     {stats
-                        ? `${stats.byStatus.SUCCEEDED} succeeded · ${stats.byStatus.PARTIAL} partial · ${stats.byStatus.FAILED} failed · ${stats.byStatus.INTERRUPTED} interrupted`
-                        : "—"}
-                     )
-                  </span>
-                  <span>
-                     <Typography.Text strong>
-                        {stats?.artifacts ?? 0}
-                     </Typography.Text>{" "}
-                     artifacts đã lưu danh mục
-                  </span>
-               </Flex>
+         <Tabs
+            type="card"
+            defaultActiveKey="projects"
+            items={[
+               {
+                  key: "projects",
+                  label: (
+                     <span>
+                        <FolderOutlined style={{ marginRight: 6 }} />
+                        Dự án &amp; Trang Figma
+                     </span>
+                  ),
+                  children: <ProjectManager />,
+               },
+               {
+                  key: "runs",
+                  label: (
+                     <span>
+                        <HistoryOutlined style={{ marginRight: 6 }} />
+                        Lịch sử bản dựng (Runs &amp; Artifacts)
+                     </span>
+                  ),
+                  children: (
+                     <Flex vertical gap={24}>
+                        {!configured ? (
+                           <Alert
+                              type="info"
+                              showIcon
+                              icon={<ApiOutlined aria-hidden="true" />}
+                              title="Catalog đang tắt"
+                              description={offMessage}
+                           />
+                        ) : errorCode !== null ? (
+                           <Alert
+                              type="error"
+                              showIcon
+                              icon={<WarningOutlined aria-hidden="true" />}
+                              title={`Không đọc được catalog (${errorCode})`}
+                              description={errorMessage}
+                           />
+                        ) : (
+                           <>
+                              <Flex wrap="wrap" gap={16}>
+                                 <span>
+                                    <Typography.Text strong>
+                                       {stats?.projects ?? 0}
+                                    </Typography.Text>{" "}
+                                    dự án
+                                 </span>
+                                 <span>
+                                    <Typography.Text strong>
+                                       {stats?.runs ?? 0}
+                                    </Typography.Text>{" "}
+                                    lần chạy (
+                                    {stats
+                                       ? `${stats.byStatus.SUCCEEDED} succeeded · ${stats.byStatus.PARTIAL} partial · ${stats.byStatus.FAILED} failed · ${stats.byStatus.INTERRUPTED} interrupted`
+                                       : "—"}
+                                    )
+                                 </span>
+                                 <span>
+                                    <Typography.Text strong>
+                                       {stats?.artifacts ?? 0}
+                                    </Typography.Text>{" "}
+                                    artifacts đã lưu danh mục
+                                 </span>
+                              </Flex>
 
-               <Card size="small" title={<h2 style={{ margin: 0 }}>Dự án</h2>}>
-                  {projects.length === 0 ? (
-                     <Typography.Text type="secondary">
-                        Chưa có dự án nào trong catalog. Chạy một bản dựng với
-                        catalog bật (xem trang Bản dựng) hoặc đặt một bundle
-                        hoàn tất vào thư mục runs đã cấu hình.
-                     </Typography.Text>
-                  ) : (
-                     <Table<CatalogProjectView>
-                        rowKey="id"
-                        columns={projectColumns}
-                        dataSource={projects}
-                        pagination={false}
-                        size="small"
-                     />
-                  )}
-               </Card>
+                              <Card
+                                 size="small"
+                                 title={
+                                    <h2 style={{ margin: 0 }}>
+                                       Dự án đã ghi nhận
+                                    </h2>
+                                 }
+                              >
+                                 {projects.length === 0 ? (
+                                    <Typography.Text type="secondary">
+                                       Chưa có dự án nào trong catalog. Chạy một
+                                       bản dựng với catalog bật (xem trang Bản
+                                       dựng) hoặc đặt một bundle hoàn tất vào
+                                       thư mục runs đã cấu hình.
+                                    </Typography.Text>
+                                 ) : (
+                                    <Table<CatalogProjectView>
+                                       rowKey="id"
+                                       columns={projectColumns}
+                                       dataSource={projects}
+                                       pagination={false}
+                                       size="small"
+                                    />
+                                 )}
+                              </Card>
 
-               <Card
-                  size="small"
-                  title={<h2 style={{ margin: 0 }}>Lần chạy</h2>}
-               >
-                  {runs.length === 0 ? (
-                     <Typography.Text type="secondary">
-                        Chưa có lần chạy nào trong catalog.
-                     </Typography.Text>
-                  ) : (
-                     <Table<CatalogRunView>
-                        rowKey="id"
-                        columns={runColumns}
-                        dataSource={runs}
-                        pagination={false}
-                        size="small"
-                     />
-                  )}
-               </Card>
-            </>
-         )}
+                              <Card
+                                 size="small"
+                                 title={<h2 style={{ margin: 0 }}>Lần chạy</h2>}
+                              >
+                                 {runs.length === 0 ? (
+                                    <Typography.Text type="secondary">
+                                       Chưa có lần chạy nào trong catalog.
+                                    </Typography.Text>
+                                 ) : (
+                                    <Table<CatalogRunView>
+                                       rowKey="id"
+                                       columns={runColumns}
+                                       dataSource={runs}
+                                       pagination={false}
+                                       size="small"
+                                    />
+                                 )}
+                              </Card>
+                           </>
+                        )}
+                     </Flex>
+                  ),
+               },
+            ]}
+         />
       </Flex>
    );
 }

@@ -85,7 +85,7 @@ export function DesignNodeTable({
    return (
       <div data-testid={testId}>
          <Table<StudioMappingView>
-            rowKey="nodeId"
+            rowKey={(record, index) => `${record.nodeId}-${index}`}
             size="small"
             columns={columns}
             dataSource={[...mappings]}

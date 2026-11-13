@@ -1,38 +1,45 @@
 /**
- * [61] DET Studio global CSS — intentionally minimal after the antd-default
- * correction. Light-only costs no CSS: Ant Design's out-of-the-box default
- * theme IS the light theme (the Studio has no ConfigProvider, no token
- * overrides and no dark algorithm anywhere), so this file carries no colors,
- * no fonts and no dark-mode rules — only the `color-scheme` declaration and
- * the single documented layout exception the shell requires.
+ * [61] DET Studio global CSS — clean, modern Ant Design light application shell.
+ * Uses standard Ant Design light tokens (colorBgLayout: #f5f6f8, colorBgContainer: #fff)
+ * with a full-width sticky app header and a centered content container.
  */
 :root {
    color-scheme: light;
 }
 
-/**
- * [61] The ONE documented layout exception (see studio-shell.tsx): Ant Design
- * has no primitive for a centered max-width content column, so the shell uses
- * this single geometry-only class to center the header band and the page
- * content region. No colors or theme values live here.
- */
+body {
+   margin: 0;
+   background: #f5f6f8;
+   color: rgba(0, 0, 0, 0.88);
+}
+
+body .ant-layout {
+   background: #f5f6f8;
+}
+
+.studio-header {
+   background: #ffffff;
+   border-bottom: 1px solid #f0f0f0;
+   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+   position: sticky;
+   top: 0;
+   z-index: 100;
+   width: 100%;
+}
+
+.studio-header-inner {
+   margin-inline: auto;
+   width: 100%;
+   max-width: 1200px;
+   padding: 0 24px;
+   height: 56px;
+   display: flex;
+   align-items: center;
+}
+
 .studio-content {
    margin-inline: auto;
    width: 100%;
-   max-width: 1152px;
-   padding: 24px;
-}
-
-/**
- * [61] C61-2 Owner request: the whole-site main background is WHITE. Ant
- * Design's Layout paints the gray `colorBgLayout` (#f0f2f5) via its cssinjs
- * `.ant-layout` rule; at equal specificity the later-injected antd rule won,
- * so this rule is prefixed with `body` to win deterministically. The value
- * stays Ant Design's own container token (default light `colorBgContainer` =
- * white) — no bespoke color is introduced. The literal `#fff` is only a
- * fallback equal to that same default token value for the case CSS variables
- * are unavailable.
- */
-body .ant-layout {
-   background: var(--ant-color-bg-container, #fff);
+   max-width: 1200px;
+   padding: 24px 24px 48px;
 }
