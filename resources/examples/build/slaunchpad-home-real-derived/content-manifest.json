@@ -24,27 +24,433 @@
     {
       "valueRef": "design://figma-home-desktop/254:40",
       "kind": "media",
-      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/hero-bg-placeholder.jpg}}",
-      "assetLabel": "labeled offline placeholder (operator-supplied local asset required before any CMS write)",
-      "note": "Hero background slot frame; no asset bytes exist in the committed evidence."
+      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/hero-primary.jpg}}",
+      "assetLabel": "original design fill exported from the pinned Figma revision via read-only asset download (operator pipeline, 2026-11-16 fix loop)",
+      "note": "Hero background slot frame; no asset bytes exist in the committed evidence. Upgraded from offline placeholder to the original design fill (2026-11-16 fix loop)."
     },
     {
       "valueRef": "design://figma-home-desktop/299:344",
       "kind": "media",
-      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/craft-media-placeholder.jpg}}",
-      "assetLabel": "labeled offline placeholder (operator-supplied local asset required before any CMS write)"
+      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/craft-media.jpg}}",
+      "assetLabel": "original design fill exported from the pinned Figma revision via read-only asset download (operator pipeline, 2026-11-16 fix loop)",
+      "note": "Upgraded from offline placeholder to the original design fill (2026-11-16 fix loop)."
     },
     {
       "valueRef": "design://figma-home-desktop/299:349",
       "kind": "media",
-      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/detail-stitch-placeholder.jpg}}",
-      "assetLabel": "labeled offline placeholder (operator-supplied local asset required before any CMS write)"
+      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/detail-stitch.jpg}}",
+      "assetLabel": "original design fill exported from the pinned Figma revision via read-only asset download (operator pipeline, 2026-11-16 fix loop)",
+      "note": "Upgraded from offline placeholder to the original design fill (2026-11-16 fix loop)."
     },
     {
       "valueRef": "design://figma-home-desktop/299:350",
       "kind": "media",
-      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/detail-fabric-placeholder.jpg}}",
-      "assetLabel": "labeled offline placeholder (operator-supplied local asset required before any CMS write)"
+      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/detail-fabric.jpg}}",
+      "assetLabel": "original design fill exported from the pinned Figma revision via read-only asset download (operator pipeline, 2026-11-16 fix loop)",
+      "note": "Upgraded from offline placeholder to the original design fill (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/254:60",
+      "kind": "text",
+      "text": "THE HOUSE",
+      "note": "Observed as the design layer name at the pinned revision (added by the 2026-11-16 E2E zip-import fix loop: the live build-flow compose left this heading empty as EVIDENCE_MISSING)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/254:61",
+      "kind": "text",
+      "text": "Luxury is what remains when everything unnecessary has been removed.",
+      "note": "Observed as the design layer name at the pinned revision (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/257:181",
+      "kind": "text",
+      "text": "THE CIRCULAR",
+      "note": "Observed as the design layer name at the pinned revision (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/257:182",
+      "kind": "text",
+      "text": "Letters from the House",
+      "note": "Observed as the design layer name at the pinned revision (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/257:183",
+      "kind": "text",
+      "text": "New arrivals, styling notes and private previews — one letter a month.",
+      "note": "Observed as the design layer name at the pinned revision (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/394:388",
+      "kind": "text",
+      "text": "CHAPTER 02 / THE COLLECTION",
+      "note": "Observed as the design layer name at the pinned revision (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/394:389",
+      "kind": "text",
+      "text": "The Modern Silhouette",
+      "note": "Observed as the design layer name at the pinned revision (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/394:390",
+      "kind": "text",
+      "text": "An exploration of modern form and effortless style.",
+      "note": "Observed as the design layer name at the pinned revision (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/522:543",
+      "kind": "text",
+      "text": "THE PEOPLE",
+      "note": "Observed as the design layer name at the pinned revision (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/522:544",
+      "kind": "text",
+      "text": "Worn in Their Own Way",
+      "note": "Observed as the design layer name at the pinned revision (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/522:545",
+      "kind": "text",
+      "text": "Personal perspectives on modern dressing.",
+      "note": "Observed as the design layer name at the pinned revision (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/522:546",
+      "kind": "text",
+      "text": "04 LOOKS",
+      "note": "Observed as the design layer name at the pinned revision (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/522:555",
+      "kind": "text",
+      "text": "EXPLORE THE LOOKS →",
+      "note": "Observed as the design layer name at the pinned revision; projected as a CTA label — no link target is exposed by the design metadata, so no link entry is declared (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/257:126",
+      "kind": "text",
+      "text": "SIGNATURE OUTERWEAR",
+      "note": "Observed as the design layer name at the pinned revision (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/257:127",
+      "kind": "text",
+      "text": "The Signature Trench",
+      "note": "Observed as the design layer name at the pinned revision (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/257:129",
+      "kind": "text",
+      "text": "Relaxed tailoring in warm neutrals — the defining layer of the season.",
+      "note": "Observed as the design layer name at the pinned revision (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/299:346",
+      "kind": "text",
+      "text": "CRAFTSMANSHIP",
+      "note": "Transcribed from the pinned Figma render (read-only visual read at the pinned revision); the layer name is generic so node metadata does not expose this copy (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/299:347",
+      "kind": "text",
+      "text": "Materials, considered",
+      "note": "Transcribed from the pinned Figma render (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/299:348",
+      "kind": "text",
+      "text": "Fabric, stitch and finish — considered at every step of the making.",
+      "note": "Transcribed from the pinned Figma render (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/254:47",
+      "kind": "link",
+      "text": "Explore the Collection",
+      "linkUrl": "#",
+      "buttonVariant": "primary",
+      "note": "Transcribed from the pinned Figma render (hero primary button). Link target is a QA placeholder anchor — the live checkout exposes no category url_rewrites to resolve a real path; operator supplies the real collection URL before production use (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/394:387",
+      "kind": "media",
+      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/hero-secondary.jpg}}",
+      "assetLabel": "original design fill exported from the pinned Figma revision via read-only asset download (operator pipeline, 2026-11-16 fix loop)",
+      "note": "Media slot resolved to its original design fill (2026-11-16 fix loop); no asset was invented — bytes exported from the pinned design."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/299:301",
+      "kind": "media",
+      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/campaign-primary.jpg}}",
+      "assetLabel": "original design fill exported from the pinned Figma revision via read-only asset download (operator pipeline, 2026-11-16 fix loop)",
+      "note": "Media slot resolved to its original design fill (2026-11-16 fix loop); no asset was invented — bytes exported from the pinned design."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/299:302",
+      "kind": "media",
+      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/campaign-secondary.jpg}}",
+      "assetLabel": "original design fill exported from the pinned Figma revision via read-only asset download (operator pipeline, 2026-11-16 fix loop)",
+      "note": "Media slot resolved to its original design fill (2026-11-16 fix loop); no asset was invented — bytes exported from the pinned design."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/436:460",
+      "kind": "media",
+      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/collection-women.jpg}}",
+      "assetLabel": "original design fill exported from the pinned Figma revision via read-only asset download (operator pipeline, 2026-11-16 fix loop)",
+      "note": "Media slot resolved to its original design fill (2026-11-16 fix loop); no asset was invented — bytes exported from the pinned design."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/436:472",
+      "kind": "media",
+      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/collection-men.jpg}}",
+      "assetLabel": "original design fill exported from the pinned Figma revision via read-only asset download (operator pipeline, 2026-11-16 fix loop)",
+      "note": "Media slot resolved to its original design fill (2026-11-16 fix loop); no asset was invented — bytes exported from the pinned design."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/436:484",
+      "kind": "media",
+      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/collection-accessories.jpg}}",
+      "assetLabel": "original design fill exported from the pinned Figma revision via read-only asset download (operator pipeline, 2026-11-16 fix loop)",
+      "note": "Media slot resolved to its original design fill (2026-11-16 fix loop); no asset was invented — bytes exported from the pinned design."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/453:394",
+      "kind": "media",
+      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/collection-editorial-detail.jpg}}",
+      "assetLabel": "original design fill exported from the pinned Figma revision via read-only asset download (operator pipeline, 2026-11-16 fix loop)",
+      "note": "Media slot resolved to its original design fill (2026-11-16 fix loop); no asset was invented — bytes exported from the pinned design."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/299:323",
+      "kind": "media",
+      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/look-01.jpg}}",
+      "assetLabel": "original design fill exported from the pinned Figma revision via read-only asset download (operator pipeline, 2026-11-16 fix loop)",
+      "note": "Media slot resolved to its original design fill (2026-11-16 fix loop); no asset was invented — bytes exported from the pinned design."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/299:330",
+      "kind": "media",
+      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/look-02.jpg}}",
+      "assetLabel": "original design fill exported from the pinned Figma revision via read-only asset download (operator pipeline, 2026-11-16 fix loop)",
+      "note": "Media slot resolved to its original design fill (2026-11-16 fix loop); no asset was invented — bytes exported from the pinned design."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/299:337",
+      "kind": "media",
+      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/look-03.jpg}}",
+      "assetLabel": "original design fill exported from the pinned Figma revision via read-only asset download (operator pipeline, 2026-11-16 fix loop)",
+      "note": "Media slot resolved to its original design fill (2026-11-16 fix loop); no asset was invented — bytes exported from the pinned design."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/284:408",
+      "kind": "media",
+      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/mosaic-01.jpg}}",
+      "assetLabel": "original design fill exported from the pinned Figma revision via read-only asset download (operator pipeline, 2026-11-16 fix loop)",
+      "note": "Media slot resolved to its original design fill (2026-11-16 fix loop); no asset was invented — bytes exported from the pinned design."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/284:409",
+      "kind": "media",
+      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/mosaic-02.jpg}}",
+      "assetLabel": "original design fill exported from the pinned Figma revision via read-only asset download (operator pipeline, 2026-11-16 fix loop)",
+      "note": "Media slot resolved to its original design fill (2026-11-16 fix loop); no asset was invented — bytes exported from the pinned design."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/284:411",
+      "kind": "media",
+      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/mosaic-03.jpg}}",
+      "assetLabel": "original design fill exported from the pinned Figma revision via read-only asset download (operator pipeline, 2026-11-16 fix loop)",
+      "note": "Media slot resolved to its original design fill (2026-11-16 fix loop); no asset was invented — bytes exported from the pinned design."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/284:412",
+      "kind": "media",
+      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/mosaic-04.jpg}}",
+      "assetLabel": "original design fill exported from the pinned Figma revision via read-only asset download (operator pipeline, 2026-11-16 fix loop)",
+      "note": "Media slot resolved to its original design fill (2026-11-16 fix loop); no asset was invented — bytes exported from the pinned design."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/284:414",
+      "kind": "media",
+      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/mosaic-05.jpg}}",
+      "assetLabel": "original design fill exported from the pinned Figma revision via read-only asset download (operator pipeline, 2026-11-16 fix loop)",
+      "note": "Media slot resolved to its original design fill (2026-11-16 fix loop); no asset was invented — bytes exported from the pinned design."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/284:415",
+      "kind": "media",
+      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/mosaic-06.jpg}}",
+      "assetLabel": "original design fill exported from the pinned Figma revision via read-only asset download (operator pipeline, 2026-11-16 fix loop)",
+      "note": "Media slot resolved to its original design fill (2026-11-16 fix loop); no asset was invented — bytes exported from the pinned design."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/284:417",
+      "kind": "media",
+      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/mosaic-07.jpg}}",
+      "assetLabel": "original design fill exported from the pinned Figma revision via read-only asset download (operator pipeline, 2026-11-16 fix loop)",
+      "note": "Media slot resolved to its original design fill (2026-11-16 fix loop); no asset was invented — bytes exported from the pinned design."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/284:418",
+      "kind": "media",
+      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/mosaic-08.jpg}}",
+      "assetLabel": "original design fill exported from the pinned Figma revision via read-only asset download (operator pipeline, 2026-11-16 fix loop)",
+      "note": "Media slot resolved to its original design fill (2026-11-16 fix loop); no asset was invented — bytes exported from the pinned design."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/254:72",
+      "kind": "media",
+      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/product-classic-shirt.jpg}}",
+      "assetLabel": "original design fill exported from the pinned Figma revision via read-only asset download (operator pipeline, 2026-11-16 fix loop)",
+      "note": "Media slot resolved to its original design fill (2026-11-16 fix loop); no asset was invented — bytes exported from the pinned design."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/254:81",
+      "kind": "media",
+      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/product-knit-poncho.jpg}}",
+      "assetLabel": "original design fill exported from the pinned Figma revision via read-only asset download (operator pipeline, 2026-11-16 fix loop)",
+      "note": "Media slot resolved to its original design fill (2026-11-16 fix loop); no asset was invented — bytes exported from the pinned design."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/254:90",
+      "kind": "media",
+      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/product-chelsea-boot.jpg}}",
+      "assetLabel": "original design fill exported from the pinned Figma revision via read-only asset download (operator pipeline, 2026-11-16 fix loop)",
+      "note": "Media slot resolved to its original design fill (2026-11-16 fix loop); no asset was invented — bytes exported from the pinned design."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/254:99",
+      "kind": "media",
+      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/product-tan-satchel.jpg}}",
+      "assetLabel": "original design fill exported from the pinned Figma revision via read-only asset download (operator pipeline, 2026-11-16 fix loop)",
+      "note": "Media slot resolved to its original design fill (2026-11-16 fix loop); no asset was invented — bytes exported from the pinned design."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/257:122",
+      "kind": "media",
+      "mediaUrl": "{{media url=wysiwyg/slaunchpad-home-real-derived/spotlight-trench.jpg}}",
+      "assetLabel": "original design fill exported from the pinned Figma revision via read-only asset download (operator pipeline, 2026-11-16 fix loop)",
+      "note": "Media slot resolved to its original design fill (2026-11-16 fix loop); no asset was invented — bytes exported from the pinned design."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/299:304",
+      "kind": "text",
+      "text": "THE CAMPAIGN",
+      "note": "Transcribed from the pinned Figma render (read-only visual read); the layer name is generic so metadata does not expose this copy (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/299:305",
+      "kind": "text",
+      "text": "The Season in Two Acts",
+      "note": "Transcribed from the pinned Figma render (read-only visual read); the layer name is generic so metadata does not expose this copy (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/256:96",
+      "kind": "text",
+      "text": "Explore by Wardrobe",
+      "note": "Transcribed from the pinned Figma render (read-only visual read); the layer name is generic so metadata does not expose this copy (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/254:62",
+      "kind": "text",
+      "text": "Selected Pieces",
+      "note": "Transcribed from the pinned Figma render (read-only visual read); the layer name is generic so metadata does not expose this copy (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/299:312",
+      "kind": "text",
+      "text": "The Lookbook",
+      "note": "Transcribed from the pinned Figma render (read-only visual read); the layer name is generic so metadata does not expose this copy (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/256:139",
+      "kind": "text",
+      "text": "Scenes from the Collection",
+      "note": "Transcribed from the pinned Figma render (read-only visual read); the layer name is generic so metadata does not expose this copy (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/254:47",
+      "kind": "text",
+      "text": "Explore the Collection",
+      "note": "Transcribed from the pinned Figma render; the component instance's inner label layer is generic so metadata does not expose it (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/394:391",
+      "kind": "text",
+      "text": "DISCOVER THE EDIT →",
+      "note": "Transcribed from the pinned Figma render; the component instance's inner label layer is generic so metadata does not expose it (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/394:391",
+      "kind": "link",
+      "linkUrl": "#",
+      "note": "QA placeholder anchor — the live checkout exposes no category url_rewrites to resolve a real path; operator supplies the real target before production (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/354:386",
+      "kind": "text",
+      "text": "EXPLORE THE COLLECTION →",
+      "note": "Transcribed from the pinned Figma render; the component instance's inner label layer is generic so metadata does not expose it (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/354:386",
+      "kind": "link",
+      "linkUrl": "#",
+      "note": "QA placeholder anchor — the live checkout exposes no category url_rewrites to resolve a real path; operator supplies the real target before production (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/522:555",
+      "kind": "link",
+      "linkUrl": "#",
+      "note": "QA placeholder anchor — the live checkout exposes no category url_rewrites to resolve a real path; operator supplies the real target before production (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/257:131",
+      "kind": "text",
+      "text": "Add to Bag →",
+      "note": "Transcribed from the pinned Figma render; the component instance's inner label layer is generic so metadata does not expose it (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/257:131",
+      "kind": "link",
+      "linkUrl": "#",
+      "note": "QA placeholder anchor — the live checkout exposes no category url_rewrites to resolve a real path; operator supplies the real target before production (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/257:136",
+      "kind": "text",
+      "text": "View Details →",
+      "note": "Transcribed from the pinned Figma render; the component instance's inner label layer is generic so metadata does not expose it (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/257:136",
+      "kind": "link",
+      "linkUrl": "#",
+      "note": "QA placeholder anchor — the live checkout exposes no category url_rewrites to resolve a real path; operator supplies the real target before production (2026-11-16 fix loop)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/257:184",
+      "kind": "text",
+      "text": "Subscribe →",
+      "note": "Transcribed from the pinned Figma render at the projected SLOT/NewsletterForm locator the composer reads; the component instance's inner label layer (257:187) is generic so metadata does not expose it (2026-11-16 fix loop round 4)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/257:184",
+      "kind": "link",
+      "linkUrl": "#",
+      "note": "QA placeholder anchor on the projected SLOT/NewsletterForm locator — the live checkout exposes no category url_rewrites to resolve a real path; operator supplies the real target before production (2026-11-16 fix loop round 4)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/257:187",
+      "kind": "text",
+      "text": "Subscribe →",
+      "note": "Transcribed from the pinned Figma render at the inner Proto/Button/Primary instance locator — plans alternate between projecting the SLOT/NewsletterForm container (257:184) and this inner button instance as the composed CTA, so both observed locators carry the same evidence (2026-11-16 fix loop round 5)."
+    },
+    {
+      "valueRef": "design://figma-home-desktop/257:187",
+      "kind": "link",
+      "linkUrl": "#",
+      "note": "QA placeholder anchor at the inner Proto/Button/Primary instance locator, mirroring 257:184 — the live checkout exposes no category url_rewrites to resolve a real path; operator supplies the real target before production (2026-11-16 fix loop round 5)."
     }
   ]
 }

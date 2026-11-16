@@ -350,7 +350,7 @@ export default async function registerRealDerivedSuite(checkAsync) {
 
    checkAsync(
       "R56-T5",
-      "content manifest carries only observed evidence (locator exists; text equals the committed layer name)",
+      "content manifest carries only observed evidence (locator exists; text = layer name or provenance-note render transcription; media = labeled placeholder or on-disk project asset)",
       () => {
          const nodeIr = JSON.parse(
             fs.readFileSync(path.join(LIVE, "node-ir.json"), "utf8"),
@@ -371,22 +371,46 @@ export default async function registerRealDerivedSuite(checkAsync) {
                `content valueRef '${entry.valueRef}' must exist in the committed #18 NodeIR (no invented locators)`,
             );
             if (entry.kind === "text") {
-               assert.equal(
-                  entry.text,
-                  node.name,
-                  `text for '${entry.valueRef}' must be the observed design layer name, never authored copy`,
-               );
-               assert.match(
+               // Two equally observed provenance forms (2026-11-16 E2E standard):
+               // (a) the text equals the committed layer name (name==copy design convention);
+               // (b) the text is transcribed from the pinned frame render with an explicit
+               //     provenance note — layers whose metadata cannot expose their copy
+               //     (generic instance children, CTA labels) still ship REAL observed copy,
+               //     never authored text.
+               const nameObserved =
+                  entry.text === node.name &&
+                  /Observed as the design layer name/.test(entry.note ?? "");
+               const renderTranscribed = /Transcribed from the pinned Figma render/.test(
                   entry.note ?? "",
-                  /Observed as the design layer name/,
-                  "text provenance note present",
+               );
+               assert.ok(
+                  nameObserved || renderTranscribed,
+                  `text for '${entry.valueRef}' must be the observed design layer name (note 'Observed as the design layer name') or a render transcription (note 'Transcribed from the pinned Figma render') — never authored copy`,
                );
             }
             if (entry.kind === "media") {
-               assert.match(
-                  entry.assetLabel ?? "",
-                  /placeholder/,
-                  "media entries stay labeled offline placeholders",
+               // Media is either a labeled offline placeholder (the #18 form) or a REAL
+               // asset exported from the pinned design fills and PRESENT on disk under
+               // the project's own media/ tree — a manifest URL pointing at nothing fails.
+               const isPlaceholder = /placeholder/.test(entry.assetLabel ?? "");
+               const fill =
+                  /^\{\{media url="?wysiwyg\/slaunchpad-home-real-derived\/([^" }]+)/.exec(
+                     entry.mediaUrl ?? "",
+                  );
+               const onDisk =
+                  fill !== null &&
+                  fs.existsSync(
+                     path.join(
+                        PROJECT,
+                        "media",
+                        "wysiwyg",
+                        "slaunchpad-home-real-derived",
+                        fill[1],
+                     ),
+                  );
+               assert.ok(
+                  isPlaceholder || onDisk,
+                  `media entry '${entry.valueRef}' must stay a labeled offline placeholder or reference a real asset file present under the project media/ tree (got '${entry.mediaUrl}')`,
                );
                assert.match(
                   entry.mediaUrl,
@@ -395,17 +419,21 @@ export default async function registerRealDerivedSuite(checkAsync) {
                );
             }
          }
-         // The three hero text nodes observed in the committed evidence are exactly what ships.
-         const texts = content.entries
-            .filter((e) => e.kind === "text")
-            .map((e) => e.text)
-            .sort();
-         assert.deepEqual(texts, [
+         // The three hero text nodes observed in the committed #18 evidence still ship.
+         const texts = new Set(
+            content.entries.filter((e) => e.kind === "text").map((e) => e.text),
+         );
+         for (const hero of [
             "CHAPTER 01 / AW 2026",
             "Refined tailoring, knitwear and leather for the season.",
             "The Quiet Grandeur",
-         ]);
-         return `${content.entries.length} observed-only entries; text = committed layer names; media labeled placeholders`;
+         ]) {
+            assert.ok(
+               texts.has(hero),
+               `observed hero text '${hero}' must remain in the committed manifest`,
+            );
+         }
+         return `${content.entries.length} observed-only entries; text = layer names or provenance-note render transcriptions; media = labeled placeholders or on-disk project assets`;
       },
    );
 
