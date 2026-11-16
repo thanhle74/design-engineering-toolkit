@@ -4,7 +4,7 @@ import { cleanup, render, screen } from "@testing-library/react";
 import { DEMO_RUN_FIXTURE } from "@/src/modules/studio/shared/fixtures/demo-run";
 import type { StudioPreviewState } from "@/src/modules/studio/shared/contracts";
 
-import { PreviewPanel } from "./preview-panel";
+import { PreviewPanel } from "../preview-panel";
 
 // vitest runs without `globals`, so RTL auto-cleanup never registers itself.
 afterEach(cleanup);

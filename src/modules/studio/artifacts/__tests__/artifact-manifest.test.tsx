@@ -5,7 +5,7 @@ import userEvent from "@testing-library/user-event";
 import { DEMO_RUN_FIXTURE } from "@/src/modules/studio/shared/fixtures/demo-run";
 import type { StudioArtifactView } from "@/src/modules/studio/shared/contracts";
 
-import { ArtifactManifest } from "./artifact-manifest";
+import { ArtifactManifest } from "../artifact-manifest";
 
 // vitest runs without `globals`, so RTL auto-cleanup never registers itself.
 afterEach(cleanup);

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi, afterEach } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 
-import { StudioShell, studioNavItems } from "./studio-shell";
+import { StudioShell, studioNavItems } from "../studio-shell";
 
 /**
  * [70] The shell carries EXACTLY three nav items — Tổng quan (/), Build

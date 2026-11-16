@@ -387,7 +387,8 @@ function BuildScreenInner() {
                                  code
                                  style={{ fontSize: 11 }}
                               >
-                                 node-id=245-2 (12 sections, 2 composed)
+                                 node-id=245-2 (12 sections, 5 composed · 7
+                                 skipped)
                               </Typography.Text>
                            </Flex>
                         </Button>

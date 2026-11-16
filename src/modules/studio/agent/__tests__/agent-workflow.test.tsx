@@ -19,7 +19,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { ClaudeAgentPreflight } from "@/src/modules/studio/server/claude-agent/claude-detect";
 
-import { AgentWorkflow } from "./agent-workflow";
+import { AgentWorkflow } from "../components/agent-workflow";
 
 const CONFIGS = [
    {

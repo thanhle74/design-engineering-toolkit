@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { App as AntdApp } from "antd";
-import * as studioProvidersModule from "./studio-providers";
-import { StudioProviders } from "./studio-providers";
+import * as studioProvidersModule from "../studio-providers";
+import { StudioProviders } from "../studio-providers";
 
 /**
  * [61] Provider contract after the antd-default-light correction:

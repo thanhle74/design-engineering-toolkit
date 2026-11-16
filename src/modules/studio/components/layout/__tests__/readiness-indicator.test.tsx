@@ -6,7 +6,7 @@ import {
    ReadinessIndicator,
    resolveStudioReadinessState,
    STUDIO_READINESS_STATE_LABELS_VI,
-} from "./readiness-indicator";
+} from "../readiness-indicator";
 import { useStudioReadiness } from "@/src/modules/studio/readiness";
 import type { StudioReadinessContextValue } from "@/src/modules/studio/readiness";
 import type { StudioReadinessStatus } from "@/src/modules/studio/shared/contracts/build-flow";

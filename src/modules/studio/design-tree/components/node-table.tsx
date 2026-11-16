@@ -21,6 +21,7 @@ import {
    ComposeDispositionBadge,
    KindBadge,
    ReviewDispositionBadge,
+   mappingRowKeys,
 } from "@/src/modules/studio/mapping-review";
 
 /** "không rõ" — a fact the run does not carry is shown, never invented ([61] Vietnamese). */
@@ -82,11 +83,17 @@ export function DesignNodeTable({
    mappings: readonly StudioMappingView[];
    testId: string;
 }) {
+   /**
+    * [74] Fact-based row identity (`mappingRowKeys`, AG-011 follow-up):
+    * nodeId + section/disposition/locator/target facts + an occurrence index
+    * computed once over THIS table's (unfiltered) source array. Distinct
+    * entries with the same nodeId stay distinct; keys survive re-renders.
+    */
    const dataWithKeys = useMemo(
       () =>
-         mappings.map((m, index) => ({
-            ...m,
-            rowKey: `${m.nodeId}-${index}`,
+         mappingRowKeys(mappings).map((rowKey, index) => ({
+            ...mappings[index]!,
+            rowKey,
          })),
       [mappings],
    );

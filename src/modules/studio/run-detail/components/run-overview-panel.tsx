@@ -1,9 +1,28 @@
 "use client";
 
+/**
+ * [74] Run overview — usage-oriented tab of the run detail screen.
+ *
+ * [74] Honesty pass (issue scope E): every count and status on this panel is
+ * DERIVED from the run's own data (`run.sections` elementCount +
+ * `run.mappings` composeDisposition via `summarizeRunSections`). The #72
+ * extended reality is 5 of 12 sections composed with 7 skipped entries — the
+ * panel now says exactly that instead of a blanket "Đã ghép thành công" per
+ * row or an unconditional "Hoàn tất thành công". GAP / SKIPPED / EXCLUDED
+ * stay visible as counters and per-section badges; PREVIEW_UNAVAILABLE and
+ * errors are not masked (they live on the Technical tab and in the HTML
+ * missing-state Alert here); no fake previews are rendered.
+ *
+ * Static content (install guide) and the derived overall-status card live in
+ * their own components (`install-guide-tabs`, `overview-status-card`); this
+ * file keeps the data-driven layout. Layout, spacing and the friendly
+ * Vietnamese copy style are preserved; only truthfulness of text/counts/
+ * statuses changed. [61] Ant Design stock light (preset color values only),
+ * no theme overrides.
+ */
 import { useEffect, useState } from "react";
 import {
    CheckCircleFilled,
-   CheckCircleOutlined,
    CheckOutlined,
    CodeOutlined,
    CopyOutlined,
@@ -21,9 +40,7 @@ import {
    Flex,
    Row,
    Skeleton,
-   Steps,
    Table,
-   Tabs,
    Tag,
    Typography,
    message,
@@ -34,17 +51,17 @@ import type {
    StudioArtifactView,
    StudioRunView,
 } from "@/src/modules/studio/shared/contracts";
+import {
+   dispositionSummaryText,
+   summarizeRunSections,
+   type SectionComposeRow,
+} from "../section-summary";
+import { InstallGuideTabs } from "./install-guide-tabs";
+import { OverviewStatusCard } from "./overview-status-card";
 
 interface RunOverviewPanelProps {
    run: StudioRunView;
    onQuickDownload: (artifact: StudioArtifactView) => void;
-}
-
-interface SectionRow {
-   order: number;
-   name: string;
-   role: string;
-   elementCount: number;
 }
 
 export function RunOverviewPanel({
@@ -119,7 +136,11 @@ export function RunOverviewPanel({
       }
    }
 
-   const sectionColumns: TableColumnsType<SectionRow> = [
+   // [74] Honest counts, derived from the run itself.
+   const summary = summarizeRunSections(run);
+   const downloadableCount = run.artifacts.filter((a) => a.downloadable).length;
+
+   const sectionColumns: TableColumnsType<SectionComposeRow> = [
       {
          title: "#",
          dataIndex: "order",
@@ -141,7 +162,9 @@ export function RunOverviewPanel({
          title: "Vai trò",
          dataIndex: "role",
          width: 140,
-         render: (val: string) => <Tag color="blue">{val}</Tag>,
+         render: (val: string | null) => (
+            <Tag color="blue">{val ?? "không rõ"}</Tag>
+         ),
       },
       {
          title: "Phần tử con",
@@ -149,62 +172,56 @@ export function RunOverviewPanel({
          width: 140,
          render: (val: number) => (
             <Typography.Text>
-               {val > 0 ? `${val} phần tử` : "Khung chứa"}
+               {val > 0 ? `${val} phần tử` : "Khung chứa (0 phần tử)"}
             </Typography.Text>
          ),
       },
       {
          title: "Trạng thái",
          key: "status",
-         width: 160,
-         render: () => (
-            <Flex align="center" gap={4}>
-               <CheckCircleFilled style={{ color: "#52c41a" }} />
-               <Typography.Text type="success">
-                  Đã ghép thành công
-               </Typography.Text>
+         width: 220,
+         render: (_, row) => (
+            <Flex vertical gap={2}>
+               <Flex align="center" gap={4}>
+                  {row.composed ? (
+                     <>
+                        <CheckCircleFilled style={{ color: "#52c41a" }} />
+                        <Typography.Text type="success">
+                           Đã ghép
+                        </Typography.Text>
+                     </>
+                  ) : (
+                     <Tag color="gold" style={{ margin: 0 }}>
+                        CHƯA GHÉP
+                     </Tag>
+                  )}
+               </Flex>
+               {row.hasMappings ? (
+                  <Typography.Text type="secondary" style={{ fontSize: 11 }}>
+                     {dispositionSummaryText(row.dispositions).join(" · ")}
+                  </Typography.Text>
+               ) : (
+                  <Typography.Text type="secondary" style={{ fontSize: 11 }}>
+                     không có mapping nào ghi vào mục này
+                  </Typography.Text>
+               )}
             </Flex>
          ),
       },
    ];
 
-   const sectionData: SectionRow[] = (run.sections ?? []).map((sec, idx) => ({
-      order: sec.order ?? idx,
-      name: sec.name,
-      role: sec.role ?? "SECTION",
-      elementCount: sec.elementCount,
-   }));
+   const sectionData: SectionComposeRow[] = summary.rows;
 
    return (
       <Flex vertical gap={24}>
          {/* 1. Metric Overview Cards */}
          <Row gutter={[16, 16]}>
             <Col xs={24} sm={12} lg={6}>
-               <Card
-                  size="small"
-                  variant="borderless"
-                  style={{ background: "#f6ffed", border: "1px solid #b7eb8f" }}
-               >
-                  <Flex vertical gap={4}>
-                     <Typography.Text type="secondary" style={{ fontSize: 13 }}>
-                        Trạng thái chuyển đổi
-                     </Typography.Text>
-                     <Flex align="center" gap={6}>
-                        <CheckCircleFilled
-                           style={{ color: "#52c41a", fontSize: 18 }}
-                        />
-                        <Typography.Title
-                           level={4}
-                           style={{ margin: 0, color: "#389e0d" }}
-                        >
-                           Hoàn tất thành công
-                        </Typography.Title>
-                     </Flex>
-                     <Typography.Text type="secondary" style={{ fontSize: 12 }}>
-                        Mã thoát {run.exitCode} · Sẵn sàng sử dụng
-                     </Typography.Text>
-                  </Flex>
-               </Card>
+               <OverviewStatusCard
+                  run={run}
+                  composedSections={summary.composedSections}
+                  totalSections={summary.totalSections}
+               />
             </Col>
             <Col xs={24} sm={12} lg={6}>
                <Card size="small">
@@ -217,11 +234,12 @@ export function RunOverviewPanel({
                            style={{ fontSize: 18, color: "#1677ff" }}
                         />
                         <Typography.Title level={4} style={{ margin: 0 }}>
-                           {run.sections?.length ?? 0} Phân đoạn
+                           {summary.totalSections} Phân đoạn
                         </Typography.Title>
                      </Flex>
                      <Typography.Text type="secondary" style={{ fontSize: 12 }}>
-                        Nhận diện từ thiết kế Figma
+                        Nhận diện từ Figma · đã ghép {summary.composedSections}/
+                        {summary.totalSections}
                      </Typography.Text>
                   </Flex>
                </Card>
@@ -257,20 +275,30 @@ export function RunOverviewPanel({
                            style={{ fontSize: 18, color: "#13c2c2" }}
                         />
                         <Typography.Title level={4} style={{ margin: 0 }}>
-                           {run.artifacts.length} Tệp sẵn sàng
+                           {downloadableCount}/{run.artifacts.length} Tệp tải
+                           được
                         </Typography.Title>
                      </Flex>
-                     <Typography.Text type="secondary" style={{ fontSize: 12 }}>
-                        {run.build?.manifestVerified
-                           ? "Khớp SHA-256 hoàn toàn"
-                           : "Đã xác minh gói"}
+                     <Typography.Text
+                        type={
+                           run.build && !run.build.manifestVerified
+                              ? "danger"
+                              : "secondary"
+                        }
+                        style={{ fontSize: 12 }}
+                     >
+                        {run.build
+                           ? run.build.manifestVerified
+                              ? "Khớp SHA-256 toàn bộ tệp manifest"
+                              : "Xác minh toàn vẹn THẤT BẠI"
+                           : "Chưa có gói build — chưa xác minh SHA-256"}
                      </Typography.Text>
                   </Flex>
                </Card>
             </Col>
          </Row>
 
-         {/* 2. Usage Guide (Two Methods) */}
+         {/* 2. Usage Guide (Two Methods) — static content, extracted */}
          <Card
             size="small"
             title={
@@ -282,74 +310,7 @@ export function RunOverviewPanel({
                </Flex>
             }
          >
-            <Tabs
-               size="small"
-               defaultActiveKey="method1"
-               items={[
-                  {
-                     key: "method1",
-                     label: (
-                        <span>
-                           <CheckCircleOutlined
-                              style={{ color: "#52c41a", marginRight: 6 }}
-                           />
-                           Cách 1: Gói cài đặt trọn bộ tự động (Khuyên dùng —
-                           Đầy đủ ảnh &amp; Script)
-                        </span>
-                     ),
-                     children: (
-                        <Steps
-                           size="small"
-                           current={-1}
-                           items={[
-                              {
-                                 title: "1. Tải gói ZIP",
-                                 content:
-                                    "Bấm nút 'Tải trọn bộ Gói cài đặt (ZIP)' bên dưới. Gói gồm script install-homepage.php, HTML và thư mục media/ chứa toàn bộ ảnh.",
-                              },
-                              {
-                                 title: "2. Giải nén vào Magento",
-                                 content:
-                                    "Giải nén vào thư mục <magento-root>/det-install/ trên máy chủ hoặc local checkout của bạn.",
-                              },
-                              {
-                                 title: "3. Chạy 1 lệnh duy nhất",
-                                 content:
-                                    "Chạy 'php det-install/install-homepage.php'. Script tự động copy ảnh vào pub/media/, import CMS Page và làm mới cache.",
-                              },
-                           ]}
-                        />
-                     ),
-                  },
-                  {
-                     key: "method2",
-                     label: <span>Cách 2: Dán mã HTML thủ công</span>,
-                     children: (
-                        <Steps
-                           size="small"
-                           current={-1}
-                           items={[
-                              {
-                                 title: "1. Sao chép mã",
-                                 content:
-                                    "Bấm nút 'Sao chép toàn bộ HTML' ở khung bên dưới.",
-                              },
-                              {
-                                 title: "2. Mở Magento Admin",
-                                 content:
-                                    "Vào Content → Pages → Chọn trang muốn sửa (hoặc tạo mới).",
-                              },
-                              {
-                                 title: "3. Dán & Lưu",
-                                 content:
-                                    "Mở Page Builder, kéo khối HTML Code và dán nội dung rồi nhấn Save Page.",
-                              },
-                           ]}
-                        />
-                     ),
-                  },
-               ]}
-            />
+            <InstallGuideTabs />
          </Card>
 
          {/* 3. HTML Code Viewer & 1-Click Copy */}
@@ -438,25 +399,28 @@ export function RunOverviewPanel({
             )}
          </Card>
 
-         {/* 4. Converted Sections Breakdown */}
+         {/* 4. Detected Sections Breakdown — honest per-section status */}
          <Card
             size="small"
             title={
                <Flex align="center" gap={8}>
                   <LayoutOutlined style={{ color: "#1677ff" }} />
                   <span style={{ fontWeight: 600 }}>
-                     Các phân đoạn giao diện đã chuyển đổi ({sectionData.length}
-                     )
+                     Các phân đoạn giao diện (đã ghép {summary.composedSections}
+                     /{summary.totalSections})
                   </span>
                </Flex>
             }
          >
             <Typography.Paragraph type="secondary" style={{ marginBottom: 12 }}>
-               Hệ thống đã tự động nhận diện và chuyển đổi các phân đoạn trên
-               thiết kế Figma thành các khối tương ứng trong Magento Page
-               Builder:
+               Hệ thống đã nhận diện {summary.totalSections} phân đoạn trong
+               thiết kế Figma; {summary.composedSections}/
+               {summary.totalSections} phân đoạn có phần tử được ghép vào
+               Magento Page Builder. Các khoảng trống (gap), mục bị bỏ qua
+               (skipped) và loại trừ (excluded) vẫn được liệt kê đầy đủ bên
+               dưới.
             </Typography.Paragraph>
-            <Table<SectionRow>
+            <Table<SectionComposeRow>
                rowKey="order"
                columns={sectionColumns}
                dataSource={sectionData}

@@ -24,7 +24,7 @@ import {
    stageStatusLabel,
    stageStatusTagColor,
    stageStepStatus,
-} from "./build-flow-view";
+} from "../components/build-flow-view";
 
 describe("frozen demo source", () => {
    it("is the verified Slaunchpad home URL with the dashed node id", () => {

@@ -5,7 +5,7 @@ import {
    StudioRunViewSchema,
    type StudioRunView,
 } from "@/src/modules/studio/shared/contracts";
-import { MappingReview } from "./components/mapping-review";
+import { MappingReview } from "../components/mapping-review";
 
 afterEach(cleanup);
 

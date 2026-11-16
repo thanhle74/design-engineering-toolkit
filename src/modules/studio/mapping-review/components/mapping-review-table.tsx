@@ -22,7 +22,6 @@ import type { HTMLAttributes } from "react";
 import {
    ApartmentOutlined,
    CheckCircleFilled,
-   CheckOutlined,
    CopyOutlined,
    ExclamationCircleFilled,
    EyeOutlined,
@@ -34,14 +33,11 @@ import {
    Button,
    Card,
    Col,
-   Descriptions,
-   Drawer,
    Flex,
    Input,
    Row,
    Segmented,
    Table,
-   Tag,
    Tooltip,
    Typography,
    message,
@@ -49,6 +45,8 @@ import {
 import type { ColumnsType } from "antd/es/table";
 
 import type { StudioMappingView } from "@/src/modules/studio/shared/contracts";
+import { keyedMappings } from "../mapping-row-identity";
+import { MappingInspector } from "./mapping-inspector";
 import {
    ComposeDispositionBadge,
    KindBadge,
@@ -140,56 +138,77 @@ export function MappingReviewTable({
       useState<StudioMappingView | null>(null);
    const [copied, setCopied] = useState(false);
 
-   // Summary counts
-   const totalCount = mappings.length;
-   const mappedCount = mappings.filter(
-      (m) => m.composeDisposition === "mapped",
-   ).length;
-   const gapCount = mappings.filter(
-      (m) =>
-         m.composeDisposition === "gap" || m.composeDisposition === "skipped",
-   ).length;
-   const needsReviewCount = mappings.filter((m) => m.needsReview).length;
-   const mergedCount = mappings.filter(
-      (m) => m.composeDisposition === "decoration-merged",
-   ).length;
-   const excludedCount = mappings.filter(
-      (m) => m.composeDisposition === "excluded",
-   ).length;
+   // Summary counts — one pass, always over the UNFILTERED run order.
+   const counts = useMemo(() => {
+      let mapped = 0;
+      let gap = 0;
+      let skipped = 0;
+      let needsReview = 0;
+      let merged = 0;
+      let excluded = 0;
+      for (const m of mappings) {
+         if (m.composeDisposition === "mapped") mapped += 1;
+         else if (m.composeDisposition === "gap") gap += 1;
+         else if (m.composeDisposition === "skipped") skipped += 1;
+         else if (m.composeDisposition === "decoration-merged") merged += 1;
+         else if (m.composeDisposition === "excluded") excluded += 1;
+         if (m.needsReview) needsReview += 1;
+      }
+      return {
+         total: mappings.length,
+         mapped,
+         // The Gaps card counts gap + skipped: both are "not composed" facts.
+         gap: gap + skipped,
+         needsReview,
+         merged,
+         excluded,
+      };
+   }, [mappings]);
 
-   // Filtered mappings
+   /**
+    * [74] Row identity is computed ONCE over the UNFILTERED source array
+    * (`keyedMappings`), so a row's key never changes when the search or
+    * disposition filter changes — no remounts, no selection loss. The drawer
+    * inspector binds to the exact filtered entry object, i.e. the exact
+    * occurrence even when duplicate nodeIds exist.
+    */
    const filteredMappings = useMemo(() => {
-      let idx = 0;
-      return mappings
-         .filter((m) => {
-            if (dispositionFilter === "needs_review") {
-               if (!m.needsReview) return false;
-            } else if (
-               dispositionFilter !== "all" &&
-               m.composeDisposition !== dispositionFilter
-            ) {
-               return false;
-            }
+      return (
+         keyedMappings(mappings)
+            .filter(({ mapping: m }) => {
+               if (dispositionFilter === "needs_review") {
+                  if (!m.needsReview) return false;
+               } else if (
+                  dispositionFilter !== "all" &&
+                  m.composeDisposition !== dispositionFilter
+               ) {
+                  return false;
+               }
 
-            if (searchQuery.trim()) {
-               const q = searchQuery.toLowerCase();
-               const matchId = m.nodeId.toLowerCase().includes(q);
-               const matchName = m.sourceName?.toLowerCase().includes(q);
-               const matchLoc = m.sourceLocator?.toLowerCase().includes(q);
-               const matchTarget = m.target?.capabilityId
-                  .toLowerCase()
-                  .includes(q);
-               const matchNote = m.note?.toLowerCase().includes(q);
-               return (
-                  matchId || matchName || matchLoc || matchTarget || matchNote
-               );
-            }
-            return true;
-         })
-         .map((m) => ({
-            ...m,
-            rowKey: `${m.nodeId}-${m.sectionId ?? "none"}-${m.composeDisposition}-${idx++}`,
-         }));
+               if (searchQuery.trim()) {
+                  const q = searchQuery.toLowerCase();
+                  const matchId = m.nodeId.toLowerCase().includes(q);
+                  const matchName = m.sourceName?.toLowerCase().includes(q);
+                  const matchLoc = m.sourceLocator?.toLowerCase().includes(q);
+                  const matchTarget = m.target?.capabilityId
+                     .toLowerCase()
+                     .includes(q);
+                  const matchNote = m.note?.toLowerCase().includes(q);
+                  return (
+                     matchId ||
+                     matchName ||
+                     matchLoc ||
+                     matchTarget ||
+                     matchNote
+                  );
+               }
+               return true;
+            })
+            // Rows stay StudioMappingView-shaped (spread + rowKey) so the
+            // `rowKey="rowKey"` string-prop API and the column renderers are
+            // untouched; only the identity source changed.
+            .map(({ mapping, rowKey }) => ({ ...mapping, rowKey }))
+      );
    }, [mappings, dispositionFilter, searchQuery]);
 
    const handleCopy = (text: string) => {
@@ -307,7 +326,7 @@ export function MappingReviewTable({
                            style={{ color: "#1677ff", fontSize: 16 }}
                         />
                         <Typography.Title level={4} style={{ margin: 0 }}>
-                           {totalCount}
+                           {counts.total}
                         </Typography.Title>
                      </Flex>
                   </Flex>
@@ -327,7 +346,7 @@ export function MappingReviewTable({
                            level={4}
                            style={{ margin: 0, color: "#52c41a" }}
                         >
-                           {mappedCount}
+                           {counts.mapped}
                         </Typography.Title>
                      </Flex>
                   </Flex>
@@ -347,7 +366,7 @@ export function MappingReviewTable({
                            level={4}
                            style={{ margin: 0, color: "#d48806" }}
                         >
-                           {gapCount}
+                           {counts.gap}
                         </Typography.Title>
                      </Flex>
                   </Flex>
@@ -367,7 +386,7 @@ export function MappingReviewTable({
                            level={4}
                            style={{ margin: 0, color: "#fa8c16" }}
                         >
-                           {needsReviewCount}
+                           {counts.needsReview}
                         </Typography.Title>
                      </Flex>
                   </Flex>
@@ -384,7 +403,7 @@ export function MappingReviewTable({
                            style={{ color: "#13c2c2", fontSize: 16 }}
                         />
                         <Typography.Title level={4} style={{ margin: 0 }}>
-                           {mergedCount}
+                           {counts.merged}
                         </Typography.Title>
                      </Flex>
                   </Flex>
@@ -407,7 +426,7 @@ export function MappingReviewTable({
                            level={4}
                            style={{ margin: 0, color: "#8c8c8c" }}
                         >
-                           {excludedCount}
+                           {counts.excluded}
                         </Typography.Title>
                      </Flex>
                   </Flex>
@@ -432,19 +451,19 @@ export function MappingReviewTable({
                      value={dispositionFilter}
                      onChange={(val) => setDispositionFilter(val as string)}
                      options={[
-                        { label: `Tất cả (${totalCount})`, value: "all" },
-                        { label: `Đã map (${mappedCount})`, value: "mapped" },
-                        { label: `Gaps (${gapCount})`, value: "gap" },
+                        { label: `Tất cả (${counts.total})`, value: "all" },
+                        { label: `Đã map (${counts.mapped})`, value: "mapped" },
+                        { label: `Gaps (${counts.gap})`, value: "gap" },
                         {
-                           label: `Cần review (${needsReviewCount})`,
+                           label: `Cần review (${counts.needsReview})`,
                            value: "needs_review",
                         },
                         {
-                           label: `Hợp nhất (${mergedCount})`,
+                           label: `Hợp nhất (${counts.merged})`,
                            value: "decoration-merged",
                         },
                         {
-                           label: `Loại trừ (${excludedCount})`,
+                           label: `Loại trừ (${counts.excluded})`,
                            value: "excluded",
                         },
                      ]}
@@ -475,170 +494,13 @@ export function MappingReviewTable({
             />
          </div>
 
-         {/* 4. Side Drawer Inspector */}
-         <Drawer
-            title={
-               activeDrawerNode ? (
-                  <Flex align="center" gap={8}>
-                     <span>Chi tiết ánh xạ:</span>
-                     <Typography.Text code>
-                        {activeDrawerNode.nodeId}
-                     </Typography.Text>
-                  </Flex>
-               ) : (
-                  "Chi tiết Node"
-               )
-            }
-            open={activeDrawerNode !== null}
+         {/* 4. Side Drawer Inspector — [74] exact-occurrence binding */}
+         <MappingInspector
+            mapping={activeDrawerNode}
+            copied={copied}
+            onCopyId={handleCopy}
             onClose={() => setActiveDrawerNode(null)}
-            size={520}
-         >
-            {activeDrawerNode && (
-               <Flex vertical gap="middle">
-                  <Descriptions size="small" column={1} bordered>
-                     <Descriptions.Item label="Node ID">
-                        <Flex justify="space-between" align="center">
-                           <Typography.Text code copyable={false}>
-                              {activeDrawerNode.nodeId}
-                           </Typography.Text>
-                           <Button
-                              size="small"
-                              type="text"
-                              icon={
-                                 copied ? <CheckOutlined /> : <CopyOutlined />
-                              }
-                              onClick={() =>
-                                 handleCopy(activeDrawerNode.nodeId)
-                              }
-                           >
-                              Copy ID
-                           </Button>
-                        </Flex>
-                     </Descriptions.Item>
-                     <Descriptions.Item label="Tên lớp trong Figma">
-                        <Typography.Text strong>
-                           {activeDrawerNode.sourceName || UNKNOWN}
-                        </Typography.Text>
-                     </Descriptions.Item>
-                     <Descriptions.Item label="Loại (Kind)">
-                        <KindBadge kind={activeDrawerNode.kind} />
-                     </Descriptions.Item>
-                     <Descriptions.Item label="Lớp ngữ nghĩa">
-                        <Typography.Text code>
-                           {activeDrawerNode.semanticClass || UNKNOWN}
-                        </Typography.Text>
-                     </Descriptions.Item>
-                     <Descriptions.Item label="Vị trí nguồn (Locator)">
-                        <Typography.Text
-                           code
-                           style={{ wordBreak: "break-all" }}
-                        >
-                           {activeDrawerNode.sourceLocator || UNKNOWN}
-                        </Typography.Text>
-                     </Descriptions.Item>
-                     <Descriptions.Item label="Compose Disposition">
-                        <ComposeDispositionBadge
-                           disposition={activeDrawerNode.composeDisposition}
-                        />
-                     </Descriptions.Item>
-                     <Descriptions.Item label="Review Disposition">
-                        {activeDrawerNode.reviewDisposition ? (
-                           <ReviewDispositionBadge
-                              disposition={activeDrawerNode.reviewDisposition}
-                           />
-                        ) : (
-                           <Typography.Text type="secondary">—</Typography.Text>
-                        )}
-                     </Descriptions.Item>
-                     <Descriptions.Item label="Cần rà soát (needsReview)">
-                        <Tag
-                           color={
-                              activeDrawerNode.needsReview
-                                 ? "warning"
-                                 : "default"
-                           }
-                        >
-                           {activeDrawerNode.needsReview
-                              ? "CẦN RÀ SOÁT"
-                              : "Bình thường"}
-                        </Tag>
-                     </Descriptions.Item>
-                     <Descriptions.Item label="Đích Magento Page Builder">
-                        {activeDrawerNode.target ? (
-                           <Flex vertical gap={4}>
-                              <div>
-                                 <b>Capability:</b>{" "}
-                                 <Typography.Text code>
-                                    {activeDrawerNode.target.capabilityId}
-                                 </Typography.Text>
-                              </div>
-                              <div>
-                                 <b>Appearance:</b>{" "}
-                                 <Tag>
-                                    {activeDrawerNode.target.appearanceId}
-                                 </Tag>
-                              </div>
-                              {(activeDrawerNode.target.nativeElement ||
-                                 activeDrawerNode.target.nativeField) && (
-                                 <div>
-                                    <b>Element / Field:</b>{" "}
-                                    <Typography.Text type="secondary">
-                                       {activeDrawerNode.target.nativeElement ??
-                                          UNKNOWN}{" "}
-                                       ·{" "}
-                                       {activeDrawerNode.target.nativeField ??
-                                          UNKNOWN}
-                                    </Typography.Text>
-                                 </div>
-                              )}
-                           </Flex>
-                        ) : (
-                           <Typography.Text type="secondary">
-                              {activeDrawerNode.composeDisposition === "mapped"
-                                 ? UNKNOWN
-                                 : "Chưa gắn đích"}
-                           </Typography.Text>
-                        )}
-                     </Descriptions.Item>
-                     {activeDrawerNode.note && (
-                        <Descriptions.Item label="Ghi chú">
-                           <Typography.Text>
-                              {activeDrawerNode.note}
-                           </Typography.Text>
-                        </Descriptions.Item>
-                     )}
-                     {activeDrawerNode.reasons.length > 0 && (
-                        <Descriptions.Item label="Danh sách lý do">
-                           <ul style={{ margin: 0, paddingLeft: 18 }}>
-                              {activeDrawerNode.reasons.map((r, i) => (
-                                 <li key={i}>
-                                    <Typography.Text type="secondary">
-                                       {r}
-                                    </Typography.Text>
-                                 </li>
-                              ))}
-                           </ul>
-                        </Descriptions.Item>
-                     )}
-                  </Descriptions>
-
-                  <Card size="small" title="Dữ liệu JSON thô">
-                     <pre
-                        style={{
-                           fontSize: 11,
-                           margin: 0,
-                           background: "#fafafa",
-                           padding: 8,
-                           borderRadius: 4,
-                           overflowX: "auto",
-                        }}
-                     >
-                        {JSON.stringify(activeDrawerNode, null, 2)}
-                     </pre>
-                  </Card>
-               </Flex>
-            )}
-         </Drawer>
+         />
       </Flex>
    );
 }
