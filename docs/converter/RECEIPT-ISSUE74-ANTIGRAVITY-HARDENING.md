@@ -2,7 +2,7 @@
 
 - **Issue:** [thanhle74/design-engineering-toolkit#74](https://github.com/thanhle74/design-engineering-toolkit/issues/74) — Owner GO, single-pass autonomous execution, **Draft PR only, no self-merge**.
 - **Base (pinned):** `5bf41d3aa3e81a6f547e9349d8ff763d9ee641b2` — verified identical to `origin/main` at start (fetched during phase 0; no reconcile needed) and never advanced during the pass.
-- **Integration head at receipt:** `abc8288` on branch `thanhle74/74-det-antigravity-integration-hardening-modular` (code head `84e436b` + docs commit `abc8288`; one branch, one Draft PR).
+- **Integration head at receipt:** branch `thanhle74/74-det-antigravity-integration-hardening-modular` — integration round `abc8288` (code `84e436b` + docs), then the Coordinator **CORRECTION_REQUIRED** round: code `7c7f8eb` + this docs commit (one branch, one Draft PR; exact pushed SHA in the PR comment).
 - **Date:** 2026-11-16.
 - **Execution model:** Integrator (this session) + four bounded parallel workers in separate worktrees from the same pinned SHA: **W-A** projects/API/service, **W-B** UI lanes + AG-011 row identity, **W-C** artifacts/ZIP/PHP installer, **W-D** read-only audit. Lane commits preserved verbatim; merged sequentially `--no-ff`; one integrator fix commit (`84e436b`) after live-data verification.
 
@@ -64,7 +64,7 @@ W-B's `summarizeRunSections` derived "composed" from `elementCount > 0`. Against
 | --- | --- | --- |
 | `pnpm install --frozen-lockfile` | exit 0 | exit 0 |
 | `pnpm test` (core contracts) | **201/201**, exit 0 | **201/201**, exit 0 |
-| `pnpm run test:studio` | **631/631** in 61 files, exit 0 | **711/711** in 67 files, exit 0 |
+| `pnpm run test:studio` | **631/631** in 61 files, exit 0 | **711/711** in 67 files at `84e436b`; **715/715** at correction `7c7f8eb` (+4 symlink-refusal tests), exit 0 |
 | `pnpm run typecheck` | exit 0 | exit 0 |
 | `pnpm run lint` | exit 0 | exit 0 |
 | `pnpm run build` | exit 0 (9 pre-existing Turbopack warnings) | exit 0 (same warnings) |
@@ -72,7 +72,7 @@ W-B's `summarizeRunSections` derived "composed" from `elementCount > 0`. Against
 | foreign-cwd `node bin/det.js --help` | exit 0 | exit 0 |
 | Stable artifact hashes | n/a | ZIP determinism byte-identical; media sha256 identical build→zip→extract (8 fixture JPGs) |
 | ZIP unarchive sanity | n/a | `unzip -t` "No errors detected" ×2 bundles + live HTTP bundle |
-| `php -l` + dry-run | n/a | `php -l` clean; `--dry-run --store-id=5` exit 0 with plan JSON + **zero file changes** (before/after listing diff empty); without flag → exit 1, nothing written |
+| `php -l` + dry-run | n/a | `php -l` clean; `--dry-run --store-id=5` exit 0 with plan JSON + **zero file changes** (before/after listing diff empty); without flag → exit 1, nothing written. Re-proven at correction `7c7f8eb` on a freshly generated installer (32,266 B): `php -l` clean, dry-run exit 0, zero mutation |
 
 Studio-suite flake disclosure: under heavy parallel load on this machine, `build-flow-orchestrator.test.ts` (and once `studio-catalog.test.ts`) can fail on CLI-driven 5 s timeouts / an `activeSnapshot()` slot-release race. W-C reproduced the orchestrator flake at pristine base (1/11 runs) and 3/3 green isolated at HEAD; receipt gates ran on a quiet box and were green (711/711). Pre-existing, not introduced by this pass.
 
@@ -101,4 +101,16 @@ Studio-suite flake disclosure: under heavy parallel load on this machine, `build
 
 ## 10. PR
 
-One Draft PR from `thanhle74/74-det-antigravity-integration-hardening-modular` (`abc8288`, code head `84e436b`) → `main`, left for independent Coordinator review. **Not merged by the agent.** No Figma writes, no production Magento/CMS/DB writes, no Hyvä source distribution, no self-approval.
+One Draft PR from `thanhle74/74-det-antigravity-integration-hardening-modular` (correction round code head `7c7f8eb` + docs; integration round was `abc8288`, code `84e436b`) → `main`, left for independent Coordinator review. **Not merged by the agent.** No Figma writes, no production Magento/CMS/DB writes, no Hyvä source distribution, no self-approval.
+
+## 11. Correction round — Coordinator CORRECTION_REQUIRED (C74-1 / C74-2, same PR)
+
+The Coordinator's review at `e23715c` (**HOLD MERGE**) found two places where the W-C symlink hardening still sat on the wrong side of a trust boundary — both fixed here, bounded, no redesign; the move inventory and AG-012 ledger are untouched.
+
+**C74-1 — ZIP bundle root/media-root followed symlinks** (`src/modules/studio/server/zip-bundle.ts`): `packRunBundleZip` used `stat()` for the five bundle ROOT files and the top-level `media/` root. `stat()` follows links, so a symlinked root file (e.g. `README.md → /outside/secret.txt`) packed the OUTSIDE target's bytes into the archive, and a symlinked `media/` root packed an entire outside tree — the entry-level Dirent guard only catches links met INSIDE the recursion. Fix: both checks now `lstat()` and refuse loudly (throw) before any read; child links inside the recursion stay skip-never-follow (unchanged).
+
+**C74-2 — installer copied through destination symlinks before checking** (`render-cms-installer.ts`): (a) Gate 6 classified preexisting media destinations via `is_file()` — which FOLLOWS the link — and with `--force` the run `copy()`-ed THROUGH the link (overwriting its outside target), with the realpath containment check only running AFTER the destructive write; (b) a symlinked bundle media ROOT was invisible to the entry-level `isLink()` guard, so the iterator would silently walk an outside tree. Fix: new **Gate 6.5 destination preflight** walks EVERY media destination before the first `mkdir`/`copy`/CMS write and refuses symlinked destination files **even with `--force`** and symlinked destination ancestor directories ("Nothing was written; remove or replace the symlink(s) manually first"); Gate 2 refuses a symlinked media root on real runs; the dry-run validator refuses the media root and any child link with exit 1 before printing any plan.
+
+**Negative tests (red/green proven):** 4 new tests — zip root-file symlink refusal, zip media-root symlink refusal, `C74-2a` destination symlink + `--force` (asserts outside sentinel bytes untouched, symlink still a link, NO partial copies of the clean sibling, save log empty), `C74-2b` symlinked media root (real run AND dry-run refuse, `pub/media` never created, save log empty). Red proof: with the two SOURCE files reverted to HEAD and the new tests kept, exactly those 4 fail (4 failed / 46 passed); green: 50/50. So each test demonstrably catches its pre-fix regression.
+
+**Correction-round gates (all green):** `pnpm test` 201/201; `test:studio` 715/715 in 67 files; typecheck/lint/build exit 0; `format:check` exit 1 (pre-existing, by design); narrow suites 50/50; ZIP interop `unzip -t` "No errors detected" (7 entries, zeroed timestamps) + deterministic sha256; foreign-cwd `node bin/det.js` exit 0; freshly generated installer `php -l` clean + `--dry-run` exit 0 with **zero file mutation** (before/after diff empty). Prettier run on exactly the 4 touched files. Live isolated-Magento availability unchanged: **BLOCKED** (magento-spec MCP still unresponsive this session) — the §7 BLOCKED-not-PASS disclosure stands.
