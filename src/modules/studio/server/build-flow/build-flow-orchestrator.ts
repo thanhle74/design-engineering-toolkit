@@ -84,6 +84,12 @@ import {
    materializeApprovedInputs,
 } from "../claude-agent/plan-materializer";
 import {
+   findReusableAnalysisId,
+   planContentHash,
+   planReuseCacheKey,
+   recordReusablePlan,
+} from "../claude-agent/plan-reuse";
+import {
    assertRequestMatchesSourceIdentity,
    readSourceIdentity,
    type SourceIdentity,
@@ -900,6 +906,57 @@ export class BuildFlowOrchestrator {
       | { kind: "failed"; code: BuildFlowErrorCode; message: string }
    > {
       const request = job.snapshot.request;
+      // [76] Deterministic plan reuse (issue #76 fix-loop finding): three
+      // independent analyses of the SAME pinned source produced materially
+      // different plans, so a fresh agent per run made build-flow output
+      // irreproducible. When a previously recorded plan exists for the same
+      // (baseConfigId, fileKey, nodeId, providerRevisionId) AND it still
+      // re-validates through the runner's own zod + invariant re-check, reuse
+      // it — no agent spawn, no re-spend, byte-stable mapping inputs. The
+      // index only POINTS at the plan; validation happens via result().
+      // Fail-closed: unpinned sources (null revision) never reuse, and
+      // STUDIO_AGENT_PLAN_REUSE=off forces fresh analyses.
+      const reuseKey = planReuseCacheKey({
+         baseConfigId: request.baseConfigId,
+         fileKey: request.fileKey,
+         nodeId: request.nodeId,
+         providerRevisionId: job.identity?.providerRevisionId ?? null,
+      });
+      if (reuseKey !== null && job.identity !== null) {
+         const reusedAnalysisId = await findReusableAnalysisId({
+            runsRoot: this.runsRoot,
+            key: reuseKey,
+            providerRevisionId: job.identity.providerRevisionId as string,
+         });
+         if (reusedAnalysisId !== null) {
+            const reused = await this.agentRunner.result(reusedAnalysisId);
+            if (
+               reused !== null &&
+               reused.plan !== null &&
+               reused.snapshot.state === "exited" &&
+               reused.snapshot.outcome === "plan-ready" &&
+               reused.snapshot.grounded === true
+            ) {
+               job.plan = reused.plan;
+               job.analysisId = reusedAnalysisId;
+               this.stageRecord(job, "ai-analysis").analysisId =
+                  reusedAnalysisId;
+               await this.queueJournal(job.snapshot);
+               const reuseHash = planContentHash(reused.plan).slice(0, 12);
+               const revision =
+                  job.identity.providerRevisionId ?? "không rõ revision";
+               return {
+                  kind: "success",
+                  message:
+                     `Phân tích AI TÁI SỬ DỤNG plan đã pin ` +
+                     `(analysis ${reusedAnalysisId}, plan hash ${reuseHash}…) — ` +
+                     `cùng nguồn đã pin (file ${request.fileKey}, node ${request.nodeId}, ` +
+                     `revision ${revision}); không spawn agent mới ` +
+                     `(tái sử dụng deterministic, STUDIO_AGENT_PLAN_REUSE=off để phân tích lại).`,
+               };
+            }
+         }
+      }
       let started: AgentAnalysisSnapshot;
       try {
          started = await this.agentRunner.start(
@@ -950,6 +1007,26 @@ export class BuildFlowOrchestrator {
                const result = await this.agentRunner.result(started.analysisId);
                if (result !== null && result.plan !== null) {
                   job.plan = result.plan;
+                  // [76] Record the plan as reusable for this exact source pin
+                  // (next run with unchanged inputs reuses it deterministically).
+                  // Best-effort: an index write failure must never fail an
+                  // analysis that already succeeded — the next run just
+                  // analyzes fresh.
+                  if (reuseKey !== null && job.identity !== null) {
+                     await recordReusablePlan({
+                        runsRoot: this.runsRoot,
+                        key: reuseKey,
+                        keyParts: {
+                           baseConfigId: request.baseConfigId,
+                           fileKey: request.fileKey,
+                           nodeId: request.nodeId,
+                           providerRevisionId:
+                              job.identity.providerRevisionId ?? null,
+                        },
+                        analysisId: started.analysisId,
+                        plan: result.plan,
+                     }).catch(() => {});
+                  }
                   return {
                      kind: "success",
                      message:

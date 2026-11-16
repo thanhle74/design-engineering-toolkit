@@ -156,6 +156,12 @@ function makeFakeAgent(
 ): BuildFlowAgentRunnerPort & {
    release: () => void;
    cancelCalls: () => number;
+   startCount: () => number;
+   /** Mirror the REAL runner's persisted view: result() for a past analysis id. */
+   persistResult: (
+      analysisId: string,
+      record: { outcome: AgentAnalysisSnapshot["outcome"]; grounded: boolean | null; plan: AgentPlan | null },
+   ) => void;
    lastStarted: () => {
       request: { fileKey: string; nodeId: string; baseConfigId: string };
       baseConfigPath: string;
@@ -166,6 +172,10 @@ function makeFakeAgent(
    let cancelled = false;
    let released = script.holdUntilRelease !== true;
    let cancelCallCount = 0;
+   const persisted = new Map<
+      string,
+      { outcome: AgentAnalysisSnapshot["outcome"]; grounded: boolean | null; plan: AgentPlan | null }
+   >();
    let lastStarted: {
       request: { fileKey: string; nodeId: string; baseConfigId: string };
       baseConfigPath: string;
@@ -186,6 +196,10 @@ function makeFakeAgent(
          released = true;
       },
       cancelCalls: () => cancelCallCount,
+      startCount: () => counter,
+      persistResult: (analysisId, record) => {
+         persisted.set(analysisId, record);
+      },
       lastStarted: () => lastStarted,
       async start(request, baseConfigPath) {
          lastStarted = { request, baseConfigPath };
@@ -252,6 +266,38 @@ function makeFakeAgent(
          return { ...active };
       },
       async result(analysisId) {
+         const persistedRecord = persisted.get(analysisId);
+         if (persistedRecord !== undefined) {
+            return {
+               snapshot: {
+                  analysisId,
+                  state: "exited",
+                  request: {
+                     fileKey: PINNED_FILE_KEY,
+                     nodeId: PINNED_ROOT_NODE,
+                     baseConfigId: CONFIG_ID,
+                  },
+                  baseConfigPath: null,
+                  allowedFigmaTool: "",
+                  claudeVersion: null,
+                  command: [],
+                  exitCode: 0,
+                  signal: null,
+                  timedOut: false,
+                  cancelled: false,
+                  startedAt: "2026-11-12T00:00:00.000Z",
+                  finishedAt: "2026-11-12T00:07:00.000Z",
+                  pid: 424242,
+                  stdoutTail: "",
+                  stderrTail: "",
+                  spawnError: null,
+                  outcome: persistedRecord.outcome,
+                  envelopeSafe: null,
+                  grounded: persistedRecord.grounded,
+               },
+               plan: persistedRecord.plan,
+            };
+         }
          if (active === null || active.analysisId !== analysisId) return null;
          return { snapshot: { ...active }, plan: script.plan ?? null };
       },
@@ -1000,6 +1046,133 @@ describe("verify-source — fail-closed source pinning", () => {
       } finally {
          process.env.STUDIO_BUILD_PROJECTS_DIR = fx.projectsRoot;
       }
+   });
+});
+
+describe("deterministic plan reuse — [76] irreproducible ai-analysis fix", () => {
+   it("second flow with unchanged pinned inputs REUSES the recorded plan (no second agent spawn)", async () => {
+      const fx = requireFixture();
+      const agent = makeFakeAgent({
+         outcome: "plan-ready",
+         grounded: true,
+         plan: VALID_AGENT_PLAN,
+      });
+      const build = makeFakeBuild({});
+
+      // Run 1: fresh analysis, completed, plan recorded in the reuse index.
+      const orch1 = await openOrch({ agent, build });
+      const s1 = await orch1.start({
+         figmaInput: designUrl(PINNED_FILE_KEY, PINNED_ROOT_NODE),
+         target: "magento-page-builder",
+      });
+      const f1 = await awaitFlowTerminal(orch1, s1.flowId);
+      expect(f1.state).toBe("completed");
+      const run1AiRow = f1.stages[STAGE_INDEX["ai-analysis"]!]!;
+      const run1AnalysisId = run1AiRow.analysisId;
+      expect(run1AnalysisId).toMatch(/^agent-\d+$/);
+      expect(run1AiRow.message ?? "").not.toContain("TÁI SỬ DỤNG");
+      expect(agent.startCount()).toBe(1);
+      // Mirror the REAL runner: the finished analysis is readable via result().
+      agent.persistResult(run1AnalysisId!, {
+         outcome: "plan-ready",
+         grounded: true,
+         plan: VALID_AGENT_PLAN,
+      });
+
+      // Run 2: SAME pin, SAME runs root — the plan is reused, no fresh spawn.
+      const orch2 = await openOrch({ agent, build });
+      const s2 = await orch2.start({
+         figmaInput: designUrl(PINNED_FILE_KEY, PINNED_ROOT_NODE),
+         target: "magento-page-builder",
+      });
+      const f2 = await awaitFlowTerminal(orch2, s2.flowId);
+      expect(f2.state).toBe("completed");
+      expect(agent.startCount()).toBe(1); // unchanged — never spawned again
+      const ai2 = f2.stages[STAGE_INDEX["ai-analysis"]!]!;
+      expect(ai2.analysisId).toBe(run1AnalysisId);
+      expect(ai2.status).toBe("success");
+      expect(ai2.message).toContain("TÁI SỬ DỤNG");
+      expect(ai2.message).toContain(PINNED_REVISION);
+      // The mapping stage still hands the SAME plan to the materializer.
+      expect(f2.stages[STAGE_INDEX["mapping"]!]!.status).toBe("success");
+      void fx;
+   });
+
+   it("STUDIO_AGENT_PLAN_REUSE=off forces a fresh analysis (kill-switch)", async () => {
+      const saved = process.env.STUDIO_AGENT_PLAN_REUSE_ENV
+         ? process.env.STUDIO_AGENT_PLAN_REUSE_ENV
+         : undefined;
+      const envName = "STUDIO_AGENT_PLAN_REUSE";
+      process.env[envName] = "off";
+      try {
+         const agent = makeFakeAgent({
+            outcome: "plan-ready",
+            grounded: true,
+            plan: VALID_AGENT_PLAN,
+         });
+         const orch1 = await openOrch({ agent });
+         const s1 = await orch1.start({
+            figmaInput: designUrl(PINNED_FILE_KEY, PINNED_ROOT_NODE),
+            target: "magento-page-builder",
+         });
+         const f1 = await awaitFlowTerminal(orch1, s1.flowId);
+         expect(f1.state).toBe("completed");
+         agent.persistResult(
+            f1.stages[STAGE_INDEX["ai-analysis"]!]!.analysisId!,
+            { outcome: "plan-ready", grounded: true, plan: VALID_AGENT_PLAN },
+         );
+
+         const orch2 = await openOrch({ agent });
+         const s2 = await orch2.start({
+            figmaInput: designUrl(PINNED_FILE_KEY, PINNED_ROOT_NODE),
+            target: "magento-page-builder",
+         });
+         const f2 = await awaitFlowTerminal(orch2, s2.flowId);
+         expect(f2.state).toBe("completed");
+         expect(agent.startCount()).toBe(2); // fresh spawn — kill-switch honored
+         expect(
+            f2.stages[STAGE_INDEX["ai-analysis"]!]!.message,
+         ).not.toContain("TÁI SỬ DỤNG");
+      } finally {
+         if (saved === undefined) delete process.env[envName];
+         else process.env[envName] = saved;
+      }
+   });
+
+   it("a recorded plan that no longer validates falls through to a fresh analysis", async () => {
+      const agent = makeFakeAgent({
+         outcome: "plan-ready",
+         grounded: true,
+         plan: VALID_AGENT_PLAN,
+      });
+      const orch1 = await openOrch({ agent });
+      const s1 = await orch1.start({
+         figmaInput: designUrl(PINNED_FILE_KEY, PINNED_ROOT_NODE),
+         target: "magento-page-builder",
+      });
+      const f1 = await awaitFlowTerminal(orch1, s1.flowId);
+      expect(f1.state).toBe("completed");
+      const run1AnalysisId =
+         f1.stages[STAGE_INDEX["ai-analysis"]!]!.analysisId!;
+      // The persisted view is NO LONGER trustworthy (ungrounded outcome):
+      // the index still points at it, but the orchestrator must refuse.
+      agent.persistResult(run1AnalysisId, {
+         outcome: "plan-ungrounded",
+         grounded: false,
+         plan: VALID_AGENT_PLAN,
+      });
+
+      const orch2 = await openOrch({ agent });
+      const s2 = await orch2.start({
+         figmaInput: designUrl(PINNED_FILE_KEY, PINNED_ROOT_NODE),
+         target: "magento-page-builder",
+      });
+      const f2 = await awaitFlowTerminal(orch2, s2.flowId);
+      expect(f2.state).toBe("completed");
+      expect(agent.startCount()).toBe(2); // fell through to a fresh analysis
+      expect(f2.stages[STAGE_INDEX["ai-analysis"]!]!.analysisId).not.toBe(
+         run1AnalysisId,
+      );
    });
 });
 
