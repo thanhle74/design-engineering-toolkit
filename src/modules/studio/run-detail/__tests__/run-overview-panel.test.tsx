@@ -94,6 +94,8 @@ describe("RunOverviewPanel — derived overall status", () => {
       ];
       const mappings = [
          mapping("n-1", "s-a", "mapped"),
+         // A gap-only section is NOT composed even though the engine detected
+         // elements in it — the real #72 run has 11 detected vs 5 composed.
          mapping("n-2", "s-b", "gap"),
          mapping("n-3", "s-c", "skipped"),
       ];
@@ -108,7 +110,7 @@ describe("RunOverviewPanel — derived overall status", () => {
       ).toBeInTheDocument();
       expect(
          screen.getByText(
-            "Mã thoát 0 · Đã ghép 2/3 phân đoạn · 2 mục gap/bỏ qua/loại trừ",
+            "Mã thoát 0 · Đã ghép 1/3 phân đoạn · 2 mục gap/bỏ qua/loại trừ",
          ),
       ).toBeInTheDocument();
    });
@@ -137,8 +139,10 @@ describe("RunOverviewPanel — derived overall status", () => {
          />,
       );
       expect(screen.getByText("Chưa hoàn tất")).toBeInTheDocument();
+      // No mappings at all → nothing composed, even though a section was
+      // detected; the failure state must not inflate the composed fraction.
       expect(
-         screen.getByText(/Mã thoát 1 · Đã ghép 1\/1 phân đoạn/),
+         screen.getByText(/Mã thoát 1 · Đã ghép 0\/1 phân đoạn/),
       ).toBeInTheDocument();
    });
 

@@ -2,10 +2,12 @@
  * [74] Honest section/compose summary for the run overview (pure).
  *
  * Source of truth: the run's OWN data — `run.sections` (engine-declared
- * PageStructure sections with `elementCount`) and `run.mappings`
- * (composeDisposition per entry). Nothing here is hardcoded: the #72 extended
- * fixture composes 5/12 sections with 7 skipped entries, and this derivation
- * reports exactly that instead of a blanket "converted" claim.
+ * PageStructure detection facts, `elementCount` is DETECTION info, not
+ * composition output) and `run.mappings` (composeDisposition per entry).
+ * Nothing here is hardcoded: a section counts as composed only when it carries
+ * at least one "mapped" compose entry (the #72 ledger definition — the #72
+ * extended fixture composes 5/12 sections with 7 skipped ENTRIES, and this
+ * derivation reports exactly that instead of a blanket "converted" claim).
  *
  * Honesty rules ([29]/[61] doctrine):
  *  - unknown stays unknown: an absent section `role` is `null`, never an
@@ -33,7 +35,12 @@ export interface SectionComposeRow {
    /** Engine role, verbatim; `null` when the run does not carry one. */
    role: string | null;
    elementCount: number;
-   /** True when at least one PageStructure element was planned in. */
+   /**
+    * True when at least one mapping entry for this section composed natively
+    * ("mapped"). Deliberately NOT derived from `elementCount`: detection
+    * counts elements that composition may later skip, so `elementCount > 0`
+    * would overcount (real #72 run: 11 detected vs 5 composed).
+    */
    composed: boolean;
    /** Mapping entries grouped by compose disposition (nonzero keys only). */
    dispositions: DispositionCounts;
@@ -47,9 +54,9 @@ export interface RunSectionSummary {
    /** Section rows in engine `order` (stable by array position on ties). */
    rows: SectionComposeRow[];
    totalSections: number;
-   /** Sections with elementCount > 0 — the honest "converted" count. */
+   /** Sections carrying at least one "mapped" compose entry. */
    composedSections: number;
-   /** Sections detected but with zero composed elements. */
+   /** Sections with no "mapped" compose entry (detected but not composed). */
    notComposedSections: number;
    /** Run-wide mapping counts, including the not-composed dispositions. */
    totals: Required<DispositionCounts> & {
@@ -109,7 +116,7 @@ export function summarizeRunSections(run: StudioRunView): RunSectionSummary {
          name: sec.name,
          role: sec.role ?? null,
          elementCount: sec.elementCount,
-         composed: sec.elementCount > 0,
+         composed: (dispositions.mapped ?? 0) > 0,
          dispositions,
          needsReview,
          hasMappings: mappings.length > 0,

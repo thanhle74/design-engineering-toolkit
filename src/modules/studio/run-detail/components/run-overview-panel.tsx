@@ -4,8 +4,10 @@
  * [74] Run overview — usage-oriented tab of the run detail screen.
  *
  * [74] Honesty pass (issue scope E): every count and status on this panel is
- * DERIVED from the run's own data (`run.sections` elementCount +
- * `run.mappings` composeDisposition via `summarizeRunSections`). The #72
+ * DERIVED from the run's own data (`run.sections` detection facts +
+ * `run.mappings` composeDisposition via `summarizeRunSections`; a section
+ * counts as composed only when it carries at least one "mapped" entry).
+ * The #72
  * extended reality is 5 of 12 sections composed with 7 skipped entries — the
  * panel now says exactly that instead of a blanket "Đã ghép thành công" per
  * row or an unconditional "Hoàn tất thành công". GAP / SKIPPED / EXCLUDED
