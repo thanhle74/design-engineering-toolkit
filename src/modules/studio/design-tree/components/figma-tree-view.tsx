@@ -1,23 +1,35 @@
 "use client";
 
+/**
+ * [74] Figma design tree (tree view) — state, filtering and inspector.
+ *
+ * The pure section→`TreeDataNode` model lives in `../tree-model` (extracted
+ * along its one real seam); this component owns the interactive state.
+ *
+ * [74] Row identity (AG-011 follow-up): tree keys come from `mappingRowKeys`
+ * — computed ONCE over the UNFILTERED mappings — instead of the positional
+ * `${sectionId}::${nodeId}::${idx}` format, so a key never changes when the
+ * search/disposition filter changes and duplicate nodeIds stay distinct
+ * (AG-009 saw `n-f18f7c3e5cd3` twice in one run). The inspector binds via
+ * the identity map (`mappingByKey`), never via a nodeId-only map, so it
+ * always shows the exact occurrence the operator clicked — including when a
+ * filter later hides the selected node.
+ *
+ * [61] Ant Design stock light appearance: stock Tree/Card/Tag styling, no
+ * theme overrides, layout preserved exactly.
+ */
 import React, { useMemo, useState } from "react";
 import {
    ApartmentOutlined,
-   AppstoreOutlined,
    CheckCircleFilled,
    CheckOutlined,
    CloseCircleFilled,
    CopyOutlined,
    ExclamationCircleFilled,
    FileTextOutlined,
-   FolderOpenOutlined,
-   FolderOutlined,
-   FontSizeOutlined,
    MinusCircleFilled,
-   PictureOutlined,
    QuestionCircleFilled,
    SearchOutlined,
-   TagOutlined,
 } from "@ant-design/icons";
 import {
    Button,
@@ -35,7 +47,6 @@ import {
    Typography,
    message,
 } from "antd";
-import type { TreeDataNode } from "antd";
 
 import type {
    StudioMappingView,
@@ -45,30 +56,15 @@ import {
    ComposeDispositionBadge,
    KindBadge,
    ReviewDispositionBadge,
+   keyedMappings,
 } from "@/src/modules/studio/mapping-review";
+
+import { buildFigmaTreeData } from "../tree-model";
 
 interface FigmaTreeViewProps {
    sections: readonly StudioSectionView[];
    mappings: readonly StudioMappingView[];
    unassigned: readonly StudioMappingView[];
-}
-
-function getNodeIcon(kind?: string) {
-   switch (kind) {
-      case "text":
-         return <FontSizeOutlined style={{ color: "#1677ff" }} />;
-      case "media":
-         return <PictureOutlined style={{ color: "#52c41a" }} />;
-      case "container":
-      case "page-section":
-         return <FolderOutlined style={{ color: "#fa8c16" }} />;
-      case "component":
-         return <AppstoreOutlined style={{ color: "#722ed1" }} />;
-      case "icon":
-         return <TagOutlined style={{ color: "#13c2c2" }} />;
-      default:
-         return <FileTextOutlined style={{ color: "#8c8c8c" }} />;
-   }
 }
 
 function getDispositionIcon(disposition: string) {
@@ -110,13 +106,21 @@ export function FigmaTreeView({
    const [selectedKey, setSelectedKey] = useState<string | null>(null);
    const [copied, setCopied] = useState(false);
 
-   // Map of mappings by ID for fast inspector lookup
-   const mappingMap = useMemo(() => {
-      const map = new Map<string, StudioMappingView>();
-      for (const m of mappings) {
-         map.set(m.nodeId, m);
+   /**
+    * [74] Identity, computed ONCE over the UNFILTERED mappings (the
+    * `unassigned` subset shares the same array entries). `rowKeys` keys the
+    * tree model; `mappingByKey` is the exact-occurrence inspector lookup —
+    * replacing the old nodeId-only `mappingMap`, which silently returned the
+    * LAST occurrence for duplicate nodeIds.
+    */
+   const { rowKeys, mappingByKey } = useMemo(() => {
+      const keys = new Map<StudioMappingView, string>();
+      const byKey = new Map<string, StudioMappingView>();
+      for (const { mapping, rowKey } of keyedMappings(mappings)) {
+         keys.set(mapping, rowKey);
+         byKey.set(rowKey, mapping);
       }
-      return map;
+      return { rowKeys: keys, mappingByKey: byKey };
    }, [mappings]);
 
    const sectionMap = useMemo(() => {
@@ -179,243 +183,27 @@ export function FigmaTreeView({
       });
    }, [unassigned, dispositionFilter, searchQuery]);
 
-   type SelectedTreeItem =
-      | { type: "section"; section: StudioSectionView }
-      | { type: "mapping"; mapping: StudioMappingView }
-      | { type: "unassigned-group" };
+   // Pure tree model (sections + filtered groups + stable row identity).
+   const { treeData, treeItemsByKey, allSectionKeys } = useMemo(
+      () =>
+         buildFigmaTreeData({
+            sections,
+            mappingsBySection,
+            filteredUnassigned,
+            rowKeys,
+         }),
+      [sections, mappingsBySection, filteredUnassigned, rowKeys],
+   );
 
-   // Build Ant Design Tree Data structure with globally unique keys
-   const { treeData, treeItemsByKey, allSectionKeys } = useMemo(() => {
-      const itemsMap = new Map<string, SelectedTreeItem>();
-      const sectionKeys: string[] = [];
-
-      const sectionNodes: TreeDataNode[] = sections.map((sec) => {
-         sectionKeys.push(sec.sectionId);
-         itemsMap.set(sec.sectionId, { type: "section", section: sec });
-
-         const secMappings = mappingsBySection.get(sec.sectionId) || [];
-         const children: TreeDataNode[] = secMappings.map((m, idx) => {
-            const nodeKey = `${sec.sectionId}::${m.nodeId}::${idx}`;
-            itemsMap.set(nodeKey, { type: "mapping", mapping: m });
-            return {
-               key: nodeKey,
-               isLeaf: true,
-               title: (
-                  <span
-                     style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 8,
-                        width: "100%",
-                        overflow: "hidden",
-                        whiteSpace: "nowrap",
-                     }}
-                  >
-                     <span
-                        style={{
-                           display: "inline-flex",
-                           alignItems: "center",
-                           fontSize: 14,
-                           flexShrink: 0,
-                        }}
-                     >
-                        {getNodeIcon(m.kind)}
-                     </span>
-                     <span
-                        style={{
-                           fontWeight: 500,
-                           maxWidth: 240,
-                           overflow: "hidden",
-                           textOverflow: "ellipsis",
-                           whiteSpace: "nowrap",
-                           fontSize: 13,
-                        }}
-                        title={m.sourceName || m.nodeId}
-                     >
-                        {m.sourceName || m.nodeId}
-                     </span>
-                     <Typography.Text
-                        code
-                        style={{
-                           fontSize: 11,
-                           color: "#8c8c8c",
-                           padding: "0 4px",
-                           background: "#f5f5f5",
-                           flexShrink: 0,
-                        }}
-                     >
-                        {m.nodeId}
-                     </Typography.Text>
-                     <span style={{ flexShrink: 0 }}>
-                        <ComposeDispositionBadge
-                           disposition={m.composeDisposition}
-                        />
-                     </span>
-                  </span>
-               ),
-            };
-         });
-
-         return {
-            key: sec.sectionId,
-            title: (
-               <span
-                  style={{
-                     display: "inline-flex",
-                     alignItems: "center",
-                     gap: 8,
-                     width: "100%",
-                     overflow: "hidden",
-                     whiteSpace: "nowrap",
-                  }}
-               >
-                  <FolderOpenOutlined
-                     style={{ color: "#1677ff", fontSize: 14, flexShrink: 0 }}
-                  />
-                  <Typography.Text
-                     strong
-                     style={{ fontSize: 13, flexShrink: 0 }}
-                  >
-                     #{sec.order} {sec.name}
-                  </Typography.Text>
-                  <Typography.Text
-                     code
-                     style={{ fontSize: 11, color: "#8c8c8c", flexShrink: 0 }}
-                  >
-                     {sec.sectionId}
-                  </Typography.Text>
-                  <Tag
-                     color={sec.elementCount > 0 ? "blue" : "gold"}
-                     style={{ margin: 0, fontSize: 11, flexShrink: 0 }}
-                  >
-                     {sec.elementCount} phần tử
-                  </Tag>
-                  {sec.elementCount === 0 && (
-                     <Tag
-                        color="warning"
-                        style={{ margin: 0, fontSize: 11, flexShrink: 0 }}
-                     >
-                        PARTIAL
-                     </Tag>
-                  )}
-               </span>
-            ),
-            children,
-         };
-      });
-
-      if (filteredUnassigned.length > 0) {
-         sectionKeys.push("unassigned-group");
-         itemsMap.set("unassigned-group", { type: "unassigned-group" });
-         sectionNodes.push({
-            key: "unassigned-group",
-            title: (
-               <span
-                  style={{
-                     display: "inline-flex",
-                     alignItems: "center",
-                     gap: 8,
-                     width: "100%",
-                     overflow: "hidden",
-                     whiteSpace: "nowrap",
-                  }}
-               >
-                  <FolderOutlined
-                     style={{ color: "#faad14", fontSize: 14, flexShrink: 0 }}
-                  />
-                  <Typography.Text
-                     strong
-                     style={{ fontSize: 13, flexShrink: 0 }}
-                  >
-                     Chưa gán vào mục nào
-                  </Typography.Text>
-                  <Tag
-                     color="orange"
-                     style={{ margin: 0, fontSize: 11, flexShrink: 0 }}
-                  >
-                     {filteredUnassigned.length} node
-                  </Tag>
-               </span>
-            ),
-            children: filteredUnassigned.map((m, idx) => {
-               const nodeKey = `unassigned::${m.nodeId}::${idx}`;
-               itemsMap.set(nodeKey, { type: "mapping", mapping: m });
-               return {
-                  key: nodeKey,
-                  isLeaf: true,
-                  title: (
-                     <span
-                        style={{
-                           display: "inline-flex",
-                           alignItems: "center",
-                           gap: 8,
-                           width: "100%",
-                           overflow: "hidden",
-                           whiteSpace: "nowrap",
-                        }}
-                     >
-                        <span
-                           style={{
-                              display: "inline-flex",
-                              alignItems: "center",
-                              fontSize: 14,
-                              flexShrink: 0,
-                           }}
-                        >
-                           {getNodeIcon(m.kind)}
-                        </span>
-                        <span
-                           style={{
-                              fontWeight: 500,
-                              maxWidth: 240,
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              whiteSpace: "nowrap",
-                              fontSize: 13,
-                           }}
-                           title={m.sourceName || m.nodeId}
-                        >
-                           {m.sourceName || m.nodeId}
-                        </span>
-                        <Typography.Text
-                           code
-                           style={{
-                              fontSize: 11,
-                              color: "#8c8c8c",
-                              padding: "0 4px",
-                              background: "#f5f5f5",
-                              flexShrink: 0,
-                           }}
-                        >
-                           {m.nodeId}
-                        </Typography.Text>
-                        <span style={{ flexShrink: 0 }}>
-                           <ComposeDispositionBadge
-                              disposition={m.composeDisposition}
-                           />
-                        </span>
-                     </span>
-                  ),
-               };
-            }),
-         });
-      }
-
-      return {
-         treeData: sectionNodes,
-         treeItemsByKey: itemsMap,
-         allSectionKeys: sectionKeys,
-      };
-   }, [sections, mappingsBySection, filteredUnassigned]);
-
-   // Selected item details with fallback
+   // Selected item details: the tree lookup first (exact item), then the
+   // [74] identity map by the full stable row key — never a nodeId-only
+   // fallback, which could show the WRONG occurrence of a duplicated node.
    const selectedItem = selectedKey ? treeItemsByKey.get(selectedKey) : null;
-   const selectedNode =
-      selectedItem?.type === "mapping"
-         ? selectedItem.mapping
-         : selectedKey
-           ? (mappingMap.get(selectedKey.split("::")[1] ?? selectedKey) ?? null)
-           : null;
+   const selectedNode = selectedItem?.type === "mapping"
+      ? selectedItem.mapping
+      : selectedKey
+        ? (mappingByKey.get(selectedKey) ?? null)
+        : null;
    const selectedSection =
       selectedItem?.type === "section"
          ? selectedItem.section
