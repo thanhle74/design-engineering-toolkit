@@ -204,8 +204,9 @@ export function RunScreen({ run }: { run: StudioRunView }) {
                      ) : null}
                   </Flex>
                   <Typography.Text type="secondary" style={{ fontSize: 13 }}>
-                     Trang đã được sinh thành công sang mã Magento Page Builder.
-                     Bạn có thể sao chép hoặc tải các tệp bên dưới để áp dụng.
+                     {nativeContentArtifact
+                        ? "Trang đã được sinh mã Magento Page Builder. Bạn có thể sao chép hoặc tải các tệp bên dưới để áp dụng."
+                        : "Lần chạy này chưa có mã Page Builder đầu ra — trạng thái và chẩn đoán chi tiết nằm ở các tab bên dưới."}
                   </Typography.Text>
                </Flex>
 
