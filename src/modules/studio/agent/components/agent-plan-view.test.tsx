@@ -9,7 +9,7 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 
-import { VALID_AGENT_PLAN } from "@/src/modules/studio/shared/contracts/agent-plan.test";
+import { VALID_AGENT_PLAN } from "@/src/modules/studio/shared/contracts/__tests__/agent-plan.test";
 import type { AgentPlan } from "@/src/modules/studio/shared/contracts";
 import type { ApprovalPreview } from "@/src/modules/studio/server/claude-agent/plan-materializer";
 
