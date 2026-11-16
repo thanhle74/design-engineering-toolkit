@@ -151,9 +151,7 @@ function mappingLeaf(
  * filtered mapping leaves, then the explicit "Chưa gán vào mục nào" group.
  * Pure — no hooks, no state; safe inside a single useMemo.
  */
-export function buildFigmaTreeData(
-   input: FigmaTreeModelInput,
-): FigmaTreeModel {
+export function buildFigmaTreeData(input: FigmaTreeModelInput): FigmaTreeModel {
    const { sections, mappingsBySection, filteredUnassigned, rowKeys } = input;
    const itemsMap = new Map<string, SelectedTreeItem>();
    const sectionKeys: string[] = [];
@@ -183,10 +181,7 @@ export function buildFigmaTreeData(
                <FolderOpenOutlined
                   style={{ color: "#1677ff", fontSize: 14, flexShrink: 0 }}
                />
-               <Typography.Text
-                  strong
-                  style={{ fontSize: 13, flexShrink: 0 }}
-               >
+               <Typography.Text strong style={{ fontSize: 13, flexShrink: 0 }}>
                   #{sec.order} {sec.name}
                </Typography.Text>
                <Typography.Text
@@ -234,10 +229,7 @@ export function buildFigmaTreeData(
                <FolderOutlined
                   style={{ color: "#faad14", fontSize: 14, flexShrink: 0 }}
                />
-               <Typography.Text
-                  strong
-                  style={{ fontSize: 13, flexShrink: 0 }}
-               >
+               <Typography.Text strong style={{ fontSize: 13, flexShrink: 0 }}>
                   Chưa gán vào mục nào
                </Typography.Text>
                <Tag

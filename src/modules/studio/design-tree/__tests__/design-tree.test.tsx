@@ -5,7 +5,7 @@ import {
    StudioRunViewSchema,
    type StudioRunView,
 } from "@/src/modules/studio/shared/contracts";
-import { DesignTree } from "./components/design-tree";
+import { DesignTree } from "../components/design-tree";
 
 afterEach(cleanup);
 

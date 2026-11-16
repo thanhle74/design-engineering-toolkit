@@ -88,11 +88,7 @@ export function OverviewStatusCard({
    composedSections: number;
    totalSections: number;
 }) {
-   const state = deriveOverallState(
-      run,
-      composedSections,
-      totalSections,
-   );
+   const state = deriveOverallState(run, composedSections, totalSections);
    const visual = STATUS_VISUALS[state];
    let notComposedEntries = 0;
    for (const m of run.mappings) {

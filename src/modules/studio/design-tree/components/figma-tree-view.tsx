@@ -199,11 +199,12 @@ export function FigmaTreeView({
    // [74] identity map by the full stable row key — never a nodeId-only
    // fallback, which could show the WRONG occurrence of a duplicated node.
    const selectedItem = selectedKey ? treeItemsByKey.get(selectedKey) : null;
-   const selectedNode = selectedItem?.type === "mapping"
-      ? selectedItem.mapping
-      : selectedKey
-        ? (mappingByKey.get(selectedKey) ?? null)
-        : null;
+   const selectedNode =
+      selectedItem?.type === "mapping"
+         ? selectedItem.mapping
+         : selectedKey
+           ? (mappingByKey.get(selectedKey) ?? null)
+           : null;
    const selectedSection =
       selectedItem?.type === "section"
          ? selectedItem.section

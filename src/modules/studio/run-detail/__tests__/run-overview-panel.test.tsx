@@ -103,7 +103,9 @@ describe("RunOverviewPanel — derived overall status", () => {
             onQuickDownload={onQuickDownload}
          />,
       );
-      expect(screen.getByText("Hoàn tất — còn mục chưa ghép")).toBeInTheDocument();
+      expect(
+         screen.getByText("Hoàn tất — còn mục chưa ghép"),
+      ).toBeInTheDocument();
       expect(
          screen.getByText(
             "Mã thoát 0 · Đã ghép 2/3 phân đoạn · 2 mục gap/bỏ qua/loại trừ",
@@ -154,10 +156,7 @@ describe("RunOverviewPanel — derived overall status", () => {
 
 describe("RunOverviewPanel — derived section statuses", () => {
    it("marks each section from its own data, not a blanket success", () => {
-      const sections = [
-         section(0, "s-a", 3),
-         section(1, "s-b", 0),
-      ];
+      const sections = [section(0, "s-a", 3), section(1, "s-b", 0)];
       const mappings = [
          mapping("n-1", "s-a", "mapped"),
          mapping("n-2", "s-b", "skipped"),
@@ -176,9 +175,7 @@ describe("RunOverviewPanel — derived section statuses", () => {
 
       const skippedRow = rows.find((r) => within(r).queryByText("Section 1"));
       expect(skippedRow).toBeDefined();
-      expect(
-         within(skippedRow!).getByText("CHƯA GHÉP"),
-      ).toBeInTheDocument();
+      expect(within(skippedRow!).getByText("CHƯA GHÉP")).toBeInTheDocument();
       // The section's own skipped entries stay visible per row.
       expect(within(skippedRow!).getByText("2 skipped")).toBeInTheDocument();
       // No invented blanket per-row claim remains.
@@ -192,7 +189,9 @@ describe("RunOverviewPanel — derived section statuses", () => {
          section(2, "s-2", 2),
          section(3, "s-3", 1),
          section(4, "s-4", 2),
-         ...Array.from({ length: 7 }, (_, i) => section(5 + i, `s-${5 + i}`, 0)),
+         ...Array.from({ length: 7 }, (_, i) =>
+            section(5 + i, `s-${5 + i}`, 0),
+         ),
       ];
       const mappings = [
          ...Array.from({ length: 5 }, (_, i) =>

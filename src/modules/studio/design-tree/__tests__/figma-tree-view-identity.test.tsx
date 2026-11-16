@@ -12,7 +12,13 @@
  *    filter that hides the selected node (exact-occurrence fallback, not a
  *    last-write-wins nodeId lookup).
  */
-import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import {
+   cleanup,
+   fireEvent,
+   render,
+   screen,
+   within,
+} from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 
 import type {
@@ -70,10 +76,7 @@ const MAPPINGS: StudioMappingView[] = [
 function treeNodesFor(nodeId: string): HTMLElement[] {
    return screen
       .queryAllByText(nodeId)
-      .map(
-         (el) =>
-            el.closest(".ant-tree-treenode") as HTMLElement | null,
-      )
+      .map((el) => el.closest(".ant-tree-treenode") as HTMLElement | null)
       .filter((el): el is HTMLElement => el !== null);
 }
 
@@ -113,9 +116,7 @@ describe("FigmaTreeView — duplicate nodeIds bind the exact occurrence", () => 
 
       clickOccurrence(DUP_NODE, "mapped");
       expect(screen.getByText("design://x/10:2")).toBeInTheDocument();
-      expect(
-         screen.getByText("magento_pagebuilder/text"),
-      ).toBeInTheDocument();
+      expect(screen.getByText("magento_pagebuilder/text")).toBeInTheDocument();
       expect(screen.queryByText("gap assessment one")).toBeNull();
    });
 });

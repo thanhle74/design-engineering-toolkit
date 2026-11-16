@@ -33,7 +33,7 @@ import type { AgentAnalysisSnapshot } from "@/src/modules/studio/shared/contract
 import { StudioReadinessProvider } from "@/src/modules/studio/readiness";
 
 import { DEMO_FIGMA_SOURCE } from "../components/build-flow-view";
-import { BuildScreen } from "./build.screen";
+import { BuildScreen } from "../screens/build.screen";
 
 const FLOW_ID = "flow-910001";
 const BUILD_RUN_ID = "run-424242";

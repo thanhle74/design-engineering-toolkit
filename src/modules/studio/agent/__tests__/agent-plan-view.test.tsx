@@ -13,7 +13,7 @@ import { VALID_AGENT_PLAN } from "@/src/modules/studio/shared/contracts/agent-pl
 import type { AgentPlan } from "@/src/modules/studio/shared/contracts";
 import type { ApprovalPreview } from "@/src/modules/studio/server/claude-agent/plan-materializer";
 
-import { AgentPlanView } from "./agent-plan-view";
+import { AgentPlanView } from "../components/agent-plan-view";
 
 afterEach(cleanup);
 

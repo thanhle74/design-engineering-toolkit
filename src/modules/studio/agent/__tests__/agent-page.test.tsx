@@ -13,7 +13,7 @@ vi.mock("next/navigation", () => ({
    },
 }));
 
-import AgentPage from "./page";
+import AgentPage from "@/app/agent/page";
 
 async function redirectTargetFor(
    searchParams: Record<string, string | string[] | undefined>,

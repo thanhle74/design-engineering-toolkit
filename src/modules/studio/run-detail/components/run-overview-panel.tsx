@@ -238,8 +238,8 @@ export function RunOverviewPanel({
                         </Typography.Title>
                      </Flex>
                      <Typography.Text type="secondary" style={{ fontSize: 12 }}>
-                        Nhận diện từ Figma · đã ghép{" "}
-                        {summary.composedSections}/{summary.totalSections}
+                        Nhận diện từ Figma · đã ghép {summary.composedSections}/
+                        {summary.totalSections}
                      </Typography.Text>
                   </Flex>
                </Card>
@@ -289,8 +289,8 @@ export function RunOverviewPanel({
                      >
                         {run.build
                            ? run.build.manifestVerified
-                             ? "Khớp SHA-256 toàn bộ tệp manifest"
-                             : "Xác minh toàn vẹn THẤT BẠI"
+                              ? "Khớp SHA-256 toàn bộ tệp manifest"
+                              : "Xác minh toàn vẹn THẤT BẠI"
                            : "Chưa có gói build — chưa xác minh SHA-256"}
                      </Typography.Text>
                   </Flex>
@@ -406,8 +406,8 @@ export function RunOverviewPanel({
                <Flex align="center" gap={8}>
                   <LayoutOutlined style={{ color: "#1677ff" }} />
                   <span style={{ fontWeight: 600 }}>
-                     Các phân đoạn giao diện (đã ghép{" "}
-                     {summary.composedSections}/{summary.totalSections})
+                     Các phân đoạn giao diện (đã ghép {summary.composedSections}
+                     /{summary.totalSections})
                   </span>
                </Flex>
             }

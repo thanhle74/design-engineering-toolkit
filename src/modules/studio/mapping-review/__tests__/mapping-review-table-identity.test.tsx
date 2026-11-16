@@ -10,7 +10,13 @@
  *  - duplicate-nodeId entries render as distinct rows with distinct keys;
  *  - the drawer inspector shows the EXACT occurrence that was clicked.
  */
-import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import {
+   cleanup,
+   fireEvent,
+   render,
+   screen,
+   within,
+} from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 
 import type { StudioMappingView } from "@/src/modules/studio/shared/contracts";
@@ -143,7 +149,9 @@ describe("MappingReviewTable — inspector binds to the clicked occurrence", () 
       // First occurrence (gap, "gap assessment one").
       fireEvent.click(rows[0]!);
       let drawer = screen.getByRole("dialog");
-      expect(within(drawer).getByText("gap assessment one")).toBeInTheDocument();
+      expect(
+         within(drawer).getByText("gap assessment one"),
+      ).toBeInTheDocument();
       expect(within(drawer).getByText("design://x/10:1")).toBeInTheDocument();
 
       // Second occurrence (mapped, no note) — same drawer, re-bound.

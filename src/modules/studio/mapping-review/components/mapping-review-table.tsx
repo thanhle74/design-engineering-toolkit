@@ -173,36 +173,42 @@ export function MappingReviewTable({
     * occurrence even when duplicate nodeIds exist.
     */
    const filteredMappings = useMemo(() => {
-      return keyedMappings(mappings)
-         .filter(({ mapping: m }) => {
-            if (dispositionFilter === "needs_review") {
-               if (!m.needsReview) return false;
-            } else if (
-               dispositionFilter !== "all" &&
-               m.composeDisposition !== dispositionFilter
-            ) {
-               return false;
-            }
+      return (
+         keyedMappings(mappings)
+            .filter(({ mapping: m }) => {
+               if (dispositionFilter === "needs_review") {
+                  if (!m.needsReview) return false;
+               } else if (
+                  dispositionFilter !== "all" &&
+                  m.composeDisposition !== dispositionFilter
+               ) {
+                  return false;
+               }
 
-            if (searchQuery.trim()) {
-               const q = searchQuery.toLowerCase();
-               const matchId = m.nodeId.toLowerCase().includes(q);
-               const matchName = m.sourceName?.toLowerCase().includes(q);
-               const matchLoc = m.sourceLocator?.toLowerCase().includes(q);
-               const matchTarget = m.target?.capabilityId
-                  .toLowerCase()
-                  .includes(q);
-               const matchNote = m.note?.toLowerCase().includes(q);
-               return (
-                  matchId || matchName || matchLoc || matchTarget || matchNote
-               );
-            }
-            return true;
-         })
-         // Rows stay StudioMappingView-shaped (spread + rowKey) so the
-         // `rowKey="rowKey"` string-prop API and the column renderers are
-         // untouched; only the identity source changed.
-         .map(({ mapping, rowKey }) => ({ ...mapping, rowKey }));
+               if (searchQuery.trim()) {
+                  const q = searchQuery.toLowerCase();
+                  const matchId = m.nodeId.toLowerCase().includes(q);
+                  const matchName = m.sourceName?.toLowerCase().includes(q);
+                  const matchLoc = m.sourceLocator?.toLowerCase().includes(q);
+                  const matchTarget = m.target?.capabilityId
+                     .toLowerCase()
+                     .includes(q);
+                  const matchNote = m.note?.toLowerCase().includes(q);
+                  return (
+                     matchId ||
+                     matchName ||
+                     matchLoc ||
+                     matchTarget ||
+                     matchNote
+                  );
+               }
+               return true;
+            })
+            // Rows stay StudioMappingView-shaped (spread + rowKey) so the
+            // `rowKey="rowKey"` string-prop API and the column renderers are
+            // untouched; only the identity source changed.
+            .map(({ mapping, rowKey }) => ({ ...mapping, rowKey }))
+      );
    }, [mappings, dispositionFilter, searchQuery]);
 
    const handleCopy = (text: string) => {

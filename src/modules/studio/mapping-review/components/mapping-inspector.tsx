@@ -132,8 +132,8 @@ export function MappingInspector({
                               <div>
                                  <b>Element / Field:</b>{" "}
                                  <Typography.Text type="secondary">
-                                    {mapping.target.nativeElement ?? UNKNOWN}{" "}
-                                    · {mapping.target.nativeField ?? UNKNOWN}
+                                    {mapping.target.nativeElement ?? UNKNOWN} ·{" "}
+                                    {mapping.target.nativeField ?? UNKNOWN}
                                  </Typography.Text>
                               </div>
                            )}
