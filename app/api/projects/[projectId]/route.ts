@@ -1,74 +1,24 @@
+/**
+ * [74] /api/projects/[projectId] — thin route: all validation and error
+ * mapping live in the projects module server seam (`projects/api.ts`).
+ */
 import {
-   deleteProject,
-   getProject,
-} from "@/src/modules/studio/projects/project-store";
+   projectDeleteResponse,
+   projectGetResponse,
+} from "@/src/modules/studio/projects/api";
 
 export async function GET(
    _request: Request,
    { params }: { params: Promise<{ projectId: string }> },
 ): Promise<Response> {
-   try {
-      const { projectId } = await params;
-      const project = await getProject(projectId);
-      if (!project) {
-         return Response.json(
-            {
-               error: {
-                  code: "not-found",
-                  message: `Không tìm thấy dự án ${projectId}`,
-               },
-            },
-            { status: 404 },
-         );
-      }
-      return Response.json({ project });
-   } catch (error) {
-      return Response.json(
-         {
-            error: {
-               code: "internal-error",
-               message:
-                  error instanceof Error
-                     ? error.message
-                     : "Failed to get project",
-            },
-         },
-         { status: 500 },
-      );
-   }
+   const { projectId } = await params;
+   return projectGetResponse(projectId);
 }
 
 export async function DELETE(
    _request: Request,
    { params }: { params: Promise<{ projectId: string }> },
 ): Promise<Response> {
-   try {
-      const { projectId } = await params;
-      const ok = await deleteProject(projectId);
-      if (!ok) {
-         return Response.json(
-            {
-               error: {
-                  code: "not-found",
-                  message: `Không tìm thấy dự án ${projectId}`,
-               },
-            },
-            { status: 404 },
-         );
-      }
-      return Response.json({ ok: true });
-   } catch (error) {
-      return Response.json(
-         {
-            error: {
-               code: "internal-error",
-               message:
-                  error instanceof Error
-                     ? error.message
-                     : "Failed to delete project",
-            },
-         },
-         { status: 500 },
-      );
-   }
+   const { projectId } = await params;
+   return projectDeleteResponse(projectId);
 }
