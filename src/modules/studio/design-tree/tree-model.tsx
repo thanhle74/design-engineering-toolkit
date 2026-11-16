@@ -16,15 +16,11 @@
  */
 import {
    AppstoreOutlined,
-   CheckCircleFilled,
-   ExclamationCircleFilled,
    FileTextOutlined,
    FolderOpenOutlined,
    FolderOutlined,
    FontSizeOutlined,
-   MinusCircleFilled,
    PictureOutlined,
-   QuestionCircleFilled,
    TagOutlined,
 } from "@ant-design/icons";
 import { Tag, Typography } from "antd";

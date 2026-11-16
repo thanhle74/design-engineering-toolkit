@@ -22,7 +22,6 @@ import type { HTMLAttributes } from "react";
 import {
    ApartmentOutlined,
    CheckCircleFilled,
-   CheckOutlined,
    CopyOutlined,
    ExclamationCircleFilled,
    EyeOutlined,
@@ -34,14 +33,11 @@ import {
    Button,
    Card,
    Col,
-   Descriptions,
-   Drawer,
    Flex,
    Input,
    Row,
    Segmented,
    Table,
-   Tag,
    Tooltip,
    Typography,
    message,
@@ -50,6 +46,7 @@ import type { ColumnsType } from "antd/es/table";
 
 import type { StudioMappingView } from "@/src/modules/studio/shared/contracts";
 import { keyedMappings } from "../mapping-row-identity";
+import { MappingInspector } from "./mapping-inspector";
 import {
    ComposeDispositionBadge,
    KindBadge,
@@ -491,170 +488,13 @@ export function MappingReviewTable({
             />
          </div>
 
-         {/* 4. Side Drawer Inspector */}
-         <Drawer
-            title={
-               activeDrawerNode ? (
-                  <Flex align="center" gap={8}>
-                     <span>Chi tiết ánh xạ:</span>
-                     <Typography.Text code>
-                        {activeDrawerNode.nodeId}
-                     </Typography.Text>
-                  </Flex>
-               ) : (
-                  "Chi tiết Node"
-               )
-            }
-            open={activeDrawerNode !== null}
+         {/* 4. Side Drawer Inspector — [74] exact-occurrence binding */}
+         <MappingInspector
+            mapping={activeDrawerNode}
+            copied={copied}
+            onCopyId={handleCopy}
             onClose={() => setActiveDrawerNode(null)}
-            size={520}
-         >
-            {activeDrawerNode && (
-               <Flex vertical gap="middle">
-                  <Descriptions size="small" column={1} bordered>
-                     <Descriptions.Item label="Node ID">
-                        <Flex justify="space-between" align="center">
-                           <Typography.Text code copyable={false}>
-                              {activeDrawerNode.nodeId}
-                           </Typography.Text>
-                           <Button
-                              size="small"
-                              type="text"
-                              icon={
-                                 copied ? <CheckOutlined /> : <CopyOutlined />
-                              }
-                              onClick={() =>
-                                 handleCopy(activeDrawerNode.nodeId)
-                              }
-                           >
-                              Copy ID
-                           </Button>
-                        </Flex>
-                     </Descriptions.Item>
-                     <Descriptions.Item label="Tên lớp trong Figma">
-                        <Typography.Text strong>
-                           {activeDrawerNode.sourceName || UNKNOWN}
-                        </Typography.Text>
-                     </Descriptions.Item>
-                     <Descriptions.Item label="Loại (Kind)">
-                        <KindBadge kind={activeDrawerNode.kind} />
-                     </Descriptions.Item>
-                     <Descriptions.Item label="Lớp ngữ nghĩa">
-                        <Typography.Text code>
-                           {activeDrawerNode.semanticClass || UNKNOWN}
-                        </Typography.Text>
-                     </Descriptions.Item>
-                     <Descriptions.Item label="Vị trí nguồn (Locator)">
-                        <Typography.Text
-                           code
-                           style={{ wordBreak: "break-all" }}
-                        >
-                           {activeDrawerNode.sourceLocator || UNKNOWN}
-                        </Typography.Text>
-                     </Descriptions.Item>
-                     <Descriptions.Item label="Compose Disposition">
-                        <ComposeDispositionBadge
-                           disposition={activeDrawerNode.composeDisposition}
-                        />
-                     </Descriptions.Item>
-                     <Descriptions.Item label="Review Disposition">
-                        {activeDrawerNode.reviewDisposition ? (
-                           <ReviewDispositionBadge
-                              disposition={activeDrawerNode.reviewDisposition}
-                           />
-                        ) : (
-                           <Typography.Text type="secondary">—</Typography.Text>
-                        )}
-                     </Descriptions.Item>
-                     <Descriptions.Item label="Cần rà soát (needsReview)">
-                        <Tag
-                           color={
-                              activeDrawerNode.needsReview
-                                 ? "warning"
-                                 : "default"
-                           }
-                        >
-                           {activeDrawerNode.needsReview
-                              ? "CẦN RÀ SOÁT"
-                              : "Bình thường"}
-                        </Tag>
-                     </Descriptions.Item>
-                     <Descriptions.Item label="Đích Magento Page Builder">
-                        {activeDrawerNode.target ? (
-                           <Flex vertical gap={4}>
-                              <div>
-                                 <b>Capability:</b>{" "}
-                                 <Typography.Text code>
-                                    {activeDrawerNode.target.capabilityId}
-                                 </Typography.Text>
-                              </div>
-                              <div>
-                                 <b>Appearance:</b>{" "}
-                                 <Tag>
-                                    {activeDrawerNode.target.appearanceId}
-                                 </Tag>
-                              </div>
-                              {(activeDrawerNode.target.nativeElement ||
-                                 activeDrawerNode.target.nativeField) && (
-                                 <div>
-                                    <b>Element / Field:</b>{" "}
-                                    <Typography.Text type="secondary">
-                                       {activeDrawerNode.target.nativeElement ??
-                                          UNKNOWN}{" "}
-                                       ·{" "}
-                                       {activeDrawerNode.target.nativeField ??
-                                          UNKNOWN}
-                                    </Typography.Text>
-                                 </div>
-                              )}
-                           </Flex>
-                        ) : (
-                           <Typography.Text type="secondary">
-                              {activeDrawerNode.composeDisposition === "mapped"
-                                 ? UNKNOWN
-                                 : "Chưa gắn đích"}
-                           </Typography.Text>
-                        )}
-                     </Descriptions.Item>
-                     {activeDrawerNode.note && (
-                        <Descriptions.Item label="Ghi chú">
-                           <Typography.Text>
-                              {activeDrawerNode.note}
-                           </Typography.Text>
-                        </Descriptions.Item>
-                     )}
-                     {activeDrawerNode.reasons.length > 0 && (
-                        <Descriptions.Item label="Danh sách lý do">
-                           <ul style={{ margin: 0, paddingLeft: 18 }}>
-                              {activeDrawerNode.reasons.map((r, i) => (
-                                 <li key={i}>
-                                    <Typography.Text type="secondary">
-                                       {r}
-                                    </Typography.Text>
-                                 </li>
-                              ))}
-                           </ul>
-                        </Descriptions.Item>
-                     )}
-                  </Descriptions>
-
-                  <Card size="small" title="Dữ liệu JSON thô">
-                     <pre
-                        style={{
-                           fontSize: 11,
-                           margin: 0,
-                           background: "#fafafa",
-                           padding: 8,
-                           borderRadius: 4,
-                           overflowX: "auto",
-                        }}
-                     >
-                        {JSON.stringify(activeDrawerNode, null, 2)}
-                     </pre>
-                  </Card>
-               </Flex>
-            )}
-         </Drawer>
+         />
       </Flex>
    );
 }

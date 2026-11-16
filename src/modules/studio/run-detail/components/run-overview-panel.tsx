@@ -13,20 +13,20 @@
  * errors are not masked (they live on the Technical tab and in the HTML
  * missing-state Alert here); no fake previews are rendered.
  *
- * Layout, spacing and the friendly Vietnamese copy style are preserved; only
- * truthfulness of text/counts/statuses changed. [61] Ant Design stock light
- * (preset color values only), no theme overrides.
+ * Static content (install guide) and the derived overall-status card live in
+ * their own components (`install-guide-tabs`, `overview-status-card`); this
+ * file keeps the data-driven layout. Layout, spacing and the friendly
+ * Vietnamese copy style are preserved; only truthfulness of text/counts/
+ * statuses changed. [61] Ant Design stock light (preset color values only),
+ * no theme overrides.
  */
 import { useEffect, useState } from "react";
 import {
    CheckCircleFilled,
-   CheckCircleOutlined,
    CheckOutlined,
-   CloseCircleFilled,
    CodeOutlined,
    CopyOutlined,
    DownloadOutlined,
-   ExclamationCircleFilled,
    InfoCircleOutlined,
    LayoutOutlined,
    QuestionCircleOutlined,
@@ -40,9 +40,7 @@ import {
    Flex,
    Row,
    Skeleton,
-   Steps,
    Table,
-   Tabs,
    Tag,
    Typography,
    message,
@@ -58,35 +56,12 @@ import {
    summarizeRunSections,
    type SectionComposeRow,
 } from "../section-summary";
+import { InstallGuideTabs } from "./install-guide-tabs";
+import { OverviewStatusCard } from "./overview-status-card";
 
 interface RunOverviewPanelProps {
    run: StudioRunView;
    onQuickDownload: (artifact: StudioArtifactView) => void;
-}
-
-/** Derived overall state of the conversion run. */
-type OverallState = "success" | "partial" | "failed" | "unknown";
-
-function deriveOverallState(
-   run: StudioRunView,
-   composedSections: number,
-   totalSections: number,
-): OverallState {
-   if (run.exitCode === null) return "unknown";
-   if (run.exitCode !== 0) return "failed";
-   const { gap, skipped } = (() => {
-      let gap = 0;
-      let skipped = 0;
-      for (const m of run.mappings) {
-         if (m.composeDisposition === "gap") gap += 1;
-         if (m.composeDisposition === "skipped") skipped += 1;
-      }
-      return { gap, skipped };
-   })();
-   if (composedSections < totalSections || gap > 0 || skipped > 0) {
-      return "partial";
-   }
-   return "success";
 }
 
 export function RunOverviewPanel({
@@ -163,61 +138,7 @@ export function RunOverviewPanel({
 
    // [74] Honest counts, derived from the run itself.
    const summary = summarizeRunSections(run);
-   const overall = deriveOverallState(
-      run,
-      summary.composedSections,
-      summary.totalSections,
-   );
-   const notComposedEntries =
-      summary.totals.gap + summary.totals.skipped + summary.totals.excluded;
    const downloadableCount = run.artifacts.filter((a) => a.downloadable).length;
-
-   const overallStatus = {
-      success: {
-         icon: <CheckCircleFilled style={{ color: "#52c41a", fontSize: 18 }} />,
-         text: "Hoàn tất thành công",
-         tone: "success" as const,
-         surface: { background: "#f6ffed", border: "1px solid #b7eb8f" },
-         textColor: "#389e0d",
-      },
-      partial: {
-         icon: (
-            <ExclamationCircleFilled
-               style={{ color: "#faad14", fontSize: 18 }}
-            />
-         ),
-         text: "Hoàn tất — còn mục chưa ghép",
-         tone: "warning" as const,
-         surface: { background: "#fffbe6", border: "1px solid #ffe58f" },
-         textColor: "#d48806",
-      },
-      failed: {
-         icon: <CloseCircleFilled style={{ color: "#ff4d4f", fontSize: 18 }} />,
-         text: "Chưa hoàn tất",
-         tone: "error" as const,
-         surface: { background: "#fff1f0", border: "1px solid #ffa39e" },
-         textColor: "#cf1322",
-      },
-      unknown: {
-         icon: (
-            <InfoCircleOutlined style={{ color: "#8c8c8c", fontSize: 18 }} />
-         ),
-         text: "Chưa rõ trạng thái",
-         tone: "secondary" as const,
-         surface: { background: "#fafafa", border: "1px solid #d9d9d9" },
-         textColor: "#595959",
-      },
-   }[overall];
-
-   const overallSubline = [
-      `Mã thoát ${run.exitCode ?? "không rõ"}`,
-      `Đã ghép ${summary.composedSections}/${summary.totalSections} phân đoạn`,
-      notComposedEntries > 0
-         ? `${notComposedEntries} mục gap/bỏ qua/loại trừ`
-         : null,
-   ]
-      .filter((part): part is string => part !== null)
-      .join(" · ");
 
    const sectionColumns: TableColumnsType<SectionComposeRow> = [
       {
@@ -270,11 +191,9 @@ export function RunOverviewPanel({
                         </Typography.Text>
                      </>
                   ) : (
-                     <>
-                        <Tag color="gold" style={{ margin: 0 }}>
-                           CHƯA GHÉP
-                        </Tag>
-                     </>
+                     <Tag color="gold" style={{ margin: 0 }}>
+                        CHƯA GHÉP
+                     </Tag>
                   )}
                </Flex>
                {row.hasMappings ? (
@@ -298,28 +217,11 @@ export function RunOverviewPanel({
          {/* 1. Metric Overview Cards */}
          <Row gutter={[16, 16]}>
             <Col xs={24} sm={12} lg={6}>
-               <Card size="small" variant="borderless" style={overallStatus.surface}>
-                  <Flex vertical gap={4}>
-                     <Typography.Text type="secondary" style={{ fontSize: 13 }}>
-                        Trạng thái chuyển đổi
-                     </Typography.Text>
-                     <Flex align="center" gap={6}>
-                        {overallStatus.icon}
-                        <Typography.Title
-                           level={4}
-                           style={{
-                              margin: 0,
-                              color: overallStatus.textColor,
-                           }}
-                        >
-                           {overallStatus.text}
-                        </Typography.Title>
-                     </Flex>
-                     <Typography.Text type="secondary" style={{ fontSize: 12 }}>
-                        {overallSubline}
-                     </Typography.Text>
-                  </Flex>
-               </Card>
+               <OverviewStatusCard
+                  run={run}
+                  composedSections={summary.composedSections}
+                  totalSections={summary.totalSections}
+               />
             </Col>
             <Col xs={24} sm={12} lg={6}>
                <Card size="small">
@@ -378,7 +280,11 @@ export function RunOverviewPanel({
                         </Typography.Title>
                      </Flex>
                      <Typography.Text
-                        type={run.build && !run.build.manifestVerified ? "danger" : "secondary"}
+                        type={
+                           run.build && !run.build.manifestVerified
+                              ? "danger"
+                              : "secondary"
+                        }
                         style={{ fontSize: 12 }}
                      >
                         {run.build
@@ -392,7 +298,7 @@ export function RunOverviewPanel({
             </Col>
          </Row>
 
-         {/* 2. Usage Guide (Two Methods) */}
+         {/* 2. Usage Guide (Two Methods) — static content, extracted */}
          <Card
             size="small"
             title={
@@ -404,74 +310,7 @@ export function RunOverviewPanel({
                </Flex>
             }
          >
-            <Tabs
-               size="small"
-               defaultActiveKey="method1"
-               items={[
-                  {
-                     key: "method1",
-                     label: (
-                        <span>
-                           <CheckCircleOutlined
-                              style={{ color: "#52c41a", marginRight: 6 }}
-                           />
-                           Cách 1: Gói cài đặt trọn bộ tự động (Khuyên dùng —
-                           Đầy đủ ảnh &amp; Script)
-                        </span>
-                     ),
-                     children: (
-                        <Steps
-                           size="small"
-                           current={-1}
-                           items={[
-                              {
-                                 title: "1. Tải gói ZIP",
-                                 content:
-                                    "Bấm nút 'Tải trọn bộ Gói cài đặt (ZIP)' bên dưới. Gói gồm script install-homepage.php, HTML và thư mục media/ chứa toàn bộ ảnh.",
-                              },
-                              {
-                                 title: "2. Giải nén vào Magento",
-                                 content:
-                                    "Giải nén vào thư mục <magento-root>/det-install/ trên máy chủ hoặc local checkout của bạn.",
-                              },
-                              {
-                                 title: "3. Chạy 1 lệnh duy nhất",
-                                 content:
-                                    "Chạy 'php det-install/install-homepage.php'. Script tự động copy ảnh vào pub/media/, import CMS Page và làm mới cache.",
-                              },
-                           ]}
-                        />
-                     ),
-                  },
-                  {
-                     key: "method2",
-                     label: <span>Cách 2: Dán mã HTML thủ công</span>,
-                     children: (
-                        <Steps
-                           size="small"
-                           current={-1}
-                           items={[
-                              {
-                                 title: "1. Sao chép mã",
-                                 content:
-                                    "Bấm nút 'Sao chép toàn bộ HTML' ở khung bên dưới.",
-                              },
-                              {
-                                 title: "2. Mở Magento Admin",
-                                 content:
-                                    "Vào Content → Pages → Chọn trang muốn sửa (hoặc tạo mới).",
-                              },
-                              {
-                                 title: "3. Dán & Lưu",
-                                 content:
-                                    "Mở Page Builder, kéo khối HTML Code và dán nội dung rồi nhấn Save Page.",
-                              },
-                           ]}
-                        />
-                     ),
-                  },
-               ]}
-            />
+            <InstallGuideTabs />
          </Card>
 
          {/* 3. HTML Code Viewer & 1-Click Copy */}
