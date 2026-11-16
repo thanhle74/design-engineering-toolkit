@@ -159,29 +159,37 @@ export function MappingReviewTable({
 
    // Filtered mappings
    const filteredMappings = useMemo(() => {
-      return mappings.filter((m) => {
-         if (dispositionFilter === "needs_review") {
-            if (!m.needsReview) return false;
-         } else if (
-            dispositionFilter !== "all" &&
-            m.composeDisposition !== dispositionFilter
-         ) {
-            return false;
-         }
+      let idx = 0;
+      return mappings
+         .filter((m) => {
+            if (dispositionFilter === "needs_review") {
+               if (!m.needsReview) return false;
+            } else if (
+               dispositionFilter !== "all" &&
+               m.composeDisposition !== dispositionFilter
+            ) {
+               return false;
+            }
 
-         if (searchQuery.trim()) {
-            const q = searchQuery.toLowerCase();
-            const matchId = m.nodeId.toLowerCase().includes(q);
-            const matchName = m.sourceName?.toLowerCase().includes(q);
-            const matchLoc = m.sourceLocator?.toLowerCase().includes(q);
-            const matchTarget = m.target?.capabilityId
-               .toLowerCase()
-               .includes(q);
-            const matchNote = m.note?.toLowerCase().includes(q);
-            return matchId || matchName || matchLoc || matchTarget || matchNote;
-         }
-         return true;
-      });
+            if (searchQuery.trim()) {
+               const q = searchQuery.toLowerCase();
+               const matchId = m.nodeId.toLowerCase().includes(q);
+               const matchName = m.sourceName?.toLowerCase().includes(q);
+               const matchLoc = m.sourceLocator?.toLowerCase().includes(q);
+               const matchTarget = m.target?.capabilityId
+                  .toLowerCase()
+                  .includes(q);
+               const matchNote = m.note?.toLowerCase().includes(q);
+               return (
+                  matchId || matchName || matchLoc || matchTarget || matchNote
+               );
+            }
+            return true;
+         })
+         .map((m) => ({
+            ...m,
+            rowKey: `${m.nodeId}-${m.sectionId ?? "none"}-${m.composeDisposition}-${idx++}`,
+         }));
    }, [mappings, dispositionFilter, searchQuery]);
 
    const handleCopy = (text: string) => {
@@ -447,13 +455,11 @@ export function MappingReviewTable({
 
          {/* 3. The Main Table */}
          <div data-testid="mapping-review-table">
-            <Table<StudioMappingView>
-               rowKey={(record, index) =>
-                  `${record.nodeId}-${record.sectionId ?? "none"}-${index}`
-               }
+            <Table
+               rowKey="rowKey"
                size="small"
                columns={columns}
-               dataSource={[...filteredMappings]}
+               dataSource={filteredMappings}
                pagination={false}
                onRow={(mapping) =>
                   rowProps({

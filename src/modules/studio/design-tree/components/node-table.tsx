@@ -13,7 +13,7 @@
  * the caller-visible `data-testid` around the table so the grouped row
  * assertions do not depend on antd's internal markup.
  */
-import type { HTMLAttributes } from "react";
+import { useMemo, type HTMLAttributes } from "react";
 import { Table, Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import type { StudioMappingView } from "@/src/modules/studio/shared/contracts";
@@ -82,13 +82,22 @@ export function DesignNodeTable({
    mappings: readonly StudioMappingView[];
    testId: string;
 }) {
+   const dataWithKeys = useMemo(
+      () =>
+         mappings.map((m, index) => ({
+            ...m,
+            rowKey: `${m.nodeId}-${index}`,
+         })),
+      [mappings],
+   );
+
    return (
       <div data-testid={testId}>
-         <Table<StudioMappingView>
-            rowKey={(record, index) => `${record.nodeId}-${index}`}
+         <Table
+            rowKey="rowKey"
             size="small"
             columns={columns}
-            dataSource={[...mappings]}
+            dataSource={dataWithKeys}
             pagination={false}
             onRow={() => rowProps({ "data-testid": "design-tree-node" })}
          />

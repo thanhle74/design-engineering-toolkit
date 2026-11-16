@@ -479,7 +479,36 @@ Copy the following template for each addition. If a field is irrelevant, write `
   - `src/modules/studio/design-tree/components/figma-tree-view.tsx`
   - `src/modules/studio/projects/components/add-page-modal.tsx`
   - `docs/specs/ANTIGRAVITY-FEATURE-LOG.md`
-- Branch / commit: `main` / `d12e492`
+- Branch / commit: `main` / `a4dd00b`
+- Known issues / shortcuts / structural debt: N/A.
+- Next functional follow-up (optional): N/A.
+
+### AG-011 — [Fix] Khắc phục cảnh báo Ant Design Table deprecation về index trong rowKey
+
+- Status: `DONE`
+- Goal / intended behavior:
+  - Loại bỏ hoàn toàn cảnh báo console: `Warning: [antd: Table] 'index' parameter of 'rowKey' function is deprecated. There is no guarantee that it will work as expected.` tại `MappingReviewTable` và `DesignNodeTable`.
+  - Đảm bảo mỗi hàng trong `dataSource` có key duy nhất ổn định, không phụ thuộc vào tham số `index` trong hàm `rowKey`, giúp Table hoạt động mượt mà khi filter/sort.
+- Implemented behavior:
+  1. `src/modules/studio/mapping-review/components/mapping-review-table.tsx`:
+     - Trong `useMemo` của `filteredMappings`, gán sẵn thuộc tính `rowKey: `${m.nodeId}-${m.sectionId ?? "none"}-${m.composeDisposition}-${idx++}`` vào từng object record.
+     - Đổi prop của `<Table>` thành `rowKey="rowKey"` (string prop), loại bỏ hoàn toàn việc truyền hàm nhận `index`.
+  2. `src/modules/studio/design-tree/components/node-table.tsx`:
+     - Dùng `useMemo` gán trước `rowKey: `${m.nodeId}-${index}`` cho từng item.
+     - Đổi prop của `<Table>` thành `rowKey="rowKey"`.
+- How to test (URL, CLI, user actions):
+  1. CLI verification:
+     - `pnpm test:studio src/modules/studio/mapping-review src/modules/studio/design-tree`: 16/16 tests passed, hoàn toàn sạch sẽ, 0 cảnh báo deprecation trên stderr.
+     - `pnpm test`: 201/201 checks passed.
+     - `pnpm run lint`: exit 0 (0 warnings, 0 errors).
+     - `pnpm run typecheck`: exit 0.
+  2. UI verification:
+     - Mở trang `http://localhost:3000/runs/build-1794544715541`, chuyển qua tab **Chi tiết ánh xạ (Mapping Review)** và kiểm tra Console trình duyệt: không còn bất kỳ warning nào về `[antd: Table] index parameter of rowKey function is deprecated`.
+- Changed code:
+  - `src/modules/studio/design-tree/components/node-table.tsx`
+  - `src/modules/studio/mapping-review/components/mapping-review-table.tsx`
+  - `docs/specs/ANTIGRAVITY-FEATURE-LOG.md`
+- Branch / commit: `main` / `2e21f11`
 - Known issues / shortcuts / structural debt: N/A.
 - Next functional follow-up (optional): N/A.
 
