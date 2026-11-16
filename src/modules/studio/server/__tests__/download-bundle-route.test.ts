@@ -6,7 +6,7 @@ import path from "node:path";
 vi.mock("server-only", () => ({}));
 
 import { STUDIO_DET_RUNS_DIR_ENV } from "@/src/modules/studio/server/det-run-reader-factory";
-import { GET } from "./route";
+import { GET } from "@/app/api/runs/[runId]/download-bundle/route";
 
 const savedEnv = process.env[STUDIO_DET_RUNS_DIR_ENV];
 let root: string;
