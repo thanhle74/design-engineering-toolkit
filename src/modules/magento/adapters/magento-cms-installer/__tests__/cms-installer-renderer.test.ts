@@ -261,8 +261,12 @@ describe("[70] installer safety surface", () => {
    it("declares strict types, a REAL AppInterface class and the service-layer write path", () => {
       expect(php).toContain("declare(strict_types=1)");
       expect(php).toContain(
-         "final class DetCmsInstallerApp implements \\Magento\\Framework\\AppInterface",
+         "class DetCmsInstallerApp implements \\Magento\\Framework\\AppInterface",
       );
+      // NOT final: Magento's createApplication() generates an Interceptor that
+      // extends the app class; final makes boot a fatal before any write
+      // (live store-5 rerun regression, 2026-11-16).
+      expect(php).not.toContain("final class DetCmsInstallerApp");
       expect(php).toContain(
          "\\Magento\\Framework\\App\\Bootstrap::create(BP, $_SERVER)",
       );

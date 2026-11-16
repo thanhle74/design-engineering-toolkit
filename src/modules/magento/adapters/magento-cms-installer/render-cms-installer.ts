@@ -425,8 +425,15 @@ require $magentoRoot . '/app/bootstrap.php';
  * renderResult(), NOT sendResponse(), so Bootstrap::run() would fatal AFTER the
  * CMS write ([70] C70-1, fixed). Declared after a successful bootstrap require
  * (see the placement guard above).
+ *
+ * Deliberately NOT final: Bootstrap::createApplication() resolves the app class
+ * through DI, so Magento generates DetCmsInstallerApp\\Interceptor extends
+ * DetCmsInstallerApp at boot. A final class makes that generation a fatal
+ * ("Class DetCmsInstallerApp\\Interceptor cannot extend final class ..."),
+ * which the live store-5 rerun on 2026-11-16 proved (exit 255 before any
+ * write). Non-final is the native Magento AppInterface contract.
  */
-final class DetCmsInstallerApp implements \\Magento\\Framework\\AppInterface
+class DetCmsInstallerApp implements \\Magento\\Framework\\AppInterface
 {
     public const EXIT_OK = 0;
     public const EXIT_FAILURE = 1;
