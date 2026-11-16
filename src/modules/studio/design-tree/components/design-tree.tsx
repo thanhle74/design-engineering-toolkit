@@ -12,7 +12,11 @@
  * Alert, not an error banner; section cards stack in a stock Flex column.
  */
 import { useState } from "react";
-import { ApartmentOutlined, AppstoreOutlined, SearchOutlined } from "@ant-design/icons";
+import {
+   ApartmentOutlined,
+   AppstoreOutlined,
+   SearchOutlined,
+} from "@ant-design/icons";
 import { Alert, Flex, Segmented, Typography } from "antd";
 import type {
    StudioMappingView,
@@ -101,7 +105,13 @@ export function DesignTree({
          aria-labelledby="studio-design-tree-heading"
          data-testid="design-tree"
       >
-         <Flex justify="space-between" align="center" wrap="wrap" gap="small" style={{ marginBottom: 16 }}>
+         <Flex
+            justify="space-between"
+            align="center"
+            wrap="wrap"
+            gap="small"
+            style={{ marginBottom: 16 }}
+         >
             <h2 style={{ margin: 0 }}>
                Cây thiết kế gốc{" "}
                <Typography.Text type="secondary">{summary}</Typography.Text>

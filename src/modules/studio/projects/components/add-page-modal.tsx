@@ -130,7 +130,7 @@ export function AddPageModal({
                      type="success"
                      showIcon
                      style={{ marginBottom: 16 }}
-                     message={
+                     title={
                         <Flex gap="small" align="center" wrap="wrap">
                            <Typography.Text strong>Node ID:</Typography.Text>
                            <Tag color="blue">{parseResult.nodeId}</Tag>
@@ -152,7 +152,7 @@ export function AddPageModal({
                      type="error"
                      showIcon
                      style={{ marginBottom: 16 }}
-                     message="Định dạng chưa hợp lệ"
+                     title="Định dạng chưa hợp lệ"
                      description={parseResult.message}
                   />
                )

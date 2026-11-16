@@ -530,38 +530,54 @@ describe("[70] escaping gauntlet (php-dependent)", () => {
       },
    );
 
-   itPhp("dry-run reports mediaAssets when media directory exists in bundle", () => {
-      const root = fs.mkdtempSync(path.join(tmp, "magroot-media-"));
-      fs.mkdirSync(path.join(root, "det-install"));
-      fs.mkdirSync(path.join(root, "det-install", "media", "wysiwyg", "test"), { recursive: true });
-      fs.writeFileSync(path.join(root, "det-install", "media", "wysiwyg", "test", "sample.jpg"), "fake-jpg-bytes");
-      fs.mkdirSync(path.join(root, "app"));
-      fs.writeFileSync(
-         path.join(root, "app", "bootstrap.php"),
-         "<?php // stub\n",
-      );
-      const php = renderCmsInstallerPhp(installerInput(CONTENT_SIMPLE));
-      const installerPath = path.join(
-         root,
-         "det-install",
-         "install-homepage.php",
-      );
-      fs.writeFileSync(installerPath, php);
-      const plan = execFileSync(PHP_BIN, [installerPath, "--dry-run"], {
-         cwd: REPO_ROOT,
-         stdio: "pipe",
-      }).toString();
-      const parsed = JSON.parse(plan) as Record<string, unknown>;
-      expect(parsed).toMatchObject({
-         mode: "dry-run",
-         identifier: CMS_INSTALL.identifier,
-         mediaAssets: {
-            count: 1,
-            totalBytes: 14,
-            files: ["pub/media/wysiwyg/test/sample.jpg"],
-         },
-      });
-   });
+   itPhp(
+      "dry-run reports mediaAssets when media directory exists in bundle",
+      () => {
+         const root = fs.mkdtempSync(path.join(tmp, "magroot-media-"));
+         fs.mkdirSync(path.join(root, "det-install"));
+         fs.mkdirSync(
+            path.join(root, "det-install", "media", "wysiwyg", "test"),
+            { recursive: true },
+         );
+         fs.writeFileSync(
+            path.join(
+               root,
+               "det-install",
+               "media",
+               "wysiwyg",
+               "test",
+               "sample.jpg",
+            ),
+            "fake-jpg-bytes",
+         );
+         fs.mkdirSync(path.join(root, "app"));
+         fs.writeFileSync(
+            path.join(root, "app", "bootstrap.php"),
+            "<?php // stub\n",
+         );
+         const php = renderCmsInstallerPhp(installerInput(CONTENT_SIMPLE));
+         const installerPath = path.join(
+            root,
+            "det-install",
+            "install-homepage.php",
+         );
+         fs.writeFileSync(installerPath, php);
+         const plan = execFileSync(PHP_BIN, [installerPath, "--dry-run"], {
+            cwd: REPO_ROOT,
+            stdio: "pipe",
+         }).toString();
+         const parsed = JSON.parse(plan) as Record<string, unknown>;
+         expect(parsed).toMatchObject({
+            mode: "dry-run",
+            identifier: CMS_INSTALL.identifier,
+            mediaAssets: {
+               count: 1,
+               totalBytes: 14,
+               files: ["pub/media/wysiwyg/test/sample.jpg"],
+            },
+         });
+      },
+   );
 });
 
 // ---- 5. mapping-and-gaps ledger ------------------------------------------------------------------

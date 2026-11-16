@@ -48,7 +48,12 @@ function DiagnosticRow({ diagnostic }: { diagnostic: StudioDiagnosticView }) {
                subject: {diagnostic.subjectType ?? UNKNOWN}
             </Typography.Text>
             {diagnostic.subjectId && (
-               <Typography.Text code type="secondary" title={diagnostic.subjectId} style={{ fontSize: 12 }}>
+               <Typography.Text
+                  code
+                  type="secondary"
+                  title={diagnostic.subjectId}
+                  style={{ fontSize: 12 }}
+               >
                   {diagnostic.subjectId}
                </Typography.Text>
             )}

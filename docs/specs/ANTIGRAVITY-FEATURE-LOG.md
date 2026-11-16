@@ -449,6 +449,40 @@ Copy the following template for each addition. If a field is irrelevant, write `
 - Known issues / shortcuts / structural debt: N/A.
 - Next functional follow-up (optional): N/A.
 
+### AG-010 — [Fix] Chuẩn hóa các prop Ant Design 6 (Steps orientation/Alert title) & Khắc phục cascade render trong Tree state
+
+- Status: `DONE`
+- Goal / intended behavior:
+  - Loại bỏ các cảnh báo và lỗi console liên quan đến thuộc tính sai / deprecation của Ant Design 6 / React:
+    1. Giữ nguyên `orientation="vertical"` trên `<Steps>` theo chuẩn Ant Design 6.x (loại bỏ hoàn toàn cảnh báo `[antd: Steps] 'direction' is deprecated. Please use 'orientation' instead`).
+    2. Loại bỏ `orientation="horizontal"` không hợp lệ trên `<Space>`.
+    3. Thay thế thuộc tính `message` bị deprecate trên `<Alert>` trong `add-page-modal.tsx` thành `title`.
+    4. Xử lý trạng thái mở rộng `expandedKeys` trong `figma-tree-view.tsx` theo cơ chế declarative event-driven, loại bỏ lỗi ESLint React 19 `react-hooks/set-state-in-effect`.
+- Implemented behavior:
+  1. `src/modules/studio/build-control/screens/build.screen.tsx` & `build-pipeline.tsx`:
+     - Đồng bộ dùng `orientation="vertical"` chuẩn theo API Ant Design 6 cho component `Steps`.
+  2. `src/modules/studio/design-tree/components/figma-tree-view.tsx`:
+     - Đổi `<Space orientation="horizontal" size="small">` thành `<Space size="small">`.
+     - Chuyển `expandedKeys` sang `userExpandedKeys ?? allSectionKeys`: tự động mở toàn bộ section khi mới load, tự động mở rộng khi gõ tìm kiếm trong `handleSearch`, và lưu trữ trạng thái người dùng thao tác khi bấm Mở hết / Thu gọn / Mở thủ công (0 effect, không gây cascading renders).
+  3. `src/modules/studio/projects/components/add-page-modal.tsx`:
+     - Thay đổi `message=` thành `title=` trên cả 2 component `<Alert>` thông báo định dạng Figma URL.
+- How to test (URL, CLI, user actions):
+  1. CLI verification:
+     - `pnpm test`: 201/201 checks passed.
+     - `pnpm run test:studio`: 61/61 test files passed, 631/631 tests passed.
+     - `pnpm run typecheck`: exit 0.
+     - `pnpm run lint`: exit 0 (0 warnings, 0 errors).
+  2. UI verification:
+     - Mở `http://localhost:3000/build` và `http://localhost:3000/catalog`: Không còn bất kỳ cảnh báo deprecation nào trên `Steps` hay `Alert`.
+     - Mở `http://localhost:3000/runs/build-1794544715541`: Cây `FigmaTreeView` tự động bung tất cả section ban đầu, gõ tìm kiếm tự bung section khớp, không có lỗi console.
+- Changed code:
+  - `src/modules/studio/design-tree/components/figma-tree-view.tsx`
+  - `src/modules/studio/projects/components/add-page-modal.tsx`
+  - `docs/specs/ANTIGRAVITY-FEATURE-LOG.md`
+- Branch / commit: `main` / `d12e492`
+- Known issues / shortcuts / structural debt: N/A.
+- Next functional follow-up (optional): N/A.
+
 ### Notes for Page Builder work
 
 - **PASS is correct native component type and hierarchy**, not pixel-perfect styling: Row, Column, Banner, Image, Slider→Slide, Products grid/carousel, verified Magento widgets, and editable Admin Save→Reload behavior.

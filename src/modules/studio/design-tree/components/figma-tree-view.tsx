@@ -74,15 +74,27 @@ function getNodeIcon(kind?: string) {
 function getDispositionIcon(disposition: string) {
    switch (disposition) {
       case "mapped":
-         return <CheckCircleFilled style={{ color: "#52c41a", fontSize: 12 }} />;
+         return (
+            <CheckCircleFilled style={{ color: "#52c41a", fontSize: 12 }} />
+         );
       case "gap":
-         return <ExclamationCircleFilled style={{ color: "#faad14", fontSize: 12 }} />;
+         return (
+            <ExclamationCircleFilled
+               style={{ color: "#faad14", fontSize: 12 }}
+            />
+         );
       case "excluded":
-         return <CloseCircleFilled style={{ color: "#8c8c8c", fontSize: 12 }} />;
+         return (
+            <CloseCircleFilled style={{ color: "#8c8c8c", fontSize: 12 }} />
+         );
       case "decoration-merged":
-         return <MinusCircleFilled style={{ color: "#13c2c2", fontSize: 12 }} />;
+         return (
+            <MinusCircleFilled style={{ color: "#13c2c2", fontSize: 12 }} />
+         );
       case "skipped":
-         return <QuestionCircleFilled style={{ color: "#1677ff", fontSize: 12 }} />;
+         return (
+            <QuestionCircleFilled style={{ color: "#1677ff", fontSize: 12 }} />
+         );
       default:
          return null;
    }
@@ -118,7 +130,10 @@ export function FigmaTreeView({
    // Filtered mappings
    const filteredMappings = useMemo(() => {
       return mappings.filter((m) => {
-         if (dispositionFilter !== "all" && m.composeDisposition !== dispositionFilter) {
+         if (
+            dispositionFilter !== "all" &&
+            m.composeDisposition !== dispositionFilter
+         ) {
             return false;
          }
          if (searchQuery.trim()) {
@@ -148,7 +163,10 @@ export function FigmaTreeView({
 
    const filteredUnassigned = useMemo(() => {
       return unassigned.filter((m) => {
-         if (dispositionFilter !== "all" && m.composeDisposition !== dispositionFilter) {
+         if (
+            dispositionFilter !== "all" &&
+            m.composeDisposition !== dispositionFilter
+         ) {
             return false;
          }
          if (searchQuery.trim()) {
@@ -181,35 +199,106 @@ export function FigmaTreeView({
             itemsMap.set(nodeKey, { type: "mapping", mapping: m });
             return {
                key: nodeKey,
-               icon: getNodeIcon(m.kind),
+               isLeaf: true,
                title: (
-                  <Flex align="center" gap={6} wrap="wrap">
-                     <span style={{ fontWeight: 500 }}>{m.sourceName || m.nodeId}</span>
-                     <Typography.Text code style={{ fontSize: 11 }}>
+                  <span
+                     style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 8,
+                        width: "100%",
+                        overflow: "hidden",
+                        whiteSpace: "nowrap",
+                     }}
+                  >
+                     <span
+                        style={{
+                           display: "inline-flex",
+                           alignItems: "center",
+                           fontSize: 14,
+                           flexShrink: 0,
+                        }}
+                     >
+                        {getNodeIcon(m.kind)}
+                     </span>
+                     <span
+                        style={{
+                           fontWeight: 500,
+                           maxWidth: 240,
+                           overflow: "hidden",
+                           textOverflow: "ellipsis",
+                           whiteSpace: "nowrap",
+                           fontSize: 13,
+                        }}
+                        title={m.sourceName || m.nodeId}
+                     >
+                        {m.sourceName || m.nodeId}
+                     </span>
+                     <Typography.Text
+                        code
+                        style={{
+                           fontSize: 11,
+                           color: "#8c8c8c",
+                           padding: "0 4px",
+                           background: "#f5f5f5",
+                           flexShrink: 0,
+                        }}
+                     >
                         {m.nodeId}
                      </Typography.Text>
-                     {getDispositionIcon(m.composeDisposition)}
-                     <ComposeDispositionBadge disposition={m.composeDisposition} />
-                     {m.reviewDisposition && (
-                        <ReviewDispositionBadge disposition={m.reviewDisposition} />
-                     )}
-                  </Flex>
+                     <span style={{ flexShrink: 0 }}>
+                        <ComposeDispositionBadge
+                           disposition={m.composeDisposition}
+                        />
+                     </span>
+                  </span>
                ),
             };
          });
 
          return {
             key: sec.sectionId,
-            icon: <FolderOpenOutlined style={{ color: "#1677ff" }} />,
             title: (
-               <Flex align="center" gap={8} wrap="wrap">
-                  <span style={{ fontWeight: 600 }}>#{sec.order} {sec.name}</span>
-                  <Tag style={{ fontSize: 11 }}>{sec.sectionId}</Tag>
-                  <Tag color={sec.elementCount > 0 ? "blue" : "gold"}>
+               <span
+                  style={{
+                     display: "inline-flex",
+                     alignItems: "center",
+                     gap: 8,
+                     width: "100%",
+                     overflow: "hidden",
+                     whiteSpace: "nowrap",
+                  }}
+               >
+                  <FolderOpenOutlined
+                     style={{ color: "#1677ff", fontSize: 14, flexShrink: 0 }}
+                  />
+                  <Typography.Text
+                     strong
+                     style={{ fontSize: 13, flexShrink: 0 }}
+                  >
+                     #{sec.order} {sec.name}
+                  </Typography.Text>
+                  <Typography.Text
+                     code
+                     style={{ fontSize: 11, color: "#8c8c8c", flexShrink: 0 }}
+                  >
+                     {sec.sectionId}
+                  </Typography.Text>
+                  <Tag
+                     color={sec.elementCount > 0 ? "blue" : "gold"}
+                     style={{ margin: 0, fontSize: 11, flexShrink: 0 }}
+                  >
                      {sec.elementCount} phần tử
                   </Tag>
-                  {sec.elementCount === 0 && <Tag color="warning">PARTIAL</Tag>}
-               </Flex>
+                  {sec.elementCount === 0 && (
+                     <Tag
+                        color="warning"
+                        style={{ margin: 0, fontSize: 11, flexShrink: 0 }}
+                     >
+                        PARTIAL
+                     </Tag>
+                  )}
+               </span>
             ),
             children,
          };
@@ -220,27 +309,92 @@ export function FigmaTreeView({
          itemsMap.set("unassigned-group", { type: "unassigned-group" });
          sectionNodes.push({
             key: "unassigned-group",
-            icon: <FolderOutlined style={{ color: "#faad14" }} />,
             title: (
-               <Flex align="center" gap={8}>
-                  <span style={{ fontWeight: 600 }}>Chưa gán vào mục nào</span>
-                  <Tag color="orange">{filteredUnassigned.length} node</Tag>
-               </Flex>
+               <span
+                  style={{
+                     display: "inline-flex",
+                     alignItems: "center",
+                     gap: 8,
+                     width: "100%",
+                     overflow: "hidden",
+                     whiteSpace: "nowrap",
+                  }}
+               >
+                  <FolderOutlined
+                     style={{ color: "#faad14", fontSize: 14, flexShrink: 0 }}
+                  />
+                  <Typography.Text
+                     strong
+                     style={{ fontSize: 13, flexShrink: 0 }}
+                  >
+                     Chưa gán vào mục nào
+                  </Typography.Text>
+                  <Tag
+                     color="orange"
+                     style={{ margin: 0, fontSize: 11, flexShrink: 0 }}
+                  >
+                     {filteredUnassigned.length} node
+                  </Tag>
+               </span>
             ),
             children: filteredUnassigned.map((m, idx) => {
                const nodeKey = `unassigned::${m.nodeId}::${idx}`;
                itemsMap.set(nodeKey, { type: "mapping", mapping: m });
                return {
                   key: nodeKey,
-                  icon: getNodeIcon(m.kind),
+                  isLeaf: true,
                   title: (
-                     <Flex align="center" gap={6} wrap="wrap">
-                        <span style={{ fontWeight: 500 }}>{m.sourceName || m.nodeId}</span>
-                        <Typography.Text code style={{ fontSize: 11 }}>
+                     <span
+                        style={{
+                           display: "inline-flex",
+                           alignItems: "center",
+                           gap: 8,
+                           width: "100%",
+                           overflow: "hidden",
+                           whiteSpace: "nowrap",
+                        }}
+                     >
+                        <span
+                           style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                              fontSize: 14,
+                              flexShrink: 0,
+                           }}
+                        >
+                           {getNodeIcon(m.kind)}
+                        </span>
+                        <span
+                           style={{
+                              fontWeight: 500,
+                              maxWidth: 240,
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                              fontSize: 13,
+                           }}
+                           title={m.sourceName || m.nodeId}
+                        >
+                           {m.sourceName || m.nodeId}
+                        </span>
+                        <Typography.Text
+                           code
+                           style={{
+                              fontSize: 11,
+                              color: "#8c8c8c",
+                              padding: "0 4px",
+                              background: "#f5f5f5",
+                              flexShrink: 0,
+                           }}
+                        >
                            {m.nodeId}
                         </Typography.Text>
-                        <ComposeDispositionBadge disposition={m.composeDisposition} />
-                     </Flex>
+                        <span style={{ flexShrink: 0 }}>
+                           <ComposeDispositionBadge
+                              disposition={m.composeDisposition}
+                           />
+                        </span>
+                     </span>
                   ),
                };
             }),
@@ -260,16 +414,27 @@ export function FigmaTreeView({
       selectedItem?.type === "mapping"
          ? selectedItem.mapping
          : selectedKey
-           ? mappingMap.get(selectedKey.split("::")[1] ?? selectedKey) ?? null
+           ? (mappingMap.get(selectedKey.split("::")[1] ?? selectedKey) ?? null)
            : null;
    const selectedSection =
       selectedItem?.type === "section"
          ? selectedItem.section
          : selectedKey
-           ? sectionMap.get(selectedKey) ?? null
+           ? (sectionMap.get(selectedKey) ?? null)
            : null;
 
-   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>(allSectionKeys);
+   const [userExpandedKeys, setUserExpandedKeys] = useState<React.Key[] | null>(
+      null,
+   );
+   const expandedKeys = userExpandedKeys ?? allSectionKeys;
+
+   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const q = e.target.value;
+      setSearchQuery(q);
+      if (q.trim()) {
+         setUserExpandedKeys(allSectionKeys);
+      }
+   };
 
    const handleCopy = (text: string) => {
       void navigator.clipboard.writeText(text);
@@ -288,7 +453,7 @@ export function FigmaTreeView({
                      placeholder="Tìm kiếm node Figma (tên, ID, loại)..."
                      prefix={<SearchOutlined style={{ color: "#8c8c8c" }} />}
                      value={searchQuery}
-                     onChange={(e) => setSearchQuery(e.target.value)}
+                     onChange={handleSearch}
                      allowClear
                   />
                </Col>
@@ -306,14 +471,17 @@ export function FigmaTreeView({
                   />
                </Col>
                <Col xs={24} md={4} style={{ textAlign: "right" }}>
-                  <Space orientation="horizontal" size="small">
+                  <Space size="small">
                      <Button
                         size="small"
-                        onClick={() => setExpandedKeys(allSectionKeys)}
+                        onClick={() => setUserExpandedKeys(allSectionKeys)}
                      >
                         Mở hết
                      </Button>
-                     <Button size="small" onClick={() => setExpandedKeys([])}>
+                     <Button
+                        size="small"
+                        onClick={() => setUserExpandedKeys([])}
+                     >
                         Thu gọn
                      </Button>
                   </Space>
@@ -329,7 +497,9 @@ export function FigmaTreeView({
                   title={
                      <Flex align="center" gap={8}>
                         <ApartmentOutlined style={{ color: "#1677ff" }} />
-                        <span style={{ fontWeight: 600 }}>Cây thiết kế Figma (Figma Design Tree)</span>
+                        <span style={{ fontWeight: 600 }}>
+                           Cây thiết kế Figma (Figma Design Tree)
+                        </span>
                         <Tag color="cyan">
                            {filteredMappings.length} / {mappings.length} node
                         </Tag>
@@ -342,9 +512,9 @@ export function FigmaTreeView({
                   ) : (
                      <Tree
                         showLine={{ showLeafIcon: false }}
-                        showIcon
+                        blockNode
                         expandedKeys={expandedKeys}
-                        onExpand={(keys) => setExpandedKeys(keys)}
+                        onExpand={(keys) => setUserExpandedKeys(keys)}
                         selectedKeys={selectedKey ? [selectedKey] : []}
                         onSelect={(keys) => {
                            if (keys.length > 0) {
@@ -364,21 +534,32 @@ export function FigmaTreeView({
                   title={
                      <Flex align="center" gap={8}>
                         <FileTextOutlined style={{ color: "#52c41a" }} />
-                        <span style={{ fontWeight: 600 }}>Chi tiết thành phần được chọn</span>
+                        <span style={{ fontWeight: 600 }}>
+                           Chi tiết thành phần được chọn
+                        </span>
                      </Flex>
                   }
                   style={{ minHeight: 480 }}
                >
                   {selectedNode ? (
                      <Flex vertical gap="middle">
-                        <Flex justify="space-between" align="center" wrap="wrap">
+                        <Flex
+                           justify="space-between"
+                           align="center"
+                           wrap="wrap"
+                        >
                            <Typography.Title level={5} style={{ margin: 0 }}>
                               {selectedNode.sourceName || "Không có tên"}
                            </Typography.Title>
                            <KindBadge kind={selectedNode.kind} />
                         </Flex>
 
-                        <Descriptions size="small" column={1} bordered layout="vertical">
+                        <Descriptions
+                           size="small"
+                           column={1}
+                           bordered
+                           layout="vertical"
+                        >
                            <Descriptions.Item label="Node ID">
                               <Flex align="center" justify="space-between">
                                  <Typography.Text code copyable={false}>
@@ -387,27 +568,47 @@ export function FigmaTreeView({
                                  <Button
                                     size="small"
                                     type="text"
-                                    icon={copied ? <CheckOutlined /> : <CopyOutlined />}
-                                    onClick={() => handleCopy(selectedNode.nodeId)}
+                                    icon={
+                                       copied ? (
+                                          <CheckOutlined />
+                                       ) : (
+                                          <CopyOutlined />
+                                       )
+                                    }
+                                    onClick={() =>
+                                       handleCopy(selectedNode.nodeId)
+                                    }
                                  >
                                     Copy ID
                                  </Button>
                               </Flex>
                            </Descriptions.Item>
                            <Descriptions.Item label="Figma Locator">
-                              <Typography.Text code ellipsis style={{ maxWidth: 300 }}>
+                              <Typography.Text
+                                 code
+                                 ellipsis
+                                 style={{ maxWidth: 300 }}
+                              >
                                  {selectedNode.sourceLocator || "không rõ"}
                               </Typography.Text>
                            </Descriptions.Item>
                            <Descriptions.Item label="Trạng thái Compose">
                               <Flex align="center" gap={6}>
-                                 {getDispositionIcon(selectedNode.composeDisposition)}
-                                 <ComposeDispositionBadge disposition={selectedNode.composeDisposition} />
+                                 {getDispositionIcon(
+                                    selectedNode.composeDisposition,
+                                 )}
+                                 <ComposeDispositionBadge
+                                    disposition={
+                                       selectedNode.composeDisposition
+                                    }
+                                 />
                               </Flex>
                            </Descriptions.Item>
                            {selectedNode.reviewDisposition && (
                               <Descriptions.Item label="Trạng thái Review">
-                                 <ReviewDispositionBadge disposition={selectedNode.reviewDisposition} />
+                                 <ReviewDispositionBadge
+                                    disposition={selectedNode.reviewDisposition}
+                                 />
                               </Descriptions.Item>
                            )}
                            <Descriptions.Item label="Đích Magento Page Builder">
@@ -416,24 +617,64 @@ export function FigmaTreeView({
                                     <Typography.Text strong code>
                                        {selectedNode.target.capabilityId}
                                     </Typography.Text>
-                                    <Typography.Text type="secondary" style={{ fontSize: 12 }}>
-                                       Appearance: {selectedNode.target.appearanceId}
+                                    <Typography.Text
+                                       type="secondary"
+                                       style={{ fontSize: 12 }}
+                                    >
+                                       Appearance:{" "}
+                                       {selectedNode.target.appearanceId}
                                     </Typography.Text>
-                                    {(selectedNode.target.nativeElement || selectedNode.target.nativeField) && (
-                                       <Typography.Text type="secondary" style={{ fontSize: 12 }}>
-                                          {selectedNode.target.nativeElement} · {selectedNode.target.nativeField}
+                                    {(selectedNode.target.nativeElement ||
+                                       selectedNode.target.nativeField) && (
+                                       <Typography.Text
+                                          type="secondary"
+                                          style={{ fontSize: 12 }}
+                                       >
+                                          {selectedNode.target.nativeElement} ·{" "}
+                                          {selectedNode.target.nativeField}
                                        </Typography.Text>
                                     )}
                                  </Flex>
+                              ) : selectedItem?.type === "unassigned-group" ? (
+                                 <Flex vertical gap="middle">
+                                    <Typography.Title
+                                       level={5}
+                                       style={{ margin: 0 }}
+                                    >
+                                       Chưa gán vào mục nào
+                                    </Typography.Title>
+                                    <Descriptions
+                                       size="small"
+                                       column={1}
+                                       bordered
+                                    >
+                                       <Descriptions.Item label="Tổng số node">
+                                          <Tag color="orange">
+                                             {filteredUnassigned.length} node
+                                          </Tag>
+                                       </Descriptions.Item>
+                                       <Descriptions.Item label="Mô tả">
+                                          Các mapping mà kế hoạch ghép chưa gán
+                                          vào section nào (như SCROLL, Header,
+                                          Footer toàn trang). Tất cả vẫn được
+                                          bảo toàn nguyên vẹn trong báo cáo.
+                                       </Descriptions.Item>
+                                    </Descriptions>
+                                 </Flex>
                               ) : (
                                  <Typography.Text type="secondary">
-                                    {selectedNode.composeDisposition === "mapped" ? "không rõ" : "Chưa gắn đích"}
+                                    {selectedNode.composeDisposition ===
+                                    "mapped"
+                                       ? "không rõ"
+                                       : "Chưa gắn đích"}
                                  </Typography.Text>
                               )}
                            </Descriptions.Item>
                            {selectedNode.note && (
                               <Descriptions.Item label="Ghi chú">
-                                 <Typography.Text>{selectedNode.note}</Typography.Text>
+                                 <Typography.Text>
+                                    {selectedNode.note}
+                                 </Typography.Text>
                               </Descriptions.Item>
                            )}
                            {selectedNode.reasons.length > 0 && (
@@ -441,7 +682,10 @@ export function FigmaTreeView({
                                  <ul style={{ margin: 0, paddingLeft: 18 }}>
                                     {selectedNode.reasons.map((r, i) => (
                                        <li key={i}>
-                                          <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+                                          <Typography.Text
+                                             type="secondary"
+                                             style={{ fontSize: 12 }}
+                                          >
                                              {r}
                                           </Typography.Text>
                                        </li>
@@ -458,11 +702,21 @@ export function FigmaTreeView({
                         </Typography.Title>
                         <Descriptions size="small" column={1} bordered>
                            <Descriptions.Item label="Section ID">
-                              <Typography.Text code>{selectedSection.sectionId}</Typography.Text>
+                              <Typography.Text code>
+                                 {selectedSection.sectionId}
+                              </Typography.Text>
                            </Descriptions.Item>
-                           <Descriptions.Item label="Thứ tự">{selectedSection.order}</Descriptions.Item>
+                           <Descriptions.Item label="Thứ tự">
+                              {selectedSection.order}
+                           </Descriptions.Item>
                            <Descriptions.Item label="Số phần tử đã ghép">
-                              <Tag color={selectedSection.elementCount > 0 ? "blue" : "gold"}>
+                              <Tag
+                                 color={
+                                    selectedSection.elementCount > 0
+                                       ? "blue"
+                                       : "gold"
+                                 }
+                              >
                                  {selectedSection.elementCount} phần tử
                               </Tag>
                            </Descriptions.Item>
@@ -474,10 +728,22 @@ export function FigmaTreeView({
                         </Descriptions>
                      </Flex>
                   ) : (
-                     <Flex vertical align="center" justify="center" style={{ height: 320, color: "#8c8c8c" }}>
-                        <ApartmentOutlined style={{ fontSize: 48, marginBottom: 16, color: "#d9d9d9" }} />
+                     <Flex
+                        vertical
+                        align="center"
+                        justify="center"
+                        style={{ height: 320, color: "#8c8c8c" }}
+                     >
+                        <ApartmentOutlined
+                           style={{
+                              fontSize: 48,
+                              marginBottom: 16,
+                              color: "#d9d9d9",
+                           }}
+                        />
                         <Typography.Text type="secondary">
-                           Bấm chọn một node hoặc section trong cây thiết kế bên trái để xem chi tiết ánh xạ.
+                           Bấm chọn một node hoặc section trong cây thiết kế bên
+                           trái để xem chi tiết ánh xạ.
                         </Typography.Text>
                      </Flex>
                   )}

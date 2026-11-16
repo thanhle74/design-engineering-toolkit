@@ -146,7 +146,8 @@ export function MappingReviewTable({
       (m) => m.composeDisposition === "mapped",
    ).length;
    const gapCount = mappings.filter(
-      (m) => m.composeDisposition === "gap" || m.composeDisposition === "skipped",
+      (m) =>
+         m.composeDisposition === "gap" || m.composeDisposition === "skipped",
    ).length;
    const needsReviewCount = mappings.filter((m) => m.needsReview).length;
    const mergedCount = mappings.filter(
@@ -177,13 +178,7 @@ export function MappingReviewTable({
                .toLowerCase()
                .includes(q);
             const matchNote = m.note?.toLowerCase().includes(q);
-            return (
-               matchId ||
-               matchName ||
-               matchLoc ||
-               matchTarget ||
-               matchNote
-            );
+            return matchId || matchName || matchLoc || matchTarget || matchNote;
          }
          return true;
       });
@@ -300,7 +295,9 @@ export function MappingReviewTable({
                         Tổng số Node
                      </Typography.Text>
                      <Flex align="center" gap={6}>
-                        <ApartmentOutlined style={{ color: "#1677ff", fontSize: 16 }} />
+                        <ApartmentOutlined
+                           style={{ color: "#1677ff", fontSize: 16 }}
+                        />
                         <Typography.Title level={4} style={{ margin: 0 }}>
                            {totalCount}
                         </Typography.Title>
@@ -315,8 +312,13 @@ export function MappingReviewTable({
                         Đã ánh xạ (Mapped)
                      </Typography.Text>
                      <Flex align="center" gap={6}>
-                        <CheckCircleFilled style={{ color: "#52c41a", fontSize: 16 }} />
-                        <Typography.Title level={4} style={{ margin: 0, color: "#52c41a" }}>
+                        <CheckCircleFilled
+                           style={{ color: "#52c41a", fontSize: 16 }}
+                        />
+                        <Typography.Title
+                           level={4}
+                           style={{ margin: 0, color: "#52c41a" }}
+                        >
                            {mappedCount}
                         </Typography.Title>
                      </Flex>
@@ -330,8 +332,13 @@ export function MappingReviewTable({
                         Khoảng trống (Gaps)
                      </Typography.Text>
                      <Flex align="center" gap={6}>
-                        <ExclamationCircleFilled style={{ color: "#faad14", fontSize: 16 }} />
-                        <Typography.Title level={4} style={{ margin: 0, color: "#d48806" }}>
+                        <ExclamationCircleFilled
+                           style={{ color: "#faad14", fontSize: 16 }}
+                        />
+                        <Typography.Title
+                           level={4}
+                           style={{ margin: 0, color: "#d48806" }}
+                        >
                            {gapCount}
                         </Typography.Title>
                      </Flex>
@@ -345,8 +352,13 @@ export function MappingReviewTable({
                         Cần rà soát (Review)
                      </Typography.Text>
                      <Flex align="center" gap={6}>
-                        <WarningFilled style={{ color: "#fa8c16", fontSize: 16 }} />
-                        <Typography.Title level={4} style={{ margin: 0, color: "#fa8c16" }}>
+                        <WarningFilled
+                           style={{ color: "#fa8c16", fontSize: 16 }}
+                        />
+                        <Typography.Title
+                           level={4}
+                           style={{ margin: 0, color: "#fa8c16" }}
+                        >
                            {needsReviewCount}
                         </Typography.Title>
                      </Flex>
@@ -360,7 +372,9 @@ export function MappingReviewTable({
                         Hợp nhất (Merged)
                      </Typography.Text>
                      <Flex align="center" gap={6}>
-                        <MinusCircleFilled style={{ color: "#13c2c2", fontSize: 16 }} />
+                        <MinusCircleFilled
+                           style={{ color: "#13c2c2", fontSize: 16 }}
+                        />
                         <Typography.Title level={4} style={{ margin: 0 }}>
                            {mergedCount}
                         </Typography.Title>
@@ -375,8 +389,16 @@ export function MappingReviewTable({
                         Loại trừ (Excluded)
                      </Typography.Text>
                      <Flex align="center" gap={6}>
-                        <Typography.Text type="secondary" style={{ fontSize: 16 }}>—</Typography.Text>
-                        <Typography.Title level={4} style={{ margin: 0, color: "#8c8c8c" }}>
+                        <Typography.Text
+                           type="secondary"
+                           style={{ fontSize: 16 }}
+                        >
+                           —
+                        </Typography.Text>
+                        <Typography.Title
+                           level={4}
+                           style={{ margin: 0, color: "#8c8c8c" }}
+                        >
                            {excludedCount}
                         </Typography.Title>
                      </Flex>
@@ -405,9 +427,18 @@ export function MappingReviewTable({
                         { label: `Tất cả (${totalCount})`, value: "all" },
                         { label: `Đã map (${mappedCount})`, value: "mapped" },
                         { label: `Gaps (${gapCount})`, value: "gap" },
-                        { label: `Cần review (${needsReviewCount})`, value: "needs_review" },
-                        { label: `Hợp nhất (${mergedCount})`, value: "decoration-merged" },
-                        { label: `Loại trừ (${excludedCount})`, value: "excluded" },
+                        {
+                           label: `Cần review (${needsReviewCount})`,
+                           value: "needs_review",
+                        },
+                        {
+                           label: `Hợp nhất (${mergedCount})`,
+                           value: "decoration-merged",
+                        },
+                        {
+                           label: `Loại trừ (${excludedCount})`,
+                           value: "excluded",
+                        },
                      ]}
                   />
                </Col>
@@ -428,7 +459,9 @@ export function MappingReviewTable({
                   rowProps({
                      "data-testid": "mapping-row",
                      "data-node-id": mapping.nodeId,
-                     "data-needs-review": mapping.needsReview ? "true" : "false",
+                     "data-needs-review": mapping.needsReview
+                        ? "true"
+                        : "false",
                      style: { cursor: "pointer" },
                      onClick: () => setActiveDrawerNode(mapping),
                   })
@@ -442,7 +475,9 @@ export function MappingReviewTable({
                activeDrawerNode ? (
                   <Flex align="center" gap={8}>
                      <span>Chi tiết ánh xạ:</span>
-                     <Typography.Text code>{activeDrawerNode.nodeId}</Typography.Text>
+                     <Typography.Text code>
+                        {activeDrawerNode.nodeId}
+                     </Typography.Text>
                   </Flex>
                ) : (
                   "Chi tiết Node"
@@ -463,8 +498,12 @@ export function MappingReviewTable({
                            <Button
                               size="small"
                               type="text"
-                              icon={copied ? <CheckOutlined /> : <CopyOutlined />}
-                              onClick={() => handleCopy(activeDrawerNode.nodeId)}
+                              icon={
+                                 copied ? <CheckOutlined /> : <CopyOutlined />
+                              }
+                              onClick={() =>
+                                 handleCopy(activeDrawerNode.nodeId)
+                              }
                            >
                               Copy ID
                            </Button>
@@ -484,7 +523,10 @@ export function MappingReviewTable({
                         </Typography.Text>
                      </Descriptions.Item>
                      <Descriptions.Item label="Vị trí nguồn (Locator)">
-                        <Typography.Text code style={{ wordBreak: "break-all" }}>
+                        <Typography.Text
+                           code
+                           style={{ wordBreak: "break-all" }}
+                        >
                            {activeDrawerNode.sourceLocator || UNKNOWN}
                         </Typography.Text>
                      </Descriptions.Item>
@@ -503,8 +545,16 @@ export function MappingReviewTable({
                         )}
                      </Descriptions.Item>
                      <Descriptions.Item label="Cần rà soát (needsReview)">
-                        <Tag color={activeDrawerNode.needsReview ? "warning" : "default"}>
-                           {activeDrawerNode.needsReview ? "CẦN RÀ SOÁT" : "Bình thường"}
+                        <Tag
+                           color={
+                              activeDrawerNode.needsReview
+                                 ? "warning"
+                                 : "default"
+                           }
+                        >
+                           {activeDrawerNode.needsReview
+                              ? "CẦN RÀ SOÁT"
+                              : "Bình thường"}
                         </Tag>
                      </Descriptions.Item>
                      <Descriptions.Item label="Đích Magento Page Builder">
@@ -518,15 +568,20 @@ export function MappingReviewTable({
                               </div>
                               <div>
                                  <b>Appearance:</b>{" "}
-                                 <Tag>{activeDrawerNode.target.appearanceId}</Tag>
+                                 <Tag>
+                                    {activeDrawerNode.target.appearanceId}
+                                 </Tag>
                               </div>
                               {(activeDrawerNode.target.nativeElement ||
                                  activeDrawerNode.target.nativeField) && (
                                  <div>
                                     <b>Element / Field:</b>{" "}
                                     <Typography.Text type="secondary">
-                                       {activeDrawerNode.target.nativeElement ?? UNKNOWN} ·{" "}
-                                       {activeDrawerNode.target.nativeField ?? UNKNOWN}
+                                       {activeDrawerNode.target.nativeElement ??
+                                          UNKNOWN}{" "}
+                                       ·{" "}
+                                       {activeDrawerNode.target.nativeField ??
+                                          UNKNOWN}
                                     </Typography.Text>
                                  </div>
                               )}
@@ -541,7 +596,9 @@ export function MappingReviewTable({
                      </Descriptions.Item>
                      {activeDrawerNode.note && (
                         <Descriptions.Item label="Ghi chú">
-                           <Typography.Text>{activeDrawerNode.note}</Typography.Text>
+                           <Typography.Text>
+                              {activeDrawerNode.note}
+                           </Typography.Text>
                         </Descriptions.Item>
                      )}
                      {activeDrawerNode.reasons.length > 0 && (
@@ -549,7 +606,9 @@ export function MappingReviewTable({
                            <ul style={{ margin: 0, paddingLeft: 18 }}>
                               {activeDrawerNode.reasons.map((r, i) => (
                                  <li key={i}>
-                                    <Typography.Text type="secondary">{r}</Typography.Text>
+                                    <Typography.Text type="secondary">
+                                       {r}
+                                    </Typography.Text>
                                  </li>
                               ))}
                            </ul>

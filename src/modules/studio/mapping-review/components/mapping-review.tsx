@@ -29,7 +29,8 @@ export function MappingReview({ run }: { run: StudioRunView }) {
             <h2 style={{ margin: 0 }}>
                Chi tiết ánh xạ (Mapping Review){" "}
                <Typography.Text type="secondary" style={{ fontSize: 14 }}>
-                  {run.mappings.length} mapping · {run.diagnostics.length} chẩn đoán
+                  {run.mappings.length} mapping · {run.diagnostics.length} chẩn
+                  đoán
                </Typography.Text>
             </h2>
             {isEmpty ? (
