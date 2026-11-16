@@ -267,6 +267,43 @@ describe("[70] real offline build emits the operator install bundle", () => {
    );
 
    itDist(
+      "bundle media/ (build.ts copy seam) is byte-identical to the example's source media (sha256)",
+      () => {
+         // build.ts copies <configDir>/media -> <bundleDir>/media when the caller's input
+         // project carries one; the committed real-derived example does. The chain
+         // source -> bundle must be sha256-identical (the installer later syncs this
+         // directory into pub/media/).
+         const sourceMediaDir = path.join(EXAMPLE_DIR, "media");
+         const bundleMediaDir = path.join(bundleDir, "media");
+         expect(fs.existsSync(sourceMediaDir)).toBe(true);
+         expect(fs.existsSync(bundleMediaDir)).toBe(true);
+         const relPaths: string[] = [];
+         const collect = (dir: string): void => {
+            for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+               const full = path.join(dir, entry.name);
+               if (entry.isSymbolicLink()) continue;
+               if (entry.isDirectory()) collect(full);
+               else if (entry.isFile())
+                  relPaths.push(path.relative(sourceMediaDir, full));
+            }
+         };
+         collect(sourceMediaDir);
+         expect(relPaths.length).toBeGreaterThan(0);
+         for (const rel of relPaths) {
+            const source = path.join(sourceMediaDir, rel);
+            const copied = path.join(bundleMediaDir, rel);
+            expect(fs.existsSync(copied)).toBe(true);
+            expect(sha256File(copied)).toBe(sha256File(source));
+            expect(fs.statSync(copied).size).toBe(fs.statSync(source).size);
+         }
+         // The operator README documents the media sync into pub/media/.
+         const readme = fs.readFileSync(path.join(bundleDir, "README.md"), "utf8");
+         expect(readme).toContain("pub/media/");
+      },
+      60000,
+   );
+
+   itDist(
       "README carries the dry-run, write-warning and homepage-safety lines; installer echoes the target",
       () => {
          const readme = fs.readFileSync(
@@ -280,6 +317,10 @@ describe("[70] real offline build emits the operator install bundle", () => {
          expect(readme).toContain("action=updated");
          expect(readme).toContain("mapping-and-gaps.json");
          expect(readme).toContain("pixel-perfect");
+         // [74] hardening disclosures: confirmation flags + scoped cache clean.
+         expect(readme).toContain("--store-id=");
+         expect(readme).toContain("--force");
+         expect(readme).toContain("flush-all");
          const installer = fs.readFileSync(
             path.join(bundleDir, "install-homepage.php"),
             "utf8",

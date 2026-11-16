@@ -259,12 +259,31 @@ declare(strict_types=1);
  *    An existing page with the same identifier under a DIFFERENT store set
  *    (including store 0 "all store views") REFUSES the run (exit 1) — never
  *    guessed, never re-scoped.
+ *  - CONFIRMATION FLAGS ([74]):
+ *      a) NON-DEFAULT store scope: when the declared store_id is NOT 0, a real
+ *         run must pass the explicit matching flag --store-id=<storeId>
+ *         (e.g. --store-id=${cmsInstall.storeId}) — a missing or mismatched
+ *         flag REFUSES the run (exit 1). --dry-run never needs the flag.
+ *      b) NO silent overwrite: an EXISTING page under the declared scope is
+ *         never replaced silently — the run REFUSES (exit 1) unless the
+ *         operator passes --force. A brand-new page needs no --force.
+ *  - MEDIA ([74]): files under this bundle's media/ directory are copied into
+ *    <magento-root>/pub/media/ ONLY. Every destination is checked by realpath
+ *    containment (it must resolve INSIDE the resolved pub/media), symlinks in
+ *    the bundle media tree and any '..' path segment REFUSE the run BEFORE
+ *    anything is written, existing pub/media files with DIFFERENT bytes REFUSE
+ *    the run unless --force (byte-identical files are skipped — idempotent),
+ *    and directory/file permissions are 0755/0644.
+ *  - CACHE ([74]): after a successful page write the script cleans ONLY the
+ *    cache types [full_page, block_html] — a scoped clean, NEVER a flush-all —
+ *    so the installed page and its media render immediately.
  *  - SCOPE GUARANTEES: this script NEVER reads or writes the store config value
  *    web/default/cms_home_page (the store's default homepage is untouched) and
  *    NEVER touches any other CMS page; resolution is strictly by the declared
  *    identifier within the declared store scope.
  *  - IDEMPOTENT: create-or-update keyed on (identifier, store scope); a second
- *    run reports action=updated with the same page id.
+ *    run with the same flags reports action=updated with the same page id
+ *    (existing pages require --force, byte-identical media is skipped).
  *  - PARTIAL COVERAGE: the bundle's mapping-and-gaps.json lists every mapping
  *    gap and exclusion. Partial composition coverage is NOT pixel-perfect.
  *  - RUNTIME PROOF: the emitted runtime shape (AppInterface launch -> a REAL
@@ -357,7 +376,14 @@ if (in_array('--dry-run', $argv, true)) {
         'active' => DET_TARGET['active'],
         'contentBytes' => strlen($planContent),
         'contentSha256' => hash('sha256', $planContent),
+        // [74] honest disclosure of what a REAL run would do (never done by a dry run):
+        'writeMode' => 'create-or-update of the ONE declared page only; an EXISTING page under the declared scope refuses unless --force; a different store scope refuses',
+        'cacheFlush' => 'on a real run only: clean Magento cache types [full_page, block_html] — a scoped clean, never flush-all',
     ];
+    if (DET_TARGET['storeId'] !== 0) {
+        // [74] a NON-DEFAULT store scope requires the explicit confirmation flag on a real run.
+        $dryRunPlan['requiresFlags'] = ['--store-id=' . (string) DET_TARGET['storeId']];
+    }
     if (count($mediaPlan) > 0) {
         $dryRunPlan['mediaAssets'] = [
             'count' => count($mediaPlan),
@@ -466,14 +492,100 @@ final class DetCmsInstallerApp implements \\Magento\\Framework\\AppInterface
      * (identifier, store scope). Refuses loudly on any ambiguity; never touches
      * any other page; never reads or writes web/default/cms_home_page. Any
      * refusal is a thrown \\RuntimeException (a recorded exit 1, never a partial
-     * write and never a silent guess).
+     * write and never a silent guess), and EVERY refusal below is raised BEFORE
+     * the first filesystem or database write — a refused run leaves the
+     * installation byte-for-byte untouched ([74] hardening):
+     * 1. explicit confirmation flag --store-id=<n> for a NON-DEFAULT store scope;
+     * 2. bundle media tree integrity (symlinks, traversal segments) — refused;
+     * 3. existing-page collisions under a different store scope — refused;
+     * 4. ambiguous targets — refused;
+     * 5. an EXISTING page under the declared scope refuses unless --force;
+     * 6. existing pub/media files with DIFFERENT bytes refuse unless --force
+     *    (byte-identical files are skipped — idempotent reruns).
      */
     private function execute(): void
     {
         $content = det_pb_embedded_content();
         $storeId = (int) DET_TARGET['storeId'];
         $identifier = (string) DET_TARGET['identifier'];
+        $cliArgs = is_array($_SERVER['argv'] ?? null) ? $_SERVER['argv'] : [];
+        $force = in_array('--force', $cliArgs, true);
 
+        // ---- Gate 1: EXPLICIT confirmation flag for a NON-DEFAULT store scope ---------------
+        if ($storeId !== 0) {
+            $hasStoreFlag = false;
+            $flagStoreId = null;
+            $argCount = count($cliArgs);
+            for ($i = 0; $i < $argCount; $i++) {
+                $arg = (string) $cliArgs[$i];
+                if (strpos($arg, '--store-id=') === 0) {
+                    $hasStoreFlag = true;
+                    $flagStoreId = (int) substr($arg, strlen('--store-id='));
+                } elseif ($arg === '--store-id' && $i + 1 < $argCount) {
+                    $hasStoreFlag = true;
+                    $flagStoreId = (int) $cliArgs[$i + 1];
+                }
+            }
+            if (!$hasStoreFlag) {
+                throw new \\RuntimeException(
+                    'REFUSING to write: this bundle targets a NON-DEFAULT store scope (store_id=' . (string) $storeId . '). A real run must pass the explicit matching flag --store-id=' . (string) $storeId . ' to confirm the store scope (--dry-run needs no flag). Nothing was written.'
+                );
+            }
+            if ($flagStoreId !== $storeId) {
+                throw new \\RuntimeException(
+                    'REFUSING to write: the passed --store-id flag (' . (string) $flagStoreId . ') does not match the declared store_id=' . (string) $storeId . '. This script writes ONLY its declared store scope; nothing was written.'
+                );
+            }
+        }
+
+        // ---- Gate 2: bundle media tree integrity (validation ONLY — no writes) -------------
+        $mediaSourceDir = __DIR__ . '/media';
+        $mediaEntries = [];
+        $mediaProblems = [];
+        if (is_dir($mediaSourceDir)) {
+            $iterator = new \\RecursiveIteratorIterator(
+                new \\RecursiveDirectoryIterator($mediaSourceDir, \\FilesystemIterator::SKIP_DOTS),
+                \\RecursiveIteratorIterator::LEAVES_ONLY
+            );
+            /** @var \\SplFileInfo $item */
+            foreach ($iterator as $item) {
+                if (!$item->isFile()) {
+                    continue;
+                }
+                $relPath = substr($item->getPathname(), strlen($mediaSourceDir) + 1);
+                // A symlinked media entry could smuggle out-of-tree content into
+                // pub/media: refuse the run before anything is written.
+                if ($item->isLink()) {
+                    $mediaProblems[] = 'symlink inside the bundle media tree (refused): ' . $relPath;
+                    continue;
+                }
+                $unsafeReason = null;
+                if ($relPath === '' || strpos($relPath, "\\0") !== false || strpos($relPath, '\\\\') !== false) {
+                    $unsafeReason = 'unsafe relative media path';
+                } elseif ($relPath[0] === '/') {
+                    $unsafeReason = 'absolute relative media path';
+                } else {
+                    foreach (explode('/', $relPath) as $segment) {
+                        if ($segment === '' || $segment === '.' || $segment === '..') {
+                            $unsafeReason = 'path traversal segment in relative media path';
+                            break;
+                        }
+                    }
+                }
+                if ($unsafeReason !== null) {
+                    $mediaProblems[] = $unsafeReason . ' (refused): ' . var_export($relPath, true);
+                    continue;
+                }
+                $mediaEntries[] = [$item->getPathname(), $relPath];
+            }
+            if (count($mediaProblems) > 0) {
+                throw new \\RuntimeException(
+                    'REFUSING the run: the bundle media tree carries unsafe entr(ies) — ' . implode('; ', $mediaProblems) . '. Nothing was written.'
+                );
+            }
+        }
+
+        // ---- Gate 3+4: existing-page collisions and ambiguity (read-only lookups) ----------
         // Find existing pages STRICTLY by the declared identifier — no fuzzy or
         // partial match, no other page is ever considered.
         /** @var \\Magento\\Cms\\Model\\ResourceModel\\Page\\Collection $collection */
@@ -516,55 +628,112 @@ final class DetCmsInstallerApp implements \\Magento\\Framework\\AppInterface
             );
         }
 
+        // ---- Gate 5: an EXISTING page is never overwritten silently ------------------------
+        $action = 'created';
+        if (count($candidates) === 1) {
+            if (!$force) {
+                throw new \\RuntimeException(
+                    'REFUSING to write: cms page id=' . (string) $candidates[0]['page']->getId() . ' already exists with the declared identifier under the declared store scope. Re-run with --force to update it in place (the script does NOT back up the previous content — record its page id and restore it in Admin if needed). Nothing was written.'
+                );
+            }
+            $action = 'updated';
+        }
+
+        // ---- Gate 6: media overwrite classification (read-only hashing, no writes) ---------
+        $magentoRoot = realpath(__DIR__ . '/..');
+        $pubMediaDir = $magentoRoot . '/pub/media';
+        $copyList = [];
+        $mediaConflicts = [];
+        $mediaSkipped = 0;
+        foreach ($mediaEntries as $entry) {
+            $sourcePath = $entry[0];
+            $relPath = $entry[1];
+            $targetPath = $pubMediaDir . '/' . $relPath;
+            if (is_file($targetPath)) {
+                $sourceHash = hash_file('sha256', $sourcePath);
+                $targetHash = hash_file('sha256', $targetPath);
+                if (is_string($sourceHash) && $sourceHash === $targetHash) {
+                    // Byte-identical: an idempotent rerun, not a change.
+                    $mediaSkipped++;
+                } else {
+                    $mediaConflicts[] = ['source' => $sourcePath, 'rel' => $relPath, 'target' => $targetPath];
+                }
+            } else {
+                $copyList[] = ['source' => $sourcePath, 'rel' => $relPath, 'target' => $targetPath];
+            }
+        }
+        if (count($mediaConflicts) > 0 && !$force) {
+            $conflictNames = [];
+            foreach ($mediaConflicts as $mediaConflict) {
+                $conflictNames[] = $mediaConflict['rel'];
+            }
+            throw new \\RuntimeException(
+                'REFUSING to overwrite existing pub/media file(s) with DIFFERENT bytes: ' . implode('; ', $conflictNames) . '. Re-run with --force to replace them (no backup is taken). Nothing was written.'
+            );
+        }
+        if ($force && count($mediaConflicts) > 0) {
+            $copyList = array_merge($copyList, $mediaConflicts);
+        }
+
         /** @var \\Magento\\Cms\\Api\\PageRepositoryInterface $pageRepository */
         $pageRepository = $this->objectManager->create(\\Magento\\Cms\\Api\\PageRepositoryInterface::class);
 
-        // Media assets copy: automatically copy all files in __DIR__ . '/media' to <magentoRoot>/pub/media/
-        $mediaSourceDir = __DIR__ . '/media';
-        $magentoRoot = realpath(__DIR__ . '/..');
-        if ($magentoRoot !== false && is_dir($mediaSourceDir)) {
-            $pubMediaDir = $magentoRoot . '/pub/media';
-            $copiedMediaCount = 0;
-            $copiedMediaBytes = 0;
-            $iterator = new \\RecursiveIteratorIterator(
-                new \\RecursiveDirectoryIterator($mediaSourceDir, \\FilesystemIterator::SKIP_DOTS),
-                \\RecursiveIteratorIterator::SELF_FIRST
-            );
-            foreach ($iterator as $item) {
-                if ($item->isFile()) {
-                    $relPath = substr($item->getPathname(), strlen($mediaSourceDir) + 1);
-                    $targetPath = $pubMediaDir . '/' . $relPath;
-                    $targetDir = dirname($targetPath);
-                    if (!is_dir($targetDir)) {
-                        if (!@mkdir($targetDir, 0755, true) && !is_dir($targetDir)) {
-                            throw new \\RuntimeException('Failed to create directory: ' . $targetDir);
-                        }
-                    }
-                    if (!@copy($item->getPathname(), $targetPath)) {
-                        throw new \\RuntimeException('Failed to copy media asset to: ' . $targetPath);
-                    }
-                    @chmod($targetPath, 0644);
-                    $copiedMediaCount++;
-                    $copiedMediaBytes += $item->getSize();
+        // ---- WRITES START HERE: every refusal above happened before the first write --------
+        $copiedMediaCount = 0;
+        $copiedMediaBytes = 0;
+        if (count($copyList) > 0) {
+            if (!is_dir($pubMediaDir)) {
+                if (!@mkdir($pubMediaDir, 0755, true) && !is_dir($pubMediaDir)) {
+                    throw new \\RuntimeException('Failed to create the pub/media destination directory: ' . $pubMediaDir);
                 }
             }
-            if ($copiedMediaCount > 0) {
-                fwrite(STDOUT, sprintf(
-                    'det-cms-installer: copied %d media asset(s) (%d bytes) to pub/media/' . PHP_EOL,
-                    $copiedMediaCount,
-                    $copiedMediaBytes
-                ));
+            $pubMediaReal = realpath($pubMediaDir);
+            if ($pubMediaReal === false || $pubMediaReal === '/') {
+                throw new \\RuntimeException('Cannot resolve the pub/media destination: ' . $pubMediaDir);
+            }
+            $pubMediaPrefix = $pubMediaReal . '/';
+            foreach ($copyList as $copyEntry) {
+                $targetPath = $pubMediaDir . '/' . $copyEntry['rel'];
+                $targetDir = dirname($targetPath);
+                if (!is_dir($targetDir)) {
+                    if (!@mkdir($targetDir, 0755, true) && !is_dir($targetDir)) {
+                        throw new \\RuntimeException('Failed to create directory: ' . $targetDir);
+                    }
+                }
+                $targetDirReal = realpath($targetDir);
+                // CONTAINMENT: the RESOLVED destination directory must stay inside
+                // the RESOLVED pub/media — a symlinked or aliased escape refuses.
+                if ($targetDirReal === false || strpos($targetDirReal . '/', $pubMediaPrefix) !== 0) {
+                    throw new \\RuntimeException('REFUSING media copy: resolved destination escapes pub/media (rel: ' . $copyEntry['rel'] . ').');
+                }
+                $containedTarget = $targetDirReal . '/' . basename($copyEntry['rel']);
+                if (!@copy($copyEntry['source'], $containedTarget)) {
+                    throw new \\RuntimeException('Failed to copy media asset to: ' . $containedTarget);
+                }
+                @chmod($containedTarget, 0644);
+                $writtenReal = realpath($containedTarget);
+                if ($writtenReal === false || strpos($writtenReal . '/', $pubMediaPrefix) !== 0) {
+                    throw new \\RuntimeException('REFUSING media copy: written path escaped pub/media (rel: ' . $copyEntry['rel'] . ').');
+                }
+                $copiedMediaCount++;
+                $copiedMediaBytes += (int) filesize($copyEntry['source']);
             }
         }
+        if ($copiedMediaCount > 0 || $mediaSkipped > 0) {
+            fwrite(STDOUT, sprintf(
+                'det-cms-installer: media copy to pub/media/ — copied %d file(s) (%d bytes), skipped %d byte-identical file(s)' . PHP_EOL,
+                $copiedMediaCount,
+                $copiedMediaBytes,
+                $mediaSkipped
+            ));
+        }
 
-        if (count($candidates) === 1) {
+        if ($action === 'updated') {
             $page = $candidates[0]['page'];
-            $action = 'updated';
         } else {
             /** @var \\Magento\\Cms\\Model\\Page $page */
             $page = $this->objectManager->create(\\Magento\\Cms\\Model\\PageFactory::class)->create();
             $page->setIdentifier($identifier);
-            $action = 'created';
         }
         // EXPLICIT declared store scope — the only scope this script may write.
         $page->setStoreId([$storeId]);
@@ -586,7 +755,8 @@ final class DetCmsInstallerApp implements \\Magento\\Framework\\AppInterface
             DET_PROVENANCE_JSON
         ));
 
-        // Cache refresh: clean CMS and full-page cache so new page and media render immediately
+        // Cache refresh: clean ONLY the scoped CMS-affecting cache types so the new
+        // page and media render immediately — a scoped clean, NEVER a flush-all.
         try {
             /** @var \\Magento\\Framework\\App\\Cache\\Manager $cacheManager */
             $cacheManager = $this->objectManager->get(\\Magento\\Framework\\App\\Cache\\Manager::class);
@@ -747,7 +917,7 @@ cùng identifier nhưng thuộc bộ store **khác**, script **từ chối chạ
    \`realpath(__DIR__ . '/..')\` và yêu cầu \`app/bootstrap.php\`; đặt sai chỗ thì nó báo lỗi
    STDERR + exit 1, không bao giờ fatal).
 2. Chạy **dry-run TRƯỚC** — chỉ in kế hoạch (identifier/title/store/active, số byte nội dung,
-   sha256) và **không ghi gì cả**:
+   sha256, cờ bắt buộc nếu có, media sẽ copy, và loại cache sẽ làm sạch) và **không ghi gì cả**:
 
    \`\`\`bash
    php install-homepage.php --dry-run
@@ -759,16 +929,41 @@ cùng identifier nhưng thuộc bộ store **khác**, script **từ chối chạ
    php install-homepage.php
    \`\`\`
 
+## Cờ xác nhận bắt buộc (đọc kỹ — script từ chối nếu thiếu)
+
+- **Store khác mặc định**: nếu \`storeId\` khai báo **khác 0**, lệnh cài thật PHẢI kèm cờ khớp
+  \`--store-id=<storeId>\` (ví dụ \`--dry-run\` thì không cần cờ, nhưng cài thật thì bắt buộc).
+  Thiếu cờ hoặc cờ sai số → script **từ chối chạy** (exit 1), không ghi gì cả.
+- **Không ghi đè im lặng**: nếu trang CMS với identifier trên **đã tồn tại** trong đúng store
+  scope khai báo, script **từ chối** (exit 1) cho tới khi bạn thêm cờ \`--force\` để ghi đè
+  một cách tường minh. Trang mới tạo thì không cần \`--force\`.
+- **Media ghi đè**: tệp đã có sẵn trong \`pub/media/\` nhưng **khác byte** cũng bị từ chối nếu
+  thiếu \`--force\`; tệp **giống hệt về byte** thì được bỏ qua (chạy lại an toàn).
+
 ## Cảnh báo ghi (đọc kỹ)
 
 **CHẠY SCRIPT NÀY SẼ GHI TRANG CMS TRONG CHÍNH BẢN CÀI MAGENTO NÀY.** DET không bao giờ tự
 ghi; đây là script do operator thực thi. Hãy chạy \`--dry-run\` trước. Script chỉ ghi qua tầng
 service \\Magento\\Cms\\Api\\PageRepositoryInterface (không có SQL trực tiếp lên bảng cms_page).
 
+## Media (ảnh đi kèm bó)
+
+Các tệp trong thư mục \`media/\` của bó được copy **CHỈ** vào \`<magento-root>/pub/media/\`
+(kiểm tra containment bằng realpath; symlink trong cây media của bó hoặc bất kỳ segment
+\`..\` nào sẽ khiến script **từ chối chạy trước khi ghi thứ gì**; quyền thư mục/tệp là
+0755/0644). Tệp thương merchant đã có sẵn cùng nội dung byte thì được bỏ qua — không ghi lại.
+
+## Cache (chỉ làm sạch có chọn lọc)
+
+Sau khi ghi trang thành công, script **chỉ** làm sạch 2 loại cache \`[full_page, block_html]\`
+(làm sạch có chọn lọc — **KHÔNG BAO GIỜ flush-all**) để trang và media mới hiển thị ngay.
+Dry-run cũng in rõ thông báo này trong kế hoạch.
+
 ## Chạy lại là an toàn (idempotent)
 
-Chạy lần hai báo \`action=updated\` với cùng page id — create-or-update khoá theo cặp
-(identifier, store scope), không sinh trang trùng.
+Chạy lần hai (với đúng bộ cờ, kể cả \`--force\` khi trang đã tồn tại) báo \`action=updated\`
+với cùng page id — create-or-update khoá theo cặp (identifier, store scope), không sinh
+trang trùng; media giống byte được bỏ qua.
 
 ## Hoàn tác (rollback)
 
