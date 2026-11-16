@@ -25,10 +25,17 @@
   `modules/` level inside the studio module): `overview`, `build-control`, `catalog`,
   `run-detail`, `conversions`, `design-tree`, `mapping-review`, `preview`, `artifacts`,
   `agent`. Each lane is one standard module (index.ts public API, components/, screens/, types/…).
-- **Deviation kept on purpose.** Tests stay co-located with their code (`*.test.tsx`
-  beside the component, suites in module `__tests__/`) per the [68] doctrine — the
-  standard's `__tests__/`-only rule is satisfied in spirit (tests beside code, kebab
-  `*.test.*` naming). `shared/contracts/index.ts` keeps three scoped `export *` re-exports
+- **Test placement — Owner override (#74, 2026-11-16), supersedes the earlier
+  co-location exception.** ALL `*.test.ts(x)` files under touched Studio modules live in a
+  `__tests__/` directory INSIDE their owning module/lane/submodule (exact spelling
+  `__tests__/`), never loose beside component files, never a giant root `tests/`. Next
+  `app/api/**/route.test.ts` files move into the owning server module's `__tests__/` and
+  import the real thin route; `app/**/page.test.ts` moves into the owning lane's
+  `__tests__/` importing the real page module. Test names and assertions are preserved;
+  only imports/fixtures/globs adjust. Executable standalone `.mjs` contract suites
+  (`src/modules/studio/__tests__/*.mjs`, `scripts/`) and `scripts/proof/**` are not
+  `*.test.ts(x)` and are not moved by this rule; already-conforming `src/modules/**/__tests__`
+  stay put. `shared/contracts/index.ts` keeps three scoped `export *` re-exports
   of its own sibling contract files (a namespace barrel, not sprawl).
 - **Formatting.** Prettier governs formatting: `tabWidth: 3` (`.prettierrc.json`,
   `.editorconfig`); run `pnpm run format` before committing. `pnpm run format:check` in
