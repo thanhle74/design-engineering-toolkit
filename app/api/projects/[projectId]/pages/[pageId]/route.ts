@@ -1,36 +1,14 @@
-import { deleteFigmaPage } from "@/src/modules/studio/projects/project-store";
+/**
+ * [74] /api/projects/[projectId]/pages/[pageId] — thin route: all validation
+ * and error mapping live in the projects module server seam
+ * (`projects/api.ts`).
+ */
+import { projectDeletePageResponse } from "@/src/modules/studio/projects/api";
 
 export async function DELETE(
    _request: Request,
    { params }: { params: Promise<{ projectId: string; pageId: string }> },
 ): Promise<Response> {
-   try {
-      const { projectId, pageId } = await params;
-      const ok = await deleteFigmaPage(projectId, pageId);
-      if (!ok) {
-         return Response.json(
-            {
-               error: {
-                  code: "not-found",
-                  message: `Không tìm thấy trang ${pageId} trong dự án ${projectId}`,
-               },
-            },
-            { status: 404 },
-         );
-      }
-      return Response.json({ ok: true });
-   } catch (error) {
-      return Response.json(
-         {
-            error: {
-               code: "internal-error",
-               message:
-                  error instanceof Error
-                     ? error.message
-                     : "Failed to delete page",
-            },
-         },
-         { status: 500 },
-      );
-   }
+   const { projectId, pageId } = await params;
+   return projectDeletePageResponse(projectId, pageId);
 }
