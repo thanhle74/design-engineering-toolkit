@@ -16,6 +16,7 @@
     "identifier": "det-qa-72-home",
     "title": "DET QA 72 Homepage",
     "storeId": 5,
-    "active": true
+    "active": true,
+    "pageLayout": "cms-full-width"
   }
 }

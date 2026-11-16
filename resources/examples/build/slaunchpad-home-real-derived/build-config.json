@@ -16,6 +16,7 @@
     "identifier": "det-studio-homepage",
     "title": "DET Studio Homepage",
     "storeId": 0,
-    "active": true
+    "active": true,
+    "pageLayout": "cms-full-width"
   }
 }

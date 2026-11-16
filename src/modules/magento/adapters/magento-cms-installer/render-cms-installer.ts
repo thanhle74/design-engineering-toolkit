@@ -27,6 +27,15 @@ export interface CmsInstallTarget {
    title: string;
    storeId: number;
    active: boolean;
+   /**
+    * [76] Magento `page_layout` written onto the page. Optional — when the
+    * build config omits it the installer writes `cms-full-width`: native
+    * Page Builder homepage content is full-bleed, and a NULL layout lets the
+    * active theme fall back to a multi-column layout that squeezes the page
+    * into a ~25% main column (live slaunchpad bug, 2026-11-16: body class
+    * `page-layout-3columns` collapsed every composed row).
+    */
+   pageLayout?: string;
 }
 
 /** Build provenance echoed into the installer header and the operator README. */
@@ -301,6 +310,11 @@ const DET_TARGET = [
     'title' => ${phpSingleQuoted(cmsInstall.title)},
     'storeId' => ${cmsInstall.storeId},
     'active' => ${cmsInstall.active ? "true" : "false"},
+    // [76] a native Page Builder page MUST declare its page_layout: NULL lets the
+    // theme fall back to a multi-column layout that squeezes the content into a
+    // narrow main column (live bug: body class page-layout-3columns). Full-bleed
+    // PB homepage content renders under 'cms-full-width'.
+    'pageLayout' => ${phpSingleQuoted(cmsInstall.pageLayout ?? "cms-full-width")},
 ];
 
 // ---- Provenance metadata (json_encode form; no credentials, no secrets) ---------------------
@@ -388,6 +402,7 @@ if (in_array('--dry-run', $argv, true)) {
         'title' => DET_TARGET['title'],
         'storeId' => DET_TARGET['storeId'],
         'active' => DET_TARGET['active'],
+        'pageLayout' => DET_TARGET['pageLayout'],
         'contentBytes' => strlen($planContent),
         'contentSha256' => hash('sha256', $planContent),
         // [74] honest disclosure of what a REAL run would do (never done by a dry run):
@@ -811,16 +826,21 @@ class DetCmsInstallerApp implements \\Magento\\Framework\\AppInterface
         $page->setTitle(DET_TARGET['title']);
         $page->setContent($content);
         $page->setIsActive((bool) DET_TARGET['active']);
+        // [76] the page layout is part of the declared write target — without it a
+        // NULL layout renders under the theme's multi-column fallback and collapses
+        // the composed Page Builder rows into a narrow column.
+        $page->setPageLayout(DET_TARGET['pageLayout']);
 
         $saved = $pageRepository->save($page);
         fwrite(STDOUT, sprintf(
-            'det-cms-installer: action=%s page_id=%s identifier=%s title=%s store_id=%d active=%s content_bytes=%d content_sha256=%s provenance=%s' . PHP_EOL,
+            'det-cms-installer: action=%s page_id=%s identifier=%s title=%s store_id=%d active=%s page_layout=%s content_bytes=%d content_sha256=%s provenance=%s' . PHP_EOL,
             $action,
             (string) $saved->getId(),
             $identifier,
             (string) DET_TARGET['title'],
             $storeId,
             DET_TARGET['active'] ? 'true' : 'false',
+            (string) DET_TARGET['pageLayout'],
             strlen($content),
             hash('sha256', $content),
             DET_PROVENANCE_JSON

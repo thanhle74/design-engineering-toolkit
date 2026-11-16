@@ -127,6 +127,11 @@
         "active": {
           "type": "boolean",
           "description": "Whether the installed CMS page is active."
+        },
+        "pageLayout": {
+          "type": "string",
+          "minLength": 1,
+          "description": "[76] Optional — the page_layout handle the target platform's installer writes onto the CMS page (e.g. cms-full-width). When omitted the installer still writes cms-full-width; the field exists so the operator can see and change the declared layout in the config, since an install that leaves page_layout NULL falls back to the theme's multi-column layout and collapses every composed row into a narrow column."
         }
       }
     }

@@ -277,6 +277,11 @@ describe("[70] installer safety surface", () => {
       expect(php).toContain("addFieldToFilter('identifier', $identifier)");
       // The frozen explicit-store-scope form.
       expect(php).toContain("$page->setStoreId([$storeId]);");
+      // [76] the page layout is part of the declared write target — a NULL layout
+      // renders under the theme's multi-column fallback and collapses the composed
+      // Page Builder rows (live slaunchpad bug: body class page-layout-3columns).
+      expect(php).toContain("$page->setPageLayout(DET_TARGET['pageLayout']);");
+      expect(php).toContain("'pageLayout' => 'cms-full-width'");
       expect(php).toContain("realpath(__DIR__ . '/..')");
       expect(php).toContain("app/bootstrap.php");
       expect(php).toContain("exit(1);");
@@ -686,6 +691,8 @@ describe("[70] schema minors", () => {
          title: "DET Studio Homepage",
          storeId: 0,
          active: true,
+         // [76] declared so installs never fall back to the theme's multi-column layout.
+         pageLayout: "cms-full-width",
       });
    });
 
