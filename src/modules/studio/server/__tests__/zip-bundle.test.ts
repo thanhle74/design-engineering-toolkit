@@ -558,4 +558,77 @@ describe("packRunBundleZip [74] hardening", () => {
          fs.rmSync(tmpDir, { recursive: true, force: true });
       }
    });
+
+   // [74 C74-1] a symlinked bundle ROOT file must be refused, never followed:
+   // stat() would resolve the link and pack the OUTSIDE sentinel into the archive.
+   it("refuses a symlinked bundle root file instead of packing the outside target", () => {
+      const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "zip-rootlink-"));
+      const outsideDir = fs.mkdtempSync(
+         path.join(os.tmpdir(), "zip-rootlink-outside-"),
+      );
+      try {
+         const sentinel = path.join(outsideDir, "outside-secret.txt");
+         fs.writeFileSync(sentinel, "TOP-SECRET-OUTSIDE");
+         fs.writeFileSync(
+            path.join(tmpDir, "pagebuilder-content.html"),
+            "<div data-content-type='row'></div>",
+         );
+         fs.symlinkSync(sentinel, path.join(tmpDir, "README.md"));
+
+         let refused = false;
+         try {
+            packRunBundleZip(tmpDir);
+         } catch (e) {
+            refused = true;
+            expect((e as Error).message).toMatch(/symbolic link/);
+            expect((e as Error).message).toMatch(/README\.md/);
+         }
+         expect(refused).toBe(true);
+         // No archive can exist (packRunBundleZip threw), and the outside
+         // sentinel bytes are untouched.
+         expect(fs.readFileSync(sentinel, "utf8")).toBe("TOP-SECRET-OUTSIDE");
+      } finally {
+         fs.rmSync(tmpDir, { recursive: true, force: true });
+         fs.rmSync(outsideDir, { recursive: true, force: true });
+      }
+   });
+
+   // [74 C74-1] a symlinked top-level media/ root must be refused: the child
+   // Dirent guard never sees the root, and stat().isDirectory() would follow it.
+   it("refuses a symlinked media root instead of packing the outside tree", () => {
+      const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "zip-mediaroot-"));
+      const outsideDir = fs.mkdtempSync(
+         path.join(os.tmpdir(), "zip-mediaroot-outside-"),
+      );
+      try {
+         const sentinel = path.join(outsideDir, "hero.jpg");
+         fs.writeFileSync(sentinel, "TOP-SECRET-MEDIA-TREE");
+         fs.writeFileSync(
+            path.join(tmpDir, "README.md"),
+            "# bundle with linked media root",
+         );
+         fs.symlinkSync(outsideDir, path.join(tmpDir, "media"));
+
+         let refused = false;
+         try {
+            const zip = packRunBundleZip(tmpDir);
+            // Defense in depth: if a buffer were ever produced it must not
+            // carry the sentinel bytes.
+            expect(zip.includes(Buffer.from("TOP-SECRET-MEDIA-TREE"))).toBe(
+               false,
+            );
+         } catch (e) {
+            refused = true;
+            expect((e as Error).message).toMatch(/symbolic link/);
+            expect((e as Error).message).toMatch(/media/);
+         }
+         expect(refused).toBe(true);
+         expect(fs.readFileSync(sentinel, "utf8")).toBe(
+            "TOP-SECRET-MEDIA-TREE",
+         );
+      } finally {
+         fs.rmSync(tmpDir, { recursive: true, force: true });
+         fs.rmSync(outsideDir, { recursive: true, force: true });
+      }
+   });
 });

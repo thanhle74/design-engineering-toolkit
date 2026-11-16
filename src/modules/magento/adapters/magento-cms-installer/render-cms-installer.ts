@@ -350,13 +350,23 @@ if (in_array('--dry-run', $argv, true)) {
     // application is NOT booted and NOTHING is written. The exact plan:
     $planContent = det_pb_embedded_content();
     $mediaPlan = [];
+    $mediaPlanProblems = [];
     $mediaSourceDir = __DIR__ . '/media';
-    if (is_dir($mediaSourceDir)) {
+    // [74 C74-2] validate the media tree even in dry-run: a symlinked media root
+    // or symlinked media entry is a refusal condition for the REAL run, so the
+    // plan must fail loudly (exit nonzero) instead of listing outside content.
+    if (is_link($mediaSourceDir)) {
+        $mediaPlanProblems[] = 'bundle media root (media/) is a symbolic link — refused';
+    } elseif (is_dir($mediaSourceDir)) {
         $iterator = new \\RecursiveIteratorIterator(
             new \\RecursiveDirectoryIterator($mediaSourceDir, \\FilesystemIterator::SKIP_DOTS),
             \\RecursiveIteratorIterator::SELF_FIRST
         );
         foreach ($iterator as $item) {
+            if ($item->isLink()) {
+                $mediaPlanProblems[] = 'symlink inside the bundle media tree (refused): ' . substr($item->getPathname(), strlen($mediaSourceDir) + 1);
+                continue;
+            }
             if ($item->isFile()) {
                 $relPath = substr($item->getPathname(), strlen($mediaSourceDir) + 1);
                 $mediaPlan[] = [
@@ -366,6 +376,10 @@ if (in_array('--dry-run', $argv, true)) {
                 ];
             }
         }
+    }
+    if (count($mediaPlanProblems) > 0) {
+        fwrite(STDERR, 'det-cms-installer: REFUSING the run (dry-run validation): ' . implode('; ', $mediaPlanProblems) . '. Nothing was written — dry-run never writes.' . PHP_EOL);
+        exit(1);
     }
     $dryRunPlan = [
         'mode' => 'dry-run',
@@ -542,6 +556,14 @@ final class DetCmsInstallerApp implements \\Magento\\Framework\\AppInterface
         $mediaSourceDir = __DIR__ . '/media';
         $mediaEntries = [];
         $mediaProblems = [];
+        // [74 C74-2] the entry-level isLink() guard below never sees the ROOT of the
+        // media tree: is_dir() would follow a symlinked media/ root and iterate an
+        // outside tree. Refuse the root before any iteration or read.
+        if (is_link($mediaSourceDir)) {
+            throw new \\RuntimeException(
+                'REFUSING the run: the bundle media root (media/) is a symbolic link — bundle media must be a real directory inside det-install/. Nothing was written.'
+            );
+        }
         if (is_dir($mediaSourceDir)) {
             $iterator = new \\RecursiveIteratorIterator(
                 new \\RecursiveDirectoryIterator($mediaSourceDir, \\FilesystemIterator::SKIP_DOTS),
@@ -673,6 +695,48 @@ final class DetCmsInstallerApp implements \\Magento\\Framework\\AppInterface
         }
         if ($force && count($mediaConflicts) > 0) {
             $copyList = array_merge($copyList, $mediaConflicts);
+        }
+
+        // ---- Gate 6.5: destination preflight (read-only — still no writes) ------------------
+        // [74 C74-2] is_file()/copy() FOLLOW symlinks: a preexisting symlinked destination
+        // file used to be classified, then (with --force) copied THROUGH the link —
+        // overwriting its outside target — with the realpath containment check only
+        // running AFTER the destructive write. Refuse BEFORE the first mkdir/copy/CMS
+        // write instead: every planned destination must be a real path inside a real
+        // directory chain under pub/media. Iterate ALL bundle media entries (even
+        // byte-identical skips): a symlink standing where the bundle owns a file is a
+        // trust-boundary change regardless of what would have been written.
+        $destProblems = [];
+        foreach ($mediaEntries as $entry) {
+            $candidate = $pubMediaDir . '/' . $entry[1];
+            if (is_link($candidate)) {
+                $destProblems[] = 'symlinked destination file (refused even with --force): ' . $entry[1];
+                continue;
+            }
+            // Walk every EXISTING ancestor from the destination's directory up to
+            // pub/media: a symlinked ancestor dir could redirect the write outside
+            // pub/media. Non-existent segments will be created fresh inside a
+            // contained chain, so only existing links matter here.
+            $walk = dirname($candidate);
+            while (true) {
+                if (is_link($walk)) {
+                    $destProblems[] = 'symlinked destination directory for ' . $entry[1] . ' (via ' . $walk . ')';
+                    break;
+                }
+                if ($walk === $pubMediaDir) {
+                    break;
+                }
+                $parent = dirname($walk);
+                if ($parent === $walk) {
+                    break;
+                }
+                $walk = $parent;
+            }
+        }
+        if (count($destProblems) > 0) {
+            throw new \\RuntimeException(
+                'REFUSING media copy BEFORE any write: symlinked destination(s) detected in pub/media — ' . implode('; ', $destProblems) . '. Nothing was written; remove or replace the symlink(s) manually first (DET never writes through a link, even with --force).'
+            );
         }
 
         /** @var \\Magento\\Cms\\Api\\PageRepositoryInterface $pageRepository */

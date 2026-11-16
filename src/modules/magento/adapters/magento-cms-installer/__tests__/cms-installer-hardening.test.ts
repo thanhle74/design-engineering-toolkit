@@ -602,4 +602,114 @@ describe("[74] cms installer hardening (fake Magento root, hermetic)", () => {
          }
       },
    );
+
+   // [74 C74-2a] a PREEXISTING symlinked destination under pub/media used to be
+   // classified via is_file() (which FOLLOWS the link) and — with --force — copied
+   // THROUGH the link, overwriting its outside target, with the realpath
+   // containment check only running AFTER the destructive write. The Gate 6.5
+   // preflight must refuse the WHOLE run before the first mkdir/copy/CMS write.
+   itPhp(
+      "C74-2a: refuses a symlinked pub/media destination BEFORE any write even with --force (no partial copies, outside target untouched)",
+      () => {
+         const outsideDir = fs.mkdtempSync(
+            path.join(os.tmpdir(), "det74-c74a-outside-"),
+         );
+         const root = makeFakeMagentoRoot({
+            target: STORE5,
+            mediaFiles: {
+               "wysiwyg/clean-first.jpg": "clean-media-bytes",
+               "wysiwyg/hero.jpg": "different-bundle-bytes",
+            },
+         });
+         try {
+            const sentinel = path.join(outsideDir, "merchant-hero-outside.jpg");
+            fs.writeFileSync(sentinel, "MERCHANT-OUTSIDE-BYTES");
+            const heroTarget = path.join(
+               root,
+               "pub",
+               "media",
+               "wysiwyg",
+               "hero.jpg",
+            );
+            fs.mkdirSync(path.dirname(heroTarget), { recursive: true });
+            fs.symlinkSync(sentinel, heroTarget);
+
+            const saveLog = path.join(root, "save.jsonl");
+            const cacheLog = path.join(root, "cache.jsonl");
+            const res = runInstaller(root, ["--force", "--store-id=5"], {
+               DET_FAKE_SAVE_LOG: saveLog,
+               DET_FAKE_CACHE_LOG: cacheLog,
+            });
+            expect(res.exit).not.toBe(0);
+            const output = res.stdout + res.stderr;
+            expect(output).toMatch(/symlinked destination file/);
+            expect(output).toMatch(/hero\.jpg/);
+            expect(output).toMatch(/Nothing was written/);
+            // copy() never followed the link: outside bytes untouched.
+            expect(fs.readFileSync(sentinel, "utf8")).toBe(
+               "MERCHANT-OUTSIDE-BYTES",
+            );
+            expect(fs.lstatSync(heroTarget).isSymbolicLink()).toBe(true);
+            expect(fs.readlinkSync(heroTarget)).toBe(sentinel);
+            // No partial write: the clean sibling entry was refused too — the
+            // preflight validates EVERY destination before the first write.
+            expect(
+               fs.existsSync(
+                  path.join(root, "pub", "media", "wysiwyg", "clean-first.jpg"),
+               ),
+            ).toBe(false);
+            // The CMS page write never happened.
+            expect(
+               fs.existsSync(saveLog) ? fs.readFileSync(saveLog, "utf8") : "",
+            ).toBe("");
+         } finally {
+            fs.rmSync(root, { recursive: true, force: true });
+            fs.rmSync(outsideDir, { recursive: true, force: true });
+         }
+      },
+   );
+
+   // [74 C74-2b] a symlinked bundle media ROOT is invisible to the entry-level
+   // isLink() guard: the iterator would silently walk an OUTSIDE tree and copy
+   // its files into pub/media. Both the real run and dry-run must refuse.
+   itPhp(
+      "C74-2b: refuses a symlinked bundle media root (real run and dry-run), nothing written",
+      () => {
+         const outsideDir = fs.mkdtempSync(
+            path.join(os.tmpdir(), "det74-c74b-outside-"),
+         );
+         const root = makeFakeMagentoRoot({ target: STORE5 });
+         try {
+            const sentinel = path.join(outsideDir, "outside.jpg");
+            fs.writeFileSync(sentinel, "OUTSIDE-MEDIA-TREE");
+            fs.symlinkSync(outsideDir, path.join(root, "det-install", "media"));
+
+            const saveLog = path.join(root, "save.jsonl");
+            const cacheLog = path.join(root, "cache.jsonl");
+            const real = runInstaller(root, ["--store-id=5"], {
+               DET_FAKE_SAVE_LOG: saveLog,
+               DET_FAKE_CACHE_LOG: cacheLog,
+            });
+            expect(real.exit).not.toBe(0);
+            expect(real.stdout + real.stderr).toMatch(
+               /bundle media root \(media\/\) is a symbolic link/,
+            );
+            expect(fs.existsSync(path.join(root, "pub", "media"))).toBe(false);
+            expect(
+               fs.existsSync(saveLog) ? fs.readFileSync(saveLog, "utf8") : "",
+            ).toBe("");
+
+            // Dry-run validates the same condition and refuses loudly too.
+            const dry = runInstaller(root, ["--dry-run"]);
+            expect(dry.exit).not.toBe(0);
+            expect(dry.stdout + dry.stderr).toMatch(/dry-run validation/);
+            expect(fs.readFileSync(sentinel, "utf8")).toBe(
+               "OUTSIDE-MEDIA-TREE",
+            );
+         } finally {
+            fs.rmSync(root, { recursive: true, force: true });
+            fs.rmSync(outsideDir, { recursive: true, force: true });
+         }
+      },
+   );
 });

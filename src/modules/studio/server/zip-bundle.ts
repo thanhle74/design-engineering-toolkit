@@ -259,10 +259,11 @@ export function createZipBuffer(
  *
  * [74] notes: entry names derive from the on-disk tree via path.relative, and every name is
  * still re-validated by createZipBuffer's traversal/control-char gate before it can reach the
- * archive. Symbolic links inside the run directory are NOT followed and NOT packed (a symlink
- * dirent is neither isFile() nor isDirectory(), so it is skipped — a symlink can never smuggle
- * out-of-tree content into the bundle). Missing optional files are simply absent; the function
- * refuses a run directory with nothing packable.
+ * archive. Symbolic links are NEVER followed and NEVER packed: links met inside the media
+ * recursion are skipped, and a symlinked BUNDLE ROOT file or a symlinked top-level media/
+ * root is a loud REFUSAL ([74 C74-1] — stat() would follow them and smuggle out-of-tree
+ * content into the bundle). Missing optional files are simply absent; the function refuses
+ * a run directory with nothing packable.
  */
 export function packRunBundleZip(runDir: string): Buffer {
    if (!fs.existsSync(runDir)) {
@@ -282,7 +283,22 @@ export function packRunBundleZip(runDir: string): Buffer {
 
    for (const fileName of rootFiles) {
       const filePath = path.join(runDir, fileName);
-      if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+      // [74 C74-1] lstat (NOT stat): a symlinked bundle ROOT file would make
+      // stat follow the link and pack OUTSIDE content into the archive — an
+      // untrusted run directory must never change the bundle's trust boundary.
+      // Fail closed with a loud refusal instead of silently following.
+      let rootStat: fs.Stats;
+      try {
+         rootStat = fs.lstatSync(filePath);
+      } catch {
+         continue; // absent optional file — stays absent (unchanged behavior)
+      }
+      if (rootStat.isSymbolicLink()) {
+         throw new Error(
+            `Run directory refused: bundle root file "${fileName}" is a symbolic link — symlinked bundle entries are never followed or packed.`,
+         );
+      }
+      if (rootStat.isFile()) {
          filesToPack.push({
             name: fileName,
             content: fs.readFileSync(filePath),
@@ -292,7 +308,21 @@ export function packRunBundleZip(runDir: string): Buffer {
 
    // Recursive media directory
    const mediaDir = path.join(runDir, "media");
-   if (fs.existsSync(mediaDir) && fs.statSync(mediaDir).isDirectory()) {
+   // [74 C74-1] lstat (NOT stat): the child Dirent guard only catches links met
+   // INSIDE the recursion — a symlinked top-level media/ root would be followed
+   // here and pack an outside tree. Refuse it before any read.
+   let mediaRootStat: fs.Stats | null = null;
+   try {
+      mediaRootStat = fs.lstatSync(mediaDir);
+   } catch {
+      mediaRootStat = null; // no media directory — fine
+   }
+   if (mediaRootStat?.isSymbolicLink()) {
+      throw new Error(
+         `Run directory refused: bundle "media" root is a symbolic link — the media tree must be a real directory inside the run directory.`,
+      );
+   }
+   if (mediaRootStat?.isDirectory()) {
       const collectMedia = (dir: string) => {
          const entries = fs.readdirSync(dir, { withFileTypes: true });
          for (const entry of entries) {
