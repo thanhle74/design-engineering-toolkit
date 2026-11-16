@@ -61,7 +61,7 @@ const MAPPINGS: StudioMappingView[] = [
       sourceName: "Scroll band",
       sourceLocator: "design://x/10:5",
       composeDisposition: "skipped",
-      sectionId: null,
+      // No sectionId — an unassigned entry (optional in the contract).
       reasons: [],
       needsReview: false,
    },

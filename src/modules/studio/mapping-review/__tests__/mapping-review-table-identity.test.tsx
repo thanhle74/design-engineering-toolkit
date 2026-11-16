@@ -62,7 +62,7 @@ const MAPPINGS: StudioMappingView[] = [
       sourceName: "Footer",
       sourceLocator: "design://x/1:4",
       composeDisposition: "skipped",
-      sectionId: null,
+      // No sectionId — an unassigned entry (optional in the contract).
       reasons: [],
       needsReview: false,
    },
