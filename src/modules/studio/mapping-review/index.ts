@@ -9,6 +9,11 @@
  * relevant slices) as props and never fetch or import server code.
  */
 export { MappingReview } from "./components/mapping-review";
+export {
+   keyedMappings,
+   mappingRowKeys,
+   type KeyedMapping,
+} from "./mapping-row-identity";
 export { MappingReviewTable } from "./components/mapping-review-table";
 export { DiagnosticsPanel } from "./components/diagnostics-panel";
 export { ProvenanceFooter } from "./components/provenance-footer";

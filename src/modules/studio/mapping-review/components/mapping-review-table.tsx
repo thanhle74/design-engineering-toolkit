@@ -49,6 +49,7 @@ import {
 import type { ColumnsType } from "antd/es/table";
 
 import type { StudioMappingView } from "@/src/modules/studio/shared/contracts";
+import { keyedMappings } from "../mapping-row-identity";
 import {
    ComposeDispositionBadge,
    KindBadge,
@@ -140,28 +141,43 @@ export function MappingReviewTable({
       useState<StudioMappingView | null>(null);
    const [copied, setCopied] = useState(false);
 
-   // Summary counts
-   const totalCount = mappings.length;
-   const mappedCount = mappings.filter(
-      (m) => m.composeDisposition === "mapped",
-   ).length;
-   const gapCount = mappings.filter(
-      (m) =>
-         m.composeDisposition === "gap" || m.composeDisposition === "skipped",
-   ).length;
-   const needsReviewCount = mappings.filter((m) => m.needsReview).length;
-   const mergedCount = mappings.filter(
-      (m) => m.composeDisposition === "decoration-merged",
-   ).length;
-   const excludedCount = mappings.filter(
-      (m) => m.composeDisposition === "excluded",
-   ).length;
+   // Summary counts — one pass, always over the UNFILTERED run order.
+   const counts = useMemo(() => {
+      let mapped = 0;
+      let gap = 0;
+      let skipped = 0;
+      let needsReview = 0;
+      let merged = 0;
+      let excluded = 0;
+      for (const m of mappings) {
+         if (m.composeDisposition === "mapped") mapped += 1;
+         else if (m.composeDisposition === "gap") gap += 1;
+         else if (m.composeDisposition === "skipped") skipped += 1;
+         else if (m.composeDisposition === "decoration-merged") merged += 1;
+         else if (m.composeDisposition === "excluded") excluded += 1;
+         if (m.needsReview) needsReview += 1;
+      }
+      return {
+         total: mappings.length,
+         mapped,
+         // The Gaps card counts gap + skipped: both are "not composed" facts.
+         gap: gap + skipped,
+         needsReview,
+         merged,
+         excluded,
+      };
+   }, [mappings]);
 
-   // Filtered mappings
+   /**
+    * [74] Row identity is computed ONCE over the UNFILTERED source array
+    * (`keyedMappings`), so a row's key never changes when the search or
+    * disposition filter changes — no remounts, no selection loss. The drawer
+    * inspector binds to the exact filtered entry object, i.e. the exact
+    * occurrence even when duplicate nodeIds exist.
+    */
    const filteredMappings = useMemo(() => {
-      let idx = 0;
-      return mappings
-         .filter((m) => {
+      return keyedMappings(mappings)
+         .filter(({ mapping: m }) => {
             if (dispositionFilter === "needs_review") {
                if (!m.needsReview) return false;
             } else if (
@@ -186,10 +202,10 @@ export function MappingReviewTable({
             }
             return true;
          })
-         .map((m) => ({
-            ...m,
-            rowKey: `${m.nodeId}-${m.sectionId ?? "none"}-${m.composeDisposition}-${idx++}`,
-         }));
+         // Rows stay StudioMappingView-shaped (spread + rowKey) so the
+         // `rowKey="rowKey"` string-prop API and the column renderers are
+         // untouched; only the identity source changed.
+         .map(({ mapping, rowKey }) => ({ ...mapping, rowKey }));
    }, [mappings, dispositionFilter, searchQuery]);
 
    const handleCopy = (text: string) => {
@@ -307,7 +323,7 @@ export function MappingReviewTable({
                            style={{ color: "#1677ff", fontSize: 16 }}
                         />
                         <Typography.Title level={4} style={{ margin: 0 }}>
-                           {totalCount}
+                           {counts.total}
                         </Typography.Title>
                      </Flex>
                   </Flex>
@@ -327,7 +343,7 @@ export function MappingReviewTable({
                            level={4}
                            style={{ margin: 0, color: "#52c41a" }}
                         >
-                           {mappedCount}
+                           {counts.mapped}
                         </Typography.Title>
                      </Flex>
                   </Flex>
@@ -347,7 +363,7 @@ export function MappingReviewTable({
                            level={4}
                            style={{ margin: 0, color: "#d48806" }}
                         >
-                           {gapCount}
+                           {counts.gap}
                         </Typography.Title>
                      </Flex>
                   </Flex>
@@ -367,7 +383,7 @@ export function MappingReviewTable({
                            level={4}
                            style={{ margin: 0, color: "#fa8c16" }}
                         >
-                           {needsReviewCount}
+                           {counts.needsReview}
                         </Typography.Title>
                      </Flex>
                   </Flex>
@@ -384,7 +400,7 @@ export function MappingReviewTable({
                            style={{ color: "#13c2c2", fontSize: 16 }}
                         />
                         <Typography.Title level={4} style={{ margin: 0 }}>
-                           {mergedCount}
+                           {counts.merged}
                         </Typography.Title>
                      </Flex>
                   </Flex>
@@ -407,7 +423,7 @@ export function MappingReviewTable({
                            level={4}
                            style={{ margin: 0, color: "#8c8c8c" }}
                         >
-                           {excludedCount}
+                           {counts.excluded}
                         </Typography.Title>
                      </Flex>
                   </Flex>
@@ -432,19 +448,19 @@ export function MappingReviewTable({
                      value={dispositionFilter}
                      onChange={(val) => setDispositionFilter(val as string)}
                      options={[
-                        { label: `Tất cả (${totalCount})`, value: "all" },
-                        { label: `Đã map (${mappedCount})`, value: "mapped" },
-                        { label: `Gaps (${gapCount})`, value: "gap" },
+                        { label: `Tất cả (${counts.total})`, value: "all" },
+                        { label: `Đã map (${counts.mapped})`, value: "mapped" },
+                        { label: `Gaps (${counts.gap})`, value: "gap" },
                         {
-                           label: `Cần review (${needsReviewCount})`,
+                           label: `Cần review (${counts.needsReview})`,
                            value: "needs_review",
                         },
                         {
-                           label: `Hợp nhất (${mergedCount})`,
+                           label: `Hợp nhất (${counts.merged})`,
                            value: "decoration-merged",
                         },
                         {
-                           label: `Loại trừ (${excludedCount})`,
+                           label: `Loại trừ (${counts.excluded})`,
                            value: "excluded",
                         },
                      ]}
