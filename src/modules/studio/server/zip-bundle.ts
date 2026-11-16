@@ -162,7 +162,9 @@ export function createZipBuffer(
       const nameBuf = Buffer.from(normName, "utf8");
       const dataBuf = file.content;
       if (!Buffer.isBuffer(dataBuf)) {
-         throw new TypeError(`zip entry "${normName}" content must be a Buffer`);
+         throw new TypeError(
+            `zip entry "${normName}" content must be a Buffer`,
+         );
       }
       if (dataBuf.length > limits.maxEntryBytes) {
          throw new Error(

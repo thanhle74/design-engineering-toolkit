@@ -297,7 +297,10 @@ describe("[70] real offline build emits the operator install bundle", () => {
             expect(fs.statSync(copied).size).toBe(fs.statSync(source).size);
          }
          // The operator README documents the media sync into pub/media/.
-         const readme = fs.readFileSync(path.join(bundleDir, "README.md"), "utf8");
+         const readme = fs.readFileSync(
+            path.join(bundleDir, "README.md"),
+            "utf8",
+         );
          expect(readme).toContain("pub/media/");
       },
       60000,

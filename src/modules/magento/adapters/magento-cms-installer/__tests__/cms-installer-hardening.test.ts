@@ -147,12 +147,16 @@ function makeFakeMagentoRoot(options: FakeRootOptions): string {
       fs.mkdirSync(path.dirname(target), { recursive: true });
       fs.writeFileSync(target, content);
    }
-   for (const [rel, linkTarget] of Object.entries(options.mediaSymlinks ?? {})) {
+   for (const [rel, linkTarget] of Object.entries(
+      options.mediaSymlinks ?? {},
+   )) {
       const target = path.join(detInstall, "media", rel);
       fs.mkdirSync(path.dirname(target), { recursive: true });
       fs.symlinkSync(linkTarget, target);
    }
-   for (const [rel, content] of Object.entries(options.pubMediaExisting ?? {})) {
+   for (const [rel, content] of Object.entries(
+      options.pubMediaExisting ?? {},
+   )) {
       const target = path.join(root, "pub", "media", rel);
       fs.mkdirSync(path.dirname(target), { recursive: true });
       fs.writeFileSync(target, content);
@@ -177,11 +181,7 @@ function runInstaller(
    args: string[] = [],
    env: Record<string, string> = {},
 ): RunResult {
-   const installerPath = path.join(
-      root,
-      "det-install",
-      "install-homepage.php",
-   );
+   const installerPath = path.join(root, "det-install", "install-homepage.php");
    let stdout = "";
    let stderr = "";
    let exit = 0;
@@ -262,9 +262,7 @@ describe("[74] cms installer hardening (fake Magento root, hermetic)", () => {
             const plan = JSON.parse(stdout) as Record<string, unknown>;
             // Honest disclosure of what a REAL run would do (never done by a dry run):
             expect(plan["writeMode"]).toMatch(/--force/);
-            expect(plan["cacheFlush"]).toMatch(
-               /\[full_page, block_html\]/,
-            );
+            expect(plan["cacheFlush"]).toMatch(/\[full_page, block_html\]/);
             expect(plan["cacheFlush"]).toMatch(/never flush-all/);
             expect(plan["requiresFlags"]).toEqual(["--store-id=5"]);
             expect(plan["mediaAssets"]).toMatchObject({
@@ -326,7 +324,9 @@ describe("[74] cms installer hardening (fake Magento root, hermetic)", () => {
             mediaFiles: { "wysiwyg/banner.jpg": "banner-bytes" },
             // Even a colliding page must not matter: the flag gate fires FIRST,
             // before any write.
-            existingPages: [{ id: 9, identifier: STORE5.identifier, storeIds: [5] }],
+            existingPages: [
+               { id: 9, identifier: STORE5.identifier, storeIds: [5] },
+            ],
          });
          try {
             const { exit, stdout, stderr } = runInstaller(root);
@@ -344,20 +344,23 @@ describe("[74] cms installer hardening (fake Magento root, hermetic)", () => {
       },
    );
 
-   itPhp("a MISMATCHED --store-id flag refuses (declared scope is the only scope)", () => {
-      const root = makeFakeMagentoRoot({
-         target: STORE5,
-         mediaFiles: { "wysiwyg/banner.jpg": "banner-bytes" },
-      });
-      try {
-         const { exit, stderr } = runInstaller(root, ["--store-id=6"]);
-         expect(exit).toBe(1);
-         expect(stderr).toContain("does not match the declared store_id=5");
-         expect(listTree(path.join(root, "pub", "media"))).toEqual([]);
-      } finally {
-         fs.rmSync(root, { recursive: true, force: true });
-      }
-   });
+   itPhp(
+      "a MISMATCHED --store-id flag refuses (declared scope is the only scope)",
+      () => {
+         const root = makeFakeMagentoRoot({
+            target: STORE5,
+            mediaFiles: { "wysiwyg/banner.jpg": "banner-bytes" },
+         });
+         try {
+            const { exit, stderr } = runInstaller(root, ["--store-id=6"]);
+            expect(exit).toBe(1);
+            expect(stderr).toContain("does not match the declared store_id=5");
+            expect(listTree(path.join(root, "pub", "media"))).toEqual([]);
+         } finally {
+            fs.rmSync(root, { recursive: true, force: true });
+         }
+      },
+   );
 
    itPhp(
       "the correct --store-id flag installs into the declared scope (both flag spellings)",
@@ -399,7 +402,9 @@ describe("[74] cms installer hardening (fake Magento root, hermetic)", () => {
          const root = makeFakeMagentoRoot({
             target: STORE0,
             mediaFiles: { "wysiwyg/banner.jpg": "banner-bytes" },
-            existingPages: [{ id: 7, identifier: STORE0.identifier, storeIds: [0] }],
+            existingPages: [
+               { id: 7, identifier: STORE0.identifier, storeIds: [0] },
+            ],
          });
          try {
             const { exit, stdout, stderr } = runInstaller(root);
@@ -421,7 +426,9 @@ describe("[74] cms installer hardening (fake Magento root, hermetic)", () => {
       () => {
          const root = makeFakeMagentoRoot({
             target: STORE0,
-            existingPages: [{ id: 7, identifier: STORE0.identifier, storeIds: [0] }],
+            existingPages: [
+               { id: 7, identifier: STORE0.identifier, storeIds: [0] },
+            ],
             mediaFiles: { "wysiwyg/banner.jpg": "banner-bytes" },
          });
          const saveLog = path.join(root, "save.jsonl");
@@ -454,7 +461,13 @@ describe("[74] cms installer hardening (fake Magento root, hermetic)", () => {
             mediaFiles: { "wysiwyg/banner.jpg": "new-bundle-bytes" },
             pubMediaExisting: { "wysiwyg/banner.jpg": existing },
          });
-         const targetPath = path.join(root, "pub", "media", "wysiwyg", "banner.jpg");
+         const targetPath = path.join(
+            root,
+            "pub",
+            "media",
+            "wysiwyg",
+            "banner.jpg",
+         );
          try {
             const { exit, stderr } = runInstaller(root);
             expect(exit).toBe(1);
@@ -478,7 +491,13 @@ describe("[74] cms installer hardening (fake Magento root, hermetic)", () => {
             mediaFiles: { "wysiwyg/banner.jpg": sourceBytes },
             pubMediaExisting: { "wysiwyg/banner.jpg": "merchant-old" },
          });
-         const targetPath = path.join(root, "pub", "media", "wysiwyg", "banner.jpg");
+         const targetPath = path.join(
+            root,
+            "pub",
+            "media",
+            "wysiwyg",
+            "banner.jpg",
+         );
          try {
             const { exit, stdout } = runInstaller(root, ["--force"]);
             expect(exit).toBe(0);
@@ -502,7 +521,13 @@ describe("[74] cms installer hardening (fake Magento root, hermetic)", () => {
             mediaFiles: { "wysiwyg/banner.jpg": sourceBytes },
             pubMediaExisting: { "wysiwyg/banner.jpg": sourceBytes },
          });
-         const targetPath = path.join(root, "pub", "media", "wysiwyg", "banner.jpg");
+         const targetPath = path.join(
+            root,
+            "pub",
+            "media",
+            "wysiwyg",
+            "banner.jpg",
+         );
          try {
             const before = fs.statSync(targetPath);
             const { exit, stdout } = runInstaller(root);
@@ -548,16 +573,23 @@ describe("[74] cms installer hardening (fake Magento root, hermetic)", () => {
             "wysiwyg/banner.jpg": "banner-media",
             "wysiwyg/deep/nested/hero.jpg": "hero-media",
          };
-         const root = makeFakeMagentoRoot({ target: STORE0, mediaFiles: files });
+         const root = makeFakeMagentoRoot({
+            target: STORE0,
+            mediaFiles: files,
+         });
          try {
             const { exit } = runInstaller(root);
             expect(exit).toBe(0);
             for (const [rel, content] of Object.entries(files)) {
                const written = path.join(root, "pub", "media", rel);
                expect(fs.existsSync(written)).toBe(true);
-               expect(sha256File(written)).toBe(sha256Buf(Buffer.from(content)));
+               expect(sha256File(written)).toBe(
+                  sha256Buf(Buffer.from(content)),
+               );
                expect(fs.statSync(written).mode & 0o777).toBe(0o644);
-               expect(fs.statSync(path.dirname(written)).mode & 0o777).toBe(0o755);
+               expect(fs.statSync(path.dirname(written)).mode & 0o777).toBe(
+                  0o755,
+               );
             }
             // Nothing outside pub/media was created in the fake Magento root
             // (only app/ and det-install/ pre-existed; det-install/media is the source).

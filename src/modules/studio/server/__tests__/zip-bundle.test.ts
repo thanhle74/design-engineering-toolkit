@@ -174,10 +174,11 @@ describe("zip-bundle", () => {
       expect(listing).toContain("test.txt");
       expect(listing).toContain("sub/sample.json");
 
-      const extracted = execFileSync(
-         "unzip",
-         ["-p", zipPath, "test.txt"],
-      ).toString();
+      const extracted = execFileSync("unzip", [
+         "-p",
+         zipPath,
+         "test.txt",
+      ]).toString();
       expect(extracted).toBe("hello world");
 
       // [74] full integrity + byte-exact extraction of every member
@@ -256,10 +257,15 @@ describe("zip-bundle entry-name security gate ([74])", () => {
    }
 
    it("refuses duplicates of the same name (exact and backslash-folded)", () => {
-      const dup = (names: string[]): (() => void) => () =>
-         createZipBuffer(
-            names.map((n) => ({ name: n, content: Buffer.from("x", "utf8") })),
-         );
+      const dup =
+         (names: string[]): (() => void) =>
+         () =>
+            createZipBuffer(
+               names.map((n) => ({
+                  name: n,
+                  content: Buffer.from("x", "utf8"),
+               })),
+            );
       expect(dup(["install-homepage.php", "install-homepage.php"])).toThrow(
          /duplicate entry name/,
       );
@@ -517,7 +523,10 @@ describe("packRunBundleZip [74] hardening", () => {
                content: Buffer.from("<div data-content-type='row'></div>"),
             },
             { name: "build-manifest.json", content: Buffer.from('{"k":1}') },
-            { name: "mapping-and-gaps.json", content: Buffer.from('{"gaps":[]}') },
+            {
+               name: "mapping-and-gaps.json",
+               content: Buffer.from('{"gaps":[]}'),
+            },
             { name: "README.md", content: Buffer.from("# op\n", "utf8") },
             {
                name: "media/wysiwyg/hero.jpg",
